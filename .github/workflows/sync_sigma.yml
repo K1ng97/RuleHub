@@ -8,11 +8,8 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
-<<<<<<< HEAD
-=======
     permissions:
       contents: write
->>>>>>> 9e73fd8 ("同步Sigma规则更新")
     steps:
       - name: Checkout RuleHub
         uses: actions/checkout@v4
@@ -35,4 +32,4 @@ jobs:
           git config --global user.email 'actions@github.com'
           git add rules/public/sigma
           git diff --quiet && git diff --staged --quiet || git commit -m "Sync Sigma rules $(date +'%Y-%m-%d %H:%M:%S')"
-          git push
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
