@@ -8,6 +8,11 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
+<<<<<<< HEAD
+=======
+    permissions:
+      contents: write
+>>>>>>> 9e73fd8 ("同步Sigma规则更新")
     steps:
       - name: Checkout RuleHub
         uses: actions/checkout@v4
