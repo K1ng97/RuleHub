@@ -21,10 +21,10 @@ jobs:
           
       - name: Force sync repositories
         run: |
-          for repo in $(echo ${{ steps.config.outputs.repositories }} | jq -c '.[]'); do
-            name=$(echo $repo | jq -r '.name')
-            url=$(echo $repo | jq -r '.url')
-            source_dir=$(echo $repo | jq -r '.source_dir')
+          for repo in $(echo '${{ steps.config.outputs.repositories }}' | jq -c '.[]'); do
+            name=$(echo "$repo" | jq -r '.name')
+            url=$(echo "$repo" | jq -r '.url')
+            source_dir=$(echo "$repo" | jq -r '.source_dir')
             target_dir=$(echo $repo | jq -r '.target_dir')
             
             echo "Syncing repository: $name"
