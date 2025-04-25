@@ -1,0 +1,19 @@
+{
+  "repositories": {
+    "sigma": {
+      "url": "https://github.com/SigmaHQ/sigma",
+      "last_sync": "",
+      "last_commit": ""
+    },
+    "elastic": {
+      "url": "https://github.com/elastic/detection-rules",
+      "last_sync": "",
+      "last_commit": ""
+    },
+    "splunk": {
+      "url": "https://research.splunk.com/detections/",
+      "last_sync": "",
+      "last_commit": ""
+    }
+  }
+}

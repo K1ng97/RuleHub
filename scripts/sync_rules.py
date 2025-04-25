@@ -52,6 +52,20 @@ def sync_repository(repo_config):
     url = repo_config['url']
     source_dir = repo_config['source_dir']
     target_dir = repo_config['target_dir']
+    
+    # 检查版本元数据文件
+    version_file = os.path.join(repo_root, 'rules', 'version_metadata.json')
+    if os.path.exists(version_file):
+        with open(version_file, 'r') as f:
+            version_data = json.load(f)
+        
+        # 获取远程仓库最新commit
+        remote_commit = run_command(['git', 'ls-remote', url, 'HEAD'], cwd=repo_root).split()[0]
+        
+        # 检查是否有更新
+        if name in version_data['repositories'] and version_data['repositories'][name]['last_commit'] == remote_commit:
+            print(f"{name}规则仓库没有更新，跳过同步")
+            return
 
     temp_clone_path = os.path.join(TEMP_DIR_BASE, name)
     source_rules_path = os.path.join(temp_clone_path, source_dir)
@@ -89,10 +103,31 @@ def sync_repository(repo_config):
     run_command(['rsync', '-av', '--delete', '--exclude', '.git', source_for_rsync, target_for_rsync])
 
     print(f"--- Finished syncing {name} ---")
+    
+    # 更新版本元数据
+    version_file = os.path.join(repo_root, 'rules', 'version_metadata.json')
+    if os.path.exists(version_file):
+        with open(version_file, 'r+') as f:
+            version_data = json.load(f)
+            # 获取远程仓库最新commit
+            remote_commit = run_command(['git', 'ls-remote', url, 'HEAD'], cwd=repo_root).split()[0]
+            # 更新元数据
+            version_data['repositories'][name] = {
+                'url': url,
+                'last_sync': datetime.now().isoformat(),
+                'last_commit': remote_commit
+            }
+            f.seek(0)
+            json.dump(version_data, f, indent=2)
+            f.truncate()
+            print(f"Updated version metadata for {name}")
 
 
 def main():
     print("Starting rule synchronization...")
+    
+    # 确保导入json模块
+    import json
 
     # Ensure rsync is available (should be on ubuntu-latest)
     try:
@@ -174,8 +209,11 @@ def main():
     # This uses GitHub Actions step output format
     # print(f"::set-output name=new_branch_name::{new_branch_name}") # Deprecated
     # Use environment files instead for GitHub Actions >= 20.04 runner
-    with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
-        print(f'new_branch_name={new_branch_name}', file=f)
+    if 'GITHUB_OUTPUT' in os.environ:
+        with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+            print(f'new_branch_name={new_branch_name}', file=f)
+    else:
+        print(f"::set-output name=new_branch_name::{new_branch_name}")
 
 
     print("Rule synchronization script finished.")
