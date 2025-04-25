@@ -158,7 +158,11 @@ def main():
     all_target_dirs = [os.path.join(repo_root, r['target_dir']) for r in config.get('repositories', [])]
     # Use git add on the specific target directories
     run_command(['git', 'add'] + all_target_dirs)
-
+    
+    # Also add version_metadata.json file explicitly
+    version_metadata_path = os.path.join(repo_root, 'rules', 'version_metadata.json')
+    if os.path.exists(version_metadata_path):
+        run_command(['git', 'add', version_metadata_path])
 
     # Check if there are any staged changes
     status_output = run_command(['git', 'status', '--porcelain'])
