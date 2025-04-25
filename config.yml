@@ -18,3 +18,9 @@ repositories:
     url: https://github.com/splunk/security_content.git
     source_dir: detections
     target_dir: rules/public/splunk
+
+    # FalconFriday 规则仓库
+  - name: FalconFriday
+    url: https://github.com/FalconForceTeam/FalconFriday.git
+    source_dir: .
+    target_dir: rules/public/FalconFriday
