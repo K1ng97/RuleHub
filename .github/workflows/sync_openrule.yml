@@ -1,0 +1,64 @@
+name: Sync Rules from Config
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 * * * *'  # 每小时运行一次
+
+jobs:
+  sync-rules:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 获取完整提交历史
+        
+      - name: Read config file
+        id: config
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const yaml = require('js-yaml');
+            try {
+              const config = yaml.load(fs.readFileSync('./config.yml', 'utf8'));
+              return config.repositories;
+            } catch (e) {
+              core.setFailed(`Failed to read config: ${e}`);
+            }
+      
+      - name: Sync repositories
+        run: |
+          for repo in ${{ steps.config.outputs.repositories }}; do
+            echo "Syncing $repo.name..."
+            
+            # 检查是否有更新
+            if [ -d "$repo.target_dir" ]; then
+              cd "$repo.target_dir"
+              git fetch origin
+              LOCAL=$(git rev-parse @)
+              REMOTE=$(git rev-parse @{u})
+              cd - > /dev/null
+              
+              if [ "$LOCAL" = "$REMOTE" ]; then
+                echo "No updates for $repo.name, skipping..."
+                continue
+              fi
+            fi
+            
+            # 同步更新
+            git clone --depth 1 $repo.url temp_repo
+            mkdir -p $repo.target_dir
+            rsync -a --delete temp_repo/ $repo.target_dir/
+            rm -rf temp_repo
+          done
+          
+      - name: Commit changes
+        if: contains(steps.sync.outputs, 'updated')
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add .
+          git commit -m "[Automated] Sync rules from config" || echo "No changes to commit"
+          git push

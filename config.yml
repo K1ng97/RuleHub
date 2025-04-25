@@ -1,0 +1,16 @@
+# 规则仓库同步配置
+repositories:
+  # SigmaHQ规则仓库
+  - name: sigma
+    url: https://github.com/SigmaHQ/sigma.git
+    target_dir: rules/public/sigma
+    
+  # Elastic规则仓库
+  - name: elastic
+    url: https://github.com/elastic/detection-rules.git
+    target_dir: rules/public/elastic
+    
+  # Splunk规则仓库
+  - name: splunk
+    url: https://github.com/splunk/security_content.git
+    target_dir: rules/public/splunk
