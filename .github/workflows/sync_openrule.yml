@@ -14,6 +14,9 @@ jobs:
         with:
           fetch-depth: 0  # 获取完整提交历史
         
+      - name: Install dependencies
+        run: npm install js-yaml
+        
       - name: Read config file
         id: config
         uses: actions/github-script@v6
