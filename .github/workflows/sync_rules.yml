@@ -20,6 +20,9 @@ jobs:
         id: config
         run: |
           echo "REPOSITORIES=$(yq -o json '.repositories' config.yml)" >> $GITHUB_OUTPUT
+          echo "REPOSITORIES<<EOF" >> $GITHUB_OUTPUT
+          echo "$(yq -o json '.repositories' config.yml)" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Sync repositories
         run: |
