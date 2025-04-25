@@ -3,6 +3,7 @@ import subprocess
 import os
 import shutil
 import sys
+import json
 from datetime import datetime
 
 # Ensure we are in the repository root directory
