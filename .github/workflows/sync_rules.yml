@@ -1,0 +1,54 @@
+name: Sync Rules
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 * * * *'  # 每小时运行一次
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout RuleHub
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read config file
+        id: config
+        run: |
+          echo "REPOSITORIES=$(yq -o json '.repositories' config.yml)" >> $GITHUB_OUTPUT
+
+      - name: Sync repositories
+        run: |
+          # 设置Git用户信息
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          
+          for repo in $(echo '${{ steps.config.outputs.REPOSITORIES }}' | jq -c '.[]'); do
+            name=$(echo "$repo" | jq -r '.name')
+            url=$(echo "$repo" | jq -r '.url')
+            source_dir=$(echo "$repo" | jq -r '.source_dir')
+            target_dir=$(echo "$repo" | jq -r '.target_dir')
+            
+            echo "Syncing repository: $name"
+            
+            # 创建临时目录并克隆仓库
+            mkdir -p /tmp/$name
+            git clone --depth 1 $url /tmp/$name
+            
+            # 清空目标目录并同步规则文件
+            rm -rf $target_dir/*
+            mkdir -p $target_dir
+            cp -r /tmp/$name/$source_dir/* $target_dir/
+            
+            # 清理临时目录
+            rm -rf /tmp/$name
+          done
+          
+          # 提交变更
+          git add rules/public
+          git diff --quiet && git diff --staged --quiet || git commit -m "[Automated] Sync rules $(date +'%Y-%m-%d %H:%M:%S')"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
