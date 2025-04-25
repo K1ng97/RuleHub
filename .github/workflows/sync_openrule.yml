@@ -15,7 +15,9 @@ jobs:
           fetch-depth: 0  # 获取完整提交历史
         
       - name: Install dependencies
-        run: npm install js-yaml
+        run: |
+          npm install js-yaml
+          sudo apt-get update && sudo apt-get install -y jq
         
       - name: Read config file
         id: config
@@ -26,10 +28,14 @@ jobs:
             const yaml = require('js-yaml');
             try {
               const config = yaml.load(fs.readFileSync('./config.yml', 'utf8'));
+              core.setOutput('repositories', JSON.stringify(config.repositories));
               return config.repositories;
             } catch (e) {
               core.setFailed(`Failed to read config: ${e}`);
             }
+        
+      - name: Set repositories output
+        run: echo "repositories=${{ steps.config.outputs.repositories }}" >> $GITHUB_OUTPUT
       
       - name: Sync repositories
         run: |
@@ -40,16 +46,21 @@ jobs:
           echo "当前工作目录: $(pwd)"
           echo "规则仓库配置: ${{ steps.config.outputs.repositories }}"
           
-          for repo in ${{ steps.config.outputs.repositories }}; do
-            echo "开始同步仓库: $repo.name"
-            echo "源URL: $repo.url"
-            echo "源目录: $repo.source_dir"
-            echo "目标目录: $repo.target_dir"
+          for repo in $(echo '${{ steps.config.outputs.repositories }}' | jq -c '.[]'); do
+            repo_name=$(echo $repo | jq -r '.name')
+            repo_url=$(echo $repo | jq -r '.url')
+            source_dir=$(echo $repo | jq -r '.source_dir')
+            target_dir=$(echo $repo | jq -r '.target_dir')
+            
+            echo "开始同步仓库: $repo_name"
+            echo "源URL: $repo_url"
+            echo "源目录: $source_dir"
+            echo "目标目录: $target_dir"
             
             # 检查是否有更新
-            if [ -d "$repo.target_dir" ]; then
-              echo "目标目录已存在: $repo.target_dir"
-              cd "$repo.target_dir"
+            if [ -d "$target_dir" ]; then
+              echo "目标目录已存在: $target_dir"
+              cd "$target_dir"
               echo "进入目标目录: $(pwd)"
               git fetch origin
               LOCAL=$(git rev-parse @)
@@ -68,17 +79,17 @@ jobs:
             
             # 同步更新
             echo "开始克隆临时仓库..."
-            git clone --depth 1 $repo.url temp_repo
-            echo "创建目标目录: $repo.target_dir"
-            mkdir -p $repo.target_dir
-            echo "同步文件从 temp_repo/$repo.source_dir 到 $repo.target_dir"
-            rsync -av --delete temp_repo/$repo.source_dir/ $repo.target_dir/
+            git clone --depth 1 $repo_url temp_repo
+            echo "创建目标目录: $target_dir"
+            mkdir -p $target_dir
+            echo "同步文件从 temp_repo/$source_dir 到 $target_dir"
+            rsync -av --delete temp_repo/$source_dir/ $target_dir/
             echo "删除临时仓库..."
             rm -rf temp_repo
             
             # 记录更新状态
-            echo "$repo.name updated" >> sync_status.txt
-            echo "$repo.name 同步完成"
+            echo "$repo_name updated" >> sync_status.txt
+            echo "$repo_name 同步完成"
           done
           
           # 提交变更
