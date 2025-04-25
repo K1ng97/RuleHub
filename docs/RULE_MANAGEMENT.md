@@ -1,17 +1,20 @@
 # RuleHub 规则管理文档
 
 ## 同步机制
+1. **自动同步开源规则**
+   - 通过GitHub Actions定期执行同步任务
+   - 使用`sync_rules.py`脚本同步配置的规则仓库
+   - 同步后自动创建Pull Request到`develop`分支
 
-### 自动同步
-1. 通过GitHub Actions定期同步开源规则仓库
-2. 当前配置的同步频率:
-   - SigmaHQ: 每天同步一次
-   - Elastic: 每5分钟同步一次
-   - Splunk: 每天同步一次
+2. **同步流程**
+   - 检查远程仓库是否有更新(通过commit hash比对)
+   - 使用rsync同步规则文件到本地仓库
+   - 更新版本元数据文件`version_metadata.json`
+   - 自动提交变更并创建Pull Request
 
-### 手动同步
-1. 可在GitHub仓库的Actions标签页手动触发同步工作流
-2. 支持按需同步特定规则仓库
+3. **同步频率**
+   - 默认每小时同步一次
+   - 可通过`workflow_dispatch`手动触发
 
 ## 分支策略
 1. `main`分支: 存放已通过审批的稳定版本规则
