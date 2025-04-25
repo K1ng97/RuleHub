@@ -37,39 +37,58 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           
+          echo "当前工作目录: $(pwd)"
+          echo "规则仓库配置: ${{ steps.config.outputs.repositories }}"
+          
           for repo in ${{ steps.config.outputs.repositories }}; do
-            echo "Syncing $repo.name..."
+            echo "开始同步仓库: $repo.name"
+            echo "源URL: $repo.url"
+            echo "源目录: $repo.source_dir"
+            echo "目标目录: $repo.target_dir"
             
             # 检查是否有更新
             if [ -d "$repo.target_dir" ]; then
+              echo "目标目录已存在: $repo.target_dir"
               cd "$repo.target_dir"
+              echo "进入目标目录: $(pwd)"
               git fetch origin
               LOCAL=$(git rev-parse @)
               REMOTE=$(git rev-parse @{u})
+              echo "本地提交: $LOCAL"
+              echo "远程提交: $REMOTE"
               cd - > /dev/null
               
               if [ "$LOCAL" = "$REMOTE" ]; then
-                echo "No updates for $repo.name, skipping..."
+                echo "没有更新: $repo.name"
                 continue
               fi
+            else
+              echo "目标目录不存在，将创建: $repo.target_dir"
             fi
             
             # 同步更新
+            echo "开始克隆临时仓库..."
             git clone --depth 1 $repo.url temp_repo
+            echo "创建目标目录: $repo.target_dir"
             mkdir -p $repo.target_dir
-            rsync -a --delete temp_repo/$repo.source_dir/ $repo.target_dir/
+            echo "同步文件从 temp_repo/$repo.source_dir 到 $repo.target_dir"
+            rsync -av --delete temp_repo/$repo.source_dir/ $repo.target_dir/
+            echo "删除临时仓库..."
             rm -rf temp_repo
             
             # 记录更新状态
             echo "$repo.name updated" >> sync_status.txt
+            echo "$repo.name 同步完成"
           done
           
           # 提交变更
           if [ -f "sync_status.txt" ]; then
+            echo "检测到更新，准备提交..."
+            cat sync_status.txt
             git add .
             git commit -m "[Automated] Sync rules from config"
             git push
             rm sync_status.txt
           else
-            echo "No updates to commit"
+            echo "没有需要提交的更新"
           fi
