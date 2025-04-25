@@ -17,7 +17,42 @@ jobs:
       - name: Install dependencies
         run: |
           npm install js-yaml
-          sudo apt-get update && sudo apt-get install -y jq
+          sudo apt-get update && sudo apt-get install -y jq git
+          
+      - name: Force sync repositories
+        run: |
+          for repo in $(echo ${{ steps.config.outputs.repositories }} | jq -c '.[]'); do
+            name=$(echo $repo | jq -r '.name')
+            url=$(echo $repo | jq -r '.url')
+            source_dir=$(echo $repo | jq -r '.source_dir')
+            target_dir=$(echo $repo | jq -r '.target_dir')
+            
+            echo "Syncing repository: $name"
+            echo "Source URL: $url"
+            echo "Source directory: $source_dir"
+            echo "Target directory: $target_dir"
+            
+            # Remove existing directory if exists
+            if [ -d "$target_dir" ]; then
+              echo "Removing existing directory: $target_dir"
+              rm -rf "$target_dir"
+            fi
+            
+            # Clone repository with depth 1 to save bandwidth
+            echo "Cloning repository..."
+            git clone --depth 1 --filter=blob:none --sparse "$url" "$target_dir"
+            
+            # Checkout only the needed directory
+            cd "$target_dir"
+            git sparse-checkout init --cone
+            git sparse-checkout set "$source_dir"
+            
+            # Move the source directory content to target directory root
+            mv "$source_dir"/* .
+            rm -rf "$source_dir"
+            
+            echo "Successfully synced: $name"
+          done
         
       - name: Read config file
         id: config
