@@ -22,5 +22,5 @@ repositories:
   # FalconFriday 规则仓库
   - name: FalconFriday
     url: https://github.com/FalconForceTeam/FalconFriday.git
-    source_dir: .
+    source_dir: 
     target_dir: rules/public/FalconFriday
