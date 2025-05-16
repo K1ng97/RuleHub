@@ -1,0 +1,49 @@
+{
+  "id": "b237c54b-0f15-4612-a819-44b735e0de27",
+  "name": "A Security-Enabled Global Group Was Deleted",
+  "description": "Detects activity when a security-enabled global group is deleted",
+  "source": {
+    "type": "sigma",
+    "id": "b237c54b-0f15-4612-a819-44b735e0de27",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_security_enabled_global_group_deleted.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/account_management/win_security_security_enabled_global_group_deleted.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1098"
+  ],
+  "author": "Alexandr Yampolskyi, SOC Prime",
+  "references": [
+    "https://www.cisecurity.org/controls/cis-controls-list/",
+    "https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf",
+    "https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.04162018.pdf",
+    "https://www.ultimatewindowssecurity.com/securitylog/encyclopedia/event.aspx?eventID=4730",
+    "https://www.ultimatewindowssecurity.com/securitylog/encyclopedia/event.aspx?eventID=634"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "stable",
+  "created": "2023-04-26",
+  "modified": "2023-04-26",
+  "mitre": {
+    "tactics": [
+      "TA1098"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": [4730, 634]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "0506a799-698b-43b4-85a1-ac4c84c720e9",
+  "name": "PwnKit Local Privilege Escalation",
+  "description": "Detects potential PwnKit exploitation CVE-2021-4034 in auth logs",
+  "source": {
+    "type": "sigma",
+    "id": "0506a799-698b-43b4-85a1-ac4c84c720e9",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/lnx_auth_pwnkit_local_privilege_escalation.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/builtin/auth/lnx_auth_pwnkit_local_privilege_escalation.yml"
+  },
+  "tags": [
+    "attackprivilege-escalation",
+    "attackt1548001"
+  ],
+  "author": "Sreeman",
+  "references": [
+    "https://twitter.com/wdormann/status/1486161836961579020"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-01-26",
+  "modified": "2024-09-11",
+  "mitre": {
+    "tactics": [
+      "TA1548"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "keywords: {\"|all\": [\"pkexec\", \"The value for environment variable XAUTHORITY contains suspicious content\", \"[USER=root] [TTY=/dev/pts/0]\"]}",
+    "condition": "keywords",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "auth"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "id": "f8ad2e2c-40b6-4117-84d7-20b89896ab23",
+  "name": "Suspicious Scan Loop Network",
+  "description": "Adversaries may attempt to get a listing of other systems by IP address, hostname, or other logical identifier on a network that may be used for Lateral Movement from the current system",
+  "source": {
+    "type": "sigma",
+    "id": "f8ad2e2c-40b6-4117-84d7-20b89896ab23",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_susp_network_scan_loop.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_susp_network_scan_loop.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackexecution",
+    "attackt1018",
+    "attackt1059"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1018/T1018.md",
+    "https://ss64.com/nt/for.html",
+    "https://ss64.com/ps/foreach-object.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-03-12",
+  "modified": "2022-03-12",
+  "mitre": {
+    "tactics": [
+      "TA1018",
+      "TA1059"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_loop: {\"CommandLine|contains\": [\"for \", \"foreach \"]}\nselection_tools: {\"CommandLine|contains\": [\"nslookup\", \"ping\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate script"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "id": "9aa5106d-bce3-4b13-86df-3a20f1d5cf0b",
+  "name": "Forfiles Command Execution",
+  "description": "Detects the execution of \"forfiles\" with the \"/c\" flag.\nWhile this is an expected behavior of the tool, it can be abused in order to proxy execution through it with any binary.\nCan be used to bypass application whitelisting.\n",
+  "source": {
+    "type": "sigma",
+    "id": "9aa5106d-bce3-4b13-86df-3a20f1d5cf0b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_forfiles_proxy_execution_.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_forfiles_proxy_execution_.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1059"
+  ],
+  "author": "Tim Rauch, Elastic, E.M. Anhaus (originally from Atomic Blue Detections, Endgame), oscd.community",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/Binaries/Forfiles/",
+    "https://pentestlab.blog/2020/07/06/indirect-command-execution/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-06-14",
+  "modified": "2024-03-05",
+  "mitre": {
+    "tactics": [
+      "TA1059"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\forfiles.exe\"}, {\"OriginalFileName\": \"forfiles.exe\"}]\nselection_cli: {\"CommandLine|contains|windash\": \" -c \"}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use via a batch script or by an administrator."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

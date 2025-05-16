@@ -1,0 +1,48 @@
+{
+  "id": "4480827a-9799-4232-b2c4-ccc6c4e9e12b",
+  "name": "Suspicious Certreq Command to Download",
+  "description": "Detects a suspicious certreq execution taken from the LOLBAS examples, which can be abused to download (small) files",
+  "source": {
+    "type": "sigma",
+    "id": "4480827a-9799-4232-b2c4-ccc6c4e9e12b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_lolbin_susp_certreq_download.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_lolbin_susp_certreq_download.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1105"
+  ],
+  "author": "Christian Burkard (Nextron Systems)",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/Binaries/Certreq/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-11-24",
+  "modified": "2022-06-13",
+  "mitre": {
+    "tactics": [
+      "TA1105"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\certreq.exe\"}, {\"OriginalFileName\": \"CertReq.exe\"}]\nselection_cli: {\"CommandLine|contains|all\": [\" -Post \", \" -config \", \" http\", \" C:\\\\windows\\\\win.ini \"]}",
+    "condition": "all of selection*",
+    "fields": [
+      "CommandLine",
+      "ParentCommandLine"
+    ]
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "id": "e2072cab-8c9a-459b-b63c-40ae79e27031",
+  "name": "Decode Base64 Encoded Text",
+  "description": "Detects usage of base64 utility to decode arbitrary base64-encoded text",
+  "source": {
+    "type": "sigma",
+    "id": "e2072cab-8c9a-459b-b63c-40ae79e27031",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_base64_decode.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_base64_decode.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1027"
+  ],
+  "author": "Daniil Yugoslavskiy, oscd.community",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1027/T1027.md"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-19",
+  "modified": "2021-11-27",
+  "mitre": {
+    "tactics": [
+      "TA1027"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"/base64\", \"CommandLine|contains\": \"-d\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate activities"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

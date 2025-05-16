@@ -1,0 +1,50 @@
+{
+  "id": "8e3c7994-131e-4ba5-b6ea-804d49113a26",
+  "name": "Uncommon Child Process Spawned By Odbcconf.EXE",
+  "description": "Detects an uncommon child process of \"odbcconf.exe\" binary which normally shouldn't have any child processes.",
+  "source": {
+    "type": "sigma",
+    "id": "8e3c7994-131e-4ba5-b6ea-804d49113a26",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_odbcconf_uncommon_child_process.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_odbcconf_uncommon_child_process.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218008"
+  ],
+  "author": "Harjot Singh @cyb3rjy0t",
+  "references": [
+    "https://learn.microsoft.com/en-us/sql/odbc/odbcconf-exe?view=sql-server-ver16",
+    "https://lolbas-project.github.io/lolbas/Binaries/Odbcconf/",
+    "https://medium.com/@cyberjyot/t1218-008-dll-execution-using-odbcconf-exe-803fa9e08dac"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-05-22",
+  "modified": "2023-05-22",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": [
+      "T008"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ParentImage|endswith\": \"\\\\odbcconf.exe\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "In rare occurrences where \"odbcconf\" crashes. It might spawn a \"werfault\" process",
+    "Other child processes will depend on the DLL being registered by actions like \"regsvr\". In case where the DLLs have external calls (which should be rare). Other child processes might spawn and additional filters need to be applied."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "id": "30a8cb77-8eb3-4cfb-8e79-ad457c5a4592",
+  "name": "Renamed Powershell Under Powershell Channel",
+  "description": "Detects a renamed Powershell execution, which is a common technique used to circumvent security controls and bypass detection logic that's dependent on process names and process paths.\n",
+  "source": {
+    "type": "sigma",
+    "id": "30a8cb77-8eb3-4cfb-8e79-ad457c5a4592",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_pc_renamed_powershell.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_classic/posh_pc_renamed_powershell.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1036003",
+    "attackt1059001"
+  ],
+  "author": "Harish Segar, frack113",
+  "references": [
+    "https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-06-29",
+  "modified": "2025-01-20",
+  "mitre": {
+    "tactics": [
+      "TA1036",
+      "TA1059"
+    ],
+    "techniques": [
+      "T001",
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Data|contains\": \"HostName=ConsoleHost\"}\nfilter_main_ps: {\"Data|contains\": [\"HostApplication=powershell\", \"HostApplication=C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell\", \"HostApplication=C:\\\\Windows\\\\SysWOW64\\\\WindowsPowerShell\\\\v1.0\\\\powershell\", \"HostApplication=C:/Windows/System32/WindowsPowerShell/v1.0/powershell\", \"HostApplication=C:/Windows/SysWOW64/WindowsPowerShell/v1.0/powershell\", \"HostApplication=C:\\\\\\\\\\\\\\\\WINDOWS\\\\\\\\\\\\\\\\system32\\\\\\\\\\\\\\\\WindowsPowerShell\\\\\\\\\\\\\\\\v1.0\\\\\\\\\\\\\\\\powershell.exe\", \"HostApplication=C:\\\\\\\\\\\\\\\\WINDOWS\\\\\\\\\\\\\\\\SysWOW64\\\\\\\\\\\\\\\\WindowsPowerShell\\\\\\\\\\\\\\\\v1.0\\\\\\\\\\\\\\\\powershell.exe\"]}\nfilter_main_host_application_null: {\"Data|re\": \"HostId=[a-zA-Z0-9-]{36}\\\\s+EngineVersion=\"}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_classic_start"
+  ]
+}

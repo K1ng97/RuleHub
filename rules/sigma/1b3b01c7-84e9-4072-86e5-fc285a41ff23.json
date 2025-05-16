@@ -1,0 +1,42 @@
+{
+  "id": "1b3b01c7-84e9-4072-86e5-fc285a41ff23",
+  "name": "Nslookup PowerShell Download Cradle - ProcessCreation",
+  "description": "Detects suspicious powershell download cradle using nslookup. This cradle uses nslookup to extract payloads from DNS records",
+  "source": {
+    "type": "sigma",
+    "id": "1b3b01c7-84e9-4072-86e5-fc285a41ff23",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_nslookup_poweshell_download.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_nslookup_poweshell_download.yml"
+  },
+  "tags": [
+    "attackdefense-evasion"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://twitter.com/Alh4zr3d/status/1566489367232651264"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-09-05",
+  "modified": "2022-12-19",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|contains\": \"\\\\nslookup.exe\"}, {\"OriginalFileName\": \"\\\\nslookup.exe\"}]\nselection_cmd: {\"ParentImage|endswith\": [\"\\\\powershell.exe\", \"\\\\pwsh.exe\"], \"CommandLine|contains\": [\" -q=txt \", \" -querytype=txt \"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

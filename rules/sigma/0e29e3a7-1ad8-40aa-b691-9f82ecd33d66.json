@@ -1,0 +1,49 @@
+{
+  "id": "0e29e3a7-1ad8-40aa-b691-9f82ecd33d66",
+  "name": "Office Macro File Download",
+  "description": "Detects the creation of a new office macro files on the systems via an application (browser, mail client).",
+  "source": {
+    "type": "sigma",
+    "id": "0e29e3a7-1ad8-40aa-b691-9f82ecd33d66",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_office_macro_files_downloaded.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_office_macro_files_downloaded.yml"
+  },
+  "tags": [
+    "attackinitial-access",
+    "attackt1566001"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1566.001/T1566.001.md",
+    "https://learn.microsoft.com/en-us/deployoffice/compat/office-file-format-reference"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-01-23",
+  "modified": "2023-04-18",
+  "mitre": {
+    "tactics": [
+      "TA1566"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_processes: {\"Image|endswith\": [\"\\\\RuntimeBroker.exe\", \"\\\\outlook.exe\", \"\\\\thunderbird.exe\", \"\\\\brave.exe\", \"\\\\chrome.exe\", \"\\\\firefox.exe\", \"\\\\iexplore.exe\", \"\\\\maxthon.exe\", \"\\\\MicrosoftEdge.exe\", \"\\\\msedge.exe\", \"\\\\msedgewebview2.exe\", \"\\\\opera.exe\", \"\\\\safari.exe\", \"\\\\seamonkey.exe\", \"\\\\vivaldi.exe\", \"\\\\whale.exe\"]}\nselection_ext: [{\"TargetFilename|endswith\": [\".docm\", \".dotm\", \".xlsm\", \".xltm\", \".potm\", \".pptm\"]}, {\"TargetFilename|contains\": [\".docm:Zone\", \".dotm:Zone\", \".xlsm:Zone\", \".xltm:Zone\", \".potm:Zone\", \".pptm:Zone\"]}]",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate macro files downloaded from the internet",
+    "Legitimate macro files sent as attachments via emails"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "id": "b640c0b8-87f8-4daa-aef8-95a24261dd1d",
+  "name": "MITRE BZAR Indicators for Execution",
+  "description": "Windows DCE-RPC functions which indicate an execution techniques on the remote system. All credit for the Zeek mapping of the suspicious endpoint/operation field goes to MITRE",
+  "source": {
+    "type": "sigma",
+    "id": "b640c0b8-87f8-4daa-aef8-95a24261dd1d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/zeek_dce_rpc_mitre_bzar_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/network/zeek/zeek_dce_rpc_mitre_bzar_execution.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1047",
+    "attackt1053002",
+    "attackt1569002"
+  ],
+  "author": "@neu5ron, SOC Prime",
+  "references": [
+    "https://github.com/mitre-attack/bzar#indicators-for-attck-execution"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-03-19",
+  "modified": "2021-11-27",
+  "mitre": {
+    "tactics": [
+      "TA1047",
+      "TA1053",
+      "TA1569"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "op1: {\"endpoint\": \"JobAdd\", \"operation\": \"atsvc\"}\nop2: {\"endpoint\": \"ITaskSchedulerService\", \"operation\": \"SchRpcEnableTask\"}\nop3: {\"endpoint\": \"ITaskSchedulerService\", \"operation\": \"SchRpcRegisterTask\"}\nop4: {\"endpoint\": \"ITaskSchedulerService\", \"operation\": \"SchRpcRun\"}\nop5: {\"endpoint\": \"IWbemServices\", \"operation\": \"ExecMethod\"}\nop6: {\"endpoint\": \"IWbemServices\", \"operation\": \"ExecMethodAsync\"}\nop7: {\"endpoint\": \"svcctl\", \"operation\": \"CreateServiceA\"}\nop8: {\"endpoint\": \"svcctl\", \"operation\": \"CreateServiceW\"}\nop9: {\"endpoint\": \"svcctl\", \"operation\": \"StartServiceA\"}\nop10: {\"endpoint\": \"svcctl\", \"operation\": \"StartServiceW\"}",
+    "condition": "1 of op*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Windows administrator tasks or troubleshooting",
+    "Windows management scripts or software"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "zeek",
+    "dce_rpc"
+  ]
+}

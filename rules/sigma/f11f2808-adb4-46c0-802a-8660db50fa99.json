@@ -1,0 +1,43 @@
+{
+  "id": "f11f2808-adb4-46c0-802a-8660db50fa99",
+  "name": "ImagingDevices Unusual Parent/Child Processes",
+  "description": "Detects unusual parent or children of the ImagingDevices.exe (Windows Contacts) process as seen being used with Bumblebee activity",
+  "source": {
+    "type": "sigma",
+    "id": "f11f2808-adb4-46c0-802a-8660db50fa99",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_imagingdevices_unusual_parents.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_imagingdevices_unusual_parents.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://thedfirreport.com/2022/09/26/bumblebee-round-two/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-09-27",
+  "modified": "2022-12-29",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_parent: {\"ParentImage|endswith\": [\"\\\\WmiPrvSE.exe\", \"\\\\svchost.exe\", \"\\\\dllhost.exe\"], \"Image|endswith\": \"\\\\ImagingDevices.exe\"}\nselection_child: {\"ParentImage|endswith\": \"\\\\ImagingDevices.exe\"}",
+    "condition": "1 of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

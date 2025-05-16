@@ -1,0 +1,50 @@
+{
+  "id": "4153a907-2451-4e4f-a578-c52bb6881432",
+  "name": "Suspicious DNS Query with B64 Encoded String",
+  "description": "Detects suspicious DNS queries using base64 encoding",
+  "source": {
+    "type": "sigma",
+    "id": "4153a907-2451-4e4f-a578-c52bb6881432",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/net_dns_susp_b64_queries.yml",
+    "file_path": "tmp/repos/sigma/rules/network/dns/net_dns_susp_b64_queries.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackexfiltration",
+    "attackt1048003",
+    "attackt1071004"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://github.com/krmaxwell/dns-exfiltration"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2018-05-10",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [
+      "TA1048",
+      "TA1071"
+    ],
+    "techniques": [
+      "T003",
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"query|contains\": \"==.\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "dns"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "id": "e51fbdb0-0be0-474f-92ea-d289f71a695e",
+  "name": "Windows Network Share Interaction Via Net",
+  "description": "The following analytic identifies network share discovery and collection activities performed on Windows systems using the Net command. Attackers often use network share discovery to identify accessible shared resources within a network, which can be a precursor to privilege escalation or data exfiltration. By monitoring Windows Event Logs for the usage of the Net command to list and interact with network shares, this detection helps identify potential reconnaissance and collection activities.",
+  "source": {
+    "type": "splunk",
+    "id": "e51fbdb0-0be0-474f-92ea-d289f71a695e",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_network_share_interaction_via_net.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_network_share_interaction_via_net.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "atomic_guid",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Dean Luxton",
+  "references": [
+    "https://attack.mitre.org/techniques/T1135/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes WHERE (`process_net` OR (Processes.process_name=\"net.exe\" OR Processes.original_file_name=\"net.exe\")) AND Processes.process IN (\"*use *\", \"*view*\") by Processes.action Processes.dest Processes.original_file_name Processes.parent_process Processes.parent_process_exec Processes.parent_process_guid Processes.parent_process_id Processes.parent_process_name Processes.parent_process_path Processes.process Processes.process_exec Processes.process_guid Processes.process_hash Processes.process_id Processes.process_integrity_level Processes.process_name Processes.process_path Processes.user Processes.user_id Processes.vendor_product | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_network_share_interaction_via_net_filter`",
+    "condition": "The detection is based on data originating from either Endpoint Detection and Response (EDR) telemetry or EventCode 4688 with process command line logging enabled. These sources provide security-related telemetry from the endpoints. To implement this search, you must ingest logs that contain the process name, parent process, and complete command-line executions. These logs must be mapped to the Splunk Common Information Model (CIM) to normalize the field names capture the data within the datamodel schema.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrators or power users may use this command. Additional filters needs to be applied."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

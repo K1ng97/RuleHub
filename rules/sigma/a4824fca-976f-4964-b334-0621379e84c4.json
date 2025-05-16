@@ -1,0 +1,50 @@
+{
+  "id": "a4824fca-976f-4964-b334-0621379e84c4",
+  "name": "Potential File Overwrite Via Sysinternals SDelete",
+  "description": "Detects the use of SDelete to erase a file not the free space",
+  "source": {
+    "type": "sigma",
+    "id": "a4824fca-976f-4964-b334-0621379e84c4",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_sysinternals_sdelete.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_sysinternals_sdelete.yml"
+  },
+  "tags": [
+    "attackimpact",
+    "attackt1485"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1485/T1485.md"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-06-03",
+  "modified": "2023-02-28",
+  "mitre": {
+    "tactics": [
+      "TA1485"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"OriginalFileName\": \"sdelete.exe\"}\nfilter: {\"CommandLine|contains\": [\" -h\", \" -c\", \" -z\", \" /\\\\?\"]}",
+    "condition": "selection and not filter",
+    "fields": [
+      "ComputerName",
+      "User",
+      "CommandLine",
+      "ParentCommandLine"
+    ]
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

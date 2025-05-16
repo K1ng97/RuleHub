@@ -1,0 +1,42 @@
+{
+  "id": "12b8e9f5-96b2-41e1-9a42-8c6779a5c184",
+  "name": "Potentially Suspicious Execution Of PDQDeployRunner",
+  "description": "Detects suspicious execution of \"PDQDeployRunner\" which is part of the PDQDeploy service stack that is responsible for executing commands and packages on a remote machines",
+  "source": {
+    "type": "sigma",
+    "id": "12b8e9f5-96b2-41e1-9a42-8c6779a5c184",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_pdqdeploy_runner_susp_children.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_pdqdeploy_runner_susp_children.yml"
+  },
+  "tags": [
+    "attackexecution"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://twitter.com/malmoeb/status/1550483085472432128"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-07-22",
+  "modified": "2024-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_parent: {\"ParentImage|contains\": \"\\\\PDQDeployRunner-\"}\nselection_child: [{\"Image|endswith\": [\"\\\\bash.exe\", \"\\\\certutil.exe\", \"\\\\cmd.exe\", \"\\\\csc.exe\", \"\\\\cscript.exe\", \"\\\\dllhost.exe\", \"\\\\mshta.exe\", \"\\\\msiexec.exe\", \"\\\\regsvr32.exe\", \"\\\\rundll32.exe\", \"\\\\scriptrunner.exe\", \"\\\\wmic.exe\", \"\\\\wscript.exe\", \"\\\\wsl.exe\"]}, {\"Image|contains\": [\":\\\\ProgramData\\\\\", \":\\\\Users\\\\Public\\\\\", \":\\\\Windows\\\\TEMP\\\\\", \"\\\\AppData\\\\Local\\\\Temp\"]}, {\"CommandLine|contains\": [\" -decode \", \" -enc \", \" -encodedcommand \", \" -w hidden\", \"DownloadString\", \"FromBase64String\", \"http\", \"iex \", \"Invoke-\"]}]",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use of the PDQDeploy tool to execute these commands"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

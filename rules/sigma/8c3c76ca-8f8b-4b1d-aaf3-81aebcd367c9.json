@@ -1,0 +1,47 @@
+{
+  "id": "8c3c76ca-8f8b-4b1d-aaf3-81aebcd367c9",
+  "name": "Creation Exe for Service with Unquoted Path",
+  "description": "Adversaries may execute their own malicious payloads by hijacking vulnerable file path references.\nAdversaries can take advantage of paths that lack surrounding quotations by placing an executable in a higher level directory within the path, so that Windows will choose the adversary's executable to launch.\n",
+  "source": {
+    "type": "sigma",
+    "id": "8c3c76ca-8f8b-4b1d-aaf3-81aebcd367c9",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_creation_unquoted_service_path.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_creation_unquoted_service_path.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1547009"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1574.009/T1574.009.md"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-12-30",
+  "modified": "2021-12-30",
+  "mitre": {
+    "tactics": [
+      "TA1547"
+    ],
+    "techniques": [
+      "T009"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"TargetFilename\": \"C:\\\\program.exe\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

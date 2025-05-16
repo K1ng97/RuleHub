@@ -1,0 +1,49 @@
+{
+  "id": "f354eba5-623b-450f-b073-0b5b2773b6aa",
+  "name": "Potential DCOM InternetExplorer.Application DLL Hijack - Image Load",
+  "description": "Detects potential DLL hijack of \"iertutil.dll\" found in the DCOM InternetExplorer.Application Class",
+  "source": {
+    "type": "sigma",
+    "id": "f354eba5-623b-450f-b073-0b5b2773b6aa",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/image_load_iexplore_dcom_iertutil_dll_hijack.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/image_load/image_load_iexplore_dcom_iertutil_dll_hijack.yml"
+  },
+  "tags": [
+    "attacklateral-movement",
+    "attackt1021002",
+    "attackt1021003"
+  ],
+  "author": "Roberto Rodriguez @Cyb3rWard0g, Open Threat Research (OTR), wagga",
+  "references": [
+    "https://threathunterplaybook.com/hunts/windows/201009-RemoteDCOMIErtUtilDLLHijack/notebook.html"
+  ],
+  "severity": "critical",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-12",
+  "modified": "2022-12-18",
+  "mitre": {
+    "tactics": [
+      "TA1021"
+    ],
+    "techniques": [
+      "T002",
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"\\\\Internet Explorer\\\\iexplore.exe\", \"ImageLoaded|endswith\": \"\\\\Internet Explorer\\\\iertutil.dll\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "critical",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "image_load"
+  ]
+}

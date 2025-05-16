@@ -1,0 +1,46 @@
+{
+  "id": "2850c734-2d44-4431-8139-1a56f6f54c01",
+  "name": "Web JSP Request via URL",
+  "description": "The following analytic identifies URL requests associated with CVE-2022-22965 (Spring4Shell) exploitation attempts, specifically targeting webshell access on a remote webserver. It detects HTTP GET requests with URLs containing \".jsp?cmd=\" or \"j&cmd=\" patterns. This activity is significant as it indicates potential webshell deployment, which can lead to unauthorized remote command execution. If confirmed malicious, attackers could gain control over the webserver, execute arbitrary commands, and potentially escalate privileges, leading to severe data breaches and system compromise.",
+  "source": {
+    "type": "splunk",
+    "id": "2850c734-2d44-4431-8139-1a56f6f54c01",
+    "url": "https://github.com/splunk/security_content/blob/develop/web_jsp_request_via_url.yml",
+    "file_path": "tmp/repos/splunk/detections/web/web_jsp_request_via_url.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "cve",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Michael Haag, Splunk",
+  "references": [
+    "https://www.microsoft.com/security/blog/2022/04/04/springshell-rce-vulnerability-guidance-for-protecting-against-and-detecting-cve-2022-22965/",
+    "https://github.com/TheGejr/SpringShell",
+    "https://www.tenable.com/blog/spring4shell-faq-spring-framework-remote-code-execution-vulnerability"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats count from datamodel=Web where Web.http_method IN (\"GET\") Web.url IN (\"*.jsp?cmd=*\",\"*j&cmd=*\") by Web.http_user_agent Web.http_method, Web.url,Web.url_length Web.src, Web.dest sourcetype | `drop_dm_object_name(\"Web\")` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `web_jsp_request_via_url_filter`",
+    "condition": "To successfully implement this search you need to be ingesting information on Web traffic that include fields relavent for traffic into the `Web` datamodel.",
+    "fields": []
+  },
+  "falsepositives": [
+    "False positives may be present with legitimate applications. Attempt to filter by dest IP or use Asset groups to restrict to servers."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

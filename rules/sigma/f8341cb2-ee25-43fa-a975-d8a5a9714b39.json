@@ -1,0 +1,48 @@
+{
+  "id": "f8341cb2-ee25-43fa-a975-d8a5a9714b39",
+  "name": "BPFtrace Unsafe Option Usage",
+  "description": "Detects the usage of the unsafe bpftrace option",
+  "source": {
+    "type": "sigma",
+    "id": "f8341cb2-ee25-43fa-a975-d8a5a9714b39",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_bpftrace_unsafe_option_usage.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_bpftrace_unsafe_option_usage.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1059004"
+  ],
+  "author": "Andreas Hunkeler (@Karneades)",
+  "references": [
+    "https://embracethered.com/blog/posts/2021/offensive-bpf-bpftrace/",
+    "https://bpftrace.org/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-02-11",
+  "modified": "2022-02-11",
+  "mitre": {
+    "tactics": [
+      "TA1059"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"bpftrace\", \"CommandLine|contains\": \"--unsafe\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate usage of the unsafe option"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

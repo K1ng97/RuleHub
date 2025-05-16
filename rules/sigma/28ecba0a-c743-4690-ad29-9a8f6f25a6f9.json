@@ -1,0 +1,46 @@
+{
+  "id": "28ecba0a-c743-4690-ad29-9a8f6f25a6f9",
+  "name": "Password Spray Activity",
+  "description": "Indicates that a password spray attack has been successfully performed.",
+  "source": {
+    "type": "sigma",
+    "id": "28ecba0a-c743-4690-ad29-9a8f6f25a6f9",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_identity_protection_password_spray.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/identity_protection/azure_identity_protection_password_spray.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1110"
+  ],
+  "author": "Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'",
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks#password-spray",
+    "https://learn.microsoft.com/en-us/entra/architecture/security-operations-user-accounts#unusual-sign-ins"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-09-03",
+  "modified": "2023-09-03",
+  "mitre": {
+    "tactics": [
+      "TA1110"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"riskEventType\": \"passwordSpray\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "We recommend investigating the sessions flagged by this detection in the context of other sign-ins from the user."
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "riskdetection"
+  ]
+}

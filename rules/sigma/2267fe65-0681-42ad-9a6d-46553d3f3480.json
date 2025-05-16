@@ -1,0 +1,49 @@
+{
+  "id": "2267fe65-0681-42ad-9a6d-46553d3f3480",
+  "name": "WSL Child Process Anomaly",
+  "description": "Detects uncommon or suspicious child processes spawning from a WSL process. This could indicate an attempt to evade parent/child relationship detections or persistence attempts via cron using WSL",
+  "source": {
+    "type": "sigma",
+    "id": "2267fe65-0681-42ad-9a6d-46553d3f3480",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_wsl_child_processes_anomalies.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_wsl_child_processes_anomalies.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1202",
+    "attackt1218"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/OtherMSBinaries/Wsl/",
+    "https://twitter.com/nas_bench/status/1535431474429808642"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-01-23",
+  "modified": "2023-08-15",
+  "mitre": {
+    "tactics": [
+      "TA1202",
+      "TA1218"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_parent: {\"ParentImage|endswith\": [\"\\\\wsl.exe\", \"\\\\wslhost.exe\"]}\nselection_children_images: {\"Image|endswith\": [\"\\\\calc.exe\", \"\\\\cmd.exe\", \"\\\\cscript.exe\", \"\\\\mshta.exe\", \"\\\\powershell.exe\", \"\\\\pwsh.exe\", \"\\\\regsvr32.exe\", \"\\\\rundll32.exe\", \"\\\\wscript.exe\"]}\nselection_children_paths: {\"Image|contains\": [\"\\\\AppData\\\\Local\\\\Temp\\\\\", \"C:\\\\Users\\\\Public\\\\\", \"C:\\\\Windows\\\\Temp\\\\\", \"C:\\\\Temp\\\\\", \"\\\\Downloads\\\\\", \"\\\\Desktop\\\\\"]}",
+    "condition": "selection_parent and 1 of selection_children_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

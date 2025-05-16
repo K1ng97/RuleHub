@@ -1,0 +1,52 @@
+{
+  "id": "a5ea83a7-05a5-44c1-be2e-addccbbd8c03",
+  "name": "UAC Bypass With Fake DLL",
+  "description": "Attempts to load dismcore.dll after dropping it",
+  "source": {
+    "type": "sigma",
+    "id": "a5ea83a7-05a5-44c1-be2e-addccbbd8c03",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/image_load_uac_bypass_via_dism.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/image_load/image_load_uac_bypass_via_dism.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1548002",
+    "attackt1574001"
+  ],
+  "author": "oscd.community, Dmitry Uchakin",
+  "references": [
+    "https://steemit.com/utopian-io/@ah101/uac-bypassing-utility"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-06",
+  "modified": "2022-12-25",
+  "mitre": {
+    "tactics": [
+      "TA1548",
+      "TA1574"
+    ],
+    "techniques": [
+      "T001",
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"\\\\dism.exe\", \"ImageLoaded|endswith\": \"\\\\dismcore.dll\"}\nfilter: {\"ImageLoaded\": \"C:\\\\Windows\\\\System32\\\\Dism\\\\dismcore.dll\"}",
+    "condition": "selection and not filter",
+    "fields": []
+  },
+  "falsepositives": [
+    "Actions of a legitimate telnet client"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "image_load"
+  ]
+}

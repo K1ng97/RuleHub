@@ -1,0 +1,45 @@
+{
+  "id": "880973f3-9708-491c-a77b-2a35a1921158",
+  "name": "Linux Shell Pipe to Shell",
+  "description": "Detects suspicious process command line that starts with a shell that executes something and finally gets piped into another shell",
+  "source": {
+    "type": "sigma",
+    "id": "880973f3-9708-491c-a77b-2a35a1921158",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_susp_pipe_shell.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_susp_pipe_shell.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1140"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "Internal Research"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-03-14",
+  "modified": "2022-07-26",
+  "mitre": {
+    "tactics": [
+      "TA1140"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|startswith\": [\"sh -c \", \"bash -c \"]}\nselection_exec: [{\"CommandLine|contains\": [\"| bash \", \"| sh \", \"|bash \", \"|sh \"]}, {\"CommandLine|endswith\": [\"| bash\", \"| sh\", \"|bash\", \" |sh\"]}]",
+    "condition": "all of selection*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate software that uses these patterns"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

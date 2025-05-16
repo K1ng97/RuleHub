@@ -1,0 +1,46 @@
+{
+  "id": "6004abd0-afa4-4557-ba90-49d172e0a299",
+  "name": "Execute Pcwrun.EXE To Leverage Follina",
+  "description": "Detects indirect command execution via Program Compatibility Assistant \"pcwrun.exe\" leveraging the follina (CVE-2022-30190) vulnerability",
+  "source": {
+    "type": "sigma",
+    "id": "6004abd0-afa4-4557-ba90-49d172e0a299",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_lolbin_pcwrun_follina.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_lolbin_pcwrun_follina.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1218"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://twitter.com/nas_bench/status/1535663791362519040"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-06-13",
+  "modified": "2022-06-13",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"\\\\pcwrun.exe\", \"CommandLine|contains\": \"../\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

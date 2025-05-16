@@ -1,0 +1,55 @@
+{
+  "id": "e37db05d-d1f9-49c8-b464-cee1a4b11638",
+  "name": "PUA - Rclone Execution",
+  "description": "Detects execution of RClone utility for exfiltration as used by various ransomwares strains like REvil, Conti, FiveHands, etc",
+  "source": {
+    "type": "sigma",
+    "id": "e37db05d-d1f9-49c8-b464-cee1a4b11638",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_pua_rclone_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_pua_rclone_execution.yml"
+  },
+  "tags": [
+    "attackexfiltration",
+    "attackt1567002"
+  ],
+  "author": "Bhabesh Raj, Sittikorn S, Aaron Greetham (@beardofbinary) - NCC Group",
+  "references": [
+    "https://research.nccgroup.com/2021/05/27/detecting-rclone-an-effective-tool-for-exfiltration/",
+    "https://thedfirreport.com/2021/03/29/sodinokibi-aka-revil-ransomware",
+    "https://us-cert.cisa.gov/ncas/analysis-reports/ar21-126a",
+    "https://labs.sentinelone.com/egregor-raas-continues-the-chaos-with-cobalt-strike-and-rclone",
+    "https://www.splunk.com/en_us/blog/security/darkside-ransomware-splunk-threat-update-and-detections.html"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-05-10",
+  "modified": "2023-03-05",
+  "mitre": {
+    "tactics": [
+      "TA1567"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection_specific_options: {\"CommandLine|contains|all\": [\"--config \", \"--no-check-certificate \", \" copy \"]}\nselection_rclone_img: [{\"Image|endswith\": \"\\\\rclone.exe\"}, {\"Description\": \"Rsync for cloud storage\"}]\nselection_rclone_cli: {\"CommandLine|contains\": [\"pass\", \"user\", \"copy\", \"sync\", \"config\", \"lsd\", \"remote\", \"ls\", \"mega\", \"pcloud\", \"ftp\", \"ignore-existing\", \"auto-confirm\", \"transfers\", \"multi-thread-streams\", \"no-check-certificate \"]}",
+    "condition": "selection_specific_options or all of selection_rclone_*",
+    "fields": [
+      "CommandLine",
+      "ParentCommandLine",
+      "Details"
+    ]
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

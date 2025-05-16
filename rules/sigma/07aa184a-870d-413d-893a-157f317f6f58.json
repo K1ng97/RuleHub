@@ -1,0 +1,51 @@
+{
+  "id": "07aa184a-870d-413d-893a-157f317f6f58",
+  "name": "Suspicious Reconnaissance Activity Via GatherNetworkInfo.VBS",
+  "description": "Detects execution of the built-in script located in \"C:\\Windows\\System32\\gatherNetworkInfo.vbs\". Which can be used to gather information about the target machine",
+  "source": {
+    "type": "sigma",
+    "id": "07aa184a-870d-413d-893a-157f317f6f58",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_susp_gather_network_info_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_susp_gather_network_info_execution.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackexecution",
+    "attackt1059005",
+    "attackt1615"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://posts.slayerlabs.com/living-off-the-land/#gathernetworkinfovbs",
+    "https://www.mandiant.com/resources/blog/trojanized-windows-installers-ukrainian-government"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-02-08",
+  "modified": "2023-02-08",
+  "mitre": {
+    "tactics": [
+      "TA1059",
+      "TA1615"
+    ],
+    "techniques": [
+      "T005"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|contains\": \"gatherNetworkInfo.vbs\"}\nfilter: {\"Image|endswith\": [\"\\\\cscript.exe\", \"\\\\wscript.exe\"]}",
+    "condition": "selection and not filter",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "id": "e1d02b53-c03c-4948-b11d-4d00cca49d03",
+  "name": "Increased Failed Authentications Of Any Type",
+  "description": "Detects when sign-ins increased by 10% or greater.",
+  "source": {
+    "type": "sigma",
+    "id": "e1d02b53-c03c-4948-b11d-4d00cca49d03",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_ad_auth_failure_increase.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/signin_logs/azure_ad_auth_failure_increase.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1078"
+  ],
+  "author": "Mark Morowczynski '@markmorow', MikeDuddington, '@dudders1'",
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/architecture/security-operations-user-accounts#monitoring-for-failed-unusual-sign-ins"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-11",
+  "modified": "2022-08-11",
+  "mitre": {
+    "tactics": [
+      "TA1078"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Status\": \"failure\", \"Count\": \"<10%\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "signinlogs"
+  ]
+}

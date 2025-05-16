@@ -1,0 +1,48 @@
+{
+  "id": "8a4519e8-e64a-40b6-ae85-ba8ad2177559",
+  "name": "Renamed BrowserCore.EXE Execution",
+  "description": "Detects process creation with a renamed BrowserCore.exe (used to extract Azure tokens)",
+  "source": {
+    "type": "sigma",
+    "id": "8a4519e8-e64a-40b6-ae85-ba8ad2177559",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_renamed_browsercore.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_renamed_browsercore.yml"
+  },
+  "tags": [
+    "attackt1036003",
+    "attackt1528"
+  ],
+  "author": "Max Altgelt (Nextron Systems)",
+  "references": [
+    "https://twitter.com/mariuszbit/status/1531631015139102720"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-06-02",
+  "modified": "2023-02-03",
+  "mitre": {
+    "tactics": [
+      "TA1036",
+      "TA1528"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"OriginalFileName\": \"BrowserCore.exe\"}\nfilter_realbrowsercore: {\"Image|endswith\": \"\\\\BrowserCore.exe\"}",
+    "condition": "selection and not 1 of filter_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

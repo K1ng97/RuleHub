@@ -1,0 +1,49 @@
+{
+  "id": "1fbc0671-5596-4e17-8682-f020a0b995dc",
+  "name": "Potential CCleanerDU.DLL Sideloading",
+  "description": "Detects potential DLL sideloading of \"CCleanerDU.dll\"",
+  "source": {
+    "type": "sigma",
+    "id": "1fbc0671-5596-4e17-8682-f020a0b995dc",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/image_load_side_load_ccleaner_du.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/image_load/image_load_side_load_ccleaner_du.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1574001"
+  ],
+  "author": "X__Junior (Nextron Systems)",
+  "references": [
+    "https://lab52.io/blog/2344-2/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-07-13",
+  "modified": "2023-07-13",
+  "mitre": {
+    "tactics": [
+      "TA1574"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ImageLoaded|endswith\": \"\\\\CCleanerDU.dll\"}\nfilter_main_path: {\"Image|startswith\": [\"C:\\\\Program Files\\\\CCleaner\\\\\", \"C:\\\\Program Files (x86)\\\\CCleaner\\\\\"], \"Image|endswith\": [\"\\\\CCleaner.exe\", \"\\\\CCleaner64.exe\"]}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "False positives could occur from other custom installation paths. Apply additional filters accordingly."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "image_load"
+  ]
+}

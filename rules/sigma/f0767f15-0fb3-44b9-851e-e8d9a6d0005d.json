@@ -1,0 +1,47 @@
+{
+  "id": "f0767f15-0fb3-44b9-851e-e8d9a6d0005d",
+  "name": "Scheduled Task Executed Uncommon LOLBIN",
+  "description": "Detects the execution of Scheduled Tasks where the program being run is located in a suspicious location or where it is an unusual program to be run from a Scheduled Task",
+  "source": {
+    "type": "sigma",
+    "id": "f0767f15-0fb3-44b9-851e-e8d9a6d0005d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_taskscheduler_lolbin_execution_via_task_scheduler.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/taskscheduler/win_taskscheduler_lolbin_execution_via_task_scheduler.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1053005"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "Internal Research"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-12-05",
+  "modified": "2023-02-07",
+  "mitre": {
+    "tactics": [
+      "TA1053"
+    ],
+    "techniques": [
+      "T005"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 129, \"Path|endswith\": [\"\\\\calc.exe\", \"\\\\cscript.exe\", \"\\\\mshta.exe\", \"\\\\mspaint.exe\", \"\\\\notepad.exe\", \"\\\\regsvr32.exe\", \"\\\\wscript.exe\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "False positives may occur with some of the selected binaries if you have tasks using them (which could be very common in your environment). Exclude all the specific trusted tasks before using this rule"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "taskscheduler"
+  ]
+}

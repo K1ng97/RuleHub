@@ -1,0 +1,30 @@
+{
+  "total_sources": 5,
+  "total_rules": 4569,
+  "source_stats": {
+    "elastic": {
+      "name": "elastic",
+      "rules_count": 0
+    },
+    "other": {
+      "name": "other",
+      "rules_count": 0
+    },
+    "sigma": {
+      "name": "sigma",
+      "rules_count": 2804
+    },
+    "splunk": {
+      "name": "splunk",
+      "rules_count": 1764
+    },
+    "custom": {
+      "name": "custom",
+      "rules_count": 1
+    }
+  },
+  "start_time": "2025-05-16T13:48:44.629643",
+  "end_time": "2025-05-16T13:48:46.216173",
+  "success": true,
+  "duration": 1.58653
+}

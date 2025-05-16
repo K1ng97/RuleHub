@@ -1,0 +1,49 @@
+{
+  "id": "7d6d30b8-5b91-4b90-a891-46cccaf29598",
+  "name": "Program Executed Using Proxy/Local Command Via SSH.EXE",
+  "description": "Detect usage of the \"ssh.exe\" binary as a proxy to launch other programs.",
+  "source": {
+    "type": "sigma",
+    "id": "7d6d30b8-5b91-4b90-a891-46cccaf29598",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_ssh_proxy_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_ssh_proxy_execution.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218"
+  ],
+  "author": "frack113, Nasreddine Bencherchali",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/Binaries/Ssh/",
+    "https://github.com/LOLBAS-Project/LOLBAS/pull/211/files",
+    "https://gtfobins.github.io/gtfobins/ssh/",
+    "https://man.openbsd.org/ssh_config#ProxyCommand",
+    "https://man.openbsd.org/ssh_config#LocalCommand"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-12-29",
+  "modified": "2023-01-25",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_parent: {\"ParentImage\": \"C:\\\\Windows\\\\System32\\\\OpenSSH\\\\sshd.exe\"}\nselection_cli_img: {\"Image|endswith\": \"\\\\ssh.exe\"}\nselection_cli_flags: [{\"CommandLine|contains\": \"ProxyCommand=\"}, {\"CommandLine|contains|all\": [\"PermitLocalCommand\", \"LocalCommand\"]}]",
+    "condition": "selection_parent or all of selection_cli_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate usage for administration purposes"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

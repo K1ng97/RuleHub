@@ -1,0 +1,47 @@
+{
+  "id": "fe513c69-734c-4d4a-8548-ac5f609be82b",
+  "name": "Google Cloud Firewall Modified or Deleted",
+  "description": "Detects  when a firewall rule is modified or deleted in Google Cloud Platform (GCP).",
+  "source": {
+    "type": "sigma",
+    "id": "fe513c69-734c-4d4a-8548-ac5f609be82b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/gcp_firewall_rule_modified_or_deleted.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/gcp/audit/gcp_firewall_rule_modified_or_deleted.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1562"
+  ],
+  "author": "Austin Songer @austinsonger",
+  "references": [
+    "https://cloud.google.com/kubernetes-engine/docs/how-to/audit-logging",
+    "https://developers.google.com/resources/api-libraries/documentation/compute/v1/java/latest/com/google/api/services/compute/Compute.Firewalls.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-08-13",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [
+      "TA1562"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"gcp.audit.method_name\": [\"v*.Compute.Firewalls.Delete\", \"v*.Compute.Firewalls.Patch\", \"v*.Compute.Firewalls.Update\", \"v*.Compute.Firewalls.Insert\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Firewall rules being modified or deleted may be performed by a system administrator. Verify that the firewall configuration change was expected.",
+    "Exceptions can be added to this rule to filter expected behavior."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "gcp",
+    "gcp.audit"
+  ]
+}

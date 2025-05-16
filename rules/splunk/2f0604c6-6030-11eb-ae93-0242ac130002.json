@@ -1,0 +1,46 @@
+{
+  "id": "2f0604c6-6030-11eb-ae93-0242ac130002",
+  "name": "AWS SAML Update identity provider",
+  "description": "The following analytic detects updates to the SAML provider in AWS. It leverages AWS CloudTrail logs to identify the `UpdateSAMLProvider` event, analyzing fields such as `sAMLProviderArn`, `sourceIPAddress`, and `userIdentity` details. Monitoring updates to the SAML provider is crucial as it may indicate a perimeter compromise of federated credentials or unauthorized backdoor access set by an attacker. If confirmed malicious, this activity could allow attackers to manipulate identity federation, potentially leading to unauthorized access to cloud resources and sensitive data.",
+  "source": {
+    "type": "splunk",
+    "id": "2f0604c6-6030-11eb-ae93-0242ac130002",
+    "url": "https://github.com/splunk/security_content/blob/develop/aws_saml_update_identity_provider.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/aws_saml_update_identity_provider.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Rod Soto, Splunk",
+  "references": [
+    "https://www.cisa.gov/uscert/ncas/alerts/aa21-008a",
+    "https://www.splunk.com/en_us/blog/security/a-golden-saml-journey-solarwinds-continued.html",
+    "https://www.fireeye.com/content/dam/fireeye-www/blog/pdfs/wp-m-unc2452-2021-000343-01.pdf",
+    "https://www.cyberark.com/resources/threat-research-blog/golden-saml-newly-discovered-attack-technique-forges-authentication-to-cloud-apps"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`cloudtrail` eventName=UpdateSAMLProvider | rename user_name as user | stats count min(_time) as firstTime max(_time) as lastTime values(requestParameters.sAMLProviderArn) as request_parameters by signature dest user user_agent src vendor_account vendor_region vendor_product | `security_content_ctime(firstTime)`| `security_content_ctime(lastTime)` |`aws_saml_update_identity_provider_filter`",
+    "condition": "You must install splunk AWS add on and Splunk App for AWS. This search works with AWS CloudTrail logs.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Updating a SAML provider or creating a new one may not necessarily be malicious however it needs to be closely monitored."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

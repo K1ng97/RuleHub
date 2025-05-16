@@ -1,0 +1,43 @@
+{
+  "id": "d8ddfa9b-b724-4df9-9dbe-f34cc0936714",
+  "name": "Windows Export Certificate",
+  "description": "The following analytic detects the export of a certificate from the Windows Certificate Store. It leverages the Certificates Lifecycle log channel, specifically event ID 1007, to identify this activity. Monitoring certificate exports is crucial as certificates can be used for authentication to VPNs or private resources. If malicious actors export certificates, they could potentially gain unauthorized access to sensitive systems or data, leading to significant security breaches.",
+  "source": {
+    "type": "splunk",
+    "id": "d8ddfa9b-b724-4df9-9dbe-f34cc0936714",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_export_certificate.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_export_certificate.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Michael Haag, Splunk",
+  "references": [
+    "https://atomicredteam.io/defense-evasion/T1553.004/#atomic-test-4---install-root-ca-on-windows"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`certificateservices_lifecycle` EventCode=1007 | xmlkv UserData_Xml | stats count min(_time) as firstTime max(_time) as lastTime by Computer, SubjectName, UserData_Xml | rename Computer as dest | `security_content_ctime(firstTime)`| `security_content_ctime(lastTime)` | `windows_export_certificate_filter`",
+    "condition": "To implement this analytic, you must collect Microsoft-Windows-CertificateServicesClient-Lifecycle-System/Operational or Microsoft-Windows-CertificateServicesClient-Lifecycle-User/Operational.",
+    "fields": []
+  },
+  "falsepositives": [
+    "False positives may be generated based on an automated process or service that exports certificates on the regular. Review is required before setting to alert. Monitor for abnormal processes performing an export."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

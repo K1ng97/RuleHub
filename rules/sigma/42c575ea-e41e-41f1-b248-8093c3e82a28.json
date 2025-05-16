@@ -1,0 +1,49 @@
+{
+  "id": "42c575ea-e41e-41f1-b248-8093c3e82a28",
+  "name": "PsExec Service Installation",
+  "description": "Detects PsExec service installation and execution events",
+  "source": {
+    "type": "sigma",
+    "id": "42c575ea-e41e-41f1-b248-8093c3e82a28",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_system_service_install_sysinternals_psexec.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/system/service_control_manager/win_system_service_install_sysinternals_psexec.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attacks0029",
+    "attackt1569002"
+  ],
+  "author": "Thomas Patzke",
+  "references": [
+    "https://www.jpcert.or.jp/english/pub/sr/ir_research.html",
+    "https://jpcertcc.github.io/ToolAnalysisResultSheet"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2017-06-12",
+  "modified": "2023-08-04",
+  "mitre": {
+    "tactics": [
+      "TA1569"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection_eid: {\"Provider_Name\": \"Service Control Manager\", \"EventID\": 7045}\nselection_service: [{\"ServiceName\": \"PSEXESVC\"}, {\"ImagePath|endswith\": \"\\\\PSEXESVC.exe\"}]",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "system"
+  ]
+}

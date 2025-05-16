@@ -1,0 +1,51 @@
+{
+  "id": "d7eb979b-c2b5-4a6f-a3a7-c87ce6763819",
+  "name": "Suspicious Control Panel DLL Load",
+  "description": "Detects suspicious Rundll32 execution from control.exe as used by Equation Group and Exploit Kits",
+  "source": {
+    "type": "sigma",
+    "id": "d7eb979b-c2b5-4a6f-a3a7-c87ce6763819",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_rundll32_susp_control_dll_load.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_rundll32_susp_control_dll_load.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218011"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://twitter.com/rikvduijn/status/853251879320662017",
+    "https://twitter.com/felixw3000/status/853354851128025088"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2017-04-15",
+  "modified": "2023-02-09",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": [
+      "T011"
+    ]
+  },
+  "detection": {
+    "query": "selection_parent: {\"ParentImage|endswith\": \"\\\\System32\\\\control.exe\"}\nselection_img: [{\"Image|endswith\": \"\\\\rundll32.exe\"}, {\"OriginalFileName\": \"RUNDLL32.EXE\"}]\nfilter: {\"CommandLine|contains\": \"Shell32.dll\"}",
+    "condition": "all of selection_* and not filter",
+    "fields": [
+      "CommandLine",
+      "ParentCommandLine"
+    ]
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

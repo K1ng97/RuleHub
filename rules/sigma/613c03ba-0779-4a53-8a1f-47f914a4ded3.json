@@ -1,0 +1,47 @@
+{
+  "id": "613c03ba-0779-4a53-8a1f-47f914a4ded3",
+  "name": "DNS Query To MEGA Hosting Website",
+  "description": "Detects DNS queries for subdomains related to MEGA sharing website",
+  "source": {
+    "type": "sigma",
+    "id": "613c03ba-0779-4a53-8a1f-47f914a4ded3",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/dns_query_win_mega_nz.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/dns_query/dns_query_win_mega_nz.yml"
+  },
+  "tags": [
+    "attackexfiltration",
+    "attackt1567002"
+  ],
+  "author": "Aaron Greetham (@beardofbinary) - NCC Group",
+  "references": [
+    "https://research.nccgroup.com/2021/05/27/detecting-rclone-an-effective-tool-for-exfiltration/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-05-26",
+  "modified": "2023-09-18",
+  "mitre": {
+    "tactics": [
+      "TA1567"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"QueryName|contains\": \"userstorage.mega.co.nz\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate DNS queries and usage of Mega"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "dns_query"
+  ]
+}

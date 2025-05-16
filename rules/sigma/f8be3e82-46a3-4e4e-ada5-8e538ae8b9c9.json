@@ -1,0 +1,49 @@
+{
+  "id": "f8be3e82-46a3-4e4e-ada5-8e538ae8b9c9",
+  "name": "Credential Dumping Activity By Python Based Tool",
+  "description": "Detects LSASS process access for potential credential dumping by a Python-like tool such as LaZagne or Pypykatz.",
+  "source": {
+    "type": "sigma",
+    "id": "f8be3e82-46a3-4e4e-ada5-8e538ae8b9c9",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_access_win_lsass_python_based_tool.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_access/proc_access_win_lsass_python_based_tool.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attacks0349",
+    "attackt1003001"
+  ],
+  "author": "Bhabesh Raj, Jonhnathan Ribeiro",
+  "references": [
+    "https://twitter.com/bh4b3sh/status/1303674603819081728",
+    "https://github.com/skelsec/pypykatz"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "stable",
+  "created": "2023-11-27",
+  "modified": "2023-11-29",
+  "mitre": {
+    "tactics": [
+      "TA1003"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"TargetImage|endswith\": \"\\\\lsass.exe\", \"CallTrace|contains|all\": [\"_ctypes.pyd+\", \":\\\\Windows\\\\System32\\\\KERNELBASE.dll+\", \":\\\\Windows\\\\SYSTEM32\\\\ntdll.dll+\"], \"CallTrace|contains\": [\"python27.dll+\", \"python3*.dll+\"], \"GrantedAccess\": \"0x1FFFFF\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_access"
+  ]
+}

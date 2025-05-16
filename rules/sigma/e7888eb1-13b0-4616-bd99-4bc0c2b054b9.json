@@ -1,0 +1,47 @@
+{
+  "id": "e7888eb1-13b0-4616-bd99-4bc0c2b054b9",
+  "name": "Dllhost.EXE Execution Anomaly",
+  "description": "Detects a \"dllhost\" process spawning with no commandline arguments which is very rare to happen and could indicate process injection activity or malware mimicking similar system processes.",
+  "source": {
+    "type": "sigma",
+    "id": "e7888eb1-13b0-4616-bd99-4bc0c2b054b9",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_dllhost_no_cli_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_dllhost_no_cli_execution.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1055"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://redcanary.com/blog/child-processes/",
+    "https://nasbench.medium.com/what-is-the-dllhost-exe-process-actually-running-ef9fe4c19c08",
+    "https://www.ncsc.gov.uk/static-assets/documents/malware-analysis-reports/goofy-guineapig/NCSC-MAR-Goofy-Guineapig.pdf"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-06-27",
+  "modified": "2023-05-15",
+  "mitre": {
+    "tactics": [
+      "TA1055"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"\\\\dllhost.exe\", \"CommandLine\": [\"dllhost.exe\", \"dllhost\"]}\nfilter_main_null: {\"CommandLine\": null}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

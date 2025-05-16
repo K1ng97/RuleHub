@@ -1,0 +1,48 @@
+{
+  "id": "055fb54c-a8f4-4aee-bd44-f74cf30a0d9d",
+  "name": "HackTool - SharpMove Tool Execution",
+  "description": "Detects the execution of SharpMove, a .NET utility performing multiple tasks such as \"Task Creation\", \"SCM\" query, VBScript execution using WMI via its PE metadata and command line options.\n",
+  "source": {
+    "type": "sigma",
+    "id": "055fb54c-a8f4-4aee-bd44-f74cf30a0d9d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_hktl_sharpmove.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_hktl_sharpmove.yml"
+  },
+  "tags": [
+    "attacklateral-movement",
+    "attackt1021002"
+  ],
+  "author": "Luca Di Bartolomeo (CrimpSec)",
+  "references": [
+    "https://github.com/0xthirteen/SharpMove/",
+    "https://pentestlab.blog/tag/sharpmove/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2024-01-29",
+  "modified": "2024-01-29",
+  "mitre": {
+    "tactics": [
+      "TA1021"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\SharpMove.exe\"}, {\"OriginalFileName\": \"SharpMove.exe\"}]\nselection_cli_computer: {\"CommandLine|contains\": \"computername=\"}\nselection_cli_actions: {\"CommandLine|contains\": [\"action=create\", \"action=dcom\", \"action=executevbs\", \"action=hijackdcom\", \"action=modschtask\", \"action=modsvc\", \"action=query\", \"action=scm\", \"action=startservice\", \"action=taskscheduler\"]}",
+    "condition": "selection_img or all of selection_cli_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "id": "0a8c4b26-a4e2-4ef1-b0d9-62af6d36bdc8",
+  "name": "Windows WMIC Shadowcopy Delete",
+  "description": "This analytic detects the use of WMIC to delete volume shadow copies, which is a common technique used by ransomware actors to prevent system recovery. Ransomware like Cactus often delete shadow copies before encrypting files to ensure victims cannot recover their data without paying the ransom. This behavior is particularly concerning as it indicates potential ransomware activity or malicious actors attempting to prevent system recovery.",
+  "source": {
+    "type": "splunk",
+    "id": "0a8c4b26-a4e2-4ef1-b0d9-62af6d36bdc8",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_wmic_shadowcopy_delete.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_wmic_shadowcopy_delete.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Michael Haag, AJ King, Splunk",
+  "references": [
+    "https://any.run/malware-trends/cactus",
+    "https://attack.mitre.org/techniques/T1490/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=wmic.exe Processes.process = \"*shadowcopy*\" Processes.process = \"*delete*\" by Processes.action Processes.dest Processes.original_file_name Processes.parent_process\nProcesses.parent_process_exec Processes.parent_process_guid Processes.parent_process_id\nProcesses.parent_process_name Processes.parent_process_path Processes.process Processes.process_exec\nProcesses.process_guid Processes.process_hash Processes.process_id Processes.process_integrity_level\nProcesses.process_name Processes.process_path Processes.user Processes.user_id Processes.vendor_product | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_wmic_shadowcopy_delete_filter`",
+    "condition": "This detection requires Sysmon logging with Event ID 1 (Process Create) enabled. The logs must be processed using the appropriate Splunk Technology Add-ons and mapped to the Endpoint.Processes data model. Ensure that command-line arguments are being logged and that the appropriate permissions are in place to capture this data.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate system maintenance or backup operations may occasionally delete shadow copies. However, this activity should be rare and typically performed through approved administrative tools rather than direct WMIC commands. Tune and modify the search to fit your environment, enable as TTP."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

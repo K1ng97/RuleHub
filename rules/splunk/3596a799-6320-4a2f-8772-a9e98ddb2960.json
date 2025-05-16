@@ -1,0 +1,43 @@
+{
+  "id": "3596a799-6320-4a2f-8772-a9e98ddb2960",
+  "name": "Windows Data Destruction Recursive Exec Files Deletion",
+  "description": "The following analytic identifies a suspicious process that is recursively deleting executable files on a compromised host. It leverages Sysmon Event Codes 23 and 26 to detect this activity by monitoring for a high volume of deletions or overwrites of files with extensions like .exe, .sys, and .dll. This behavior is significant as it is commonly associated with destructive malware such as CaddyWiper, DoubleZero, and SwiftSlicer, which aim to make file recovery impossible. If confirmed malicious, this activity could lead to significant data loss and system instability, severely impacting business operations.",
+  "source": {
+    "type": "splunk",
+    "id": "3596a799-6320-4a2f-8772-a9e98ddb2960",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_data_destruction_recursive_exec_files_deletion.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_data_destruction_recursive_exec_files_deletion.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk, Steven Dick",
+  "references": [
+    "https://www.welivesecurity.com/2023/01/27/swiftslicer-new-destructive-wiper-malware-ukraine/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`sysmon` EventCode IN (\"23\",\"26\") TargetFilename IN (\"*.exe\", \"*.sys\", \"*.dll\") | bin _time span=2m | stats count min(_time) as firstTime, max(_time) as lastTime values(file_path) as file_path values(file_hash) as file_hash values(file_name) as file_name values(file_modify_time) as file_modify_time values(process_name) as process_name values(process_path) as process_path values(process_guid) as process_guid values(process_id) as process_id values(process_exec) as process_exec by action dest dvc signature signature_id user user_id vendor_product | where count >=100 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_data_destruction_recursive_exec_files_deletion_filter`",
+    "condition": "To successfully implement this search, you need to ingest logs that include the process name, TargetFilename, and ProcessID executions from your endpoints. If you are using Sysmon, ensure you have at least version 2.0 of the Sysmon TA installed.",
+    "fields": []
+  },
+  "falsepositives": [
+    "The uninstallation of a large software application or the use of cleanmgr.exe may trigger this detection. A filter is necessary to reduce false positives."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

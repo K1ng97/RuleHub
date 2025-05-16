@@ -1,0 +1,44 @@
+{
+  "id": "a511426e-184f-4de6-8711-cfd2af29d1e1",
+  "name": "Okta Multiple Accounts Locked Out",
+  "description": "The following analytic detects multiple Okta accounts being locked out within a short period. It uses the user.account.lock event from Okta logs, aggregated over a 5-minute window, to identify this behavior. This activity is significant as it may indicate a brute force or password spraying attack, where an adversary attempts to guess passwords, leading to account lockouts. If confirmed malicious, this could result in potential account takeovers or unauthorized access to sensitive Okta accounts, posing a significant security risk.",
+  "source": {
+    "type": "splunk",
+    "id": "a511426e-184f-4de6-8711-cfd2af29d1e1",
+    "url": "https://github.com/splunk/security_content/blob/develop/okta_multiple_accounts_locked_out.yml",
+    "file_path": "tmp/repos/splunk/detections/application/okta_multiple_accounts_locked_out.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Michael Haag, Mauricio Velazco, Splunk",
+  "references": [
+    "https://attack.mitre.org/techniques/T1110/",
+    "https://splunkbase.splunk.com/app/6553"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats `security_content_summariesonly` count max(_time) as lastTime, min(_time) as firstTime values(All_Changes.user) as user from datamodel=Change where All_Changes.change_type=AAA All_Changes.object_category=User AND All_Changes.action=lockout AND All_Changes.command=user.account.lock by _time span=5m All_Changes.result All_Changes.command sourcetype All_Changes.src All_Changes.dest | where count > 5 | `drop_dm_object_name(\"All_Changes\")` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `okta_multiple_accounts_locked_out_filter`",
+    "condition": "The analytic leverages Okta OktaIm2 logs to be ingested using the Splunk Add-on for Okta Identity Cloud (https://splunkbase.splunk.com/app/6553).",
+    "fields": []
+  },
+  "falsepositives": [
+    "Multiple account lockouts may be also triggered by an application malfunction. Filter as needed, and monitor for any unusual activity."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

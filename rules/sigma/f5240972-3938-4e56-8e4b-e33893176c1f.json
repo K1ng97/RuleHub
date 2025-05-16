@@ -1,0 +1,45 @@
+{
+  "id": "f5240972-3938-4e56-8e4b-e33893176c1f",
+  "name": "Suspicious Query of MachineGUID",
+  "description": "Use of reg to get MachineGuid information",
+  "source": {
+    "type": "sigma",
+    "id": "f5240972-3938-4e56-8e4b-e33893176c1f",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_reg_machineguid.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_reg_machineguid.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1082"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1082/T1082.md#atomic-test-8---windows-machineguid-discovery"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-01-01",
+  "modified": "2022-01-01",
+  "mitre": {
+    "tactics": [
+      "TA1082"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"\\\\reg.exe\", \"CommandLine|contains|all\": [\"SOFTWARE\\\\Microsoft\\\\Cryptography\", \"/v \", \"MachineGuid\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "id": "d7bcd677-645d-4691-a8d4-7a5602b780d1",
+  "name": "Potential PowerShell Command Line Obfuscation",
+  "description": "Detects the PowerShell command lines with special characters",
+  "source": {
+    "type": "sigma",
+    "id": "d7bcd677-645d-4691-a8d4-7a5602b780d1",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_powershell_cmdline_special_characters.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_powershell_cmdline_special_characters.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1027",
+    "attackt1059001"
+  ],
+  "author": "Teymur Kheirkhabarov (idea), Vasiliy Burov (rule), oscd.community, Tim Shelton (fp)",
+  "references": [
+    "https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse?slide=64"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-15",
+  "modified": "2024-04-15",
+  "mitre": {
+    "tactics": [
+      "TA1027",
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": [\"\\\\powershell.exe\", \"\\\\pwsh.exe\"]}, {\"OriginalFileName\": [\"PowerShell.EXE\", \"pwsh.dll\"]}]\nselection_re: [{\"CommandLine|re\": \"\\\\+.*\\\\+.*\\\\+.*\\\\+.*\\\\+.*\\\\+.*\\\\+.*\\\\+.*\\\\+.*\\\\+.*\\\\+.*\\\\+.*\\\\+.*\\\\+\"}, {\"CommandLine|re\": \"\\\\{.*\\\\{.*\\\\{.*\\\\{.*\\\\{.*\\\\{.*\\\\{.*\\\\{.*\\\\{.*\\\\{\"}, {\"CommandLine|re\": \"\\\\^.*\\\\^.*\\\\^.*\\\\^.*\\\\^\"}, {\"CommandLine|re\": \"`.*`.*`.*`.*`\"}]\nfilter_optional_amazonSSM: {\"ParentImage\": \"C:\\\\Program Files\\\\Amazon\\\\SSM\\\\ssm-document-worker.exe\"}\nfilter_optional_defender_atp: {\"CommandLine|contains\": [\"new EventSource(\\\"Microsoft.Windows.Sense.Client.Management\\\"\", \"public static extern bool InstallELAMCertificateInfo(SafeFileHandle handle);\"]}",
+    "condition": "all of selection_* and not 1 of filter_optional_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Amazon SSM Document Worker",
+    "Windows Defender ATP"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

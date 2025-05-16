@@ -1,0 +1,45 @@
+{
+  "id": "e4df4676-ea41-4397-b160-3ee0140dc332",
+  "name": "Windows Gather Victim Host Information Camera",
+  "description": "The following analytic detects a PowerShell script that enumerates camera devices on the targeted host. This detection leverages PowerShell Script Block Logging, specifically looking for commands querying Win32_PnPEntity for camera-related information. This activity is significant as it is commonly observed in DCRat malware, which collects camera data to send to its command-and-control server. If confirmed malicious, this behavior could indicate an attempt to gather sensitive visual information from the host, potentially leading to privacy breaches or further exploitation.",
+  "source": {
+    "type": "splunk",
+    "id": "e4df4676-ea41-4397-b160-3ee0140dc332",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_gather_victim_host_information_camera.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_gather_victim_host_information_camera.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://cert.gov.ua/article/405538",
+    "https://malpedia.caad.fkie.fraunhofer.de/details/win.dcrat",
+    "https://www.mandiant.com/resources/analyzing-dark-crystal-rat-backdoor"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`powershell` EventCode=4104 ScriptBlockText= \"* Win32_PnPEntity *\" ScriptBlockText= \"*SELECT*\" ScriptBlockText= \"*WHERE*\" ScriptBlockText = \"*PNPClass*\" ScriptBlockText IN (\"*Image*\", \"*Camera*\") | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by dest signature signature_id user_id vendor_product EventID Guid Opcode Name Path ProcessID ScriptBlockId ScriptBlockText | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_gather_victim_host_information_camera_filter`",
+    "condition": "To successfully implement this analytic, you will need to enable PowerShell Script Block Logging on some or all endpoints. Additional setup here https://docs.splunk.com/Documentation/UBA/5.0.4.1/GetDataIn/AddPowerShell#Configure_module_logging_for_PowerShell.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrators may execute this powershell command to get hardware information related to camera on $dest$."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

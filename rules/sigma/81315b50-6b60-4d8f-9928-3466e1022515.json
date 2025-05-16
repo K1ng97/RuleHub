@@ -1,0 +1,48 @@
+{
+  "id": "81315b50-6b60-4d8f-9928-3466e1022515",
+  "name": "Suspicious desktop.ini Action",
+  "description": "Detects unusual processes accessing desktop.ini, which can be leveraged to alter how Explorer displays a folder's content (i.e. renaming files) without changing them on disk.",
+  "source": {
+    "type": "sigma",
+    "id": "81315b50-6b60-4d8f-9928-3466e1022515",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_susp_desktop_ini.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_susp_desktop_ini.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1547009"
+  ],
+  "author": "Maxime Thiebaut (@0xThiebaut), Tim Shelton (HAWK.IO)",
+  "references": [
+    "https://isc.sans.edu/forums/diary/Desktopini+as+a+postexploitation+tool/25912/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-03-19",
+  "modified": "2022-10-07",
+  "mitre": {
+    "tactics": [
+      "TA1547"
+    ],
+    "techniques": [
+      "T009"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"TargetFilename|endswith\": \"\\\\desktop.ini\"}\nfilter_generic: {\"Image|startswith\": [\"C:\\\\Windows\\\\\", \"C:\\\\Program Files\\\\\", \"C:\\\\Program Files (x86)\\\\\"]}\nfilter_jetbrains: {\"Image|endswith\": \"\\\\AppData\\\\Local\\\\JetBrains\\\\Toolbox\\\\bin\\\\7z.exe\", \"TargetFilename|contains\": \"\\\\JetBrains\\\\apps\\\\\"}\nfilter_upgrade: {\"TargetFilename|startswith\": \"C:\\\\$WINDOWS.~BT\\\\NewOS\\\\\"}",
+    "condition": "selection and not 1 of filter_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Operations performed through Windows SCCM or equivalent",
+    "Read only access list authority"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

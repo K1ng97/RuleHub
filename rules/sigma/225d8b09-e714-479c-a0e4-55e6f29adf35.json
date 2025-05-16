@@ -1,0 +1,49 @@
+{
+  "id": "225d8b09-e714-479c-a0e4-55e6f29adf35",
+  "name": "Azure Kubernetes Events Deleted",
+  "description": "Detects when Events are deleted in Azure Kubernetes. An adversary may delete events in Azure Kubernetes in an attempt to evade detection.",
+  "source": {
+    "type": "sigma",
+    "id": "225d8b09-e714-479c-a0e4-55e6f29adf35",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_kubernetes_events_deleted.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/activity_logs/azure_kubernetes_events_deleted.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1562",
+    "attackt1562001"
+  ],
+  "author": "Austin Songer @austinsonger",
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations#microsoftkubernetes",
+    "https://github.com/elastic/detection-rules/blob/da3852b681cf1a33898b1535892eab1f3a76177a/rules/integrations/azure/defense_evasion_kubernetes_events_deleted.toml"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-07-24",
+  "modified": "2022-08-23",
+  "mitre": {
+    "tactics": [
+      "TA1562"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"operationName\": \"MICROSOFT.KUBERNETES/CONNECTEDCLUSTERS/EVENTS.K8S.IO/EVENTS/DELETE\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Event deletions may be done by a system or network administrator. Verify whether the username, hostname, and/or resource name should be making changes in your environment. Events deletions from unfamiliar users or hosts should be investigated. If known behavior is causing false positives, it can be exempted from the rule."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "activitylogs"
+  ]
+}

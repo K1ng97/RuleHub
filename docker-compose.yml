@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  rulehub:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: rulehub:latest
+    container_name: rulehub
+    volumes:
+      # Mount configuration files
+      - ./config:/app/config
+      # Mount persistent data directories
+      - rulehub_rules:/app/rules
+      - rulehub_index:/app/index
+      - rulehub_stats:/app/stats
+      - rulehub_versions:/app/versions
+      # Optional: Mount custom rules for testing
+      # - ./my_custom_rules:/app/my_custom_rules
+    environment:
+      - PYTHONUNBUFFERED=1
+      # Add any additional environment variables here
+      # - LOG_LEVEL=INFO
+    # Command can be overridden from command line
+    # e.g., docker-compose run rulehub repo sync --source sigma
+    command: ["--help"]
+    # Uncomment the following section to expose web interface (if implemented in the future)
+    # ports:
+    #   - "8000:8000"
+    # Optional: schedule sync using cron in the container
+    # labels:
+    #   - "com.centurylinklabs.watchtower.enable=true"
+
+  # Optional: Add a scheduled sync service using the same image
+  sync:
+    image: rulehub:latest
+    container_name: rulehub_sync
+    depends_on:
+      - rulehub
+    volumes:
+      - ./config:/app/config
+      - rulehub_rules:/app/rules
+      - rulehub_index:/app/index
+      - rulehub_stats:/app/stats
+    environment:
+      - PYTHONUNBUFFERED=1
+    # Run scheduled sync every day
+    entrypoint: ["bash", "-c"]
+    command: >
+      "while :; do
+        echo 'Starting scheduled sync at $$(date)';
+        python rulehub.py repo sync --clean;
+        echo 'Sync completed at $$(date), sleeping for 24 hours';
+        sleep 86400;
+      done"
+    restart: unless-stopped
+
+  # Optional: Add a simple web UI container for future use
+  # web:
+  #   image: nginx:alpine
+  #   container_name: rulehub_web
+  #   volumes:
+  #     - ./web:/usr/share/nginx/html
+  #   ports:
+  #     - "8080:80"
+  #   depends_on:
+  #     - rulehub
+
+volumes:
+  rulehub_rules:
+    driver: local
+  rulehub_index:
+    driver: local
+  rulehub_stats:
+    driver: local
+  rulehub_versions:
+    driver: local
+
+# Optional: Create a custom network
+networks:
+  default:
+    name: rulehub_network

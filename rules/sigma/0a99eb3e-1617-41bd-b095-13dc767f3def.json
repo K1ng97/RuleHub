@@ -1,0 +1,48 @@
+{
+  "id": "0a99eb3e-1617-41bd-b095-13dc767f3def",
+  "name": "HackTool - Jlaive In-Memory Assembly Execution",
+  "description": "Detects the use of Jlaive to execute assemblies in a copied PowerShell",
+  "source": {
+    "type": "sigma",
+    "id": "0a99eb3e-1617-41bd-b095-13dc767f3def",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_hktl_jlaive_batch_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_hktl_jlaive_batch_execution.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1059003"
+  ],
+  "author": "Jose Luis Sanchez Martinez (@Joseliyo_Jstnk)",
+  "references": [
+    "https://jstnk9.github.io/jstnk9/research/Jlaive-Antivirus-Evasion-Tool",
+    "https://web.archive.org/web/20220514073704/https://github.com/ch2sh/Jlaive"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-05-24",
+  "modified": "2023-02-22",
+  "mitre": {
+    "tactics": [
+      "TA1059"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "parent_selection: {\"ParentImage|endswith\": \"\\\\cmd.exe\", \"ParentCommandLine|endswith\": \".bat\"}\nselection1: {\"Image|endswith\": \"\\\\xcopy.exe\", \"CommandLine|contains|all\": [\"powershell.exe\", \".bat.exe\"]}\nselection2: {\"Image|endswith\": \"\\\\xcopy.exe\", \"CommandLine|contains|all\": [\"pwsh.exe\", \".bat.exe\"]}\nselection3: {\"Image|endswith\": \"\\\\attrib.exe\", \"CommandLine|contains|all\": [\"+s\", \"+h\", \".bat.exe\"]}",
+    "condition": "parent_selection and (1 of selection*)",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

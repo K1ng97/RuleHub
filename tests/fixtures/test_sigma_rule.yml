@@ -1,0 +1,30 @@
+title: Windows PowerShell Execution
+id: 61243068-9614-4d22-b6fd-a3c87b78a284
+status: stable
+description: Detects PowerShell execution with specific parameters
+author: RuleHub Test
+date: 2025/05/16
+modified: 2025/05/16
+references:
+    - https://attack.mitre.org/techniques/T1059/001/
+    - https://docs.microsoft.com/en-us/powershell/
+tags:
+    - attack.execution
+    - attack.t1059.001
+    - attack.t1059
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        CommandLine|contains:
+            - 'powershell'
+            - 'pwsh'
+        CommandLine|contains:
+            - '-enc'
+            - '-encodedcommand'
+    condition: selection
+falsepositives:
+    - Administrative scripts
+    - Legitimate PowerShell usage
+level: medium

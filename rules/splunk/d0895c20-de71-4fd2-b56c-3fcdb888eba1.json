@@ -1,0 +1,49 @@
+{
+  "id": "d0895c20-de71-4fd2-b56c-3fcdb888eba1",
+  "name": "Azure AD Multiple Denied MFA Requests For User",
+  "description": "The following analytic detects an unusually high number of denied Multi-Factor Authentication (MFA) requests for a single user within a 10-minute window, specifically when more than nine MFA prompts are declined. It leverages Azure Active Directory (Azure AD) sign-in logs, focusing on \"Sign-in activity\" events with error code 500121 and additional details indicating \"MFA denied; user declined the authentication.\" This behavior is significant as it may indicate a targeted attack or account compromise attempt, with the user actively declining unauthorized access. If confirmed malicious, it could lead to data exfiltration, lateral movement, or further malicious activities.",
+  "source": {
+    "type": "splunk",
+    "id": "d0895c20-de71-4fd2-b56c-3fcdb888eba1",
+    "url": "https://github.com/splunk/security_content/blob/develop/azure_ad_multiple_denied_mfa_requests_for_user.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/azure_ad_multiple_denied_mfa_requests_for_user.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "atomic_guid",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Mauricio Velazco, Splunk",
+  "references": [
+    "https://www.mandiant.com/resources/blog/russian-targeting-gov-business",
+    "https://arstechnica.com/information-technology/2022/03/lapsus-and-solar-winds-hackers-both-use-the-same-old-trick-to-bypass-mfa/",
+    "https://therecord.media/russian-hackers-bypass-2fa-by-annoying-victims-with-repeated-push-notifications/",
+    "https://attack.mitre.org/techniques/T1621/",
+    "https://attack.mitre.org/techniques/T1078/004/",
+    "https://www.cisa.gov/sites/default/files/publications/fact-sheet-implement-number-matching-in-mfa-applications-508c.pdf"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`azure_monitor_aad` category=SignInLogs operationName=\"Sign-in activity\" | rename properties.* as * | search status.errorCode=500121 status.additionalDetails=\"MFA denied; user declined the authentication\" | bucket span=10m _time | rename userAgent as user_agent | fillnull | stats count min(_time) as firstTime max(_time) as lastTime values(dest) as dest values(user_agent) as user_agent values(src) as src by user status.additionalDetails vendor_account vendor_product signature | where count > 9 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `azure_ad_multiple_denied_mfa_requests_for_user_filter`",
+    "condition": "You must install the latest version of Splunk Add-on for Microsoft Cloud Services from Splunkbase (https://splunkbase.splunk.com/app/3110/#/details). You must be ingesting Azure Active Directory events into your Splunk environment through an EventHub. This analytic was written to be used with the azure:monitor:aad sourcetype leveraging the Signin log category.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Multiple denifed MFA requests in a short period of span may also be a sign of authentication errors. Investigate and filter as needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

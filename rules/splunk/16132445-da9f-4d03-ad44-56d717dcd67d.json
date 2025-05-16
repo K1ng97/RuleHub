@@ -1,0 +1,43 @@
+{
+  "id": "16132445-da9f-4d03-ad44-56d717dcd67d",
+  "name": "Windows AD Self DACL Assignment",
+  "description": "Detect when a user creates a new DACL in AD for their own AD object.",
+  "source": {
+    "type": "splunk",
+    "id": "16132445-da9f-4d03-ad44-56d717dcd67d",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_ad_self_dacl_assignment.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_ad_self_dacl_assignment.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Dean Luxton",
+  "references": [
+    "https://lantern.splunk.com/Security/Product_Tips/Enterprise_Security/Enabling_an_audit_trail_from_Active_Directory"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`wineventlog_security` EventCode=5136 | stats min(_time) as _time values(eval(if(OperationType==\"%%14675\",AttributeValue,null))) as old_value values(eval(if(OperationType==\"%%14674\" ,AttributeValue,null))) as new_value values(OperationType) as OperationType by ObjectClass ObjectDN OpCorrelationID src_user SubjectLogonId dest | rex field=old_value max_match=10000 \"\\((?P<old_values>.*?)\\)\" | rex field=new_value max_match=10000 \"\\((?P<new_ace>.*?)\\)\" | mvexpand new_ace | where NOT new_ace IN (old_values) | rex field=new_ace \"(?P<aceType>.*?);(?P<aceFlags>.*?);(?P<aceAccessRights>.*?);(?P<aceObjectGuid>.*?);(?P<aceInheritedTypeGuid>.*?);(?P<aceSid>.*?)$\" | rex max_match=100 field=aceAccessRights \"(?P<AccessRights>[A-Z]{2})\" | rex max_match=100 field=aceFlags \"(?P<aceFlags>[A-Z]{2})\" | lookup ace_type_lookup ace_type_string as aceType OUTPUT ace_type_value as aceType | lookup ace_flag_lookup flag_string as aceFlags OUTPUT flag_value as ace_flag_value | lookup ace_access_rights_lookup access_rights_string as AccessRights OUTPUT access_rights_value | lookup msad_guid_lookup guid as aceObjectGuid OUTPUT displayName as ControlAccessRights | lookup builtin_groups_lookup builtin_group_string as aceSid OUTPUT builtin_group_name as builtin_group | eval aceType=coalesce(ace_type_value,aceType), aceInheritance=coalesce(ace_flag_value,\"This object only\"), aceAccessRights=if(aceAccessRights=\"CCDCLCSWRPWPDTLOCRSDRCWDWO\",\"Full control\",coalesce(access_rights_value,AccessRights)), aceControlAccessRights=if((ControlAccessRights=\"Write member\" OR aceObjectGuid=\"bf9679c0-0de6-11d0-a285-00aa003049e2\") AND (aceAccessRights=\"All validated writes\" OR AccessRights=\"SW\"),\"Add/remove self as member\",coalesce(ControlAccessRights,aceObjectGuid)),user=coalesce(user, group, builtin_group, aceSid) | stats values(aceType) as aceType values(aceInheritance) as aceInheritance values(aceControlAccessRights) as aceControlAccessRights values(aceAccessRights) as aceAccessRights values(new_ace) as new_ace values(aceInheritedTypeGuid) as aceInheritedTypeGuid by _time ObjectClass ObjectDN src_user SubjectLogonId user OpCorrelationID dest | eval aceControlAccessRights=if(mvcount(aceControlAccessRights)=1 AND aceControlAccessRights=\"\",\"All rights\",\"aceControlAccessRights\") | `windows_ad_self_dacl_assignment_filter`",
+    "condition": "Ensure you are ingesting Active Directory audit logs - specifically event 5136. See lantern article in references for further on how to onboard AD audit data. Ensure the wineventlog_security macro is configured with the correct indexes and include lookups for SID resolution if evt_resolve_ad_obj is set to 0.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

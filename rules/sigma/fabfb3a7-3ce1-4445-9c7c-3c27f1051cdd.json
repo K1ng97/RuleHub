@@ -1,0 +1,47 @@
+{
+  "id": "fabfb3a7-3ce1-4445-9c7c-3c27f1051cdd",
+  "name": "Potential ReflectDebugger Content Execution Via WerFault.EXE",
+  "description": "Detects execution of \"WerFault.exe\" with the \"-pr\" commandline flag that is used to run files stored in the ReflectDebugger key which could be used to store the path to the malware in order to masquerade the execution flow",
+  "source": {
+    "type": "sigma",
+    "id": "fabfb3a7-3ce1-4445-9c7c-3c27f1051cdd",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_werfault_reflect_debugger_exec.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_werfault_reflect_debugger_exec.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1036"
+  ],
+  "author": "X__Junior (Nextron Systems)",
+  "references": [
+    "https://cocomelonc.github.io/malware/2022/11/02/malware-pers-18.html",
+    "https://www.hexacorn.com/blog/2018/08/31/beyond-good-ol-run-key-part-85/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-06-30",
+  "modified": "2023-06-30",
+  "mitre": {
+    "tactics": [
+      "TA1036"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\WerFault.exe\"}, {\"OriginalFileName\": \"WerFault.exe\"}]\nselection_cli: {\"CommandLine|contains\": \" -pr \"}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "id": "cb0fe7c5-f3a3-484d-aa25-d350a7912729",
+  "name": "Suspicious Driver/DLL Installation Via Odbcconf.EXE",
+  "description": "Detects execution of \"odbcconf\" with the \"INSTALLDRIVER\" action where the driver doesn't contain a \".dll\" extension. This is often used as a defense evasion method.",
+  "source": {
+    "type": "sigma",
+    "id": "cb0fe7c5-f3a3-484d-aa25-d350a7912729",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_odbcconf_driver_install_susp.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_odbcconf_driver_install_susp.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218008"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/Binaries/Odbcconf/",
+    "https://web.archive.org/web/20191023232753/https://twitter.com/Hexacorn/status/1187143326673330176",
+    "https://www.hexacorn.com/blog/2020/08/23/odbcconf-lolbin-trifecta/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-05-23",
+  "modified": "2023-05-23",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": [
+      "T008"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\odbcconf.exe\"}, {\"OriginalFileName\": \"odbcconf.exe\"}]\nselection_cli: {\"CommandLine|contains\": \"INSTALLDRIVER \"}\nfilter_main_dll_ext: {\"CommandLine|contains\": \".dll\"}",
+    "condition": "all of selection_* and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

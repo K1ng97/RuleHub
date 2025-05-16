@@ -1,0 +1,47 @@
+{
+  "id": "3d27f6dd-1c74-4687-b4fa-ca849d128d1c",
+  "name": "Office Application Startup - Office Test",
+  "description": "Detects the addition of office test registry that allows a user to specify an arbitrary DLL that will be executed every time an Office application is started",
+  "source": {
+    "type": "sigma",
+    "id": "3d27f6dd-1c74-4687-b4fa-ca849d128d1c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_event_office_test_regadd.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_event/registry_event_office_test_regadd.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1137002"
+  ],
+  "author": "omkar72",
+  "references": [
+    "https://unit42.paloaltonetworks.com/unit42-technical-walkthrough-office-test-persistence-method-used-in-recent-sofacy-attacks/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-25",
+  "modified": "2023-11-08",
+  "mitre": {
+    "tactics": [
+      "TA1137"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"TargetObject|contains\": \"\\\\Software\\\\Microsoft\\\\Office test\\\\Special\\\\Perf\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_event"
+  ]
+}

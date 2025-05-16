@@ -1,0 +1,47 @@
+{
+  "id": "fe63010f-8823-4864-a96b-a7b4a0f7b929",
+  "name": "LSASS Process Reconnaissance Via Findstr.EXE",
+  "description": "Detects findstring commands that include the keyword lsass, which indicates recon actviity for the LSASS process PID",
+  "source": {
+    "type": "sigma",
+    "id": "fe63010f-8823-4864-a96b-a7b4a0f7b929",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_findstr_lsass.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_findstr_lsass.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1552006"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://blog.talosintelligence.com/2022/08/recent-cyber-attack.html?m=1"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-12",
+  "modified": "2024-06-04",
+  "mitre": {
+    "tactics": [
+      "TA1552"
+    ],
+    "techniques": [
+      "T006"
+    ]
+  },
+  "detection": {
+    "query": "selection_findstr_img: [{\"Image|endswith\": [\"\\\\find.exe\", \"\\\\findstr.exe\"]}, {\"OriginalFileName\": [\"FIND.EXE\", \"FINDSTR.EXE\"]}]\nselection_findstr_cli: {\"CommandLine|contains\": \"lsass\"}\nselection_special: {\"CommandLine|contains|windash\": [\" /i \\\"lsass\", \" /i lsass.exe\", \"findstr \\\"lsass\", \"findstr lsass\", \"findstr.exe \\\"lsass\", \"findstr.exe lsass\"]}",
+    "condition": "all of selection_findstr_* or selection_special",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

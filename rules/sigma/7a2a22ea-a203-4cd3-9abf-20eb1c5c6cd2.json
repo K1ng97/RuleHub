@@ -1,0 +1,48 @@
+{
+  "id": "7a2a22ea-a203-4cd3-9abf-20eb1c5c6cd2",
+  "name": "Access To Windows Credential History File By Uncommon Applications",
+  "description": "Detects file access requests to the Windows Credential History File by an uncommon application.\nThis can be a sign of credential stealing. Example case would be usage of mimikatz \"dpapi::credhist\" function\n",
+  "source": {
+    "type": "sigma",
+    "id": "7a2a22ea-a203-4cd3-9abf-20eb1c5c6cd2",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_access_win_susp_credhist.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_access/file_access_win_susp_credhist.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1555004"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://tools.thehacker.recipes/mimikatz/modules/dpapi/credhist",
+    "https://www.passcape.com/windows_password_recovery_dpapi_credhist"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "experimental",
+  "created": "2022-10-17",
+  "modified": "2024-07-29",
+  "mitre": {
+    "tactics": [
+      "TA1555"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"FileName|endswith\": \"\\\\Microsoft\\\\Protect\\\\CREDHIST\"}\nfilter_main_system_folders: {\"Image|startswith\": [\"C:\\\\Program Files\\\\\", \"C:\\\\Program Files (x86)\\\\\", \"C:\\\\Windows\\\\system32\\\\\", \"C:\\\\Windows\\\\SysWOW64\\\\\"]}\nfilter_main_explorer: {\"Image\": \"C:\\\\Windows\\\\explorer.exe\"}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_access"
+  ]
+}

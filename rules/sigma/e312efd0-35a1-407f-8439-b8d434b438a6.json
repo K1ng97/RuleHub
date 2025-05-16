@@ -1,0 +1,50 @@
+{
+  "id": "e312efd0-35a1-407f-8439-b8d434b438a6",
+  "name": "Potential PowerShell Obfuscation Via WCHAR",
+  "description": "Detects suspicious encoded character syntax often used for defense evasion",
+  "source": {
+    "type": "sigma",
+    "id": "e312efd0-35a1-407f-8439-b8d434b438a6",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_powershell_obfuscation_via_utf8.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_powershell_obfuscation_via_utf8.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1027",
+    "attackt1059001"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://twitter.com/0gtweet/status/1281103918693482496"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-07-09",
+  "modified": "2023-01-05",
+  "mitre": {
+    "tactics": [
+      "TA1027",
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|contains\": \"(WCHAR)0x\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

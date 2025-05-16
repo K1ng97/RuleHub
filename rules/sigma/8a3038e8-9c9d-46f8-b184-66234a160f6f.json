@@ -1,0 +1,45 @@
+{
+  "id": "8a3038e8-9c9d-46f8-b184-66234a160f6f",
+  "name": "Potential Remote Desktop Tunneling",
+  "description": "Detects potential use of an SSH utility to establish RDP over a reverse SSH Tunnel. This can be used by attackers to enable routing of network packets that would otherwise not reach their intended destination.",
+  "source": {
+    "type": "sigma",
+    "id": "8a3038e8-9c9d-46f8-b184-66234a160f6f",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_susp_remote_desktop_tunneling.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_susp_remote_desktop_tunneling.yml"
+  },
+  "tags": [
+    "attacklateral-movement",
+    "attackt1021"
+  ],
+  "author": "Tim Rauch, Elastic (idea)",
+  "references": [
+    "https://www.elastic.co/guide/en/security/current/potential-remote-desktop-tunneling-detected.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-09-27",
+  "modified": "2022-09-27",
+  "mitre": {
+    "tactics": [
+      "TA1021"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|contains\": \":3389\"}\nselection_opt: {\"CommandLine|contains\": [\" -L \", \" -P \", \" -R \", \" -pw \", \" -ssh \"]}",
+    "condition": "all of selection*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "92772523-d9c1-4c93-9547-b0ca500baba3",
+  "name": "Potential Persistence Via Mpnotify",
+  "description": "Detects when an attacker register a new SIP provider for persistence and defense evasion",
+  "source": {
+    "type": "sigma",
+    "id": "92772523-d9c1-4c93-9547-b0ca500baba3",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_set_persistence_mpnotify.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_set/registry_set_persistence_mpnotify.yml"
+  },
+  "tags": [
+    "attackpersistence"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://persistence-info.github.io/Data/mpnotify.html",
+    "https://www.youtube.com/watch?v=ggY3srD9dYs&ab_channel=GrzegorzTworek"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-07-21",
+  "modified": "2023-08-17",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"TargetObject|contains\": \"\\\\SOFTWARE\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\Winlogon\\\\mpnotify\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Might trigger if a legitimate new SIP provider is registered. But this is not a common occurrence in an environment and should be investigated either way"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_set"
+  ]
+}

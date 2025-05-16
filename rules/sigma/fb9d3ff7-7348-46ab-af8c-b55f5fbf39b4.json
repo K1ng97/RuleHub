@@ -1,0 +1,49 @@
+{
+  "id": "fb9d3ff7-7348-46ab-af8c-b55f5fbf39b4",
+  "name": "Execution of Powershell Script in Public Folder",
+  "description": "This rule detects execution of PowerShell scripts located in the \"C:\\Users\\Public\" folder",
+  "source": {
+    "type": "sigma",
+    "id": "fb9d3ff7-7348-46ab-af8c-b55f5fbf39b4",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_powershell_public_folder.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_powershell_public_folder.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1059001"
+  ],
+  "author": "Max Altgelt (Nextron Systems)",
+  "references": [
+    "https://www.mandiant.com/resources/evolution-of-fin7"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-04-06",
+  "modified": "2022-07-14",
+  "mitre": {
+    "tactics": [
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": [\"\\\\powershell.exe\", \"\\\\pwsh.exe\"], \"CommandLine|contains\": [\"-f C:\\\\Users\\\\Public\", \"-f \\\"C:\\\\Users\\\\Public\", \"-f %Public%\", \"-fi C:\\\\Users\\\\Public\", \"-fi \\\"C:\\\\Users\\\\Public\", \"-fi %Public%\", \"-fil C:\\\\Users\\\\Public\", \"-fil \\\"C:\\\\Users\\\\Public\", \"-fil %Public%\", \"-file C:\\\\Users\\\\Public\", \"-file \\\"C:\\\\Users\\\\Public\", \"-file %Public%\"]}",
+    "condition": "selection",
+    "fields": [
+      "CommandLine"
+    ]
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "ec52985a-d024-41e3-8ff6-14169039a0b3",
+  "name": "Mount Execution With Hidepid Parameter",
+  "description": "Detects execution of the \"mount\" command with \"hidepid\" parameter to make invisible processes to other users from the system",
+  "source": {
+    "type": "sigma",
+    "id": "ec52985a-d024-41e3-8ff6-14169039a0b3",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_mount_hidepid.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_mount_hidepid.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1564"
+  ],
+  "author": "Joseliyo Sanchez, @Joseliyo_Jstnk",
+  "references": [
+    "https://blogs.blackberry.com/",
+    "https://www.cyberciti.biz/faq/linux-hide-processes-from-other-users/",
+    "https://twitter.com/Joseliyo_Jstnk/status/1620131033474822144"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-01-12",
+  "modified": "2023-01-12",
+  "mitre": {
+    "tactics": [
+      "TA1564"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"/mount\", \"CommandLine|contains|all\": [\"hidepid=2\", \" -o \"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

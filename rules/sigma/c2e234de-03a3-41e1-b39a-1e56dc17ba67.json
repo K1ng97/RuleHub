@@ -1,0 +1,42 @@
+{
+  "id": "c2e234de-03a3-41e1-b39a-1e56dc17ba67",
+  "name": "Remove Scheduled Cron Task/Job",
+  "description": "Detects usage of the 'crontab' utility to remove the current crontab.\nThis is a common occurrence where cryptocurrency miners compete against each other by removing traces of other miners to hijack the maximum amount of resources possible\n",
+  "source": {
+    "type": "sigma",
+    "id": "c2e234de-03a3-41e1-b39a-1e56dc17ba67",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_crontab_removal.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_crontab_removal.yml"
+  },
+  "tags": [
+    "attackdefense-evasion"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://www.trendmicro.com/en_us/research/22/i/how-malicious-actors-abuse-native-linux-tools-in-their-attacks.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-09-15",
+  "modified": "2022-09-15",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"crontab\", \"CommandLine|contains\": \" -r\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

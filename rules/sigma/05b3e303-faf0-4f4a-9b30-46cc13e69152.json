@@ -1,0 +1,48 @@
+{
+  "id": "05b3e303-faf0-4f4a-9b30-46cc13e69152",
+  "name": "Potential Persistence Via PowerShell User Profile Using Add-Content",
+  "description": "Detects calls to \"Add-Content\" cmdlet in order to modify the content of the user profile and potentially adding suspicious commands for persistence",
+  "source": {
+    "type": "sigma",
+    "id": "05b3e303-faf0-4f4a-9b30-46cc13e69152",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_user_profile_tampering.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_user_profile_tampering.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1546013"
+  ],
+  "author": "frack113, Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1546.013/T1546.013.md"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-08-18",
+  "modified": "2023-05-04",
+  "mitre": {
+    "tactics": [
+      "TA1546"
+    ],
+    "techniques": [
+      "T013"
+    ]
+  },
+  "detection": {
+    "query": "selection_add: {\"ScriptBlockText|contains\": \"Add-Content $profile\"}\nselection_options: {\"ScriptBlockText|contains\": [\"-Value \\\"IEX \", \"-Value \\\"Invoke-Expression\", \"-Value \\\"Invoke-WebRequest\", \"-Value \\\"Start-Process\", \"-Value 'IEX \", \"-Value 'Invoke-Expression\", \"-Value 'Invoke-WebRequest\", \"-Value 'Start-Process\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administration and tuning scripts that aim to add functionality to a user PowerShell session"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "id": "76ac2dcb-333c-4a77-8ae9-2720cfae47a8",
+  "name": "Citrix ADC Exploitation CVE-2023-3519",
+  "description": "The following analytic identifies potential exploitation attempts against Citrix ADC related to CVE-2023-3519. It detects POST requests to specific web endpoints associated with this vulnerability by leveraging the Web datamodel. This activity is significant as CVE-2023-3519 involves a SAML processing overflow issue that can lead to memory corruption, posing a high risk. If confirmed malicious, attackers could exploit this to execute arbitrary code, escalate privileges, or disrupt services, making it crucial for SOC analysts to monitor and investigate these alerts promptly.",
+  "source": {
+    "type": "splunk",
+    "id": "76ac2dcb-333c-4a77-8ae9-2720cfae47a8",
+    "url": "https://github.com/splunk/security_content/blob/develop/citrix_adc_exploitation_cve_2023_3519.yml",
+    "file_path": "tmp/repos/splunk/detections/web/citrix_adc_exploitation_cve_2023_3519.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "atomic_guid",
+    "cve",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Michael Haag, Splunk",
+  "references": [
+    "https://blog.assetnote.io/2023/07/21/citrix-CVE-2023-3519-analysis/",
+    "https://support.citrix.com/article/CTX561482/citrix-adc-and-citrix-gateway-security-bulletin-for-cve20233519-cve20233466-cve20233467",
+    "https://securityintelligence.com/x-force/x-force-uncovers-global-netscaler-gateway-credential-harvesting-campaign/",
+    "https://support.citrix.com/article/CTX579459/netscaler-adc-and-netscaler-gateway-security-bulletin-for-cve20234966-and-cve20234967"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url IN (\"*/saml/login\",\"/cgi/samlauth\",\"*/saml/activelogin\",\"/cgi/samlart?samlart=*\",\"*/cgi/logout\",\"/gwtest/formssso?event=start&target=*\",\"/netscaler/ns_gui/vpn/*\")  Web.http_method=POST by Web.http_user_agent, Web.status Web.http_method, Web.url, Web.url_length, Web.src, Web.dest, sourcetype | `drop_dm_object_name(\"Web\")` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `citrix_adc_exploitation_cve_2023_3519_filter`",
+    "condition": "This detection requires the Web datamodel to be populated from a supported Technology Add-On like Splunk for Apache, Splunk for Nginx, or Splunk for Palo Alto.",
+    "fields": []
+  },
+  "falsepositives": [
+    "False positives may be present based on organization use of SAML utilities. Filter, or restrict the analytic to Citrix devices only."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

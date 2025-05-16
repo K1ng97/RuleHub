@@ -1,0 +1,47 @@
+{
+  "id": "05936ce2-ee05-4dae-9d03-9a391cf2d2c6",
+  "name": "WMI Persistence - Command Line Event Consumer",
+  "description": "Detects WMI command line event consumers",
+  "source": {
+    "type": "sigma",
+    "id": "05936ce2-ee05-4dae-9d03-9a391cf2d2c6",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/image_load_wmi_persistence_commandline_event_consumer.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/image_load/image_load_wmi_persistence_commandline_event_consumer.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1546003"
+  ],
+  "author": "Thomas Patzke",
+  "references": [
+    "https://www.eideon.com/2018-03-02-THL03-WMIBackdoors/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2018-03-07",
+  "modified": "2021-11-27",
+  "mitre": {
+    "tactics": [
+      "TA1546"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Image\": \"C:\\\\Windows\\\\System32\\\\wbem\\\\WmiPrvSE.exe\", \"ImageLoaded|endswith\": \"\\\\wbemcons.dll\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown (data set is too small; further testing needed)"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "image_load"
+  ]
+}

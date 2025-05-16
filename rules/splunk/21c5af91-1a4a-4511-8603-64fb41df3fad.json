@@ -1,0 +1,44 @@
+{
+  "id": "21c5af91-1a4a-4511-8603-64fb41df3fad",
+  "name": "Windows SIP Provider Inventory",
+  "description": "The following analytic identifies all SIP (Subject Interface Package) providers on a Windows system using PowerShell scripted inputs. It detects SIP providers by capturing DLL paths from relevant events. This activity is significant because malicious SIP providers can be used to bypass trust controls, potentially allowing unauthorized code execution. If confirmed malicious, this activity could enable attackers to subvert system integrity, leading to unauthorized access or persistent threats within the environment. Analysts should review for new and non-standard paths to identify potential threats.",
+  "source": {
+    "type": "splunk",
+    "id": "21c5af91-1a4a-4511-8603-64fb41df3fad",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_sip_provider_inventory.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_sip_provider_inventory.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "atomic_guid",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Michael Haag, Splunk",
+  "references": [
+    "https://gist.github.com/MHaggis/75dd5db546c143ea67703d0e86cdbbd1"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`subjectinterfacepackage` Dll=*\\\\*.dll | stats count min(_time) as firstTime max(_time) as lastTime values(Dll) by Path host| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`| `windows_sip_provider_inventory_filter`",
+    "condition": "To implement this analytic, one must first perform inventory using a scripted inputs. Review the following Gist - https://gist.github.com/MHaggis/75dd5db546c143ea67703d0e86cdbbd1",
+    "fields": []
+  },
+  "falsepositives": [
+    "False positives are limited as this is a hunting query for inventory."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

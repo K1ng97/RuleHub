@@ -1,0 +1,54 @@
+{
+  "id": "eae8ce9f-bde9-47a6-8e79-f20d18419910",
+  "name": "Suspicious History File Operations - Linux",
+  "description": "Detects commandline operations on shell history files",
+  "source": {
+    "type": "sigma",
+    "id": "eae8ce9f-bde9-47a6-8e79-f20d18419910",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/lnx_auditd_susp_histfile_operations.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/auditd/lnx_auditd_susp_histfile_operations.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1552003"
+  ],
+  "author": "Mikhail Larin, oscd.community",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1552.003/T1552.003.md"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-17",
+  "modified": "2022-11-28",
+  "mitre": {
+    "tactics": [
+      "TA1552"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "execve: {\"type\": \"EXECVE\"}\nhistory: [\".bash_history\", \".zsh_history\", \".zhistory\", \".history\", \".sh_history\", \"fish_history\"]",
+    "condition": "execve and history",
+    "fields": [
+      "a0",
+      "a1",
+      "a2",
+      "a3",
+      "key"
+    ]
+  },
+  "falsepositives": [
+    "Legitimate administrative activity",
+    "Legitimate software, cleaning hist file"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "auditd"
+  ]
+}

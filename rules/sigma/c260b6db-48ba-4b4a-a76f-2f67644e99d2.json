@@ -1,0 +1,49 @@
+{
+  "id": "c260b6db-48ba-4b4a-a76f-2f67644e99d2",
+  "name": "HackTool - Covenant PowerShell Launcher",
+  "description": "Detects suspicious command lines used in Covenant luanchers",
+  "source": {
+    "type": "sigma",
+    "id": "c260b6db-48ba-4b4a-a76f-2f67644e99d2",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_hktl_covenant.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_hktl_covenant.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1059001",
+    "attackt1564003"
+  ],
+  "author": "Florian Roth (Nextron Systems), Jonhnathan Ribeiro, oscd.community",
+  "references": [
+    "https://posts.specterops.io/covenant-v0-5-eee0507b85ba"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-06-04",
+  "modified": "2023-02-21",
+  "mitre": {
+    "tactics": [
+      "TA1059",
+      "TA1564"
+    ],
+    "techniques": [
+      "T001",
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection_1: {\"CommandLine|contains|all\": [\"-Sta\", \"-Nop\", \"-Window\", \"Hidden\"], \"CommandLine|contains\": [\"-Command\", \"-EncodedCommand\"]}\nselection_2: {\"CommandLine|contains\": [\"sv o (New-Object IO.MemorySteam);sv d \", \"mshta file.hta\", \"GruntHTTP\", \"-EncodedCommand cwB2ACAAbwAgA\"]}",
+    "condition": "1 of selection_*",
+    "fields": []
+  },
+  "falsepositives": [],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

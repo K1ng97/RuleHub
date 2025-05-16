@@ -1,0 +1,51 @@
+{
+  "id": "4e87b8e2-2ee9-4b2a-a715-4727d297ece0",
+  "name": "Potential SAM Database Dump",
+  "description": "Detects the creation of files that look like exports of the local SAM (Security Account Manager)",
+  "source": {
+    "type": "sigma",
+    "id": "4e87b8e2-2ee9-4b2a-a715-4727d297ece0",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_sam_dump.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_sam_dump.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1003002"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://github.com/search?q=CVE-2021-36934",
+    "https://web.archive.org/web/20210725081645/https://github.com/cube0x0/CVE-2021-36934",
+    "https://www.google.com/search?q=%22reg.exe+save%22+sam",
+    "https://github.com/HuskyHacks/ShadowSteal",
+    "https://github.com/FireFart/hivenightmare"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-02-11",
+  "modified": "2023-01-05",
+  "mitre": {
+    "tactics": [
+      "TA1003"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: [{\"TargetFilename|endswith\": [\"\\\\Temp\\\\sam\", \"\\\\sam.sav\", \"\\\\Intel\\\\sam\", \"\\\\sam.hive\", \"\\\\Perflogs\\\\sam\", \"\\\\ProgramData\\\\sam\", \"\\\\Users\\\\Public\\\\sam\", \"\\\\AppData\\\\Local\\\\sam\", \"\\\\AppData\\\\Roaming\\\\sam\", \"_ShadowSteal.zip\", \"\\\\Documents\\\\SAM.export\", \":\\\\sam\"]}, {\"TargetFilename|contains\": [\"\\\\hive_sam_\", \"\\\\sam.save\", \"\\\\sam.export\", \"\\\\~reg_sam.save\", \"\\\\sam_backup\", \"\\\\sam.bck\", \"\\\\sam.backup\"]}]",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Rare cases of administrative activity"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

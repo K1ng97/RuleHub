@@ -1,0 +1,47 @@
+{
+  "id": "418dc89a-9808-4b87-b1d7-e5ae0cb6effc",
+  "name": "Potential Mpclient.DLL Sideloading",
+  "description": "Detects potential sideloading of \"mpclient.dll\" by Windows Defender processes (\"MpCmdRun\" and \"NisSrv\") from their non-default directory.",
+  "source": {
+    "type": "sigma",
+    "id": "418dc89a-9808-4b87-b1d7-e5ae0cb6effc",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/image_load_side_load_windows_defender.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/image_load/image_load_side_load_windows_defender.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1574001"
+  ],
+  "author": "Bhabesh Raj",
+  "references": [
+    "https://www.sentinelone.com/blog/living-off-windows-defender-lockbit-ransomware-sideloads-cobalt-strike-through-microsoft-security-tool"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-02",
+  "modified": "2023-08-04",
+  "mitre": {
+    "tactics": [
+      "TA1574"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ImageLoaded|endswith\": \"\\\\mpclient.dll\", \"Image|endswith\": [\"\\\\MpCmdRun.exe\", \"\\\\NisSrv.exe\"]}\nfilter_main_known_locations: {\"Image|startswith\": [\"C:\\\\Program Files (x86)\\\\Windows Defender\\\\\", \"C:\\\\Program Files\\\\Microsoft Security Client\\\\\", \"C:\\\\Program Files\\\\Windows Defender\\\\\", \"C:\\\\ProgramData\\\\Microsoft\\\\Windows Defender\\\\Platform\\\\\", \"C:\\\\Windows\\\\WinSxS\\\\\"]}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "image_load"
+  ]
+}

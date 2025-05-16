@@ -1,0 +1,47 @@
+{
+  "id": "a0413867-daf3-43dd-9245-734b3a787942",
+  "name": "Bitlocker Key Retrieval",
+  "description": "Monitor and alert for Bitlocker key retrieval.",
+  "source": {
+    "type": "sigma",
+    "id": "a0413867-daf3-43dd-9245-734b3a787942",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_ad_bitlocker_key_retrieval.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/audit_logs/azure_ad_bitlocker_key_retrieval.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1078004"
+  ],
+  "author": "Michael Epping, '@mepples21'",
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/architecture/security-operations-devices#bitlocker-key-retrieval"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-06-28",
+  "modified": "2022-06-28",
+  "mitre": {
+    "tactics": [
+      "TA1078"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Category\": \"KeyManagement\", \"OperationName\": \"Read BitLocker key\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "auditlogs"
+  ]
+}

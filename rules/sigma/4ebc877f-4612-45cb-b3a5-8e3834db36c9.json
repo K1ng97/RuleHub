@@ -1,0 +1,54 @@
+{
+  "id": "4ebc877f-4612-45cb-b3a5-8e3834db36c9",
+  "name": "Webshell Hacking Activity Patterns",
+  "description": "Detects certain parent child patterns found in cases in which a web shell is used to perform certain credential dumping or exfiltration activities on a compromised system\n",
+  "source": {
+    "type": "sigma",
+    "id": "4ebc877f-4612-45cb-b3a5-8e3834db36c9",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_webshell_hacking.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_webshell_hacking.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackpersistence",
+    "attackt1018",
+    "attackt1033",
+    "attackt1087",
+    "attackt1505003"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://youtu.be/7aemGhaE9ds?t=641"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-03-17",
+  "modified": "2023-11-09",
+  "mitre": {
+    "tactics": [
+      "TA1018",
+      "TA1033",
+      "TA1087",
+      "TA1505"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection_webserver_image: {\"ParentImage|endswith\": [\"\\\\caddy.exe\", \"\\\\httpd.exe\", \"\\\\nginx.exe\", \"\\\\php-cgi.exe\", \"\\\\w3wp.exe\", \"\\\\ws_tomcatservice.exe\"]}\nselection_webserver_characteristics_tomcat1: {\"ParentImage|endswith\": [\"\\\\java.exe\", \"\\\\javaw.exe\"], \"ParentImage|contains\": [\"-tomcat-\", \"\\\\tomcat\"]}\nselection_webserver_characteristics_tomcat2: {\"ParentImage|endswith\": [\"\\\\java.exe\", \"\\\\javaw.exe\"], \"CommandLine|contains\": [\"catalina.jar\", \"CATALINA_HOME\"]}\nselection_child_1: {\"CommandLine|contains|all\": [\"rundll32\", \"comsvcs\"]}\nselection_child_2: {\"CommandLine|contains|all\": [\" -hp\", \" a \", \" -m\"]}\nselection_child_3: {\"CommandLine|contains|all\": [\"net\", \" user \", \" /add\"]}\nselection_child_4: {\"CommandLine|contains|all\": [\"net\", \" localgroup \", \" administrators \", \"/add\"]}\nselection_child_5: {\"Image|endswith\": [\"\\\\ntdsutil.exe\", \"\\\\ldifde.exe\", \"\\\\adfind.exe\", \"\\\\procdump.exe\", \"\\\\Nanodump.exe\", \"\\\\vssadmin.exe\", \"\\\\fsutil.exe\"]}\nselection_child_6: {\"CommandLine|contains\": [\" -decode \", \" -NoP \", \" -W Hidden \", \" /decode \", \" /ticket:\", \" sekurlsa\", \".dmp full\", \".downloadfile(\", \".downloadstring(\", \"FromBase64String\", \"process call create\", \"reg save \", \"whoami /priv\"]}",
+    "condition": "1 of selection_webserver_* and 1 of selection_child_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

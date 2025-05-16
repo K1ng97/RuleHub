@@ -1,0 +1,47 @@
+{
+  "id": "9248c7e1-2bf3-4661-a22c-600a8040b446",
+  "name": "Potential Rundll32 Execution With DLL Stored In ADS",
+  "description": "Detects execution of rundll32 where the DLL being called is stored in an Alternate Data Stream (ADS).",
+  "source": {
+    "type": "sigma",
+    "id": "9248c7e1-2bf3-4661-a22c-600a8040b446",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_rundll32_ads_stored_dll_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_rundll32_ads_stored_dll_execution.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1564004"
+  ],
+  "author": "Harjot Singh, '@cyb3rjy0t'",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/Binaries/Rundll32"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-01-21",
+  "modified": "2023-02-08",
+  "mitre": {
+    "tactics": [
+      "TA1564"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\rundll32.exe\"}, {\"OriginalFileName\": \"RUNDLL32.EXE\"}]\nselection_cli: {\"CommandLine|re\": \"[Rr][Uu][Nn][Dd][Ll][Ll]32(\\\\.[Ee][Xx][Ee])? \\\\S+?\\\\w:\\\\S+?:\"}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

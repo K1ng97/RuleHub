@@ -1,0 +1,49 @@
+{
+  "id": "502b42de-4306-40b4-9596-6f590c81f073",
+  "name": "Local Accounts Discovery",
+  "description": "Local accounts, System Owner/User discovery using operating systems utilities",
+  "source": {
+    "type": "sigma",
+    "id": "502b42de-4306-40b4-9596-6f590c81f073",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_susp_local_system_owner_account_discovery.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_susp_local_system_owner_account_discovery.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1033",
+    "attackt1087001"
+  ],
+  "author": "Timur Zinniatullin, Daniil Yugoslavskiy, oscd.community",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1033/T1033.md"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-10-21",
+  "modified": "2023-01-03",
+  "mitre": {
+    "tactics": [
+      "TA1033",
+      "TA1087"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_other_img: {\"Image|endswith\": [\"\\\\whoami.exe\", \"\\\\quser.exe\", \"\\\\qwinsta.exe\"]}\nselection_other_wmi: {\"Image|endswith\": \"\\\\wmic.exe\", \"CommandLine|contains|all\": [\"useraccount\", \"get\"]}\nselection_other_cmdkey: {\"Image|endswith\": \"\\\\cmdkey.exe\", \"CommandLine|contains\": \" /l\"}\nselection_cmd: {\"Image|endswith\": \"\\\\cmd.exe\", \"CommandLine|contains|all\": [\" /c\", \"dir \", \"\\\\Users\\\\\"]}\nfilter_cmd: {\"CommandLine|contains\": \" rmdir \"}\nselection_net: {\"Image|endswith\": [\"\\\\net.exe\", \"\\\\net1.exe\"], \"CommandLine|contains\": \"user\"}\nfilter_net: {\"CommandLine|contains\": [\"/domain\", \"/add\", \"/delete\", \"/active\", \"/expires\", \"/passwordreq\", \"/scriptpath\", \"/times\", \"/workstations\"]}",
+    "condition": "(selection_cmd and not filter_cmd) or (selection_net and not filter_net) or 1 of selection_other_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administrator or user enumerates local users for legitimate reason"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

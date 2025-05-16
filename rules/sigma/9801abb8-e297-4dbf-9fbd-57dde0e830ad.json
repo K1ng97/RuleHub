@@ -1,0 +1,45 @@
+{
+  "id": "9801abb8-e297-4dbf-9fbd-57dde0e830ad",
+  "name": "File Download And Execution Via IEExec.EXE",
+  "description": "Detects execution of the IEExec utility to download and execute files",
+  "source": {
+    "type": "sigma",
+    "id": "9801abb8-e297-4dbf-9fbd-57dde0e830ad",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_ieexec_download.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_ieexec_download.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1105"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/Binaries/Ieexec/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-05-16",
+  "modified": "2023-11-09",
+  "mitre": {
+    "tactics": [
+      "TA1105"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\IEExec.exe\"}, {\"OriginalFileName\": \"IEExec.exe\"}]\nselection_cli: {\"CommandLine|contains\": [\"http://\", \"https://\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

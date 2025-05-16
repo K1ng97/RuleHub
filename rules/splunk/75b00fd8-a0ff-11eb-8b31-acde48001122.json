@@ -1,0 +1,44 @@
+{
+  "id": "75b00fd8-a0ff-11eb-8b31-acde48001122",
+  "name": "Schedule Task with Rundll32 Command Trigger",
+  "description": "The following analytic detects the creation of scheduled tasks in Windows that use the rundll32 command. It leverages Windows Security EventCode 4698, which logs the creation of scheduled tasks, and filters for tasks executed via rundll32. This activity is significant as it is a common technique used by malware, such as TrickBot, to persist in an environment or deliver additional payloads. If confirmed malicious, this could lead to data theft, ransomware deployment, or other damaging outcomes. Immediate investigation and mitigation are crucial to prevent further compromise.",
+  "source": {
+    "type": "splunk",
+    "id": "75b00fd8-a0ff-11eb-8b31-acde48001122",
+    "url": "https://github.com/splunk/security_content/blob/develop/schedule_task_with_rundll32_command_trigger.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/schedule_task_with_rundll32_command_trigger.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://labs.vipre.com/trickbot-and-its-modules/",
+    "https://whitehat.eu/incident-response-case-study-featuring-ryuk-and-trickbot-part-2/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`wineventlog_security` EventCode=4698 | xmlkv Message | search Command IN (\"*rundll32*\") | stats count min(_time) as firstTime max(_time) as lastTime by dest, Task_Name, Command, Author, Enabled, Hidden, Arguments | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `schedule_task_with_rundll32_command_trigger_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting logs with the task schedule (Exa. Security Log EventCode 4698) endpoints. Tune and filter known instances of Task schedule used in your environment.",
+    "fields": []
+  },
+  "falsepositives": [
+    "unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

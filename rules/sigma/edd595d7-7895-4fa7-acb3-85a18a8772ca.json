@@ -1,0 +1,47 @@
+{
+  "id": "edd595d7-7895-4fa7-acb3-85a18a8772ca",
+  "name": "Steganography Unzip Hidden Information From Picture File",
+  "description": "Detects extracting of zip file from image file",
+  "source": {
+    "type": "sigma",
+    "id": "edd595d7-7895-4fa7-acb3-85a18a8772ca",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/lnx_auditd_unzip_hidden_zip_files_steganography.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/auditd/lnx_auditd_unzip_hidden_zip_files_steganography.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1027003"
+  ],
+  "author": "Pawel Mazur",
+  "references": [
+    "https://zerotoroot.me/steganography-hiding-a-zip-in-a-jpeg-file/"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-09-09",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [
+      "TA1027"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "commands: {\"type\": \"EXECVE\", \"a0\": \"unzip\"}\na1: {\"a1|endswith\": [\".jpg\", \".png\"]}",
+    "condition": "commands and a1",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "auditd"
+  ]
+}

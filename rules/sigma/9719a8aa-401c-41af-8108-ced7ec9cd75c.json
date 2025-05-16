@@ -1,0 +1,53 @@
+{
+  "id": "9719a8aa-401c-41af-8108-ced7ec9cd75c",
+  "name": "Windows Defender Definition Files Removed",
+  "description": "Adversaries may disable security tools to avoid possible detection of their tools and activities by removing Windows Defender Definition Files",
+  "source": {
+    "type": "sigma",
+    "id": "9719a8aa-401c-41af-8108-ced7ec9cd75c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_mpcmdrun_remove_windows_defender_definition.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_mpcmdrun_remove_windows_defender_definition.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1562001"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md",
+    "https://unit42.paloaltonetworks.com/unit42-gorgon-group-slithering-nation-state-cybercrime/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-07-07",
+  "modified": "2023-07-18",
+  "mitre": {
+    "tactics": [
+      "TA1562"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\MpCmdRun.exe\"}, {\"OriginalFileName\": \"MpCmdRun.exe\"}]\nselection_cli: {\"CommandLine|contains|all\": [\" -RemoveDefinitions\", \" -All\"]}",
+    "condition": "all of selection_*",
+    "fields": [
+      "ComputerName",
+      "User",
+      "CommandLine",
+      "ParentCommandLine"
+    ]
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

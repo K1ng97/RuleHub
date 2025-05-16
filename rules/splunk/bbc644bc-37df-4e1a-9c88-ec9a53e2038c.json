@@ -1,0 +1,41 @@
+{
+  "id": "bbc644bc-37df-4e1a-9c88-ec9a53e2038c",
+  "name": "Disabling Remote User Account Control",
+  "description": "The following analytic identifies modifications to the registry key that controls the enforcement of Windows User Account Control (UAC). It detects changes to the registry path `HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System\\EnableLUA` where the value is set to `0x00000000`. This activity is significant because disabling UAC can allow unauthorized changes to the system without user consent, potentially leading to privilege escalation. If confirmed malicious, an attacker could gain elevated privileges, making it easier to execute further attacks or maintain persistence within the environment.",
+  "source": {
+    "type": "splunk",
+    "id": "bbc644bc-37df-4e1a-9c88-ec9a53e2038c",
+    "url": "https://github.com/splunk/security_content/blob/develop/disabling_remote_user_account_control.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/disabling_remote_user_account_control.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "David Dorsey, Patrick Bareiss, Splunk",
+  "references": [],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Registry where Registry.registry_path=*\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Policies\\\\System\\\\EnableLUA* Registry.registry_value_data=\"0x00000000\" by Registry.action Registry.dest Registry.process_guid Registry.process_id Registry.registry_hive Registry.registry_path Registry.registry_key_name Registry.registry_value_data Registry.registry_value_name Registry.registry_value_type Registry.status Registry.user Registry.vendor_product | `drop_dm_object_name(Registry)` | `disabling_remote_user_account_control_filter`",
+    "condition": "To successfully implement this search, you must be ingesting data that records registry activity from your hosts to populate the endpoint data model in the registry node. This is typically populated via endpoint detection-and-response product, such as Carbon Black, or via other endpoint data sources, such as Sysmon. The data used for this search is typically generated via logs that report registry modifications.",
+    "fields": []
+  },
+  "falsepositives": [
+    "This registry key may be modified via administrators to implement a change in system policy. This type of change should be a very rare occurrence."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

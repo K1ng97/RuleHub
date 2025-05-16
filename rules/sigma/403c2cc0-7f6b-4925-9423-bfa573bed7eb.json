@@ -1,0 +1,48 @@
+{
+  "id": "403c2cc0-7f6b-4925-9423-bfa573bed7eb",
+  "name": "Suspicious PowerShell Download - Powershell Script",
+  "description": "Detects suspicious PowerShell download command",
+  "source": {
+    "type": "sigma",
+    "id": "403c2cc0-7f6b-4925-9423-bfa573bed7eb",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_susp_download.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_susp_download.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1059001"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://learn.microsoft.com/en-us/dotnet/api/system.net.webclient.downloadstring?view=net-8.0",
+    "https://learn.microsoft.com/en-us/dotnet/api/system.net.webclient.downloadfile?view=net-8.0"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2017-03-05",
+  "modified": "2022-12-02",
+  "mitre": {
+    "tactics": [
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "webclient: {\"ScriptBlockText|contains\": \"System.Net.WebClient\"}\ndownload: {\"ScriptBlockText|contains\": [\".DownloadFile(\", \".DownloadFileAsync(\", \".DownloadString(\", \".DownloadStringAsync(\"]}",
+    "condition": "webclient and download",
+    "fields": []
+  },
+  "falsepositives": [
+    "PowerShell scripts that download content from the Internet"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

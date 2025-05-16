@@ -1,0 +1,49 @@
+{
+  "id": "a83122f2-fa09-4868-a230-544dbc54bc1c",
+  "name": "Fortinet Appliance Auth bypass",
+  "description": "The following analytic detects attempts to exploit CVE-2022-40684, a Fortinet appliance authentication bypass vulnerability. It identifies REST API requests to the /api/v2/ endpoint using various HTTP methods (GET, POST, PUT, DELETE) that may indicate unauthorized modifications, such as adding SSH keys or creating new users. This detection leverages the Web datamodel to monitor specific URL patterns and HTTP methods. This activity is significant as it can lead to unauthorized access and control over the appliance. If confirmed malicious, attackers could gain persistent access, reroute network traffic, or capture sensitive information.",
+  "source": {
+    "type": "splunk",
+    "id": "a83122f2-fa09-4868-a230-544dbc54bc1c",
+    "url": "https://github.com/splunk/security_content/blob/develop/fortinet_appliance_auth_bypass.yml",
+    "file_path": "tmp/repos/splunk/detections/web/fortinet_appliance_auth_bypass.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "cve",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Michael Haag, Splunk",
+  "references": [
+    "https://www.wordfence.com/blog/2022/10/threat-advisory-cve-2022-40684-fortinet-appliance-auth-bypass/",
+    "https://www.horizon3.ai/fortios-fortiproxy-and-fortiswitchmanager-authentication-bypass-technical-deep-dive-cve-2022-40684/",
+    "https://github.com/horizon3ai/CVE-2022-40684",
+    "https://www.horizon3.ai/fortinet-iocs-cve-2022-40684/",
+    "https://attackerkb.com/topics/QWOxGIKkGx/cve-2022-40684/rapid7-analysis",
+    "https://github.com/rapid7/metasploit-framework/pull/17143"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url IN (\"*/api/v2/cmdb/system/admin*\")  Web.http_method IN (\"GET\", \"PUT\") by Web.http_user_agent, Web.http_method, Web.url, Web.url_length, Web.src, Web.dest, sourcetype | `drop_dm_object_name(\"Web\")` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `fortinet_appliance_auth_bypass_filter`",
+    "condition": "This detection requires the Web datamodel to be populated from a supported Technology Add-On like Splunk for Apache. Splunk for Nginx, or Splunk for Palo Alto.",
+    "fields": []
+  },
+  "falsepositives": [
+    "GET requests will be noisy and need to be filtered out or removed from the query based on volume. Restrict analytic to known publically facing Fortigates, or run analytic as a Hunt until properly tuned. It is also possible the user agent may be filtered on Report Runner or Node.js only for the exploit, however, it is unknown at this if other user agents may be used."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

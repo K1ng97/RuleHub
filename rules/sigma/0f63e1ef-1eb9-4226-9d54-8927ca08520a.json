@@ -1,0 +1,52 @@
+{
+  "id": "0f63e1ef-1eb9-4226-9d54-8927ca08520a",
+  "name": "Admin User Remote Logon",
+  "description": "Detect remote login by Administrator user (depending on internal pattern).",
+  "source": {
+    "type": "sigma",
+    "id": "0f63e1ef-1eb9-4226-9d54-8927ca08520a",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_admin_rdp_login.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/account_management/win_security_admin_rdp_login.yml"
+  },
+  "tags": [
+    "attacklateral-movement",
+    "attackt1078001",
+    "attackt1078002",
+    "attackt1078003",
+    "car2016-04-005"
+  ],
+  "author": "juju4",
+  "references": [
+    "https://car.mitre.org/wiki/CAR-2016-04-005"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2017-10-29",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [
+      "TA1078"
+    ],
+    "techniques": [
+      "T001",
+      "T002",
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 4624, \"LogonType\": 10, \"AuthenticationPackageName\": \"Negotiate\", \"TargetUserName|startswith\": \"Admin\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administrative activity."
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

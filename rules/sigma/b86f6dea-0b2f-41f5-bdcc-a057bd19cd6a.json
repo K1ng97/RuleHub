@@ -1,0 +1,46 @@
+{
+  "id": "b86f6dea-0b2f-41f5-bdcc-a057bd19cd6a",
+  "name": "File Download From IP Based URL Via CertOC.EXE",
+  "description": "Detects when a user downloads a file from an IP based URL using CertOC.exe",
+  "source": {
+    "type": "sigma",
+    "id": "b86f6dea-0b2f-41f5-bdcc-a057bd19cd6a",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_certoc_download_direct_ip.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_certoc_download_direct_ip.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackexecution",
+    "attackt1105"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/Binaries/Certoc/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-10-18",
+  "modified": "2023-10-18",
+  "mitre": {
+    "tactics": [
+      "TA1105"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\certoc.exe\"}, {\"OriginalFileName\": \"CertOC.exe\"}]\nselection_ip: {\"CommandLine|re\": \"://[0-9]{1,3}\\\\.[0-9]{1,3}\\\\.[0-9]{1,3}\\\\.[0-9]{1,3}\"}\nselection_cli: {\"CommandLine|contains\": \"-GetCACAPS\"}",
+    "condition": "all of selection*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

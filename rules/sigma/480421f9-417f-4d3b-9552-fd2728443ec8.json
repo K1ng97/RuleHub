@@ -1,0 +1,55 @@
+{
+  "id": "480421f9-417f-4d3b-9552-fd2728443ec8",
+  "name": "Wow6432Node Windows NT CurrentVersion Autorun Keys Modification",
+  "description": "Detects modification of autostart extensibility point (ASEP) in registry.",
+  "source": {
+    "type": "sigma",
+    "id": "480421f9-417f-4d3b-9552-fd2728443ec8",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_set_asep_reg_keys_modification_wow6432node_currentversion.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_set/registry_set_asep_reg_keys_modification_wow6432node_currentversion.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1547001"
+  ],
+  "author": "Victor Sergeev, Daniil Yugoslavskiy, Gleb Sukhodolskiy, Timur Zinniatullin, oscd.community, Tim Shelton, frack113 (split)",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1547.001/T1547.001.md",
+    "https://learn.microsoft.com/en-us/sysinternals/downloads/autoruns",
+    "https://gist.github.com/GlebSukhodolskiy/0fc5fa5f482903064b448890db1eaf9d"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-10-25",
+  "modified": "2023-08-17",
+  "mitre": {
+    "tactics": [
+      "TA1547"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "wow_nt_current_version_base: {\"TargetObject|contains\": \"\\\\SOFTWARE\\\\Wow6432Node\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\"}\nwow_nt_current_version: {\"TargetObject|contains\": [\"\\\\Windows\\\\Appinit_Dlls\", \"\\\\Image File Execution Options\", \"\\\\Drivers32\"]}\nfilter: {\"Details\": [\"(Empty)\", \"\\\\REGISTRY\\\\MACHINE\\\\SOFTWARE\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\Image File Execution Options\"]}",
+    "condition": "wow_nt_current_version_base and wow_nt_current_version and not filter",
+    "fields": [
+      "SecurityID",
+      "ObjectName",
+      "OldValueType",
+      "NewValueType"
+    ]
+  },
+  "falsepositives": [
+    "Legitimate software automatically (mostly, during installation) sets up autorun keys for legitimate reason",
+    "Legitimate administrator sets up autorun keys for legitimate reason"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_set"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "cad1fe90-2406-44dc-bd03-59d0b58fe722",
+  "name": "HackTool - NPPSpy Hacktool Usage",
+  "description": "Detects the use of NPPSpy hacktool that stores cleartext passwords of users that logged in to a local file",
+  "source": {
+    "type": "sigma",
+    "id": "cad1fe90-2406-44dc-bd03-59d0b58fe722",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_hktl_nppspy.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_hktl_nppspy.yml"
+  },
+  "tags": [
+    "attackcredential-access"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1003/T1003.md#atomic-test-2---credential-dumping-with-nppspy",
+    "https://twitter.com/0gtweet/status/1465282548494487554"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-11-29",
+  "modified": "2024-06-27",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"TargetFilename|endswith\": [\"\\\\NPPSpy.txt\", \"\\\\NPPSpy.dll\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

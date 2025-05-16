@@ -1,0 +1,50 @@
+{
+  "id": "968eef52-9cff-4454-8992-1e74b9cbad6c",
+  "name": "Reconnaissance Activity",
+  "description": "Detects activity as \"net user administrator /domain\" and \"net group domain admins /domain\"",
+  "source": {
+    "type": "sigma",
+    "id": "968eef52-9cff-4454-8992-1e74b9cbad6c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_susp_net_recon_activity.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_susp_net_recon_activity.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attacks0039",
+    "attackt1069002",
+    "attackt1087002"
+  ],
+  "author": "Florian Roth (Nextron Systems), Jack Croock (method), Jonhnathan Ribeiro (improvements), oscd.community",
+  "references": [
+    "https://findingbad.blogspot.de/2017/01/hunting-what-does-it-look-like.html"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2017-03-07",
+  "modified": "2022-08-22",
+  "mitre": {
+    "tactics": [
+      "TA1069",
+      "TA1087"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 4661, \"AccessMask\": \"0x2d\", \"ObjectType\": [\"SAM_USER\", \"SAM_GROUP\"], \"ObjectName|startswith\": \"S-1-5-21-\", \"ObjectName|endswith\": [\"-500\", \"-512\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrator activity"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

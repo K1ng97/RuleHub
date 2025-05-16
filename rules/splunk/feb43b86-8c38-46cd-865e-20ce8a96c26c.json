@@ -1,0 +1,44 @@
+{
+  "id": "feb43b86-8c38-46cd-865e-20ce8a96c26c",
+  "name": "Windows Scheduled Tasks for CompMgmtLauncher or Eventvwr",
+  "description": "The following analytic detects the creation or modification of Windows Scheduled Tasks related to CompMgmtLauncher or Eventvwr. These legitimate system utilities, used for launching the Computer Management Console and Event Viewer, can be abused by attackers to execute malicious payloads under the guise of normal system processes. By leveraging these tasks, adversaries can establish persistence or elevate privileges without raising suspicion. This detection helps security analysts identify unusual or unauthorized scheduled tasks involving these executables, allowing for timely investigation and remediation of potential threats.",
+  "source": {
+    "type": "splunk",
+    "id": "feb43b86-8c38-46cd-865e-20ce8a96c26c",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_scheduled_tasks_for_compmgmtlauncher_or_eventvwr.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_scheduled_tasks_for_compmgmtlauncher_or_eventvwr.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://www.proofpoint.com/us/blog/threat-insight/chinese-malware-appears-earnest-across-cybercrime-threat-landscape",
+    "https://www.fortinet.com/blog/threat-research/valleyrat-campaign-targeting-chinese-speakers"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`wineventlog_security` EventCode=4698 TaskContent = \"*&lt;Command&gt;C:\\\\Windows\\\\System32\\\\CompMgmtLauncher.exe&lt;/Command&gt;*\" OR TaskContent = \"*&lt;Command&gt;C:\\\\Windows\\\\System32\\\\zh-CN\\\\eventvwr.msc&lt;/Command&gt;*\" OR TaskContent = \"*&lt;Command&gt;C:\\\\Windows\\\\System32\\\\eventvwr.msc&lt;/Command&gt;*\" | stats count min(_time) as firstTime max(_time) as lastTime by dest action EventData_Xml TaskContent TaskName | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_scheduled_tasks_for_compmgmtlauncher_or_eventvwr_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting Windows Security Event Logs with 4698 EventCode enabled. The Windows TA as well as the URL ToolBox application are also required.",
+    "fields": []
+  },
+  "falsepositives": [
+    "unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

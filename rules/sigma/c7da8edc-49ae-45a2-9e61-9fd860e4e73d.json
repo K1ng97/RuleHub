@@ -1,0 +1,47 @@
+{
+  "id": "c7da8edc-49ae-45a2-9e61-9fd860e4e73d",
+  "name": "PUA - Sysinternals Tools Execution - Registry",
+  "description": "Detects the execution of some potentially unwanted tools such as PsExec, Procdump, etc. (part of the Sysinternals suite) via the creation of the \"accepteula\" registry key.",
+  "source": {
+    "type": "sigma",
+    "id": "c7da8edc-49ae-45a2-9e61-9fd860e4e73d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_add_pua_sysinternals_susp_execution_via_eula.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_add/registry_add_pua_sysinternals_susp_execution_via_eula.yml"
+  },
+  "tags": [
+    "attackresource-development",
+    "attackt1588002"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://twitter.com/Moti_B/status/1008587936735035392"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-24",
+  "modified": "2023-02-07",
+  "mitre": {
+    "tactics": [
+      "TA1588"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventType\": \"CreateKey\", \"TargetObject|contains\": [\"\\\\Active Directory Explorer\", \"\\\\Handle\", \"\\\\LiveKd\", \"\\\\Process Explorer\", \"\\\\ProcDump\", \"\\\\PsExec\", \"\\\\PsLoglist\", \"\\\\PsPasswd\", \"\\\\SDelete\", \"\\\\Sysinternals\"], \"TargetObject|endswith\": \"\\\\EulaAccepted\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use of SysInternals tools. Filter the legitimate paths used in your environment"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_add"
+  ]
+}

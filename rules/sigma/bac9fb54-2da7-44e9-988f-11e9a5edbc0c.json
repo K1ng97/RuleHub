@@ -1,0 +1,47 @@
+{
+  "id": "bac9fb54-2da7-44e9-988f-11e9a5edbc0c",
+  "name": "Potential Password Spraying Attempt Using Dsacls.EXE",
+  "description": "Detects possible password spraying attempts using Dsacls",
+  "source": {
+    "type": "sigma",
+    "id": "bac9fb54-2da7-44e9-988f-11e9a5edbc0c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_dsacls_password_spray.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_dsacls_password_spray.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse/using-dsacls-to-check-ad-object-permissions#password-spraying-anyone",
+    "https://ss64.com/nt/dsacls.html",
+    "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/cc771151(v=ws.11)"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-06-20",
+  "modified": "2023-02-04",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\dsacls.exe\"}, {\"OriginalFileName\": \"DSACLS.EXE\"}]\nselection_cli: {\"CommandLine|contains|all\": [\"/user:\", \"/passwd:\"]}",
+    "condition": "all of selection*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use of dsacls to bind to an LDAP session"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

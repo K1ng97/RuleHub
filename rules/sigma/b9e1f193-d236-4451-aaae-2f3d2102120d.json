@@ -1,0 +1,46 @@
+{
+  "id": "b9e1f193-d236-4451-aaae-2f3d2102120d",
+  "name": "Cisco Sniffing",
+  "description": "Show when a monitor or a span/rspan is setup or modified",
+  "source": {
+    "type": "sigma",
+    "id": "b9e1f193-d236-4451-aaae-2f3d2102120d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/cisco_cli_net_sniff.yml",
+    "file_path": "tmp/repos/sigma/rules/network/cisco/aaa/cisco_cli_net_sniff.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackdiscovery",
+    "attackt1040"
+  ],
+  "author": "Austin Clark",
+  "references": [],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-08-11",
+  "modified": "2023-01-04",
+  "mitre": {
+    "tactics": [
+      "TA1040"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "keywords: [\"monitor capture point\", \"set span\", \"set rspan\"]",
+    "condition": "keywords",
+    "fields": [
+      "CmdSet"
+    ]
+  },
+  "falsepositives": [
+    "Admins may setup new or modify old spans, or use a monitor for troubleshooting"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "cisco",
+    "aaa"
+  ]
+}

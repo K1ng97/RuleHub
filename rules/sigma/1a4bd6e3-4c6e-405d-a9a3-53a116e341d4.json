@@ -1,0 +1,46 @@
+{
+  "id": "1a4bd6e3-4c6e-405d-a9a3-53a116e341d4",
+  "name": "USB Device Plugged",
+  "description": "Detects plugged/unplugged USB devices",
+  "source": {
+    "type": "sigma",
+    "id": "1a4bd6e3-4c6e-405d-a9a3-53a116e341d4",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_usb_device_plugged.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/driverframeworks/win_usb_device_plugged.yml"
+  },
+  "tags": [
+    "attackinitial-access",
+    "attackt1200"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://df-stream.com/2014/01/the-windows-7-event-log-and-usb-device/",
+    "https://www.techrepublic.com/article/how-to-track-down-usb-flash-drive-usage-in-windows-10s-event-viewer/"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2017-11-09",
+  "modified": "2021-11-30",
+  "mitre": {
+    "tactics": [
+      "TA1200"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": [2003, 2100, 2102]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administrative activity"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "driver-framework"
+  ]
+}

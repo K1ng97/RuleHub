@@ -1,0 +1,49 @@
+{
+  "id": "cd951fdc-4b2f-47f5-ba99-a33bf61e3770",
+  "name": "Always Install Elevated Windows Installer",
+  "description": "Detects Windows Installer service (msiexec.exe) trying to install MSI packages with SYSTEM privilege",
+  "source": {
+    "type": "sigma",
+    "id": "cd951fdc-4b2f-47f5-ba99-a33bf61e3770",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_susp_always_install_elevated_windows_installer.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_susp_always_install_elevated_windows_installer.yml"
+  },
+  "tags": [
+    "attackprivilege-escalation",
+    "attackt1548002"
+  ],
+  "author": "Teymur Kheirkhabarov (idea), Mangatas Tondang (rule), oscd.community",
+  "references": [
+    "https://image.slidesharecdn.com/kheirkhabarovoffzonefinal-181117201458/95/hunting-for-privilege-escalation-in-windows-environment-48-638.jpg"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-13",
+  "modified": "2024-12-01",
+  "mitre": {
+    "tactics": [
+      "TA1548"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection_user: {\"User|contains\": [\"AUTHORI\", \"AUTORI\"]}\nselection_image_1: {\"Image|contains|all\": [\"\\\\Windows\\\\Installer\\\\\", \"msi\"], \"Image|endswith\": \"tmp\"}\nselection_image_2: {\"Image|endswith\": \"\\\\msiexec.exe\", \"IntegrityLevel\": [\"System\", \"S-1-16-16384\"]}\nfilter_installer: {\"ParentImage\": \"C:\\\\Windows\\\\System32\\\\services.exe\"}\nfilter_repair: [{\"CommandLine|endswith\": \"\\\\system32\\\\msiexec.exe /V\"}, {\"ParentCommandLine|endswith\": \"\\\\system32\\\\msiexec.exe /V\"}]\nfilter_sophos: {\"ParentImage|startswith\": \"C:\\\\ProgramData\\\\Sophos\\\\\"}\nfilter_avira: {\"ParentImage|startswith\": \"C:\\\\ProgramData\\\\Avira\\\\\"}\nfilter_avast: {\"ParentImage|startswith\": [\"C:\\\\Program Files\\\\Avast Software\\\\\", \"C:\\\\Program Files (x86)\\\\Avast Software\\\\\"]}\nfilter_google_update: {\"ParentImage|startswith\": [\"C:\\\\Program Files\\\\Google\\\\Update\\\\\", \"C:\\\\Program Files (x86)\\\\Google\\\\Update\\\\\"]}",
+    "condition": "1 of selection_image_* and selection_user and not 1 of filter_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "System administrator usage",
+    "Anti virus products",
+    "WindowsApps located in \"C:\\Program Files\\WindowsApps\\\""
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

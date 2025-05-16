@@ -1,0 +1,47 @@
+{
+  "id": "558eebe5-f2ba-4104-b339-36f7902bcc1a",
+  "name": "File Creation Date Changed to Another Year",
+  "description": "Attackers may change the file creation time of a backdoor to make it look like it was installed with the operating system.\nNote that many processes legitimately change the creation time of a file; it does not necessarily indicate malicious activity.\n",
+  "source": {
+    "type": "sigma",
+    "id": "558eebe5-f2ba-4104-b339-36f7902bcc1a",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_change_win_2022_timestomping.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_change/file_change_win_2022_timestomping.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1070006"
+  ],
+  "author": "frack113, Florian Roth (Nextron Systems)",
+  "references": [
+    "https://www.inversecos.com/2022/04/defence-evasion-technique-timestomping.html"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-12",
+  "modified": "2022-10-25",
+  "mitre": {
+    "tactics": [
+      "TA1070"
+    ],
+    "techniques": [
+      "T006"
+    ]
+  },
+  "detection": {
+    "query": "selection1: {\"PreviousCreationUtcTime|startswith\": \"2022\"}\nfilter1: {\"CreationUtcTime|startswith\": \"2022\"}\nselection2: {\"PreviousCreationUtcTime|startswith\": \"202\"}\nfilter2: {\"CreationUtcTime|startswith\": \"202\"}\ngen_filter_updates: [{\"Image\": [\"C:\\\\Windows\\\\system32\\\\ProvTool.exe\", \"C:\\\\Windows\\\\System32\\\\usocoreworker.exe\", \"C:\\\\Windows\\\\ImmersiveControlPanel\\\\SystemSettings.exe\"]}, {\"TargetFilename|startswith\": \"C:\\\\ProgramData\\\\USOPrivate\\\\UpdateStore\\\\\"}, {\"TargetFilename|endswith\": [\".tmp\", \".temp\"]}]\ngen_filter_tiworker: {\"Image|startswith\": \"C:\\\\WINDOWS\\\\\", \"Image|endswith\": \"\\\\TiWorker.exe\", \"TargetFilename|endswith\": \".cab\"}",
+    "condition": "(( selection1 and not filter1 ) or ( selection2 and not filter2 )) and not 1 of gen_filter*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Changes made to or by the local NTP service"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_change"
+  ]
+}

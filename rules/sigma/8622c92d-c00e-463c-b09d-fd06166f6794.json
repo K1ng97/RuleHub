@@ -1,0 +1,50 @@
+{
+  "id": "8622c92d-c00e-463c-b09d-fd06166f6794",
+  "name": "Github High Risk Configuration Disabled",
+  "description": "Detects when a user disables a critical security feature for an organization.",
+  "source": {
+    "type": "sigma",
+    "id": "8622c92d-c00e-463c-b09d-fd06166f6794",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/github_disable_high_risk_configuration.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/github/github_disable_high_risk_configuration.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackdefense-evasion",
+    "attackpersistence",
+    "attackt1556"
+  ],
+  "author": "Muhammad Faisal (@faisalusuf)",
+  "references": [
+    "https://docs.github.com/en/organizations/managing-oauth-access-to-your-organizations-data/disabling-oauth-app-access-restrictions-for-your-organization",
+    "https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/reviewing-the-audit-log-for-your-organization#dependabot_alerts-category-actions",
+    "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-security-and-analysis-settings-for-your-repository",
+    "https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/audit-log-events-for-your-enterprise"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-01-29",
+  "modified": "2024-07-22",
+  "mitre": {
+    "tactics": [
+      "TA1556"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"action\": [\"business_advanced_security.disabled_for_new_repos\", \"business_advanced_security.disabled_for_new_user_namespace_repos\", \"business_advanced_security.disabled\", \"business_advanced_security.user_namespace_repos_disabled\", \"org.advanced_security_disabled_for_new_repos\", \"org.advanced_security_disabled_on_all_repos\", \"org.advanced_security_policy_selected_member_disabled\", \"org.disable_oauth_app_restrictions\", \"org.disable_two_factor_requirement\", \"repo.advanced_security_disabled\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Approved administrator/owner activities."
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "github",
+    "audit"
+  ]
+}

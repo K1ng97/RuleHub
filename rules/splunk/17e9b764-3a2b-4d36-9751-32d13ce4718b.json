@@ -1,0 +1,43 @@
+{
+  "id": "17e9b764-3a2b-4d36-9751-32d13ce4718b",
+  "name": "Cisco Secure Firewall - Blocked Connection",
+  "description": "The following analytic detects a blocked connection event by identifying a \"Block\" value in the action field. It leverages logs from Cisco Secure Firewall Threat Defense devices. This activity is significant as it can identify attempts from users or applications initiating network connection to explicitly or implicitly blocked range or zones. If confirmed malicious, attackers could be attempting to perform a forbidden action on the network such as data exfiltration, lateral movement, or network disruption.",
+  "source": {
+    "type": "splunk",
+    "id": "17e9b764-3a2b-4d36-9751-32d13ce4718b",
+    "url": "https://github.com/splunk/security_content/blob/develop/cisco_secure_firewall___blocked_connection.yml",
+    "file_path": "tmp/repos/splunk/detections/network/cisco_secure_firewall___blocked_connection.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Nasreddine Bencherchali, Splunk",
+  "references": [
+    "https://www.cisco.com/c/en/us/td/docs/security/firepower/741/api/FQE/secure_firewall_estreamer_fqe_guide_740.pdf"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`cisco_secure_firewall` EventType=ConnectionEvent action=Block\n| stats count min(_time) as firstTime max(_time) as lastTime by src_ip, dest, dest_port, transport, rule, url, EVE_Process, action\n| `security_content_ctime(firstTime)` \n| `security_content_ctime(lastTime)` \n| `cisco_secure_firewall___blocked_connection_filter`\n",
+    "condition": "This search requires Cisco Secure Firewall Threat Defense Logs, which\nincludes the ConnectionEvent EventType. This search uses an input macro named `cisco_secure_firewall`.\nWe strongly recommend that you specify your environment-specific configurations\n(index, source, sourcetype, etc.) for Cisco Secure Firewall Threat Defense logs. Replace the macro definition\nwith configurations for your Splunk environment. The search also uses a post-filter\nmacro designed to filter out known false positives.\nThe logs are to be ingested using the Splunk Add-on for Cisco Security Cloud (https://splunkbase.splunk.com/app/7404).\nThe access policy must also enable logging.\n",
+    "fields": []
+  },
+  "falsepositives": [
+    "Blocked connection events are generated via an Access Control policy on the Firewall management console. Hence no false positives should be present."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

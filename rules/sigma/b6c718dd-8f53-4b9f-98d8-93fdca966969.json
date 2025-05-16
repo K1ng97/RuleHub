@@ -1,0 +1,42 @@
+{
+  "id": "b6c718dd-8f53-4b9f-98d8-93fdca966969",
+  "name": "New Okta User Created",
+  "description": "Detects new user account creation",
+  "source": {
+    "type": "sigma",
+    "id": "b6c718dd-8f53-4b9f-98d8-93fdca966969",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/okta_user_created.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/okta/okta_user_created.yml"
+  },
+  "tags": [
+    "attackcredential-access"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://developer.okta.com/docs/reference/api/event-types/"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-10-25",
+  "modified": "2023-10-25",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"eventtype\": \"user.lifecycle.create\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate and authorized user creation"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "okta",
+    "okta"
+  ]
+}

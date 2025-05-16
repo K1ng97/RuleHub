@@ -1,0 +1,58 @@
+{
+  "id": "3ceb2083-a27f-449a-be33-14ec1b7cc973",
+  "name": "Silence.EDA Detection",
+  "description": "Detects Silence EmpireDNSAgent as described in the Group-IP report",
+  "source": {
+    "type": "sigma",
+    "id": "3ceb2083-a27f-449a-be33-14ec1b7cc973",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_apt_silence_eda.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_apt_silence_eda.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackexecution",
+    "attackg0091",
+    "attackimpact",
+    "attacks0363",
+    "attackt1059001",
+    "attackt1071004",
+    "attackt1529",
+    "attackt1572"
+  ],
+  "author": "Alina Stepchenkova, Group-IB, oscd.community",
+  "references": [
+    "https://www.group-ib.com/resources/threat-research/silence_2.0.going_global.pdf"
+  ],
+  "severity": "critical",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-11-01",
+  "modified": "2023-04-03",
+  "mitre": {
+    "tactics": [
+      "TA1059",
+      "TA1071",
+      "TA1529",
+      "TA1572"
+    ],
+    "techniques": [
+      "T001",
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "empire: {\"ScriptBlockText|contains|all\": [\"System.Diagnostics.Process\", \"Stop-Computer\", \"Restart-Computer\", \"Exception in execution\", \"$cmdargs\", \"Close-Dnscat2Tunnel\"]}\ndnscat: {\"ScriptBlockText|contains|all\": [\"set type=$LookupType`nserver\", \"$Command | nslookup 2>&1 | Out-String\", \"New-RandomDNSField\", \"[Convert]::ToString($SYNOptions, 16)\", \"$Session.Dead = $True\", \"$Session[\\\"Driver\\\"] -eq\"]}",
+    "condition": "empire and dnscat",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "critical",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

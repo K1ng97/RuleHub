@@ -1,0 +1,50 @@
+{
+  "id": "37c1333a-a0db-48be-b64b-7393b2386e3b",
+  "name": "Hacktool Execution - PE Metadata",
+  "description": "Detects the execution of different Windows based hacktools via PE metadata (company, product, etc.) even if the files have been renamed",
+  "source": {
+    "type": "sigma",
+    "id": "37c1333a-a0db-48be-b64b-7393b2386e3b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_hktl_execution_via_pe_metadata.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_hktl_execution_via_pe_metadata.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1003",
+    "attackt1588002"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://github.com/cube0x0",
+    "https://www.virustotal.com/gui/search/metadata%253ACube0x0/files"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-04-27",
+  "modified": "2024-01-15",
+  "mitre": {
+    "tactics": [
+      "TA1003",
+      "TA1588"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Company\": \"Cube0x0\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

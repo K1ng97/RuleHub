@@ -1,0 +1,52 @@
+{
+  "id": "977ef627-4539-4875-adf4-ed8f780c4922",
+  "name": "Auditing Configuration Changes on Linux Host",
+  "description": "Detect changes in auditd configuration files",
+  "source": {
+    "type": "sigma",
+    "id": "977ef627-4539-4875-adf4-ed8f780c4922",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/lnx_auditd_auditing_config_change.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/auditd/lnx_auditd_auditing_config_change.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1562006"
+  ],
+  "author": "Mikhail Larin, oscd.community",
+  "references": [
+    "https://github.com/Neo23x0/auditd/blob/master/audit.rules",
+    "Self Experience"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-10-25",
+  "modified": "2021-11-27",
+  "mitre": {
+    "tactics": [
+      "TA1562"
+    ],
+    "techniques": [
+      "T006"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"type\": \"PATH\", \"name\": [\"/etc/audit/*\", \"/etc/libaudit.conf\", \"/etc/audisp/*\"]}",
+    "condition": "selection",
+    "fields": [
+      "exe",
+      "comm",
+      "key"
+    ]
+  },
+  "falsepositives": [
+    "Legitimate administrative activity"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "auditd"
+  ]
+}

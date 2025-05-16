@@ -1,0 +1,56 @@
+{
+  "id": "2e4e488a-6164-4811-9ea1-f960c7359c40",
+  "name": "HackTool - CACTUSTORCH Remote Thread Creation",
+  "description": "Detects remote thread creation from CACTUSTORCH as described in references.",
+  "source": {
+    "type": "sigma",
+    "id": "2e4e488a-6164-4811-9ea1-f960c7359c40",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/create_remote_thread_win_hktl_cactustorch.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/create_remote_thread/create_remote_thread_win_hktl_cactustorch.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1055012",
+    "attackt1059005",
+    "attackt1059007",
+    "attackt1218005"
+  ],
+  "author": "@SBousseaden (detection), Thomas Patzke (rule)",
+  "references": [
+    "https://twitter.com/SBousseaden/status/1090588499517079552",
+    "https://github.com/mdsecactivebreach/CACTUSTORCH"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-02-01",
+  "modified": "2023-05-05",
+  "mitre": {
+    "tactics": [
+      "TA1055",
+      "TA1059",
+      "TA1218"
+    ],
+    "techniques": [
+      "T005",
+      "T007",
+      "T012"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"SourceImage|endswith\": [\"\\\\System32\\\\cscript.exe\", \"\\\\System32\\\\wscript.exe\", \"\\\\System32\\\\mshta.exe\", \"\\\\winword.exe\", \"\\\\excel.exe\"], \"TargetImage|contains\": \"\\\\SysWOW64\\\\\", \"StartModule\": null}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "create_remote_thread"
+  ]
+}

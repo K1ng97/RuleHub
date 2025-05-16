@@ -1,0 +1,43 @@
+{
+  "id": "94396c3e-7728-422a-9956-e4b77b53dbdf",
+  "name": "O365 Email Reported By Admin Found Malicious",
+  "description": "The following analytic detects when an email manually submitted to Microsoft through the Security & Compliance portal is found to be malicious. This capability is an enhanced protection feature that can be used within o365 tenants by administrative users to report potentially malicious emails. This correlation looks for any submission that returns a Phish or Malware verdict upon submission.",
+  "source": {
+    "type": "splunk",
+    "id": "94396c3e-7728-422a-9956-e4b77b53dbdf",
+    "url": "https://github.com/splunk/security_content/blob/develop/o365_email_reported_by_admin_found_malicious.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/o365_email_reported_by_admin_found_malicious.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Steven Dick",
+  "references": [
+    "https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/submissions-outlook-report-messages?view=o365-worldwide"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`o365_management_activity` Workload=SecurityComplianceCenter Operation=AdminSubmission | search RescanVerdict IN (Phish,Malware) | rename Id as signature_id, SenderIP as src, Recipients{} as dest_user, P1Sender as src_user | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by dest user src vendor_account vendor_product signature signature_id dest_user src_user Subject SubmissionContent | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `o365_email_reported_by_admin_found_malicious_filter`",
+    "condition": "You must install splunk Microsoft Office 365 add-on. This search works with o365:management:activity",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrators that submit known phishing training exercises."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

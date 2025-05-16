@@ -1,0 +1,48 @@
+{
+  "id": "edd3ddc3-386f-4ba5-9ada-4376b2cfa7b5",
+  "name": "Potential EACore.DLL Sideloading",
+  "description": "Detects potential DLL sideloading of \"EACore.dll\"",
+  "source": {
+    "type": "sigma",
+    "id": "edd3ddc3-386f-4ba5-9ada-4376b2cfa7b5",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/image_load_side_load_eacore.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/image_load/image_load_side_load_eacore.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackprivilege-escalation",
+    "attackt1574001"
+  ],
+  "author": "X__Junior (Nextron Systems)",
+  "references": [
+    "https://research.checkpoint.com/2023/beyond-the-horizon-traveling-the-world-on-camaro-dragons-usb-flash-drives/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-08-03",
+  "modified": "2023-08-03",
+  "mitre": {
+    "tactics": [
+      "TA1574"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ImageLoaded|endswith\": \"\\\\EACore.dll\"}\nfilter_main_legit_path: {\"Image|contains|all\": [\"C:\\\\Program Files\\\\Electronic Arts\\\\EA Desktop\\\\\", \"\\\\EACoreServer.exe\"], \"ImageLoaded|startswith\": \"C:\\\\Program Files\\\\Electronic Arts\\\\EA Desktop\\\\\"}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "image_load"
+  ]
+}

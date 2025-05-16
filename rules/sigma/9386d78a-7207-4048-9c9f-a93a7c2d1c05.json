@@ -1,0 +1,48 @@
+{
+  "id": "9386d78a-7207-4048-9c9f-a93a7c2d1c05",
+  "name": "Code Execution via Pcwutl.dll",
+  "description": "Detects launch of executable by calling the LaunchApplication function from pcwutl.dll library.",
+  "source": {
+    "type": "sigma",
+    "id": "9386d78a-7207-4048-9c9f-a93a7c2d1c05",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_lolbin_pcwutl.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_lolbin_pcwutl.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218011"
+  ],
+  "author": "Julia Fomina, oscd.community",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/Libraries/Pcwutl/",
+    "https://twitter.com/harr0ey/status/989617817849876488"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-05",
+  "modified": "2023-02-09",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": [
+      "T011"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\rundll32.exe\"}, {\"OriginalFileName\": \"RUNDLL32.EXE\"}]\nselection_cli: {\"CommandLine|contains|all\": [\"pcwutl\", \"LaunchApplication\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Use of Program Compatibility Troubleshooter Helper"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

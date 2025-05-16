@@ -1,0 +1,48 @@
+{
+  "id": "c248c896-e412-4279-8c15-1c558067b6fa",
+  "name": "Enumerate All Information With Whoami.EXE",
+  "description": "Detects the execution of \"whoami.exe\" with the \"/all\" flag",
+  "source": {
+    "type": "sigma",
+    "id": "c248c896-e412-4279-8c15-1c558067b6fa",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_whoami_all_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_whoami_all_execution.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1033",
+    "car2016-03-001"
+  ],
+  "author": "Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://brica.de/alerts/alert/public/1247926/agent-tesla-keylogger-delivered-inside-a-power-iso-daa-archive/",
+    "https://app.any.run/tasks/7eaba74e-c1ea-400f-9c17-5e30eee89906/",
+    "https://www.youtube.com/watch?v=DsJ9ByX84o4&t=6s"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-12-04",
+  "modified": "2024-03-05",
+  "mitre": {
+    "tactics": [
+      "TA1033"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_main_img: [{\"Image|endswith\": \"\\\\whoami.exe\"}, {\"OriginalFileName\": \"whoami.exe\"}]\nselection_main_cli: {\"CommandLine|contains|windash\": \" -all\"}",
+    "condition": "all of selection_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

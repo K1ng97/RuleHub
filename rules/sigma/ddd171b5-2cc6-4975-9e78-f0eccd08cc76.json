@@ -1,0 +1,47 @@
+{
+  "id": "ddd171b5-2cc6-4975-9e78-f0eccd08cc76",
+  "name": "Potential Persistence Via Outlook Home Page",
+  "description": "Detects potential persistence activity via outlook home page.\nAn attacker can set a home page to achieve code execution and persistence by editing the WebView registry keys.\n",
+  "source": {
+    "type": "sigma",
+    "id": "ddd171b5-2cc6-4975-9e78-f0eccd08cc76",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_set_persistence_outlook_homepage.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_set/registry_set_persistence_outlook_homepage.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1112"
+  ],
+  "author": "Tobias Michalski (Nextron Systems), David Bertho (@dbertho) & Eirik Sveen (@0xSV1), Storebrand",
+  "references": [
+    "https://speakerdeck.com/heirhabarov/hunting-for-persistence-via-microsoft-exchange-server-or-outlook?slide=70",
+    "https://support.microsoft.com/en-us/topic/outlook-home-page-feature-is-missing-in-folder-properties-d207edb7-aa02-46c5-b608-5d9dbed9bd04?ui=en-us&rs=en-us&ad=us",
+    "https://trustedsec.com/blog/specula-turning-outlook-into-a-c2-with-one-registry-change"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-06-09",
+  "modified": "2024-08-07",
+  "mitre": {
+    "tactics": [
+      "TA1112"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"TargetObject|contains|all\": [\"\\\\Software\\\\Microsoft\\\\Office\\\\\", \"\\\\Outlook\\\\WebView\\\\\"], \"TargetObject|endswith\": \"\\\\URL\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_set"
+  ]
+}

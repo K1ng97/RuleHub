@@ -1,0 +1,45 @@
+{
+  "id": "898d5fc9-fbc3-43de-93ad-38e97237c344",
+  "name": "Suspicious AppX Package Installation Attempt",
+  "description": "Detects an appx package installation with the error code \"0x80073cff\" which indicates that the package didn't meet the signing requirements and could be suspicious",
+  "source": {
+    "type": "sigma",
+    "id": "898d5fc9-fbc3-43de-93ad-38e97237c344",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_appxdeployment_server_susp_appx_package_installation.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/appxdeployment_server/win_appxdeployment_server_susp_appx_package_installation.yml"
+  },
+  "tags": [
+    "attackdefense-evasion"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "Internal Research",
+    "https://www.sentinelone.com/labs/inside-malicious-windows-apps-for-malware-deployment/",
+    "https://learn.microsoft.com/en-us/windows/win32/appxpkg/troubleshooting",
+    "https://news.sophos.com/en-us/2021/11/11/bazarloader-call-me-back-attack-abuses-windows-10-apps-mechanism/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-01-11",
+  "modified": "2023-01-11",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 401, \"ErrorCode\": \"0x80073cff\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate AppX packages not signed by MS used part of an enterprise"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "appxdeployment-server"
+  ]
+}

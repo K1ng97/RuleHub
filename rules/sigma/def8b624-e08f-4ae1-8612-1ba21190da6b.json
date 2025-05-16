@@ -1,0 +1,46 @@
+{
+  "id": "def8b624-e08f-4ae1-8612-1ba21190da6b",
+  "name": "Outgoing Logon with New Credentials",
+  "description": "Detects logon events that specify new credentials",
+  "source": {
+    "type": "sigma",
+    "id": "def8b624-e08f-4ae1-8612-1ba21190da6b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_susp_logon_newcredentials.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/account_management/win_security_susp_logon_newcredentials.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attacklateral-movement",
+    "attackt1550"
+  ],
+  "author": "Max Altgelt (Nextron Systems)",
+  "references": [
+    "https://go.recordedfuture.com/hubfs/reports/mtp-2021-0914.pdf"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-04-06",
+  "modified": "2022-04-06",
+  "mitre": {
+    "tactics": [
+      "TA1550"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 4624, \"LogonType\": 9}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate remote administration activity"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "id": "3245cd30-e015-40ff-a31d-5cadd5f377ec",
+  "name": "HackTool - Rubeus Execution - ScriptBlock",
+  "description": "Detects the execution of the hacktool Rubeus using specific command line flags",
+  "source": {
+    "type": "sigma",
+    "id": "3245cd30-e015-40ff-a31d-5cadd5f377ec",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_hktl_rubeus.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_hktl_rubeus.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attacklateral-movement",
+    "attackt1003",
+    "attackt1550003",
+    "attackt1558003"
+  ],
+  "author": "Christian Burkard (Nextron Systems), Florian Roth (Nextron Systems)",
+  "references": [
+    "https://blog.harmj0y.net/redteaming/from-kekeo-to-rubeus",
+    "https://m0chan.github.io/2019/07/31/How-To-Attack-Kerberos-101.html",
+    "https://github.com/GhostPack/Rubeus"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-04-27",
+  "modified": "2023-04-27",
+  "mitre": {
+    "tactics": [
+      "TA1003",
+      "TA1550",
+      "TA1558"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ScriptBlockText|contains\": [\"asreproast \", \"dump /service:krbtgt \", \"dump /luid:0x\", \"kerberoast \", \"createnetonly /program:\", \"ptt /ticket:\", \"/impersonateuser:\", \"renew /ticket:\", \"asktgt /user:\", \"harvest /interval:\", \"s4u /user:\", \"s4u /ticket:\", \"hash /password:\", \"golden /aes256:\", \"silver /user:\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

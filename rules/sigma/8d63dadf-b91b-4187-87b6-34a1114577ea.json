@@ -1,0 +1,57 @@
+{
+  "id": "8d63dadf-b91b-4187-87b6-34a1114577ea",
+  "name": "Potential SquiblyTwo Technique Execution",
+  "description": "Detects potential SquiblyTwo attack technique with possible renamed WMIC via Imphash and OriginalFileName fields",
+  "source": {
+    "type": "sigma",
+    "id": "8d63dadf-b91b-4187-87b6-34a1114577ea",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_wmic_squiblytwo_bypass.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_wmic_squiblytwo_bypass.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1047",
+    "attackt1059005",
+    "attackt1059007",
+    "attackt1220"
+  ],
+  "author": "Markus Neis, Florian Roth",
+  "references": [
+    "https://web.archive.org/web/20190209154607/https://subt0x11.blogspot.com/2018/04/wmicexe-whitelisting-bypass-hacking.html",
+    "https://twitter.com/mattifestation/status/986280382042595328",
+    "https://atomicredteam.io/defense-evasion/T1220/",
+    "https://lolbas-project.github.io/lolbas/Binaries/Wmic/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-01-16",
+  "modified": "2024-11-23",
+  "mitre": {
+    "tactics": [
+      "TA1047",
+      "TA1059",
+      "TA1220"
+    ],
+    "techniques": [
+      "T005",
+      "T007"
+    ]
+  },
+  "detection": {
+    "query": "selection_pe: [{\"Image|endswith\": \"\\\\wmic.exe\"}, {\"OriginalFileName\": \"wmic.exe\"}, {\"Hashes|contains\": [\"IMPHASH=1B1A3F43BF37B5BFE60751F2EE2F326E\", \"IMPHASH=37777A96245A3C74EB217308F3546F4C\", \"IMPHASH=9D87C9D67CE724033C0B40CC4CA1B206\"]}]\nselection_cli: {\"CommandLine|contains|all\": [\"format:\", \"http\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

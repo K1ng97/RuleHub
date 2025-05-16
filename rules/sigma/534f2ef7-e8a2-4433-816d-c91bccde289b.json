@@ -1,0 +1,48 @@
+{
+  "id": "534f2ef7-e8a2-4433-816d-c91bccde289b",
+  "name": "Explorer NOUACCHECK Flag",
+  "description": "Detects suspicious starts of explorer.exe that use the /NOUACCHECK flag that allows to run all sub processes of that newly started explorer.exe without any UAC checks",
+  "source": {
+    "type": "sigma",
+    "id": "534f2ef7-e8a2-4433-816d-c91bccde289b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_explorer_nouaccheck.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_explorer_nouaccheck.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1548002"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://twitter.com/ORCA6665/status/1496478087244095491"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-02-23",
+  "modified": "2022-04-21",
+  "mitre": {
+    "tactics": [
+      "TA1548"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"\\\\explorer.exe\", \"CommandLine|contains\": \"/NOUACCHECK\"}\nfilter_dc_logon: [{\"ParentCommandLine\": \"C:\\\\Windows\\\\system32\\\\svchost.exe -k netsvcs -p -s Schedule\"}, {\"ParentImage\": \"C:\\\\Windows\\\\System32\\\\svchost.exe\"}]",
+    "condition": "selection and not 1 of filter_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Domain Controller User Logon",
+    "Unknown how many legitimate software products use that method"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

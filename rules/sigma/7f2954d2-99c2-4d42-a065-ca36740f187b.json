@@ -1,0 +1,48 @@
+{
+  "id": "7f2954d2-99c2-4d42-a065-ca36740f187b",
+  "name": "Hypervisor Enforced Paging Translation Disabled",
+  "description": "Detects changes to the \"DisableHypervisorEnforcedPagingTranslation\" registry value. Where the it is set to \"1\" in order to disable the Hypervisor Enforced Paging Translation feature.\n",
+  "source": {
+    "type": "sigma",
+    "id": "7f2954d2-99c2-4d42-a065-ca36740f187b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_set_deviceguard_hypervisorenforcedpagingtranslation_disabled.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_set/registry_set_deviceguard_hypervisorenforcedpagingtranslation_disabled.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1562001"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://twitter.com/standa_t/status/1808868985678803222",
+    "https://github.com/AaLl86/WindowsInternals/blob/070dc4f317726dfb6ffd2b7a7c121a33a8659b5e/Slides/Hypervisor-enforced%20Paging%20Translation%20-%20The%20end%20of%20non%20data-driven%20Kernel%20Exploits%20(Recon2024).pdf"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "experimental",
+  "created": "2024-07-05",
+  "modified": "2024-07-05",
+  "mitre": {
+    "tactics": [
+      "TA1562"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"TargetObject|endswith\": \"\\\\DisableHypervisorEnforcedPagingTranslation\", \"Details\": \"DWORD (0x00000001)\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_set"
+  ]
+}

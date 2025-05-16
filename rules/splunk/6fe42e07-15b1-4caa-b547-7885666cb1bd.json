@@ -1,0 +1,45 @@
+{
+  "id": "6fe42e07-15b1-4caa-b547-7885666cb1bd",
+  "name": "Microsoft Intune Device Health Scripts",
+  "description": "Microsoft Intune device remediation scripts are a tool administrators can use to remotely manage devices, this functionality can also be abused for SYSTEM level code execution and lateral movement to intune managed devices.  This detection identifies when a new device health script has been added, updated or deleted. ",
+  "source": {
+    "type": "splunk",
+    "id": "6fe42e07-15b1-4caa-b547-7885666cb1bd",
+    "url": "https://github.com/splunk/security_content/blob/develop/microsoft_intune_device_health_scripts.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/microsoft_intune_device_health_scripts.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Dean Luxton",
+  "references": [
+    "https://posts.specterops.io/death-from-above-lateral-movement-from-azure-to-on-prem-ad-d18cb3959d4d",
+    "https://securityintelligence.com/x-force/detecting-intune-lateral-movement/",
+    "https://posts.specterops.io/maestro-9ed71d38d546"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`azure_monitor_activity` operationName=\"*DeviceHealthScript*\"  | rename identity as user, properties.TargetObjectIds{} as TargetObjectId, properties.TargetDisplayNames{} as TargetDisplayName, properties.Actor.IsDelegatedAdmin as user_isDelegatedAdmin | rex field=\"operationName\" \"^(?P<action>\\w+?)DeviceHealthScript\" | replace \"patch\" with \"updated\", \"create\" with \"created\", \"delete\", with \"deleted\", \"assign\", with \"assigned\" IN action | table _time operationName action user user_type user_isDelegatedAdmin TargetDisplayName TargetObjectId status tenantId correlationId | `microsoft_intune_device_health_scripts_filter`",
+    "condition": "The Splunk Add-on for Microsoft Cloud Services add-on is required to ingest In-Tune audit logs via Azure EventHub.  To configure this logging, visit Intune > Tenant administration > Diagnostic settings > Add diagnostic settings & send events to the activity audit event hub.  Deploy as a risk based alerting rule for quick deployment or perform baselining & tune accordingly. ",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate adminstrative usage of this functionality will trigger this detection."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

@@ -1,0 +1,42 @@
+{
+  "id": "224f140f-3553-4cd1-af78-13d81bf9f7cc",
+  "name": "Potential RDP Session Hijacking Activity",
+  "description": "Detects potential RDP Session Hijacking activity on Windows systems",
+  "source": {
+    "type": "sigma",
+    "id": "224f140f-3553-4cd1-af78-13d81bf9f7cc",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_tscon_rdp_session_hijacking.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_tscon_rdp_session_hijacking.yml"
+  },
+  "tags": [
+    "attackexecution"
+  ],
+  "author": "@juju4",
+  "references": [
+    "https://twitter.com/Moti_B/status/909449115477659651"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-12-27",
+  "modified": "2024-12-01",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\tscon.exe\"}, {\"OriginalFileName\": \"tscon.exe\"}]\nselection_integrity: {\"IntegrityLevel\": [\"System\", \"S-1-16-16384\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrative activity"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "b8bccfbf-6ac2-40f2-83b6-e72b7efaa7d4",
+  "name": "Crowdstrike Admin With Duplicate Password",
+  "description": "The following analytic detects CrowdStrike alerts for admin accounts with duplicate password risk, identifying instances where administrative users share the same password. This practice significantly increases the risk of unauthorized access and potential breaches. Addressing these alerts promptly is crucial for maintaining strong security protocols, ensuring each admin account uses a unique, secure password to protect critical systems and data.",
+  "source": {
+    "type": "splunk",
+    "id": "b8bccfbf-6ac2-40f2-83b6-e72b7efaa7d4",
+    "url": "https://github.com/splunk/security_content/blob/develop/crowdstrike_admin_with_duplicate_password.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/crowdstrike_admin_with_duplicate_password.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://www.crowdstrike.com/wp-content/uploads/2022/12/CrowdStrike-Falcon-Event-Streams-Add-on-Guide-v3.pdf"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`crowdstrike_identities` primaryDisplayName = \"*admin*\" | rename riskFactors{}.severity as severity, riskFactors{}.type as risk_type, roles{}.type as role_type, accounts{}.domain as domain, accounts{}.dn as dn, accounts{}.samAccountName as user | stats count min(_time) as firstTime max(_time) as lastTime by  domain dn primaryDisplayName risk_type severity riskScore riskScoreSeverity user role_type | where risk_type = \"DUPLICATE_PASSWORD\" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `crowdstrike_admin_with_duplicate_password_filter`",
+    "condition": "To implement crowdstrike:identities logs, use the Falcon Streaming API. Set up an API client, authenticate with your CrowdStrike credentials, and subscribe to the \"crowdstrike:identities\" event stream. Process and store the logs as needed, integrating them into your logging or SIEM system for monitoring and analysis.",
+    "fields": []
+  },
+  "falsepositives": [
+    "unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

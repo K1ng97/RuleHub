@@ -1,0 +1,41 @@
+{
+  "id": "ada0f478-84a8-4641-a3f1-d82362d6bd71",
+  "name": "Common Ransomware Notes",
+  "description": "The following analytic detects the creation of files with names commonly associated with ransomware notes. It leverages file-system activity data from the Endpoint Filesystem data model, typically populated by endpoint detection and response (EDR) tools or Sysmon logs. This activity is significant because ransomware notes indicate a potential ransomware attack, which can lead to data encryption and extortion. If confirmed malicious, this activity could result in significant data loss, operational disruption, and financial impact due to ransom demands.",
+  "source": {
+    "type": "splunk",
+    "id": "ada0f478-84a8-4641-a3f1-d82362d6bd71",
+    "url": "https://github.com/splunk/security_content/blob/develop/common_ransomware_notes.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/common_ransomware_notes.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "David Dorsey, Splunk",
+  "references": [],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.user) as user values(Filesystem.dest) as dest values(Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem by Filesystem.action Filesystem.dest Filesystem.file_access_time Filesystem.file_create_time Filesystem.file_hash Filesystem.file_modify_time Filesystem.file_name Filesystem.file_path Filesystem.file_acl Filesystem.file_size Filesystem.process_guid Filesystem.process_id Filesystem.user Filesystem.vendor_product | `drop_dm_object_name(Filesystem)` | `security_content_ctime(lastTime)` | `security_content_ctime(firstTime)` | `ransomware_notes` | `common_ransomware_notes_filter`",
+    "condition": "You must be ingesting data that records file-system activity from your hosts to populate the Endpoint Filesystem data-model node. This is typically populated via endpoint detection-and-response product, such as Carbon Black, or via other endpoint data sources, such as Sysmon. The data used for this search is typically generated via logs that report file-system reads and writes.",
+    "fields": []
+  },
+  "falsepositives": [
+    "It's possible that a legitimate file could be created with the same name used by ransomware note files."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

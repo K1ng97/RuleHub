@@ -1,0 +1,50 @@
+{
+  "id": "96cd126d-f970-49c4-848a-da3a09f55c55",
+  "name": "Potential PowerShell Obfuscation Using Alias Cmdlets",
+  "description": "Detects Set-Alias or New-Alias cmdlet usage. Which can be use as a mean to obfuscate PowerShell scripts",
+  "source": {
+    "type": "sigma",
+    "id": "96cd126d-f970-49c4-848a-da3a09f55c55",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_susp_set_alias.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_susp_set_alias.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1027",
+    "attackt1059001"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/1337Rin/Swag-PSO"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-01-08",
+  "modified": "2023-01-08",
+  "mitre": {
+    "tactics": [
+      "TA1027",
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ScriptBlockText|contains\": [\"Set-Alias \", \"New-Alias \"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

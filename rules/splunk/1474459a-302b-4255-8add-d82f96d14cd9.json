@@ -1,0 +1,43 @@
+{
+  "id": "1474459a-302b-4255-8add-d82f96d14cd9",
+  "name": "Linux Auditd Setuid Using Setcap Utility",
+  "description": "The following analytic detects the execution of the 'setcap' utility to enable the SUID bit on Linux systems. It leverages Linux Auditd data, focusing on process names and command-line arguments that indicate the use of 'setcap' with specific capabilities. This activity is significant because setting the SUID bit allows a user to temporarily gain root access, posing a substantial security risk. If confirmed malicious, an attacker could escalate privileges, execute arbitrary commands with elevated permissions, and potentially compromise the entire system.",
+  "source": {
+    "type": "splunk",
+    "id": "1474459a-302b-4255-8add-d82f96d14cd9",
+    "url": "https://github.com/splunk/security_content/blob/develop/linux_auditd_setuid_using_setcap_utility.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/linux_auditd_setuid_using_setcap_utility.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://www.hackingarticles.in/linux-privilege-escalation-using-capabilities/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`linux_auditd` execve_command IN (\"*setcap *\")  AND execve_command IN (\"*cap_setuid+ep*\", \"*cap_setuid=ep*\", \"*cap_net_bind_service+p*\", \"*cap_net_raw+ep*\", \"*cap_dac_read_search+ep*\") | rename host as dest | rename comm as process_name | rename exe as process | stats count min(_time) as firstTime max(_time) as lastTime by argc execve_command dest | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `linux_auditd_setuid_using_setcap_utility_filter`",
+    "condition": "To implement this detection, the process begins by ingesting auditd data, that consists of SYSCALL, TYPE, EXECVE and PROCTITLE events, which captures command-line executions and process details on Unix/Linux systems. These logs should be ingested and processed using Splunk Add-on for Unix and Linux (https://splunkbase.splunk.com/app/833), which is essential for correctly parsing and categorizing the data. The next step involves normalizing the field names  to match the field names set by the Splunk Common Information Model (CIM) to ensure consistency across different data sources and enhance the efficiency of data modeling. This approach enables effective monitoring and detection of linux endpoints where auditd is deployed",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrator or network operator can execute this command. Please update the filter macros to remove false positives."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

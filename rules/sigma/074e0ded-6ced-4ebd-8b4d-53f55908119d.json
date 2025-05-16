@@ -1,0 +1,45 @@
+{
+  "id": "074e0ded-6ced-4ebd-8b4d-53f55908119d",
+  "name": "AWL Bypass with Winrm.vbs and Malicious WsmPty.xsl/WsmTxt.xsl",
+  "description": "Detects execution of attacker-controlled WsmPty.xsl or WsmTxt.xsl via winrm.vbs and copied cscript.exe (can be renamed)",
+  "source": {
+    "type": "sigma",
+    "id": "074e0ded-6ced-4ebd-8b4d-53f55908119d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_winrm_awl_bypass.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_winrm_awl_bypass.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1216"
+  ],
+  "author": "Julia Fomina, oscd.community",
+  "references": [
+    "https://posts.specterops.io/application-whitelisting-bypass-and-arbitrary-unsigned-code-execution-technique-in-winrm-vbs-c8c24fb40404"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-06",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [
+      "TA1216"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "contains_format_pretty_arg: {\"CommandLine|contains\": [\"format:pretty\", \"format:\\\"pretty\\\"\", \"format:\\\"text\\\"\", \"format:text\"]}\nimage_from_system_folder: {\"Image|startswith\": [\"C:\\\\Windows\\\\System32\\\\\", \"C:\\\\Windows\\\\SysWOW64\\\\\"]}\ncontains_winrm: {\"CommandLine|contains\": \"winrm\"}",
+    "condition": "contains_winrm and (contains_format_pretty_arg and not image_from_system_folder)",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "id": "ebbeb024-5b1d-4e16-9c0c-917f86c708a7",
+  "name": "User Added to an Administrator's Azure AD Role",
+  "description": "User Added to an Administrator's Azure AD Role",
+  "source": {
+    "type": "sigma",
+    "id": "ebbeb024-5b1d-4e16-9c0c-917f86c708a7",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_ad_user_added_to_admin_role.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/activity_logs/azure_ad_user_added_to_admin_role.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1078",
+    "attackt1098003"
+  ],
+  "author": "Raphaël CALVET, @MetallicHack",
+  "references": [
+    "https://m365internals.com/2021/07/13/what-ive-learned-from-doing-a-year-of-cloud-forensics-in-azure-ad/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-10-04",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [
+      "TA1078",
+      "TA1098"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Operation\": \"Add member to role.\", \"Workload\": \"AzureActiveDirectory\", \"ModifiedProperties{}.NewValue|endswith\": [\"Admins\", \"Administrator\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "PIM (Privileged Identity Management) generates this event each time 'eligible role' is enabled."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "activitylogs"
+  ]
+}

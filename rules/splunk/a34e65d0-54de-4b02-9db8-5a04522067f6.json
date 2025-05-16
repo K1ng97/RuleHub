@@ -1,0 +1,44 @@
+{
+  "id": "a34e65d0-54de-4b02-9db8-5a04522067f6",
+  "name": "O365 Multiple Service Principals Created by User",
+  "description": "The following analytic identifies instances where a single user creates more than three unique OAuth applications within a 10-minute window in the Office 365 environment. It leverages O365 logs from the Unified Audit Log, focusing on the 'Add service principal' operation in Azure Active Directory. This activity is significant as it may indicate a compromised user account or unauthorized actions, potentially leading to broader network infiltration or privilege escalation. If confirmed malicious, this behavior could allow attackers to gain persistent access, escalate privileges, or exfiltrate sensitive information.",
+  "source": {
+    "type": "splunk",
+    "id": "a34e65d0-54de-4b02-9db8-5a04522067f6",
+    "url": "https://github.com/splunk/security_content/blob/develop/o365_multiple_service_principals_created_by_user.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/o365_multiple_service_principals_created_by_user.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Mauricio Velazco, Splunk",
+  "references": [
+    "https://attack.mitre.org/techniques/T1136/003/",
+    "https://www.microsoft.com/en-us/security/blog/2024/01/25/midnight-blizzard-guidance-for-responders-on-nation-state-attack/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`o365_management_activity` Workload=AzureActiveDirectory Operation=\"Add service principal.\" | bucket span=10m _time | eval len=mvcount('Actor{}.ID') | eval userType = mvindex('Actor{}.ID',len-1) | search userType = \"User\" | eval displayName = object | stats count earliest(_time) as firstTime latest(_time) as lastTime values(displayName) as displayName dc(displayName) as unique_apps values(user) as user values(src) as src by src_user vendor_account vendor_product dest signature | where unique_apps > 3 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `o365_multiple_service_principals_created_by_user_filter`",
+    "condition": "You must install the Splunk Microsoft Office 365 Add-on and ingest Office 365 management activity events.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Certain users or applications may create multiple service principals in a short period of time for legitimate purposes. Filter as needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

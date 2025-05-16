@@ -1,0 +1,44 @@
+{
+  "id": "5e38ded4-c964-41f4-8cb6-4a1a53c6929f",
+  "name": "Windows PowerShell Export Certificate",
+  "description": "The following analytic detects the use of the PowerShell Cmdlet `export-certificate` by leveraging Script Block Logging. This activity is significant as it may indicate an adversary attempting to exfiltrate certificates from the local Certificate Store on a Windows endpoint. Monitoring this behavior is crucial because stolen certificates can be used to impersonate users, decrypt sensitive data, or facilitate further attacks. If confirmed malicious, this activity could lead to unauthorized access to encrypted communications and sensitive information, posing a severe security risk.",
+  "source": {
+    "type": "splunk",
+    "id": "5e38ded4-c964-41f4-8cb6-4a1a53c6929f",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_powershell_export_certificate.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_powershell_export_certificate.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Michael Haag, Splunk",
+  "references": [
+    "https://dev.to/iamthecarisma/managing-windows-pfx-certificates-through-powershell-3pj",
+    "https://learn.microsoft.com/en-us/powershell/module/pki/export-certificate?view=windowsserver2022-ps"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`powershell` EventCode=4104 ScriptBlockText IN (\"*export-certificate*\") | rename Computer as dest | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by dest signature signature_id user_id vendor_product EventID Guid Opcode Name Path ProcessID ScriptBlockId ScriptBlockText | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_powershell_export_certificate_filter`",
+    "condition": "To successfully implement this analytic, you will need to enable PowerShell Script Block Logging on some or all endpoints. Additional setup here https://docs.splunk.com/Documentation/UBA/5.0.4.1/GetDataIn/AddPowerShell#Configure_module_logging_for_PowerShell.",
+    "fields": []
+  },
+  "falsepositives": [
+    "It is possible administrators or scripts may run these commands, filtering may be required."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

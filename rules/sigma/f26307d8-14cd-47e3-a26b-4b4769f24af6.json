@@ -1,0 +1,47 @@
+{
+  "id": "f26307d8-14cd-47e3-a26b-4b4769f24af6",
+  "name": "HackTool - CrackMapExec Process Patterns",
+  "description": "Detects suspicious process patterns found in logs when CrackMapExec is used",
+  "source": {
+    "type": "sigma",
+    "id": "f26307d8-14cd-47e3-a26b-4b4769f24af6",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_hktl_crackmapexec_patterns.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_hktl_crackmapexec_patterns.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1003001"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://mpgn.gitbook.io/crackmapexec/smb-protocol/obtaining-credentials/dump-lsass"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-03-12",
+  "modified": "2023-02-13",
+  "mitre": {
+    "tactics": [
+      "TA1003"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_lsass_dump1: {\"CommandLine|contains|all\": [\"tasklist /fi \", \"Imagename eq lsass.exe\"], \"CommandLine|contains\": [\"cmd.exe /c \", \"cmd.exe /r \", \"cmd.exe /k \", \"cmd /c \", \"cmd /r \", \"cmd /k \"], \"User|contains\": [\"AUTHORI\", \"AUTORI\"]}\nselection_lsass_dump2: {\"CommandLine|contains|all\": [\"do rundll32.exe C:\\\\windows\\\\System32\\\\comsvcs.dll, MiniDump\", \"\\\\Windows\\\\Temp\\\\\", \" full\", \"%%B\"]}\nselection_procdump: {\"CommandLine|contains|all\": [\"tasklist /v /fo csv\", \"findstr /i \\\"lsass\\\"\"]}",
+    "condition": "1 of selection*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

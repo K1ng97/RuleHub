@@ -1,0 +1,45 @@
+{
+  "id": "e83e8899-c9b2-483b-b355-5decc942b959",
+  "name": "Interesting Service Enumeration Via Sc.EXE",
+  "description": "Detects the enumeration and query of interesting and in some cases sensitive services on the system via \"sc.exe\".\nAttackers often try to enumerate the services currently running on a system in order to find different attack vectors.\n",
+  "source": {
+    "type": "sigma",
+    "id": "e83e8899-c9b2-483b-b355-5decc942b959",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_sc_query_interesting_services.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_sc_query_interesting_services.yml"
+  },
+  "tags": [
+    "attackt1003"
+  ],
+  "author": "Swachchhanda Shrawan Poudel",
+  "references": [
+    "https://www.n00py.io/2021/05/dumping-plaintext-rdp-credentials-from-svchost-exe/",
+    "https://pentestlab.blog/tag/svchost/"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2024-02-12",
+  "modified": "2024-02-12",
+  "mitre": {
+    "tactics": [
+      "TA1003"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\sc.exe\"}, {\"OriginalFileName\": \"sc.exe\"}]\nselection_cli: {\"CommandLine|contains\": \"query\"}\nselection_cmd: {\"CommandLine|contains\": \"termservice\"}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

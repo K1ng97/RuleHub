@@ -1,0 +1,47 @@
+{
+  "id": "50e54b8d-ad73-43f8-96a1-5191685b17a4",
+  "name": "Silenttrinity Stager Msbuild Activity",
+  "description": "Detects a possible remote connections to Silenttrinity c2",
+  "source": {
+    "type": "sigma",
+    "id": "50e54b8d-ad73-43f8-96a1-5191685b17a4",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/net_connection_win_silenttrinity_stager_msbuild_activity.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/network_connection/net_connection_win_silenttrinity_stager_msbuild_activity.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1127001"
+  ],
+  "author": "Kiran kumar s, oscd.community",
+  "references": [
+    "https://www.blackhillsinfosec.com/my-first-joyride-with-silenttrinity/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-11",
+  "modified": "2022-10-05",
+  "mitre": {
+    "tactics": [
+      "TA1127"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"\\\\msbuild.exe\"}\nfilter: {\"DestinationPort\": [80, 443], \"Initiated\": \"true\"}",
+    "condition": "selection and filter",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "network_connection"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "id": "44143844-0631-49ab-97a0-96387d6b2d7c",
+  "name": "File Download Using Notepad++ GUP Utility",
+  "description": "Detects execution of the Notepad++ updater (gup) from a process other than Notepad++ to download files.",
+  "source": {
+    "type": "sigma",
+    "id": "44143844-0631-49ab-97a0-96387d6b2d7c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_gup_download.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_gup_download.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1105"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://twitter.com/nas_bench/status/1535322182863179776"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-06-10",
+  "modified": "2023-03-02",
+  "mitre": {
+    "tactics": [
+      "TA1105"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\GUP.exe\"}, {\"OriginalFileName\": \"gup.exe\"}]\nselection_cli: {\"CommandLine|contains|all\": [\" -unzipTo \", \"http\"]}\nfilter: {\"ParentImage|endswith\": \"\\\\notepad++.exe\"}",
+    "condition": "all of selection* and not filter",
+    "fields": []
+  },
+  "falsepositives": [
+    "Other parent processes other than notepad++ using GUP that are not currently identified"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

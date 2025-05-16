@@ -1,0 +1,48 @@
+{
+  "id": "259dda31-b7a3-444f-b7d8-17f96e8a7d0d",
+  "name": "Potential RjvPlatform.DLL Sideloading From Default Location",
+  "description": "Detects loading of \"RjvPlatform.dll\" by the \"SystemResetPlatform.exe\" binary which can be abused as a method of DLL side loading since the \"$SysReset\" directory isn't created by default.",
+  "source": {
+    "type": "sigma",
+    "id": "259dda31-b7a3-444f-b7d8-17f96e8a7d0d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/image_load_side_load_rjvplatform_default_location.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/image_load/image_load_side_load_rjvplatform_default_location.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackprivilege-escalation",
+    "attackt1574001"
+  ],
+  "author": "X__Junior (Nextron Systems)",
+  "references": [
+    "https://twitter.com/0gtweet/status/1666716511988330499"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-06-09",
+  "modified": "2023-06-09",
+  "mitre": {
+    "tactics": [
+      "TA1574"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Image\": \"C:\\\\Windows\\\\System32\\\\SystemResetPlatform\\\\SystemResetPlatform.exe\", \"ImageLoaded\": \"C:\\\\$SysReset\\\\Framework\\\\Stack\\\\RjvPlatform.dll\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "image_load"
+  ]
+}

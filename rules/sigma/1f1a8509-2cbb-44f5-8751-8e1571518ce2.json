@@ -1,0 +1,45 @@
+{
+  "id": "1f1a8509-2cbb-44f5-8751-8e1571518ce2",
+  "name": "Suspicious Splwow64 Without Params",
+  "description": "Detects suspicious Splwow64.exe process without any command line parameters",
+  "source": {
+    "type": "sigma",
+    "id": "1f1a8509-2cbb-44f5-8751-8e1571518ce2",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_splwow64_cli_anomaly.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_splwow64_cli_anomaly.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1202"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://twitter.com/sbousseaden/status/1429401053229891590?s=12"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-08-23",
+  "modified": "2022-12-25",
+  "mitre": {
+    "tactics": [
+      "TA1202"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"\\\\splwow64.exe\", \"CommandLine|endswith\": \"splwow64.exe\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

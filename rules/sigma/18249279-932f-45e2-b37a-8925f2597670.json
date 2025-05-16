@@ -1,0 +1,50 @@
+{
+  "id": "18249279-932f-45e2-b37a-8925f2597670",
+  "name": "Process Initiated Network  Connection To Ngrok Domain",
+  "description": "Detects an executable initiating a network connection to \"ngrok\" domains.\nAttackers were seen using this \"ngrok\" in order to store their second stage payloads and malware.\nWhile communication with such domains can be legitimate, often times is a sign of either data exfiltration by malicious actors or additional download.\n",
+  "source": {
+    "type": "sigma",
+    "id": "18249279-932f-45e2-b37a-8925f2597670",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/net_connection_win_domain_ngrok.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/network_connection/net_connection_win_domain_ngrok.yml"
+  },
+  "tags": [
+    "attackexfiltration",
+    "attackt1567001"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://ngrok.com/",
+    "https://ngrok.com/blog-post/new-ngrok-domains",
+    "https://www.virustotal.com/gui/file/cca0c1182ac114b44dc52dd2058fcd38611c20bb6b5ad84710681d38212f835a/",
+    "https://www.rnbo.gov.ua/files/2023_YEAR/CYBERCENTER/november/APT29%20attacks%20Embassies%20using%20CVE-2023-38831%20-%20report%20en.pdf"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-07-16",
+  "modified": "2023-11-17",
+  "mitre": {
+    "tactics": [
+      "TA1567"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Initiated\": \"true\", \"DestinationHostname|endswith\": [\".ngrok-free.app\", \".ngrok-free.dev\", \".ngrok.app\", \".ngrok.dev\", \".ngrok.io\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use of the ngrok service."
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "network_connection"
+  ]
+}

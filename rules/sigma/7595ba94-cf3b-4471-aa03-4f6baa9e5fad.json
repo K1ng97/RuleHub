@@ -1,0 +1,50 @@
+{
+  "id": "7595ba94-cf3b-4471-aa03-4f6baa9e5fad",
+  "name": "Important Scheduled Task Deleted/Disabled",
+  "description": "Detects when adversaries stop services or processes by deleting or disabling their respective scheduled tasks in order to conduct data destructive activities",
+  "source": {
+    "type": "sigma",
+    "id": "7595ba94-cf3b-4471-aa03-4f6baa9e5fad",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_susp_scheduled_task_delete_or_disable.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_susp_scheduled_task_delete_or_disable.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1053005"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4699",
+    "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4701"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-12-05",
+  "modified": "2023-03-13",
+  "mitre": {
+    "tactics": [
+      "TA1053"
+    ],
+    "techniques": [
+      "T005"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": [4699, 4701], \"TaskName|contains\": [\"\\\\Windows\\\\SystemRestore\\\\SR\", \"\\\\Windows\\\\Windows Defender\\\\\", \"\\\\Windows\\\\BitLocker\", \"\\\\Windows\\\\WindowsBackup\\\\\", \"\\\\Windows\\\\WindowsUpdate\\\\\", \"\\\\Windows\\\\UpdateOrchestrator\\\\Schedule\", \"\\\\Windows\\\\ExploitGuard\"]}\nfilter_sys_username: {\"EventID\": 4699, \"SubjectUserName|endswith\": \"$\", \"TaskName|contains\": \"\\\\Windows\\\\Windows Defender\\\\\"}",
+    "condition": "selection and not 1 of filter_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

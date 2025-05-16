@@ -1,0 +1,48 @@
+{
+  "id": "d04ae2b8-ad54-4de0-bd87-4bc1da66aa59",
+  "name": "Kerberoasting Activity - Initial Query",
+  "description": "This rule will collect the data needed to start looking into possible kerberoasting activity.\nFurther analysis or computation within the query is needed focusing on requests from one specific host/IP towards multiple service names within a time period of 5 seconds.\nYou can then set a threshold for the number of requests and time between the requests to turn this into an alert.\n",
+  "source": {
+    "type": "sigma",
+    "id": "d04ae2b8-ad54-4de0-bd87-4bc1da66aa59",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_kerberoasting_activity.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_kerberoasting_activity.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1558003"
+  ],
+  "author": "@kostastsale",
+  "references": [
+    "https://www.trustedsec.com/blog/art_of_kerberoast/",
+    "https://adsecurity.org/?p=3513"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-01-21",
+  "modified": "2022-01-21",
+  "mitre": {
+    "tactics": [
+      "TA1558"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 4769, \"Status\": \"0x0\", \"TicketEncryptionType\": \"0x17\"}\nfilter_main_: {\"ServiceName|endswith\": [\"krbtgt\", \"$\"], \"TargetUserName|contains\": \"$@\"}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legacy applications."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

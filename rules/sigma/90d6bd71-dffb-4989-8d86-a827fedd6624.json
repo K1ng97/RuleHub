@@ -1,0 +1,49 @@
+{
+  "id": "90d6bd71-dffb-4989-8d86-a827fedd6624",
+  "name": "Visual Studio Code Tunnel Execution",
+  "description": "Detects Visual Studio Code tunnel execution. Attackers can abuse this functionality to establish a C2 channel",
+  "source": {
+    "type": "sigma",
+    "id": "90d6bd71-dffb-4989-8d86-a827fedd6624",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_vscode_tunnel_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_vscode_tunnel_execution.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1071001"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems), citron_ninja",
+  "references": [
+    "https://ipfyx.fr/post/visual-studio-code-tunnel/",
+    "https://badoption.eu/blog/2023/01/31/code_c2.html",
+    "https://code.visualstudio.com/docs/remote/tunnels"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-10-25",
+  "modified": "2023-10-25",
+  "mitre": {
+    "tactics": [
+      "TA1071"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_only_tunnel: {\"OriginalFileName\": null, \"CommandLine|endswith\": \".exe tunnel\"}\nselection_tunnel_args: {\"CommandLine|contains|all\": [\".exe tunnel\", \"--name \", \"--accept-server-license-terms\"]}\nselection_parent_tunnel: {\"ParentCommandLine|endswith\": \" tunnel\", \"Image|endswith\": \"\\\\cmd.exe\", \"CommandLine|contains|all\": [\"/d /c \", \"\\\\servers\\\\Stable-\", \"code-server.cmd\"]}",
+    "condition": "1 of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use of Visual Studio Code tunnel"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

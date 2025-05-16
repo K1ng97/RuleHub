@@ -1,0 +1,43 @@
+{
+  "id": "0f16d9cf-0616-45c8-8fad-becc11b5a41c",
+  "name": "Renamed AutoHotkey.EXE Execution",
+  "description": "Detects execution of a renamed autohotkey.exe binary based on PE metadata fields",
+  "source": {
+    "type": "sigma",
+    "id": "0f16d9cf-0616-45c8-8fad-becc11b5a41c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_renamed_autohotkey.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_renamed_autohotkey.yml"
+  },
+  "tags": [
+    "attackdefense-evasion"
+  ],
+  "author": "Nasreddine Bencherchali",
+  "references": [
+    "https://www.autohotkey.com/download/",
+    "https://thedfirreport.com/2023/02/06/collect-exfiltrate-sleep-repeat/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-02-07",
+  "modified": "2023-02-07",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: [{\"Product|contains\": \"AutoHotkey\"}, {\"Description|contains\": \"AutoHotkey\"}, {\"OriginalFileName\": [\"AutoHotkey.exe\", \"AutoHotkey.rc\"]}]\nfilter: [{\"Image|endswith\": [\"\\\\AutoHotkey.exe\", \"\\\\AutoHotkey32.exe\", \"\\\\AutoHotkey32_UIA.exe\", \"\\\\AutoHotkey64.exe\", \"\\\\AutoHotkey64_UIA.exe\", \"\\\\AutoHotkeyA32.exe\", \"\\\\AutoHotkeyA32_UIA.exe\", \"\\\\AutoHotkeyU32.exe\", \"\\\\AutoHotkeyU32_UIA.exe\", \"\\\\AutoHotkeyU64.exe\", \"\\\\AutoHotkeyU64_UIA.exe\"]}, {\"Image|contains\": \"\\\\AutoHotkey\"}]",
+    "condition": "selection and not filter",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

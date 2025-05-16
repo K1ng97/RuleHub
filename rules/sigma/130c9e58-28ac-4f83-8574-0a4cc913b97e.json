@@ -1,0 +1,45 @@
+{
+  "id": "130c9e58-28ac-4f83-8574-0a4cc913b97e",
+  "name": "Potential Winnti Dropper Activity",
+  "description": "Detects files dropped by Winnti as described in RedMimicry Winnti playbook",
+  "source": {
+    "type": "sigma",
+    "id": "130c9e58-28ac-4f83-8574-0a4cc913b97e",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_redmimicry_winnti_filedrop.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_redmimicry_winnti_filedrop.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1027"
+  ],
+  "author": "Alexander Rausch",
+  "references": [
+    "https://redmimicry.com/posts/redmimicry-winnti/#dropper"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-06-24",
+  "modified": "2023-01-05",
+  "mitre": {
+    "tactics": [
+      "TA1027"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"TargetFilename|endswith\": [\"\\\\gthread-3.6.dll\", \"\\\\sigcmm-2.4.dll\", \"\\\\Windows\\\\Temp\\\\tmp.bat\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "e2812b49-bae0-4b21-b366-7c142eafcde2",
+  "name": "Potentially Suspicious Call To Win32_NTEventlogFile Class - PSScript",
+  "description": "Detects usage of the WMI class \"Win32_NTEventlogFile\" in a potentially suspicious way (delete, backup, change permissions, etc.) from a PowerShell script",
+  "source": {
+    "type": "sigma",
+    "id": "e2812b49-bae0-4b21-b366-7c142eafcde2",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_win32_nteventlogfile_usage.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_win32_nteventlogfile_usage.yml"
+  },
+  "tags": [
+    "attackdefense-evasion"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/aa394225(v=vs.85)"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-07-13",
+  "modified": "2023-07-13",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_class: {\"ScriptBlockText|contains\": \"Win32_NTEventlogFile\"}\nselection_function: {\"ScriptBlockText|contains\": [\".BackupEventlog(\", \".ChangeSecurityPermissions(\", \".ChangeSecurityPermissionsEx(\", \".ClearEventLog(\", \".Delete(\", \".DeleteEx(\", \".Rename(\", \".TakeOwnerShip(\", \".TakeOwnerShipEx(\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administration and backup scripts"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "8775fcf3-05e4-4525-bba2-a56e39d8d050",
+  "name": "Windows Explorer LNK Exploit Process Launch With Padding",
+  "description": "This detection identifies instances where Windows Explorer.exe spawns PowerShell or cmd.exe processes with abnormally large padding (50 or more spaces) in the command line. This specific pattern is a key indicator of the ZDI-CAN-25373 Windows shortcut zero-day vulnerability exploitation, where threat actors craft malicious LNK files containing padded content to trigger code execution. The excessive spacing in the command line is used to manipulate the way Windows processes the shortcut file, enabling arbitrary code execution. This technique has been actively exploited by multiple APT groups in targeted attacks, with malicious LNK files being delivered through both HTTP and SMB protocols. The presence of significant command line padding when Explorer.exe launches command shells is highly suspicious and warrants immediate investigation.",
+  "source": {
+    "type": "splunk",
+    "id": "8775fcf3-05e4-4525-bba2-a56e39d8d050",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_explorer_lnk_exploit_process_launch_with_padding.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_explorer_lnk_exploit_process_launch_with_padding.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Michael Haag, AJ King, Splunk, Jesse Hunter, Splunk Community Contributor",
+  "references": [
+    "https://www.trendmicro.com/en_us/research/25/c/windows-shortcut-zero-day-exploit.html"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_path=\"*\\\\explorer.exe\" (Processes.process_path=\"*\\\\cmd.exe\" OR Processes.process_path=\"*\\\\powershell.exe\") by Processes.action Processes.dest Processes.original_file_name Processes.parent_process Processes.parent_process_exec Processes.parent_process_guid Processes.parent_process_id Processes.parent_process_name Processes.parent_process_path Processes.process Processes.process_exec Processes.process_guid Processes.process_hash Processes.process_id Processes.process_integrity_level Processes.process_name Processes.process_path Processes.user Processes.user_id Processes.vendor_product | `drop_dm_object_name(Processes)` | regex process=\".*?\\s{50,}.*\" | `windows_explorer_lnk_exploit_process_launch_with_padding_filter`",
+    "condition": "The detection is based on data that originates from Endpoint Detection and Response (EDR) agents. These agents are designed to provide security-related telemetry from the endpoints where the agent is installed. To implement this search, you must ingest logs that contain the process GUID, process name, and parent process. Additionally, you must ingest complete command-line executions. These logs must be processed using the appropriate Splunk Technology Add-ons that are specific to the EDR product. The logs must also be mapped to the `Processes` node of the `Endpoint` data model. Use the Splunk Common Information Model (CIM) to normalize the field names and speed up the data modeling process.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Some legitimate user actions may trigger Explorer.exe to spawn PowerShell or cmd.exe, such as right-clicking and selecting \"Open PowerShell window here\" or similar options. Filter as needed based on your environment's normal behavior patterns. Reduce or increase the padding threshold based on observed false positives."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

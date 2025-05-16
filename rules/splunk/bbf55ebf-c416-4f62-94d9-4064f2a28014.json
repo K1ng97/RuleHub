@@ -1,0 +1,43 @@
+{
+  "id": "bbf55ebf-c416-4f62-94d9-4064f2a28014",
+  "name": "Zscaler Legal Liability Threat Blocked",
+  "description": "The following analytic identifies significant legal liability threats blocked by the Zscaler web proxy. It uses web proxy logs to track destinations, device owners, users, URL categories, and actions associated with legal liability. By leveraging statistics on unique fields, it ensures a precise focus on these threats. This activity is significant for SOC as it helps enforce legal compliance and risk management. If confirmed malicious, it could indicate attempts to access legally sensitive or restricted content, potentially leading to legal repercussions and compliance violations.",
+  "source": {
+    "type": "splunk",
+    "id": "bbf55ebf-c416-4f62-94d9-4064f2a28014",
+    "url": "https://github.com/splunk/security_content/blob/develop/zscaler_legal_liability_threat_blocked.yml",
+    "file_path": "tmp/repos/splunk/detections/web/zscaler_legal_liability_threat_blocked.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Rod Soto, Gowthamaraj Rajendran, Splunk",
+  "references": [
+    "https://help.zscaler.com/zia/nss-feed-output-format-web-logs"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`zscaler_proxy` urlclass=\"Legal Liability\" |  stats count min(_time) as firstTime max(_time) as lastTime by action deviceowner user urlcategory url src dest | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | dedup urlcategory | `zscaler_legal_liability_threat_blocked_filter`",
+    "condition": "You must install the latest version of Zscaler Add-on from Splunkbase. You must be ingesting Zscaler events into your Splunk environment through an ingester. This analytic was written to be used with the \"zscalernss-web\" sourcetype leveraging the Zscaler proxy data. This enables the integration with Splunk Enterprise Security. Security teams are encouraged to adjust the detection parameters, ensuring the detection is tailored to their specific environment.",
+    "fields": []
+  },
+  "falsepositives": [
+    "False positives are limited to Zscaler configuration."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

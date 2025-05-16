@@ -1,0 +1,45 @@
+title: Windows PowerShell Suspicious Parameter Variation
+id: e91f5ee6-ce3c-4b9e-9d35-4fcd15e98ca5
+status: stable
+description: Detects suspicious PowerShell invocations with parameter variations that might be used by attackers to avoid detection
+author: RuleHub Examples
+date: 2025/05/16
+modified: 2025/05/16
+references:
+    - https://attack.mitre.org/techniques/T1059/001/
+    - https://www.fireeye.com/blog/threat-research/2016/02/greater_visibilityt.html
+tags:
+    - attack.execution
+    - attack.t1059.001
+    - attack.defense_evasion
+    - attack.t1027
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: '\powershell.exe'
+        CommandLine|contains:
+            - ' -windowstyle h'
+            - ' -windowstyl h'
+            - ' -windowsty h'
+            - ' -windowst h'
+            - ' -windows h'
+            - ' -windo h'
+            - ' -wind h'
+            - ' -win h'
+            - ' -wi h'
+            - ' -win h'
+            - ' -enc'
+            - ' -encodedcommand'
+            - ' -noninteractive'
+            - ' -noprofile'
+            - ' -noexit'
+            - ' -ep bypass'
+            - ' -executionpolicy bypass'
+            - ' -executionpolicy remotesigned'
+    condition: selection
+falsepositives:
+    - Administrative scripts
+    - Software installations using PowerShell
+level: medium

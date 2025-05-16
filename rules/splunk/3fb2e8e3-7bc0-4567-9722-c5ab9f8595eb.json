@@ -1,0 +1,43 @@
+{
+  "id": "3fb2e8e3-7bc0-4567-9722-c5ab9f8595eb",
+  "name": "Windows Create Local Account",
+  "description": "The following analytic detects the creation of a new local user account on a Windows system. It leverages Windows Security Audit logs, specifically event ID 4720, to identify this activity. Monitoring the creation of local accounts is crucial for a SOC as it can indicate unauthorized access or lateral movement within the network. If confirmed malicious, this activity could allow an attacker to establish persistence, escalate privileges, or gain unauthorized access to sensitive systems and data.",
+  "source": {
+    "type": "splunk",
+    "id": "3fb2e8e3-7bc0-4567-9722-c5ab9f8595eb",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_create_local_account.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_create_local_account.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Michael Haag, Splunk",
+  "references": [
+    "https://thedfirreport.com/2022/03/21/apt35-automates-initial-access-using-proxyshell/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats `security_content_summariesonly` values(All_Changes.result_id) as result_id count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.result_id=4720 by All_Changes.user All_Changes.dest All_Changes.result All_Changes.action | `drop_dm_object_name(\"All_Changes\")` | `security_content_ctime(lastTime)` | `security_content_ctime(firstTime)` | `windows_create_local_account_filter`",
+    "condition": "This search requires you to have enabled your Group Management Audit Logs in your Local Windows Security Policy and be ingesting those logs.  More information on how to enable them can be found here: http://whatevernetworks.com/auditing-group-membership-changes-in-active-directory/",
+    "fields": []
+  },
+  "falsepositives": [
+    "It is possible that an administrator created the account. Verifying activity with an administrator is advised. This analytic is set to anomaly to allow for risk to be added. Filter and tune as needed. Restrict to critical infrastructure to reduce any volume."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

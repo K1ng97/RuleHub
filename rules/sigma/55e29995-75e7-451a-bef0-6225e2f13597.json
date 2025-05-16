@@ -1,0 +1,48 @@
+{
+  "id": "55e29995-75e7-451a-bef0-6225e2f13597",
+  "name": "Potential Credential Dumping Via LSASS SilentProcessExit Technique",
+  "description": "Detects changes to the Registry in which a monitor program gets registered to dump the memory of the lsass.exe process",
+  "source": {
+    "type": "sigma",
+    "id": "55e29995-75e7-451a-bef0-6225e2f13597",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_event_silentprocessexit_lsass.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_event/registry_event_silentprocessexit_lsass.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1003001"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://www.deepinstinct.com/2021/02/16/lsass-memory-dumps-are-stealthier-than-ever-before-part-2/",
+    "https://oddvar.moe/2018/04/10/persistence-using-globalflags-in-image-file-execution-options-hidden-from-autoruns-exe/"
+  ],
+  "severity": "critical",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-02-26",
+  "modified": "2022-12-19",
+  "mitre": {
+    "tactics": [
+      "TA1003"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"TargetObject|contains\": \"Microsoft\\\\Windows NT\\\\CurrentVersion\\\\SilentProcessExit\\\\lsass.exe\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "critical",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_event"
+  ]
+}

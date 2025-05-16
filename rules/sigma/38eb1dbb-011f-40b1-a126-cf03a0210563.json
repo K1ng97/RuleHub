@@ -1,0 +1,50 @@
+{
+  "id": "38eb1dbb-011f-40b1-a126-cf03a0210563",
+  "name": "ESXi Syslog Configuration Change Via ESXCLI",
+  "description": "Detects changes to the ESXi syslog configuration via \"esxcli\"",
+  "source": {
+    "type": "sigma",
+    "id": "38eb1dbb-011f-40b1-a126-cf03a0210563",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_esxcli_syslog_config_change.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_esxcli_syslog_config_change.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1562001",
+    "attackt1562003"
+  ],
+  "author": "Cedric Maurugeon",
+  "references": [
+    "https://support.solarwinds.com/SuccessCenter/s/article/Configure-ESXi-Syslog-to-LEM?language=en_US",
+    "https://developer.broadcom.com/xapis/esxcli-command-reference/7.0.0/namespace/esxcli_system.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-09-04",
+  "modified": "2023-09-04",
+  "mitre": {
+    "tactics": [
+      "TA1562"
+    ],
+    "techniques": [
+      "T001",
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"/esxcli\", \"CommandLine|contains|all\": [\"system\", \"syslog\", \"config\"], \"CommandLine|contains\": \" set\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administrative activities"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

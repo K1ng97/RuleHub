@@ -1,0 +1,45 @@
+{
+  "id": "58c0bff0-40a0-46e8-b5e8-b734b84d2017",
+  "name": "Certificate Exported From Local Certificate Store",
+  "description": "Detects when an application exports a certificate (and potentially the private key as well) from the local Windows certificate store.",
+  "source": {
+    "type": "sigma",
+    "id": "58c0bff0-40a0-46e8-b5e8-b734b84d2017",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_certificateservicesclient_lifecycle_system_cert_exported.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/certificate_services_client_lifecycle_system/win_certificateservicesclient_lifecycle_system_cert_exported.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1649"
+  ],
+  "author": "Zach Mathis",
+  "references": [
+    "https://www.splunk.com/en_us/blog/security/breaking-the-chain-defending-against-certificate-services-abuse.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-05-13",
+  "modified": "2023-05-13",
+  "mitre": {
+    "tactics": [
+      "TA1649"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 1007}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate application requesting certificate exports will trigger this. Apply additional filters as needed"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "certificateservicesclient-lifecycle-system"
+  ]
+}

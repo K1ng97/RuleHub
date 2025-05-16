@@ -1,0 +1,43 @@
+{
+  "id": "94665d8c-b841-4ff4-acb4-34d613e2cbfe",
+  "name": "Zscaler Exploit Threat Blocked",
+  "description": "The following analytic identifies potential exploit attempts involving command and script interpreters blocked by Zscaler. It leverages web proxy logs to detect incidents where actions are blocked due to exploit references. The detection compiles statistics by user, threat name, URL, hostname, file class, and filename. This activity is significant as it helps identify and mitigate exploit attempts, which are critical for maintaining security. If confirmed malicious, such activity could lead to unauthorized code execution, privilege escalation, or persistent access within the environment, posing a severe threat to organizational security.",
+  "source": {
+    "type": "splunk",
+    "id": "94665d8c-b841-4ff4-acb4-34d613e2cbfe",
+    "url": "https://github.com/splunk/security_content/blob/develop/zscaler_exploit_threat_blocked.yml",
+    "file_path": "tmp/repos/splunk/detections/web/zscaler_exploit_threat_blocked.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Rod Soto, Gowthamaraj Rajendran, Splunk",
+  "references": [
+    "https://help.zscaler.com/zia/nss-feed-output-format-web-logs"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`zscaler_proxy` action=blocked threatname=*exploit* | stats count min(_time) as firstTime max(_time) as lastTime  by user threatname src hostname fileclass filename url dest | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `zscaler_exploit_threat_blocked_filter`",
+    "condition": "You must install the latest version of Zscaler Add-on from Splunkbase. You must be ingesting Zscaler events into your Splunk environment through an ingester. This analytic was written to be used with the \"zscalernss-web\" sourcetype leveraging the Zscaler proxy data. This enables the integration with Splunk Enterprise Security. Security teams are encouraged to adjust the detection parameters, ensuring the detection is tailored to their specific environment.",
+    "fields": []
+  },
+  "falsepositives": [
+    "False positives are limited to Zscaler configuration."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

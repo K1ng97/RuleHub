@@ -1,0 +1,48 @@
+{
+  "id": "c90362e0-2df3-4e61-94fe-b37615814cb1",
+  "name": "Potential Persistence Via Netsh Helper DLL - Registry",
+  "description": "Detects changes to the Netsh registry key to add a new DLL value. This change might be an indication of a potential persistence attempt by adding a malicious Netsh helper\n",
+  "source": {
+    "type": "sigma",
+    "id": "c90362e0-2df3-4e61-94fe-b37615814cb1",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_set_netsh_helper_dll_potential_persistence.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_set/registry_set_netsh_helper_dll_potential_persistence.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1546007"
+  ],
+  "author": "Anish Bogati",
+  "references": [
+    "https://www.ired.team/offensive-security/persistence/t1128-netsh-helper-dll",
+    "https://pentestlab.blog/2019/10/29/persistence-netsh-helper-dll/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-11-28",
+  "modified": "2023-11-28",
+  "mitre": {
+    "tactics": [
+      "TA1546"
+    ],
+    "techniques": [
+      "T007"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"TargetObject|contains\": \"\\\\SOFTWARE\\\\Microsoft\\\\NetSh\", \"Details|contains\": \".dll\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate helper added by different programs and the OS"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_set"
+  ]
+}

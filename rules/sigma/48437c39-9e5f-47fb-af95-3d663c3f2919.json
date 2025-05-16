@@ -1,0 +1,48 @@
+{
+  "id": "48437c39-9e5f-47fb-af95-3d663c3f2919",
+  "name": "UAC Disabled",
+  "description": "Detects when an attacker tries to disable User Account Control (UAC) by setting the registry value \"EnableLUA\" to 0.\n",
+  "source": {
+    "type": "sigma",
+    "id": "48437c39-9e5f-47fb-af95-3d663c3f2919",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_set_uac_disable.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_set/registry_set_uac_disable.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackprivilege-escalation",
+    "attackt1548002"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/7e11e9b79583545f208a6dc3fa062f2ed443d999/atomics/T1548.002/T1548.002.md"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "stable",
+  "created": "2022-01-05",
+  "modified": "2024-05-10",
+  "mitre": {
+    "tactics": [
+      "TA1548"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"TargetObject|contains\": \"\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Policies\\\\System\\\\EnableLUA\", \"Details\": \"DWORD (0x00000000)\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_set"
+  ]
+}

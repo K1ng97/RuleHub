@@ -1,0 +1,45 @@
+{
+  "id": "5cdeaf3d-1489-477c-95ab-c318559fc051",
+  "name": "Suspicious AppX Package Locations",
+  "description": "Detects an appx package added the pipeline of the \"to be processed\" packages which is located in suspicious locations",
+  "source": {
+    "type": "sigma",
+    "id": "5cdeaf3d-1489-477c-95ab-c318559fc051",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_appxdeployment_server_susp_package_locations.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/appxdeployment_server/win_appxdeployment_server_susp_package_locations.yml"
+  },
+  "tags": [
+    "attackdefense-evasion"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "Internal Research",
+    "https://www.sentinelone.com/labs/inside-malicious-windows-apps-for-malware-deployment/",
+    "https://learn.microsoft.com/en-us/windows/win32/appxpkg/troubleshooting",
+    "https://news.sophos.com/en-us/2021/11/11/bazarloader-call-me-back-attack-abuses-windows-10-apps-mechanism/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-01-11",
+  "modified": "2023-01-11",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 854, \"Path|contains\": [\"C:\\\\Users\\\\Public\\\\\", \"/users/public/\", \"C:\\\\PerfLogs\\\\\", \"C:/perflogs/\", \"\\\\Desktop\\\\\", \"/desktop/\", \"\\\\Downloads\\\\\", \"/Downloads/\", \"C:\\\\Windows\\\\Temp\\\\\", \"C:/Windows/Temp/\", \"\\\\AppdData\\\\Local\\\\Temp\\\\\", \"/AppdData/Local/Temp/\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "appxdeployment-server"
+  ]
+}

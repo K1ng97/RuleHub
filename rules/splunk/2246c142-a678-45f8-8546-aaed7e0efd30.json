@@ -1,0 +1,45 @@
+{
+  "id": "2246c142-a678-45f8-8546-aaed7e0efd30",
+  "name": "O365 Elevated Mailbox Permission Assigned",
+  "description": "The following analytic identifies the assignment of elevated mailbox permissions in an Office 365 environment via the Add-MailboxPermission operation. It leverages logs from the Exchange workload in the o365_management_activity data source, focusing on permissions such as FullAccess, ChangePermission, or ChangeOwner. This activity is significant as it indicates potential unauthorized access or control over mailboxes, which could lead to data exfiltration or privilege escalation. If confirmed malicious, attackers could gain extensive access to sensitive email data and potentially manipulate mailbox settings, posing a severe security risk.",
+  "source": {
+    "type": "splunk",
+    "id": "2246c142-a678-45f8-8546-aaed7e0efd30",
+    "url": "https://github.com/splunk/security_content/blob/develop/o365_elevated_mailbox_permission_assigned.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/o365_elevated_mailbox_permission_assigned.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Patrick Bareiss, Mauricio Velazco, Splunk",
+  "references": [
+    "https://attack.mitre.org/techniques/T1098/002/",
+    "https://learn.microsoft.com/en-us/powershell/module/exchange/add-mailboxpermission",
+    "https://learn.microsoft.com/en-us/exchange/recipients/mailbox-permissions?view=exchserver-2019"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`o365_management_activity` Workload=Exchange Operation=Add-MailboxPermission (AccessRights=FullAccess OR AccessRights=ChangePermission OR AccessRights=ChangeOwner) | rename Identity AS dest_user | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by signature dest user src vendor_account vendor_product dest_user | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `o365_elevated_mailbox_permission_assigned_filter`",
+    "condition": "You must install the Splunk Microsoft Office 365 Add-on and ingest Office 365 management activity events.",
+    "fields": []
+  },
+  "falsepositives": [
+    "FullAccess mailbox delegation may be assigned for legitimate purposes, filter as needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

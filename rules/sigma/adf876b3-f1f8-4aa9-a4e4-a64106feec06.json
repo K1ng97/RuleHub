@@ -1,0 +1,46 @@
+{
+  "id": "adf876b3-f1f8-4aa9-a4e4-a64106feec06",
+  "name": "Testing Usage of Uncommonly Used Port",
+  "description": "Adversaries may communicate using a protocol and port paring that are typically not associated.\nFor example, HTTPS over port 8088(Citation: Symantec Elfin Mar 2019) or port 587(Citation: Fortinet Agent Tesla April 2018) as opposed to the traditional port 443.\n",
+  "source": {
+    "type": "sigma",
+    "id": "adf876b3-f1f8-4aa9-a4e4-a64106feec06",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_test_netconnection.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_test_netconnection.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1571"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1571/T1571.md#atomic-test-1---testing-usage-of-uncommonly-used-port-with-powershell",
+    "https://learn.microsoft.com/en-us/powershell/module/nettcpip/test-netconnection?view=windowsserver2022-ps"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-01-23",
+  "modified": "2022-01-23",
+  "mitre": {
+    "tactics": [
+      "TA1571"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"ScriptBlockText|contains|all\": [\"Test-NetConnection\", \"-ComputerName \", \"-port \"]}\nfilter: {\"ScriptBlockText|contains\": [\" 443 \", \" 80 \"]}",
+    "condition": "selection and not filter",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administrative script"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

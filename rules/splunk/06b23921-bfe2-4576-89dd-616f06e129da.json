@@ -1,0 +1,45 @@
+{
+  "id": "06b23921-bfe2-4576-89dd-616f06e129da",
+  "name": "O365 Exfiltration via File Download",
+  "description": "The following analytic detects when an excessive number of files are downloaded from o365 by the same user over a short period of time. O365 may bundle these files together as a ZIP file, however each file will have it's own download event. This behavior may indicate an attacker staging data for exfiltration or an insider threat removing organizational data. Additional attention should be taken with any Azure Guest (#EXT#) accounts.",
+  "source": {
+    "type": "splunk",
+    "id": "06b23921-bfe2-4576-89dd-616f06e129da",
+    "url": "https://github.com/splunk/security_content/blob/develop/o365_exfiltration_via_file_download.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/o365_exfiltration_via_file_download.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Steven Dick",
+  "references": [
+    "https://attack.mitre.org/techniques/T1567/exfil",
+    "https://www.varonis.com/blog/sidestepping-detection-while-exfiltrating-sharepoint-data",
+    "https://thedfirjournal.com/posts/m365-data-exfiltration-rclone/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`o365_management_activity` Operation IN (\"filedownloaded\") \n| eval user = replace(mvindex(split(lower(UserId),\"#ext#\"),0),\"_\",\"@\"), user_flat = replace(UserId, \"[^A-Za-z0-9]\",\"_\")\n| stats values(user) as user, latest(ClientIP) as src values(ZipFileName) as file_name, values(Operation) as signature, values(UserAgent) as http_user_agent, dc(SourceFileName) as count, min(_time) as firstTime, max(_time) as lastTime by Workload,UserId,SiteUrl\n| rename SiteUrl as file_path,Workload as app\n| where count > 50\n| `security_content_ctime(firstTime)` \n| `security_content_ctime(lastTime)`\n| `o365_exfiltration_via_file_download_filter`",
+    "condition": "You must install the Splunk Microsoft Office 365 Add-on and ingest Office 365 management activity events.",
+    "fields": []
+  },
+  "falsepositives": [
+    "It is possible that certain file download scenarios may trigger this alert, specifically OneDrive syncing. Adjust threshold and filtering as needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

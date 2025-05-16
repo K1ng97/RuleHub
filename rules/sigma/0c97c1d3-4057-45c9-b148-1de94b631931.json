@@ -1,0 +1,43 @@
+{
+  "id": "0c97c1d3-4057-45c9-b148-1de94b631931",
+  "name": "Okta Policy Rule Modified or Deleted",
+  "description": "Detects when an Policy Rule is Modified or Deleted.",
+  "source": {
+    "type": "sigma",
+    "id": "0c97c1d3-4057-45c9-b148-1de94b631931",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/okta_policy_rule_modified_or_deleted.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/okta/okta_policy_rule_modified_or_deleted.yml"
+  },
+  "tags": [
+    "attackimpact"
+  ],
+  "author": "Austin Songer @austinsonger",
+  "references": [
+    "https://developer.okta.com/docs/reference/api/system-log/",
+    "https://developer.okta.com/docs/reference/api/event-types/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-09-12",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"eventtype\": [\"policy.rule.update\", \"policy.rule.delete\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "okta",
+    "okta"
+  ]
+}

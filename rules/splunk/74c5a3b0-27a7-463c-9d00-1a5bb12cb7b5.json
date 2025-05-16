@@ -1,0 +1,43 @@
+{
+  "id": "74c5a3b0-27a7-463c-9d00-1a5bb12cb7b5",
+  "name": "Windows Archive Collected Data via Powershell",
+  "description": "The following analytic detects the use of PowerShell scripts to archive files into a temporary folder. It leverages PowerShell Script Block Logging, specifically monitoring for the `Compress-Archive` command targeting the `Temp` directory. This activity is significant as it may indicate an adversary's attempt to collect and compress data for exfiltration. If confirmed malicious, this behavior could lead to unauthorized data access and exfiltration, posing a severe risk to sensitive information and overall network security.",
+  "source": {
+    "type": "splunk",
+    "id": "74c5a3b0-27a7-463c-9d00-1a5bb12cb7b5",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_archive_collected_data_via_powershell.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_archive_collected_data_via_powershell.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-347a"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`powershell` EventCode=4104 ScriptBlockText = \"*Compress-Archive*\"  ScriptBlockText = \"*\\\\Temp\\\\*\" | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by dest signature signature_id user_id vendor_product EventID Guid Opcode Name Path ProcessID ScriptBlockId ScriptBlockText | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_archive_collected_data_via_powershell_filter`",
+    "condition": "To successfully implement this analytic, you will need to enable PowerShell Script Block Logging on some or all endpoints. Additional setup here https://docs.splunk.com/Documentation/UBA/5.0.4.1/GetDataIn/AddPowerShell#Configure_module_logging_for_PowerShell.",
+    "fields": []
+  },
+  "falsepositives": [
+    "powershell may used this function to archive data."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

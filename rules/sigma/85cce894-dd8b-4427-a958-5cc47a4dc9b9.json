@@ -1,0 +1,42 @@
+{
+  "id": "85cce894-dd8b-4427-a958-5cc47a4dc9b9",
+  "name": "Remote Utilities Host Service Install",
+  "description": "Detects Remote Utilities Host service installation on the target system.",
+  "source": {
+    "type": "sigma",
+    "id": "85cce894-dd8b-4427-a958-5cc47a4dc9b9",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_system_service_install_remote_utilities.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/system/service_control_manager/win_system_service_install_remote_utilities.yml"
+  },
+  "tags": [
+    "attackpersistence"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://www.remoteutilities.com/support/kb/host-service-won-t-start/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-10-31",
+  "modified": "2022-10-31",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_root: {\"Provider_Name\": \"Service Control Manager\", \"EventID\": 7045}\nselection_service: [{\"ImagePath|contains|all\": [\"\\\\rutserv.exe\", \"-service\"]}, {\"ServiceName\": \"Remote Utilities - Host\"}]",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use of the tool"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "system"
+  ]
+}

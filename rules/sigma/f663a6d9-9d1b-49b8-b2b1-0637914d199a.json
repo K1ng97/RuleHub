@@ -1,0 +1,47 @@
+{
+  "id": "f663a6d9-9d1b-49b8-b2b1-0637914d199a",
+  "name": "Narrator's Feedback-Hub Persistence",
+  "description": "Detects abusing Windows 10 Narrator's Feedback-Hub",
+  "source": {
+    "type": "sigma",
+    "id": "f663a6d9-9d1b-49b8-b2b1-0637914d199a",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_event_narrator_feedback_persistance.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_event/registry_event_narrator_feedback_persistance.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1547001"
+  ],
+  "author": "Dmitriy Lifanov, oscd.community",
+  "references": [
+    "https://giuliocomi.blogspot.com/2019/10/abusing-windows-10-narrators-feedback.html"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-10-25",
+  "modified": "2022-03-26",
+  "mitre": {
+    "tactics": [
+      "TA1547"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection1: {\"EventType\": \"DeleteValue\", \"TargetObject|endswith\": \"\\\\AppXypsaf9f1qserqevf0sws76dx4k9a5206\\\\Shell\\\\open\\\\command\\\\DelegateExecute\"}\nselection2: {\"TargetObject|endswith\": \"\\\\AppXypsaf9f1qserqevf0sws76dx4k9a5206\\\\Shell\\\\open\\\\command\\\\(Default)\"}",
+    "condition": "1 of selection*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_event"
+  ]
+}

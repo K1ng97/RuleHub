@@ -1,0 +1,43 @@
+{
+  "id": "4669561d-3bbd-44e3-857c-0e3c6ef2120c",
+  "name": "Linux Auditd Data Transfer Size Limits Via Split",
+  "description": "The following analytic detects suspicious data transfer activities that involve the use of the `split` syscall, potentially indicating an attempt to evade detection by breaking large files into smaller parts. Attackers may use this technique to bypass size-based security controls, facilitating the covert exfiltration of sensitive data. By monitoring for unusual or unauthorized use of the `split` syscall, this analytic helps identify potential data exfiltration attempts, allowing security teams to intervene and prevent the unauthorized transfer of critical information from the network.",
+  "source": {
+    "type": "splunk",
+    "id": "4669561d-3bbd-44e3-857c-0e3c6ef2120c",
+    "url": "https://github.com/splunk/security_content/blob/develop/linux_auditd_data_transfer_size_limits_via_split.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/linux_auditd_data_transfer_size_limits_via_split.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://www.splunk.com/en_us/blog/security/deep-dive-on-persistence-privilege-escalation-technique-and-detection-in-linux-platform.html"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`linux_auditd` execve_command = \"*split*\" AND execve_command = \"*-b *\" | rename host as dest | rename comm as process_name | rename exe as process | stats count min(_time) as firstTime max(_time) as lastTime by argc execve_command dest | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `linux_auditd_data_transfer_size_limits_via_split_filter`",
+    "condition": "To implement this detection, the process begins by ingesting auditd data, that consists of SYSCALL, TYPE, EXECVE and PROCTITLE events, which captures command-line executions and process details on Unix/Linux systems. These logs should be ingested and processed using Splunk Add-on for Unix and Linux (https://splunkbase.splunk.com/app/833), which is essential for correctly parsing and categorizing the data. The next step involves normalizing the field names  to match the field names set by the Splunk Common Information Model (CIM) to ensure consistency across different data sources and enhance the efficiency of data modeling. This approach enables effective monitoring and detection of linux endpoints where auditd is deployed",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrator or network operator can use this application for automation purposes. Please update the filter macros to remove false positives."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

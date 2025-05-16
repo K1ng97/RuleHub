@@ -1,0 +1,47 @@
+{
+  "id": "9e1bef8d-0fff-46f6-8465-9aa54e128c1e",
+  "name": "Use Of Hidden Paths Or Files",
+  "description": "Detects calls to hidden files or files located in hidden directories in NIX systems.",
+  "source": {
+    "type": "sigma",
+    "id": "9e1bef8d-0fff-46f6-8465-9aa54e128c1e",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/lnx_auditd_hidden_binary_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/auditd/lnx_auditd_hidden_binary_execution.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1574001"
+  ],
+  "author": "David Burkett, @signalblur",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1564.001/T1564.001.md"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-12-30",
+  "modified": "2022-12-30",
+  "mitre": {
+    "tactics": [
+      "TA1574"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"type\": \"PATH\", \"name|contains\": \"/.\"}\nfilter: {\"name|contains\": [\"/.cache/\", \"/.config/\", \"/.pyenv/\", \"/.rustup/toolchains\"]}",
+    "condition": "selection and not filter",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "auditd"
+  ]
+}

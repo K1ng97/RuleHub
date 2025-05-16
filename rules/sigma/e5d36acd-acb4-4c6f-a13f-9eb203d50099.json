@@ -1,0 +1,51 @@
+{
+  "id": "e5d36acd-acb4-4c6f-a13f-9eb203d50099",
+  "name": "Active Directory Structure Export Via Csvde.EXE",
+  "description": "Detects the execution of \"csvde.exe\" in order to export organizational Active Directory structure.",
+  "source": {
+    "type": "sigma",
+    "id": "e5d36acd-acb4-4c6f-a13f-9eb203d50099",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_csvde_export.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_csvde_export.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackexfiltration",
+    "attackt1087002"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://www.cybereason.com/blog/research/operation-ghostshell-novel-rat-targets-global-aerospace-and-telecoms-firms",
+    "https://web.archive.org/web/20180725233601/https://www.pwc.co.uk/cyber-security/pdf/cloud-hopper-annex-b-final.pdf",
+    "https://businessinsights.bitdefender.com/deep-dive-into-a-backdoordiplomacy-attack-a-study-of-an-attackers-toolkit",
+    "https://redcanary.com/blog/msix-installers/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-03-14",
+  "modified": "2023-03-14",
+  "mitre": {
+    "tactics": [
+      "TA1087"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\csvde.exe\"}, {\"OriginalFileName\": \"csvde.exe\"}]\nselection_remote: {\"CommandLine|contains\": \" -f\"}\nfilter_import: {\"CommandLine|contains\": \" -i\"}",
+    "condition": "all of selection_* and not 1 of filter_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

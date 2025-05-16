@@ -1,0 +1,46 @@
+{
+  "id": "2d1b83e4-17c6-4896-a37b-29140b40a788",
+  "name": "Google Workspace User Granted Admin Privileges",
+  "description": "Detects when an Google Workspace user is granted admin privileges.",
+  "source": {
+    "type": "sigma",
+    "id": "2d1b83e4-17c6-4896-a37b-29140b40a788",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/gcp_gworkspace_user_granted_admin_privileges.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/gcp/gworkspace/gcp_gworkspace_user_granted_admin_privileges.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1098"
+  ],
+  "author": "Austin Songer",
+  "references": [
+    "https://cloud.google.com/logging/docs/audit/gsuite-audit-logging#3",
+    "https://developers.google.com/admin-sdk/reports/v1/appendix/activity/admin-user-settings#GRANT_ADMIN_PRIVILEGE"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-08-23",
+  "modified": "2023-10-11",
+  "mitre": {
+    "tactics": [
+      "TA1098"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"eventService\": \"admin.googleapis.com\", \"eventName\": [\"GRANT_DELEGATED_ADMIN_PRIVILEGES\", \"GRANT_ADMIN_PRIVILEGE\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Google Workspace admin role privileges, may be modified by system administrators."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "gcp",
+    "google_workspace.admin"
+  ]
+}

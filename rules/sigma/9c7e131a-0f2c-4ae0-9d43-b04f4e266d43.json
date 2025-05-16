@@ -1,0 +1,46 @@
+{
+  "id": "9c7e131a-0f2c-4ae0-9d43-b04f4e266d43",
+  "name": "Uncommon Child Process Of Appvlp.EXE",
+  "description": "Detects uncommon child processes of Appvlp.EXE\nAppvlp or the Application Virtualization Utility is included with Microsoft Office. Attackers are able to abuse \"AppVLP\" to execute shell commands.\nNormally, this binary is used for Application Virtualization, but it can also be abused to circumvent the ASR file path rule folder\nor to mark a file as a system file.\n",
+  "source": {
+    "type": "sigma",
+    "id": "9c7e131a-0f2c-4ae0-9d43-b04f4e266d43",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_appvlp_uncommon_child_process.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_appvlp_uncommon_child_process.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1218"
+  ],
+  "author": "Sreeman",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/OtherMSBinaries/Appvlp/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-03-13",
+  "modified": "2023-11-09",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"ParentImage|endswith\": \"\\\\appvlp.exe\"}\nfilter_main_generic: {\"Image|endswith\": [\":\\\\Windows\\\\SysWOW64\\\\rundll32.exe\", \":\\\\Windows\\\\System32\\\\rundll32.exe\"]}\nfilter_optional_office_msoasb: {\"Image|contains\": \":\\\\Program Files\\\\Microsoft Office\", \"Image|endswith\": \"\\\\msoasb.exe\"}\nfilter_optional_office_skype: {\"Image|contains|all\": [\":\\\\Program Files\\\\Microsoft Office\", \"\\\\SkypeSrv\\\\\"], \"Image|endswith\": \"\\\\SKYPESERVER.EXE\"}\nfilter_optional_office_msouc: {\"Image|contains\": \":\\\\Program Files\\\\Microsoft Office\", \"Image|endswith\": \"\\\\MSOUC.EXE\"}",
+    "condition": "selection and not 1 of filter_main_* and not 1 of filter_optional_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

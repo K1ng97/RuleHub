@@ -1,0 +1,46 @@
+{
+  "id": "65744385-8541-44a6-8630-ffc824d7d4cc",
+  "name": "Microsoft Teams Sensitive File Access By Uncommon Applications",
+  "description": "Detects file access attempts to sensitive Microsoft teams files (leveldb, cookies) by an uncommon process.\n",
+  "source": {
+    "type": "sigma",
+    "id": "65744385-8541-44a6-8630-ffc824d7d4cc",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_access_win_teams_sensitive_files.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_access/file_access_win_teams_sensitive_files.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1528"
+  ],
+  "author": "@SerkinValery",
+  "references": [
+    "https://www.bleepingcomputer.com/news/security/microsoft-teams-stores-auth-tokens-as-cleartext-in-windows-linux-macs/",
+    "https://www.vectra.ai/blog/undermining-microsoft-teams-security-by-mining-tokens"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "experimental",
+  "created": "2024-07-22",
+  "modified": "2024-07-22",
+  "mitre": {
+    "tactics": [
+      "TA1528"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"FileName|contains\": [\"\\\\Microsoft\\\\Teams\\\\Cookies\", \"\\\\Microsoft\\\\Teams\\\\Local Storage\\\\leveldb\"]}\nfilter_main_legit_location: {\"Image|endswith\": \"\\\\Microsoft\\\\Teams\\\\current\\\\Teams.exe\"}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_access"
+  ]
+}

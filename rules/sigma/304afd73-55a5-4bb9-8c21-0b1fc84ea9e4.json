@@ -1,0 +1,57 @@
+{
+  "id": "304afd73-55a5-4bb9-8c21-0b1fc84ea9e4",
+  "name": "PSEXEC Remote Execution File Artefact",
+  "description": "Detects creation of the PSEXEC key file. Which is created anytime a PsExec command is executed. It gets written to the file system and will be recorded in the USN Journal on the target system",
+  "source": {
+    "type": "sigma",
+    "id": "304afd73-55a5-4bb9-8c21-0b1fc84ea9e4",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_sysinternals_psexec_service_key.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_sysinternals_psexec_service_key.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attacklateral-movement",
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attacks0029",
+    "attackt1136002",
+    "attackt1543003",
+    "attackt1570"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://aboutdfir.com/the-key-to-identify-psexec/",
+    "https://twitter.com/davisrichardg/status/1616518800584704028"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-01-21",
+  "modified": "2023-02-23",
+  "mitre": {
+    "tactics": [
+      "TA1136",
+      "TA1543",
+      "TA1570"
+    ],
+    "techniques": [
+      "T002",
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"TargetFilename|startswith\": \"C:\\\\Windows\\\\PSEXEC-\", \"TargetFilename|endswith\": \".key\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

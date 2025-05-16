@@ -1,0 +1,47 @@
+{
+  "id": "4c4af3cd-2115-479c-8193-6b8bfce9001c",
+  "name": "PowerShell ICMP Exfiltration",
+  "description": "Detects Exfiltration Over Alternative Protocol - ICMP. Adversaries may steal data by exfiltrating it over an un-encrypted network protocol other than that of the existing command and control channel.",
+  "source": {
+    "type": "sigma",
+    "id": "4c4af3cd-2115-479c-8193-6b8bfce9001c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_icmp_exfiltration.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_icmp_exfiltration.yml"
+  },
+  "tags": [
+    "attackexfiltration",
+    "attackt1048003"
+  ],
+  "author": "Bartlomiej Czyz @bczyz1, oscd.community",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1048.003/T1048.003.md#atomic-test-2---exfiltration-over-alternative-protocol---icmp"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-10",
+  "modified": "2022-12-25",
+  "mitre": {
+    "tactics": [
+      "TA1048"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ScriptBlockText|contains|all\": [\"New-Object\", \"System.Net.NetworkInformation.Ping\", \".Send(\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate usage of System.Net.NetworkInformation.Ping class"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

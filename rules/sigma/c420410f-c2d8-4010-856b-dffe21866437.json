@@ -1,0 +1,47 @@
+{
+  "id": "c420410f-c2d8-4010-856b-dffe21866437",
+  "name": "Enable LM Hash Storage",
+  "description": "Detects changes to the \"NoLMHash\" registry value in order to allow Windows to store LM Hashes.\nBy setting this registry value to \"0\" (DWORD), Windows will be allowed to store a LAN manager hash of your password in Active Directory and local SAM databases.\n",
+  "source": {
+    "type": "sigma",
+    "id": "c420410f-c2d8-4010-856b-dffe21866437",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_set_system_lsa_nolmhash.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_set/registry_set_system_lsa_nolmhash.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1112"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-347a",
+    "https://learn.microsoft.com/en-us/troubleshoot/windows-server/windows-security/prevent-windows-store-lm-hash-password",
+    "https://www.sans.org/blog/protecting-privileged-domain-accounts-lm-hashes-the-good-the-bad-and-the-ugly/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-12-15",
+  "modified": "2023-12-15",
+  "mitre": {
+    "tactics": [
+      "TA1112"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"TargetObject|endswith\": \"System\\\\CurrentControlSet\\\\Control\\\\Lsa\\\\NoLMHash\", \"Details\": \"DWORD (0x00000000)\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_set"
+  ]
+}

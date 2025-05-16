@@ -1,0 +1,45 @@
+{
+  "id": "aff815cc-e400-4bf0-a47a-5d8a2407d4e1",
+  "name": "Use Get-NetTCPConnection - PowerShell Module",
+  "description": "Adversaries may attempt to get a listing of network connections to or from the compromised system they are currently accessing or from remote systems by querying for information over the network.",
+  "source": {
+    "type": "sigma",
+    "id": "aff815cc-e400-4bf0-a47a-5d8a2407d4e1",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_pm_susp_get_nettcpconnection.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_module/posh_pm_susp_get_nettcpconnection.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1049"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1049/T1049.md#atomic-test-2---system-network-connections-discovery-with-powershell"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-12-10",
+  "modified": "2022-12-02",
+  "mitre": {
+    "tactics": [
+      "TA1049"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"ContextInfo|contains\": \"Get-NetTCPConnection\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_module"
+  ]
+}

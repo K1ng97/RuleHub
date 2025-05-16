@@ -1,0 +1,48 @@
+{
+  "id": "d38d2fa4-98e6-4a24-aff1-410b0c9ad177",
+  "name": "HackTool - UACMe Akagi Execution",
+  "description": "Detects the execution of UACMe, a tool used for UAC bypasses, via default PE metadata",
+  "source": {
+    "type": "sigma",
+    "id": "d38d2fa4-98e6-4a24-aff1-410b0c9ad177",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_hktl_uacme.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_hktl_uacme.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackprivilege-escalation",
+    "attackt1548002"
+  ],
+  "author": "Christian Burkard (Nextron Systems), Florian Roth (Nextron Systems)",
+  "references": [
+    "https://github.com/hfiref0x/UACME"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-08-30",
+  "modified": "2024-11-23",
+  "mitre": {
+    "tactics": [
+      "TA1548"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection_pe: [{\"Product\": \"UACMe\"}, {\"Company\": [\"REvol Corp\", \"APT 92\", \"UG North\", \"Hazardous Environments\", \"CD Project Rekt\"]}, {\"Description\": [\"UACMe main module\", \"Pentesting utility\"]}, {\"OriginalFileName\": [\"Akagi.exe\", \"Akagi64.exe\"]}]\nselection_img: {\"Image|endswith\": [\"\\\\Akagi64.exe\", \"\\\\Akagi.exe\"]}\nselection_hashes_sysmon: {\"Hashes|contains\": [\"IMPHASH=767637C23BB42CD5D7397CF58B0BE688\", \"IMPHASH=14C4E4C72BA075E9069EE67F39188AD8\", \"IMPHASH=3C782813D4AFCE07BBFC5A9772ACDBDC\", \"IMPHASH=7D010C6BB6A3726F327F7E239166D127\", \"IMPHASH=89159BA4DD04E4CE5559F132A9964EB3\", \"IMPHASH=6F33F4A5FC42B8CEC7314947BD13F30F\", \"IMPHASH=5834ED4291BDEB928270428EBBAF7604\", \"IMPHASH=5A8A8A43F25485E7EE1B201EDCBC7A38\", \"IMPHASH=DC7D30B90B2D8ABF664FBED2B1B59894\", \"IMPHASH=41923EA1F824FE63EA5BEB84DB7A3E74\", \"IMPHASH=3DE09703C8E79ED2CA3F01074719906B\"]}",
+    "condition": "1 of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

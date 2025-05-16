@@ -1,0 +1,47 @@
+{
+  "id": "47e4bab7-c626-47dc-967b-255608c9a920",
+  "name": "Permission Misconfiguration Reconnaissance Via Findstr.EXE",
+  "description": "Detects usage of findstr with the \"EVERYONE\" or \"BUILTIN\" keywords.\nThis was seen being used in combination with \"icacls\" and other utilities to spot misconfigured files or folders permissions.\n",
+  "source": {
+    "type": "sigma",
+    "id": "47e4bab7-c626-47dc-967b-255608c9a920",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_findstr_recon_everyone.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_findstr_recon_everyone.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1552006"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://www.absolomb.com/2018-01-26-Windows-Privilege-Escalation-Guide/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-12",
+  "modified": "2023-11-11",
+  "mitre": {
+    "tactics": [
+      "TA1552"
+    ],
+    "techniques": [
+      "T006"
+    ]
+  },
+  "detection": {
+    "query": "selection_findstr_img: [{\"Image|endswith\": [\"\\\\find.exe\", \"\\\\findstr.exe\"]}, {\"OriginalFileName\": [\"FIND.EXE\", \"FINDSTR.EXE\"]}]\nselection_findstr_cli: {\"CommandLine|contains\": [\"\\\"Everyone\\\"\", \"'Everyone'\", \"\\\"BUILTIN\\\\\\\\\\\"\", \"'BUILTIN\\\\'\"]}\nselection_special: {\"CommandLine|contains|all\": [\"icacls \", \"findstr \", \"Everyone\"]}",
+    "condition": "all of selection_findstr_* or selection_special",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

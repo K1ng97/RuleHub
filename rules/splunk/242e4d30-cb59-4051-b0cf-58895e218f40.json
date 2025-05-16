@@ -1,0 +1,48 @@
+{
+  "id": "242e4d30-cb59-4051-b0cf-58895e218f40",
+  "name": "O365 User Consent Blocked for Risky Application",
+  "description": "The following analytic identifies instances where Office 365 has blocked a user's attempt to grant consent to an application deemed risky or potentially malicious. This detection leverages O365 audit logs, specifically focusing on failed user consent actions due to system-driven blocks. Monitoring these blocked consent attempts is crucial as it highlights potential threats early on, indicating that a user might be targeted or that malicious applications are attempting to infiltrate the organization. If confirmed malicious, this activity suggests that O365's security measures successfully prevented a harmful application from accessing organizational data, warranting immediate investigation.",
+  "source": {
+    "type": "splunk",
+    "id": "242e4d30-cb59-4051-b0cf-58895e218f40",
+    "url": "https://github.com/splunk/security_content/blob/develop/o365_user_consent_blocked_for_risky_application.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/o365_user_consent_blocked_for_risky_application.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Mauricio Velazco, Splunk",
+  "references": [
+    "https://attack.mitre.org/techniques/T1528/",
+    "https://www.microsoft.com/en-us/security/blog/2022/09/22/malicious-oauth-applications-used-to-compromise-email-servers-and-spread-spam/",
+    "https://learn.microsoft.com/en-us/azure/active-directory/manage-apps/protect-against-consent-phishing",
+    "https://learn.microsoft.com/en-us/defender-cloud-apps/investigate-risky-oauth",
+    "https://www.alteredsecurity.com/post/introduction-to-365-stealer",
+    "https://github.com/AlteredSecurity/365-Stealer"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`o365_management_activity` Workload=AzureActiveDirectory Operation=\"Consent to application.\" ResultStatus=Failure | eval permissions =mvindex('ModifiedProperties{}.NewValue', 4) | eval reason =mvindex('ModifiedProperties{}.NewValue', 5) | search reason = \"Risky application detected\" | rex field=permissions \"Scope: (?<Scope>[^,]+)\" | fillnull | stats max(_time) as lastTime by user, reason, object, Scope, dest, src, vendor_account, vendor_product, signature | `security_content_ctime(lastTime)` | `o365_user_consent_blocked_for_risky_application_filter`",
+    "condition": "You must install the Splunk Microsoft Office 365 Add-on and ingest Office 365 management activity events.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Microsofts algorithm to identify risky applications is unknown and may flag legitimate applications."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

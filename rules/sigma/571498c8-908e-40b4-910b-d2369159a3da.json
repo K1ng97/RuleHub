@@ -1,0 +1,50 @@
+{
+  "id": "571498c8-908e-40b4-910b-d2369159a3da",
+  "name": "Password Protected ZIP File Opened (Email Attachment)",
+  "description": "Detects the extraction of password protected ZIP archives. See the filename variable for more details on which file has been opened.",
+  "source": {
+    "type": "sigma",
+    "id": "571498c8-908e-40b4-910b-d2369159a3da",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_susp_opened_encrypted_zip_outlook.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_susp_opened_encrypted_zip_outlook.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackinitial-access",
+    "attackt1027",
+    "attackt1566001"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://twitter.com/sbousseaden/status/1523383197513379841"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-05-09",
+  "modified": "2022-05-09",
+  "mitre": {
+    "tactics": [
+      "TA1027",
+      "TA1566"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 5379, \"TargetName|contains|all\": [\"Microsoft_Windows_Shell_ZipFolder:filename\", \"\\\\Temporary Internet Files\\\\Content.Outlook\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate used of encrypted ZIP files"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

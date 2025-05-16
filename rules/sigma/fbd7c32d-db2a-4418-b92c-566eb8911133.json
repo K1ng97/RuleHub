@@ -1,0 +1,51 @@
+{
+  "id": "fbd7c32d-db2a-4418-b92c-566eb8911133",
+  "name": "SyncAppvPublishingServer Execute Arbitrary PowerShell Code",
+  "description": "Executes arbitrary PowerShell code using SyncAppvPublishingServer.exe.",
+  "source": {
+    "type": "sigma",
+    "id": "fbd7c32d-db2a-4418-b92c-566eb8911133",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_lolbin_syncappvpublishingserver_execute_psh.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_lolbin_syncappvpublishingserver_execute_psh.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218/T1218.md",
+    "https://lolbas-project.github.io/lolbas/Binaries/Syncappvpublishingserver/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-07-12",
+  "modified": "2022-10-04",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\SyncAppvPublishingServer.exe\"}, {\"OriginalFileName\": \"syncappvpublishingserver.exe\"}]\nselection_cli: {\"CommandLine|contains\": \"\\\"n; \"}",
+    "condition": "all of selection_*",
+    "fields": [
+      "ComputerName",
+      "User",
+      "CommandLine",
+      "ParentCommandLine"
+    ]
+  },
+  "falsepositives": [
+    "App-V clients"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

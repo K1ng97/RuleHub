@@ -1,0 +1,47 @@
+{
+  "id": "af202fd3-7bff-4212-a25a-fb34606cfcbe",
+  "name": "Modifying Crontab",
+  "description": "Detects suspicious modification of crontab file.",
+  "source": {
+    "type": "sigma",
+    "id": "af202fd3-7bff-4212-a25a-fb34606cfcbe",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/lnx_cron_crontab_file_modification.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/builtin/cron/lnx_cron_crontab_file_modification.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1053003"
+  ],
+  "author": "Pawel Mazur",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1053.003/T1053.003.md"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-04-16",
+  "modified": "2022-04-16",
+  "mitre": {
+    "tactics": [
+      "TA1053"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "keywords: [\"REPLACE\"]",
+    "condition": "keywords",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate modification of crontab"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "cron"
+  ]
+}

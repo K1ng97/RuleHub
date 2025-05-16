@@ -1,0 +1,47 @@
+{
+  "id": "f117933c-980c-4f78-b384-e3d838111165",
+  "name": "Windows Share Mount Via Net.EXE",
+  "description": "Detects when a share is mounted using the \"net.exe\" utility",
+  "source": {
+    "type": "sigma",
+    "id": "f117933c-980c-4f78-b384-e3d838111165",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_net_use_mount_share.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_net_use_mount_share.yml"
+  },
+  "tags": [
+    "attacklateral-movement",
+    "attackt1021002"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://drive.google.com/file/d/1lKya3_mLnR3UQuCoiYruO3qgu052_iS_/view"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-02-02",
+  "modified": "2023-02-21",
+  "mitre": {
+    "tactics": [
+      "TA1021"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": [\"\\\\net.exe\", \"\\\\net1.exe\"]}, {\"OriginalFileName\": [\"net.exe\", \"net1.exe\"]}]\nselection_cli: {\"CommandLine|contains\": [\" use \", \" \\\\\\\\\\\\\\\\\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate activity by administrators and scripts"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

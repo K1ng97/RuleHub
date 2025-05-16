@@ -1,0 +1,43 @@
+{
+  "id": "19951c21-229d-4ccb-8774-b993c3ff3c5c",
+  "name": "Okta API Token Created",
+  "description": "Detects when a API token is created",
+  "source": {
+    "type": "sigma",
+    "id": "19951c21-229d-4ccb-8774-b993c3ff3c5c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/okta_api_token_created.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/okta/okta_api_token_created.yml"
+  },
+  "tags": [
+    "attackpersistence"
+  ],
+  "author": "Austin Songer @austinsonger",
+  "references": [
+    "https://developer.okta.com/docs/reference/api/system-log/",
+    "https://developer.okta.com/docs/reference/api/event-types/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-09-12",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"eventtype\": \"system.api_token.create\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate creation of an API token by authorized users"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "okta",
+    "okta"
+  ]
+}

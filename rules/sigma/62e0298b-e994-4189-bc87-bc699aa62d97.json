@@ -1,0 +1,45 @@
+{
+  "id": "62e0298b-e994-4189-bc87-bc699aa62d97",
+  "name": "Potential Suspicious Registry File Imported Via Reg.EXE",
+  "description": "Detects the import of '.reg' files from suspicious paths using the 'reg.exe' utility",
+  "source": {
+    "type": "sigma",
+    "id": "62e0298b-e994-4189-bc87-bc699aa62d97",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_reg_import_from_suspicious_paths.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_reg_import_from_suspicious_paths.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1112"
+  ],
+  "author": "frack113, Nasreddine Bencherchali",
+  "references": [
+    "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/reg-import"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-01",
+  "modified": "2023-02-05",
+  "mitre": {
+    "tactics": [
+      "TA1112"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\reg.exe\"}, {\"OriginalFileName\": \"reg.exe\"}]\nselection_cli: {\"CommandLine|contains\": \" import \"}\nselection_paths: {\"CommandLine|contains\": [\"C:\\\\Users\\\\\", \"%temp%\", \"%tmp%\", \"%appdata%\", \"\\\\AppData\\\\Local\\\\Temp\\\\\", \"C:\\\\Windows\\\\Temp\\\\\", \"C:\\\\ProgramData\\\\\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate import of keys"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

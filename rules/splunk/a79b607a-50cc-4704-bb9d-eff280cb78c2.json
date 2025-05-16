@@ -1,0 +1,44 @@
+{
+  "id": "a79b607a-50cc-4704-bb9d-eff280cb78c2",
+  "name": "ASL AWS Credential Access GetPasswordData",
+  "description": "The following analytic identifiesGetPasswordData API calls in your AWS account. It leverages  CloudTrail logs from Amazon Security Lake to detect this activity by counting the distinct instance IDs accessed. This behavior is significant as it may indicate an attempt to retrieve encrypted administrator passwords for running Windows instances, which is a critical security concern. If confirmed malicious, attackers could gain unauthorized access to administrative credentials, potentially leading to full control over the affected instances and further compromise of the AWS environment.",
+  "source": {
+    "type": "splunk",
+    "id": "a79b607a-50cc-4704-bb9d-eff280cb78c2",
+    "url": "https://github.com/splunk/security_content/blob/develop/asl_aws_credential_access_getpassworddata.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/asl_aws_credential_access_getpassworddata.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Patrick Bareiss, Splunk",
+  "references": [
+    "https://attack.mitre.org/techniques/T1552/",
+    "https://stratus-red-team.cloud/attack-techniques/AWS/aws.credential-access.ec2-get-password-data/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`amazon_security_lake` api.operation=GetPasswordData | spath input=api.request.data | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by actor.user.uid api.operation api.service.name http_request.user_agent src_endpoint.ip actor.user.account.uid cloud.provider cloud.region instanceId | rename actor.user.uid as user api.operation as action api.service.name as dest http_request.user_agent as user_agent src_endpoint.ip as src actor.user.account.uid as vendor_account cloud.provider as vendor_product cloud.region as vendor_region | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` |`asl_aws_credential_access_getpassworddata_filter`",
+    "condition": "The detection is based on Amazon Security Lake events from Amazon Web Services (AWS), which is a centralized data lake that provides security-related data from AWS services. To use this detection, you must ingest CloudTrail logs from Amazon Security Lake into Splunk. To run this search, ensure that you ingest events using the latest version of Splunk Add-on for Amazon Web Services (https://splunkbase.splunk.com/app/1876) or the Federated Analytics App.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrator tooling or automated scripts may make these calls but it is highly unlikely to make several calls in a short period of time."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

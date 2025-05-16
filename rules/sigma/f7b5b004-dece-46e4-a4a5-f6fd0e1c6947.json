@@ -1,0 +1,48 @@
+{
+  "id": "f7b5b004-dece-46e4-a4a5-f6fd0e1c6947",
+  "name": "Privileged Account Creation",
+  "description": "Detects when a new admin is created.",
+  "source": {
+    "type": "sigma",
+    "id": "f7b5b004-dece-46e4-a4a5-f6fd0e1c6947",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_privileged_account_creation.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/audit_logs/azure_privileged_account_creation.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1078004"
+  ],
+  "author": "Mark Morowczynski '@markmorow', Yochana Henderson, '@Yochana-H', Tim Shelton",
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/architecture/security-operations-privileged-accounts#changes-to-privileged-accounts"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-11",
+  "modified": "2022-08-16",
+  "mitre": {
+    "tactics": [
+      "TA1078"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"properties.message|contains|all\": [\"Add user\", \"Add member to role\"], \"Status\": \"Success\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "A legitimate new admin account being created"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "auditlogs"
+  ]
+}

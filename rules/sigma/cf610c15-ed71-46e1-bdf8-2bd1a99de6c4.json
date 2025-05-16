@@ -1,0 +1,48 @@
+{
+  "id": "cf610c15-ed71-46e1-bdf8-2bd1a99de6c4",
+  "name": "Download File To Potentially Suspicious Directory Via Wget",
+  "description": "Detects the use of wget to download content to a suspicious directory",
+  "source": {
+    "type": "sigma",
+    "id": "cf610c15-ed71-46e1-bdf8-2bd1a99de6c4",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_wget_download_suspicious_directory.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_wget_download_suspicious_directory.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1105"
+  ],
+  "author": "Joseliyo Sanchez, @Joseliyo_Jstnk",
+  "references": [
+    "https://blogs.jpcert.or.jp/en/2023/05/gobrat.html",
+    "https://jstnk9.github.io/jstnk9/research/GobRAT-Malware/",
+    "https://www.virustotal.com/gui/file/60bcd645450e4c846238cf0e7226dc40c84c96eba99f6b2cffcd0ab4a391c8b3/detection",
+    "https://www.virustotal.com/gui/file/3e44c807a25a56f4068b5b8186eee5002eed6f26d665a8b791c472ad154585d1/detection"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-06-02",
+  "modified": "2023-06-02",
+  "mitre": {
+    "tactics": [
+      "TA1105"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: {\"Image|endswith\": \"/wget\"}\nselection_output: [{\"CommandLine|re\": \"\\\\s-O\\\\s\"}, {\"CommandLine|contains\": \"--output-document\"}]\nselection_path: {\"CommandLine|contains\": \"/tmp/\"}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

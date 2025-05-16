@@ -1,0 +1,51 @@
+{
+  "id": "b7b19cb6-9b32-4fc4-a108-73f19acfe262",
+  "name": "Suspicious VBoxDrvInst.exe Parameters",
+  "description": "Detect VBoxDrvInst.exe run with parameters allowing processing INF file.\nThis allows to create values in the registry and install drivers.\nFor example one could use this technique to obtain persistence via modifying one of Run or RunOnce registry keys\n",
+  "source": {
+    "type": "sigma",
+    "id": "b7b19cb6-9b32-4fc4-a108-73f19acfe262",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_virtualbox_vboxdrvinst_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_virtualbox_vboxdrvinst_execution.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1112"
+  ],
+  "author": "Konstantin Grishchenko, oscd.community",
+  "references": [
+    "https://github.com/LOLBAS-Project/LOLBAS/blob/4db780e0f0b2e2bb8cb1fa13e09196da9b9f1834/yml/LOLUtilz/OtherBinaries/VBoxDrvInst.yml",
+    "https://twitter.com/pabraeken/status/993497996179492864"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-06",
+  "modified": "2021-11-27",
+  "mitre": {
+    "tactics": [
+      "TA1112"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"\\\\VBoxDrvInst.exe\", \"CommandLine|contains|all\": [\"driver\", \"executeinf\"]}",
+    "condition": "selection",
+    "fields": [
+      "ComputerName",
+      "User",
+      "CommandLine",
+      "ParentCommandLine"
+    ]
+  },
+  "falsepositives": [
+    "Legitimate use of VBoxDrvInst.exe utility by VirtualBox Guest Additions installation process"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

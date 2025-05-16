@@ -1,0 +1,44 @@
+{
+  "id": "cd8b36ac-8e4a-4c2f-a402-a29b8fbd5bca",
+  "name": "Suspicious File Creation Activity From Fake Recycle.Bin Folder",
+  "description": "Detects file write event from/to a fake recycle bin folder that is often used as a staging directory for malware",
+  "source": {
+    "type": "sigma",
+    "id": "cd8b36ac-8e4a-4c2f-a402-a29b8fbd5bca",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_susp_recycle_bin_fake_exec.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_susp_recycle_bin_fake_exec.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackpersistence"
+  ],
+  "author": "X__Junior (Nextron Systems)",
+  "references": [
+    "https://www.mandiant.com/resources/blog/infected-usb-steal-secrets",
+    "https://unit42.paloaltonetworks.com/cloaked-ursa-phishing/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-07-12",
+  "modified": "2023-12-11",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: [{\"Image|contains\": [\"RECYCLERS.BIN\\\\\", \"RECYCLER.BIN\\\\\"]}, {\"TargetFilename|contains\": [\"RECYCLERS.BIN\\\\\", \"RECYCLER.BIN\\\\\"]}]",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

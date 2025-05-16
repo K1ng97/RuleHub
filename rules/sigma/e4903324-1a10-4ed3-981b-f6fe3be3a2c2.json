@@ -1,0 +1,48 @@
+{
+  "id": "e4903324-1a10-4ed3-981b-f6fe3be3a2c2",
+  "name": "Potential Edputil.DLL Sideloading",
+  "description": "Detects potential DLL sideloading of \"edputil.dll\"",
+  "source": {
+    "type": "sigma",
+    "id": "e4903324-1a10-4ed3-981b-f6fe3be3a2c2",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/image_load_side_load_edputil.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/image_load/image_load_side_load_edputil.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackprivilege-escalation",
+    "attackt1574001"
+  ],
+  "author": "X__Junior (Nextron Systems)",
+  "references": [
+    "https://alternativeto.net/news/2023/5/cybercriminals-use-wordpad-vulnerability-to-spread-qbot-malware/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-06-09",
+  "modified": "2023-06-09",
+  "mitre": {
+    "tactics": [
+      "TA1574"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ImageLoaded|endswith\": \"\\\\edputil.dll\"}\nfilter_main_generic: {\"ImageLoaded|startswith\": [\"C:\\\\Windows\\\\System32\\\\\", \"C:\\\\Windows\\\\SysWOW64\\\\\", \"C\\\\Windows\\\\WinSxS\\\\\"]}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "image_load"
+  ]
+}

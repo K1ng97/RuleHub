@@ -1,0 +1,45 @@
+{
+  "id": "aa8e035d-7be4-48d3-a944-102aec04400d",
+  "name": "Suspicious Extrac32 Execution",
+  "description": "Download or Copy file with Extrac32",
+  "source": {
+    "type": "sigma",
+    "id": "aa8e035d-7be4-48d3-a944-102aec04400d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_lolbin_extrac32.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_lolbin_extrac32.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1105"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/Binaries/Extrac32/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-11-26",
+  "modified": "2022-08-13",
+  "mitre": {
+    "tactics": [
+      "TA1105"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_lolbas: [{\"CommandLine|contains\": \"extrac32.exe\"}, {\"Image|endswith\": \"\\\\extrac32.exe\"}, {\"OriginalFileName\": \"extrac32.exe\"}]\nselection_archive: {\"CommandLine|contains\": \".cab\"}\nselection_options: {\"CommandLine|contains\": [\"/C\", \"/Y\", \" \\\\\\\\\\\\\\\\\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

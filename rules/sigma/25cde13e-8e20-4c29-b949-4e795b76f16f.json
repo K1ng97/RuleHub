@@ -1,0 +1,46 @@
+{
+  "id": "25cde13e-8e20-4c29-b949-4e795b76f16f",
+  "name": "Suspicious Teams Application Related ObjectAcess Event",
+  "description": "Detects an access to authentication tokens and accounts of Microsoft Teams desktop application.",
+  "source": {
+    "type": "sigma",
+    "id": "25cde13e-8e20-4c29-b949-4e795b76f16f",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_teams_suspicious_objectaccess.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_teams_suspicious_objectaccess.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1528"
+  ],
+  "author": "@SerkinValery",
+  "references": [
+    "https://www.bleepingcomputer.com/news/security/microsoft-teams-stores-auth-tokens-as-cleartext-in-windows-linux-macs/",
+    "https://www.vectra.ai/blogpost/undermining-microsoft-teams-security-by-mining-tokens"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-09-16",
+  "modified": "2022-09-16",
+  "mitre": {
+    "tactics": [
+      "TA1528"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 4663, \"ObjectName|contains\": [\"\\\\Microsoft\\\\Teams\\\\Cookies\", \"\\\\Microsoft\\\\Teams\\\\Local Storage\\\\leveldb\"]}\nfilter: {\"ProcessName|contains\": \"\\\\Microsoft\\\\Teams\\\\current\\\\Teams.exe\"}",
+    "condition": "selection and not filter",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "id": "57c4bf16-227f-4394-8ec7-1b745ee061c3",
+  "name": "Firewall Disabled via Netsh.EXE",
+  "description": "Detects netsh commands that turns off the Windows firewall",
+  "source": {
+    "type": "sigma",
+    "id": "57c4bf16-227f-4394-8ec7-1b745ee061c3",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_netsh_fw_disable.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_netsh_fw_disable.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attacks0108",
+    "attackt1562004"
+  ],
+  "author": "Fatih Sirin",
+  "references": [
+    "https://www.winhelponline.com/blog/enable-and-disable-windows-firewall-quickly-using-command-line/",
+    "https://app.any.run/tasks/210244b9-0b6b-4a2c-83a3-04bd3175d017/",
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.004/T1562.004.md#atomic-test-1---disable-microsoft-defender-firewall"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-11-01",
+  "modified": "2023-02-13",
+  "mitre": {
+    "tactics": [
+      "TA1562"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\netsh.exe\"}, {\"OriginalFileName\": \"netsh.exe\"}]\nselection_cli_1: {\"CommandLine|contains|all\": [\"firewall\", \"set\", \"opmode\", \"disable\"]}\nselection_cli_2: {\"CommandLine|contains|all\": [\"advfirewall\", \"set\", \"state\", \"off\"]}",
+    "condition": "selection_img and 1 of selection_cli_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administration activity"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

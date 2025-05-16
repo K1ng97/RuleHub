@@ -1,0 +1,45 @@
+{
+  "id": "88872991-7445-4a22-90b2-a3adadb0e827",
+  "name": "Stop Windows Service Via Net.EXE",
+  "description": "Detects the stopping of a Windows service via the \"net\" utility.",
+  "source": {
+    "type": "sigma",
+    "id": "88872991-7445-4a22-90b2-a3adadb0e827",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_net_stop_service.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_net_stop_service.yml"
+  },
+  "tags": [
+    "attackimpact",
+    "attackt1489"
+  ],
+  "author": "Jakob Weinzettl, oscd.community, Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://ss64.com/nt/net-service.html"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-03-05",
+  "modified": "2023-03-05",
+  "mitre": {
+    "tactics": [
+      "TA1489"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"OriginalFileName\": [\"net.exe\", \"net1.exe\"]}, {\"Image|endswith\": [\"\\\\net.exe\", \"\\\\net1.exe\"]}]\nselection_cli: {\"CommandLine|contains\": \" stop \"}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "There are many legitimate reasons to stop a service. This rule isn't looking for any suspicious behaviour in particular. Filter legitimate activity accordingly"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

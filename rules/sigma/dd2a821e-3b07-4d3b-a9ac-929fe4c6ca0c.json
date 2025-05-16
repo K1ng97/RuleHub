@@ -1,0 +1,51 @@
+{
+  "id": "dd2a821e-3b07-4d3b-a9ac-929fe4c6ca0c",
+  "name": "Suspicious Scheduled Task Creation via Masqueraded XML File",
+  "description": "Detects the creation of a scheduled task using the \"-XML\" flag with a file without the '.xml' extension. This behavior could be indicative of potential defense evasion attempt during persistence",
+  "source": {
+    "type": "sigma",
+    "id": "dd2a821e-3b07-4d3b-a9ac-929fe4c6ca0c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_schtasks_schedule_via_masqueraded_xml_file.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_schtasks_schedule_via_masqueraded_xml_file.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackpersistence",
+    "attackt1036005",
+    "attackt1053005"
+  ],
+  "author": "Swachchhanda Shrawan Poudel, Elastic (idea)",
+  "references": [
+    "https://learn.microsoft.com/en-us/windows/win32/taskschd/daily-trigger-example--xml-",
+    "https://github.com/elastic/protections-artifacts/blob/084067123d3328a823b1c3fdde305b694275c794/behavior/rules/persistence_suspicious_scheduled_task_creation_via_masqueraded_xml_file.toml"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-04-20",
+  "modified": "2024-12-01",
+  "mitre": {
+    "tactics": [
+      "TA1036",
+      "TA1053"
+    ],
+    "techniques": [
+      "T005"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\schtasks.exe\"}, {\"OriginalFileName\": \"schtasks.exe\"}]\nselection_cli_create: {\"CommandLine|contains\": [\"/create\", \"-create\"]}\nselection_cli_xml: {\"CommandLine|contains\": [\"/xml\", \"-xml\"]}\nfilter_main_extension_xml: {\"CommandLine|contains\": \".xml\"}\nfilter_main_system_process: {\"IntegrityLevel\": [\"System\", \"S-1-16-16384\"]}\nfilter_main_rundll32: {\"ParentImage|endswith\": \"\\\\rundll32.exe\", \"ParentCommandLine|contains|all\": [\":\\\\WINDOWS\\\\Installer\\\\MSI\", \".tmp,zzzzInvokeManagedCustomActionOutOfProc\"]}\nfilter_optional_third_party: {\"ParentImage|endswith\": [\":\\\\ProgramData\\\\OEM\\\\UpgradeTool\\\\CareCenter_*\\\\BUnzip\\\\Setup_msi.exe\", \":\\\\Program Files\\\\Axis Communications\\\\AXIS Camera Station\\\\SetupActions.exe\", \":\\\\Program Files\\\\Axis Communications\\\\AXIS Device Manager\\\\AdmSetupActions.exe\", \":\\\\Program Files (x86)\\\\Zemana\\\\AntiMalware\\\\AntiMalware.exe\", \":\\\\Program Files\\\\Dell\\\\SupportAssist\\\\pcdrcui.exe\"]}",
+    "condition": "all of selection_* and not 1 of filter_main_* and not 1 of filter_optional_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

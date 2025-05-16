@@ -1,0 +1,43 @@
+{
+  "id": "ec102cb2-a0f5-11eb-9b38-acde48001122",
+  "name": "Powershell Remote Thread To Known Windows Process",
+  "description": "The following analytic detects suspicious PowerShell processes attempting to inject code into critical Windows processes using CreateRemoteThread. It leverages Sysmon EventCode 8 to identify instances where PowerShell spawns threads in processes like svchost.exe, csrss.exe, and others. This activity is significant as it is commonly used by malware such as TrickBot and offensive tools like Cobalt Strike to execute malicious payloads, establish reverse shells, or download additional malware. If confirmed malicious, this behavior could lead to unauthorized code execution, privilege escalation, and persistent access within the environment.",
+  "source": {
+    "type": "splunk",
+    "id": "ec102cb2-a0f5-11eb-9b38-acde48001122",
+    "url": "https://github.com/splunk/security_content/blob/develop/powershell_remote_thread_to_known_windows_process.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/powershell_remote_thread_to_known_windows_process.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://thedfirreport.com/2021/01/11/trickbot-still-alive-and-well/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`sysmon` EventCode = 8 parent_process_name IN (\"powershell_ise.exe\", \"powershell.exe\") TargetImage IN (\"*\\\\svchost.exe\",\"*\\\\csrss.exe\" \"*\\\\gpupdate.exe\", \"*\\\\explorer.exe\",\"*\\\\services.exe\",\"*\\\\winlogon.exe\",\"*\\\\smss.exe\",\"*\\\\wininit.exe\",\"*\\\\userinit.exe\",\"*\\\\spoolsv.exe\",\"*\\\\taskhost.exe\") | stats count min(_time) as firstTime max(_time) as lastTime by EventID Guid NewThreadId ProcessID SecurityID SourceImage SourceProcessGuid SourceProcessId StartAddress StartFunction StartModule TargetImage TargetProcessGuid TargetProcessId UserID dest parent_process_exec parent_process_guid parent_process_id parent_process_name parent_process_path process_exec process_guid process_id process_name process_path signature signature_id user_id vendor_product | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `powershell_remote_thread_to_known_windows_process_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting logs with the process name, Create Remote thread from your endpoints. If you are using Sysmon, you must have at least version 6.0.4 of the Sysmon TA. Tune and filter known instances of create remote thread may be used.",
+    "fields": []
+  },
+  "falsepositives": [
+    "unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

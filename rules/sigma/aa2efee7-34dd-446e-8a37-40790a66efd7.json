@@ -1,0 +1,45 @@
+{
+  "id": "aa2efee7-34dd-446e-8a37-40790a66efd7",
+  "name": "Recon Information for Export with Command Prompt",
+  "description": "Once established within a system or network, an adversary may use automated techniques for collecting internal data.",
+  "source": {
+    "type": "sigma",
+    "id": "aa2efee7-34dd-446e-8a37-40790a66efd7",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_susp_recon.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_susp_recon.yml"
+  },
+  "tags": [
+    "attackcollection",
+    "attackt1119"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1119/T1119.md"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-07-30",
+  "modified": "2022-09-13",
+  "mitre": {
+    "tactics": [
+      "TA1119"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_image: [{\"Image|endswith\": [\"\\\\tree.com\", \"\\\\WMIC.exe\", \"\\\\doskey.exe\", \"\\\\sc.exe\"]}, {\"OriginalFileName\": [\"wmic.exe\", \"DOSKEY.EXE\", \"sc.exe\"]}]\nselection_redirect: {\"ParentCommandLine|contains\": [\" > %TEMP%\\\\\", \" > %TMP%\\\\\"]}",
+    "condition": "all of selection*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

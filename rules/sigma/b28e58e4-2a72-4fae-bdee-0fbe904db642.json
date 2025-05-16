@@ -1,0 +1,50 @@
+{
+  "id": "b28e58e4-2a72-4fae-bdee-0fbe904db642",
+  "name": "Windows Defender Real-time Protection Disabled",
+  "description": "Detects disabling of Windows Defender Real-time Protection. As this event doesn't contain a lot of information on who initiated this action you might want to reduce it to a \"medium\" level if this occurs too many times in your environment\n",
+  "source": {
+    "type": "sigma",
+    "id": "b28e58e4-2a72-4fae-bdee-0fbe904db642",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_defender_real_time_protection_disabled.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/windefend/win_defender_real_time_protection_disabled.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1562001"
+  ],
+  "author": "Ján Trenčanský, frack113",
+  "references": [
+    "https://learn.microsoft.com/en-us/defender-endpoint/troubleshoot-microsoft-defender-antivirus?view=o365-worldwide#event-id-5001",
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md",
+    "https://craigclouditpro.wordpress.com/2020/03/04/hunting-malicious-windows-defender-activity/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "stable",
+  "created": "2020-07-28",
+  "modified": "2023-11-22",
+  "mitre": {
+    "tactics": [
+      "TA1562"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 5001}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrator actions (should be investigated)",
+    "Seen being triggered occasionally during Windows 8 Defender Updates"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "windefend"
+  ]
+}

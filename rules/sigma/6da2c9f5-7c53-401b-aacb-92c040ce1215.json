@@ -1,0 +1,46 @@
+{
+  "id": "6da2c9f5-7c53-401b-aacb-92c040ce1215",
+  "name": "Use of W32tm as Timer",
+  "description": "When configured with suitable command line arguments, w32tm can act as a delay mechanism",
+  "source": {
+    "type": "sigma",
+    "id": "6da2c9f5-7c53-401b-aacb-92c040ce1215",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_w32tm.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_w32tm.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1124"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/d0dad62dbcae9c60c519368e82c196a3db577055/atomics/T1124/T1124.md",
+    "https://blogs.blackberry.com/en/2022/05/dirty-deeds-done-dirt-cheap-russian-rat-offers-backdoor-bargains"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-09-25",
+  "modified": "2022-09-25",
+  "mitre": {
+    "tactics": [
+      "TA1124"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_w32tm: [{\"Image|endswith\": \"\\\\w32tm.exe\"}, {\"OriginalFileName\": \"w32time.dll\"}]\nselection_cmd: {\"CommandLine|contains|all\": [\"/stripchart\", \"/computer:\", \"/period:\", \"/dataonly\", \"/samples:\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

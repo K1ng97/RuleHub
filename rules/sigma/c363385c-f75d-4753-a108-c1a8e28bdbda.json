@@ -1,0 +1,49 @@
+{
+  "id": "c363385c-f75d-4753-a108-c1a8e28bdbda",
+  "name": "Potential Manage-bde.wsf Abuse To Proxy Execution",
+  "description": "Detects potential abuse of the \"manage-bde.wsf\" script as a LOLBIN to proxy execution",
+  "source": {
+    "type": "sigma",
+    "id": "c363385c-f75d-4753-a108-c1a8e28bdbda",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_lolbin_manage_bde.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_lolbin_manage_bde.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1216"
+  ],
+  "author": "oscd.community, Natalia Shornikova, Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/Scripts/Manage-bde/",
+    "https://gist.github.com/bohops/735edb7494fe1bd1010d67823842b712",
+    "https://twitter.com/bohops/status/980659399495741441",
+    "https://twitter.com/JohnLaTwC/status/1223292479270600706",
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1216/T1216.md"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-13",
+  "modified": "2023-02-03",
+  "mitre": {
+    "tactics": [
+      "TA1216"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_wscript_img: [{\"Image|endswith\": \"\\\\wscript.exe\"}, {\"OriginalFileName\": \"wscript.exe\"}]\nselection_wscript_cli: {\"CommandLine|contains\": \"manage-bde.wsf\"}\nselection_parent: {\"ParentImage|endswith\": [\"\\\\cscript.exe\", \"\\\\wscript.exe\"], \"ParentCommandLine|contains\": \"manage-bde.wsf\"}\nselection_filter_cmd: {\"Image|endswith\": \"\\\\cmd.exe\"}",
+    "condition": "all of selection_wscript_* or (selection_parent and not selection_filter_cmd)",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "aee4a575-7064-4e60-b511-246f9baf9895",
+  "name": "AWS Password Policy Changes",
+  "description": "The following analytic detects successful API calls to view, update, or delete the password policy in an AWS organization. It leverages AWS CloudTrail logs to identify events such as \"UpdateAccountPasswordPolicy,\" \"GetAccountPasswordPolicy,\" and \"DeleteAccountPasswordPolicy.\" This activity is significant because it is uncommon for regular users to perform these actions, and such changes can indicate an adversary attempting to understand or weaken password defenses. If confirmed malicious, this could lead to compromised accounts and increased attack surface, potentially allowing unauthorized access and control over AWS resources.",
+  "source": {
+    "type": "splunk",
+    "id": "aee4a575-7064-4e60-b511-246f9baf9895",
+    "url": "https://github.com/splunk/security_content/blob/develop/aws_password_policy_changes.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/aws_password_policy_changes.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Bhavin Patel, Splunk",
+  "references": [
+    "https://www.trendmicro.com/cloudoneconformity/knowledge-base/aws/IAM/password-policy.html"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`cloudtrail` eventName IN (\"UpdateAccountPasswordPolicy\",\"GetAccountPasswordPolicy\",\"DeleteAccountPasswordPolicy\") errorCode=success | rename user_name as user | stats count min(_time) as firstTime max(_time) as lastTime by signature dest user user_agent src vendor_account vendor_region vendor_product | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`  | `aws_password_policy_changes_filter`",
+    "condition": "You must install Splunk AWS Add on and Splunk App for AWS. This search works with AWS CloudTrail logs.",
+    "fields": []
+  },
+  "falsepositives": [
+    "While this search has no known false positives, it is possible that an AWS admin has legitimately triggered an AWS audit tool activity which may trigger this event."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

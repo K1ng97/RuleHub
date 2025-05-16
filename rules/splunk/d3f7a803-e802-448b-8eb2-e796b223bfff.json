@@ -1,0 +1,46 @@
+{
+  "id": "d3f7a803-e802-448b-8eb2-e796b223bfff",
+  "name": "ConnectWise ScreenConnect Authentication Bypass",
+  "description": "The following analytic detects attempts to exploit the ConnectWise ScreenConnect CVE-2024-1709 vulnerability, which allows attackers to bypass authentication via an alternate path or channel. It leverages web request logs to identify access to the SetupWizard.aspx page, indicating potential exploitation. This activity is significant as it can lead to unauthorized administrative access and remote code execution. If confirmed malicious, attackers could create administrative users and gain full control over the affected system, posing severe security risks. Immediate remediation by updating to version 23.9.8 or above is recommended.",
+  "source": {
+    "type": "splunk",
+    "id": "d3f7a803-e802-448b-8eb2-e796b223bfff",
+    "url": "https://github.com/splunk/security_content/blob/develop/connectwise_screenconnect_authentication_bypass.yml",
+    "file_path": "tmp/repos/splunk/detections/web/connectwise_screenconnect_authentication_bypass.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "cve",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Michael Haag, Splunk",
+  "references": [
+    "https://www.huntress.com/blog/a-catastrophe-for-control-understanding-the-screenconnect-authentication-bypass",
+    "https://www.huntress.com/blog/detection-guidance-for-connectwise-cwe-288-2",
+    "https://www.connectwise.com/company/trust/security-bulletins/connectwise-screenconnect-23.9.8"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url IN (\"*/SetupWizard.aspx/*\",\"*/SetupWizard/\") Web.status=200 Web.http_method=POST by Web.src, Web.dest, Web.http_user_agent, Web.url, Web.status, Web.http_method, sourcetype, source | rex field=Web.url \"/SetupWizard.aspx/(?<randomPath>.+)\" | `drop_dm_object_name(\"Web\")` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `connectwise_screenconnect_authentication_bypass_filter`",
+    "condition": "To implement this analytic, ensure proper logging is occurring with IIS, Apache, or a Proxy server and that these logs are being ingested into Splunk. The analytic was written against Suricata. The proper TA will need to be enabled and should be mapped to CIM and the Web datamodel. Ingestion of the data source is required to utilize this detection. In addition, if it is not mapped to the datamodel, modify the query for your application logs to look for requests the same URI and investigate further.",
+    "fields": []
+  },
+  "falsepositives": [
+    "False positives are not expected, as the detection is based on the presence of web requests to the SetupWizard.aspx page, which is not a common page to be accessed by legitimate users. Note that the analytic is limited to HTTP POST and a status of 200 to reduce false positives. Modify the query as needed to reduce false positives or hunt for additional indicators of compromise."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

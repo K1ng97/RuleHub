@@ -1,0 +1,46 @@
+{
+  "id": "067d8238-7127-451c-a9ec-fa78045b618b",
+  "name": "Linux Doas Tool Execution",
+  "description": "Detects the doas tool execution in linux host platform. This utility tool allow standard users to perform tasks as root, the same way sudo does.",
+  "source": {
+    "type": "sigma",
+    "id": "067d8238-7127-451c-a9ec-fa78045b618b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_doas_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_doas_execution.yml"
+  },
+  "tags": [
+    "attackprivilege-escalation",
+    "attackt1548"
+  ],
+  "author": "Sittikorn S, Teoderick Contreras",
+  "references": [
+    "https://research.splunk.com/endpoint/linux_doas_tool_execution/",
+    "https://www.makeuseof.com/how-to-install-and-use-doas/"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "stable",
+  "created": "2022-01-20",
+  "modified": "2022-01-20",
+  "mitre": {
+    "tactics": [
+      "TA1548"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"/doas\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

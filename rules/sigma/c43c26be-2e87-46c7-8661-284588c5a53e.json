@@ -1,0 +1,49 @@
+{
+  "id": "c43c26be-2e87-46c7-8661-284588c5a53e",
+  "name": "A Member Was Added to a Security-Enabled Global Group",
+  "description": "Detects activity when a member is added to a security-enabled global group",
+  "source": {
+    "type": "sigma",
+    "id": "c43c26be-2e87-46c7-8661-284588c5a53e",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_member_added_security_enabled_global_group.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/account_management/win_security_member_added_security_enabled_global_group.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1098"
+  ],
+  "author": "Alexandr Yampolskyi, SOC Prime",
+  "references": [
+    "https://www.cisecurity.org/controls/cis-controls-list/",
+    "https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf",
+    "https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.04162018.pdf",
+    "https://www.ultimatewindowssecurity.com/securitylog/encyclopedia/event.aspx?eventID=4728",
+    "https://www.ultimatewindowssecurity.com/securitylog/encyclopedia/event.aspx?eventID=632"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "stable",
+  "created": "2023-04-26",
+  "modified": "2023-04-26",
+  "mitre": {
+    "tactics": [
+      "TA1098"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": [4728, 632]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

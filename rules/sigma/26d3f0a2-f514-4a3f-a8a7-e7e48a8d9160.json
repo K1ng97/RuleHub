@@ -1,0 +1,45 @@
+{
+  "id": "26d3f0a2-f514-4a3f-a8a7-e7e48a8d9160",
+  "name": "PUA - Adidnsdump Execution",
+  "description": "This tool enables enumeration and exporting of all DNS records in the zone for recon purposes of internal networks Python 3 and python.exe must be installed,\nUsee to Query/modify DNS records for Active Directory integrated DNS via LDAP\n",
+  "source": {
+    "type": "sigma",
+    "id": "26d3f0a2-f514-4a3f-a8a7-e7e48a8d9160",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_python_adidnsdump.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_python_adidnsdump.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1018"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1018/T1018.md#atomic-test-9---remote-system-discovery---adidnsdump"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-01-01",
+  "modified": "2023-02-21",
+  "mitre": {
+    "tactics": [
+      "TA1018"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"\\\\python.exe\", \"CommandLine|contains\": \"adidnsdump\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

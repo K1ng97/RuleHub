@@ -1,0 +1,49 @@
+{
+  "id": "614cf376-6651-47c4-9dcc-6b9527f749f4",
+  "name": "Suspicious Scheduled Task Update",
+  "description": "Detects update to a scheduled task event that contain suspicious keywords.",
+  "source": {
+    "type": "sigma",
+    "id": "614cf376-6651-47c4-9dcc-6b9527f749f4",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_susp_scheduled_task_update.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_susp_scheduled_task_update.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1053005"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4698"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-12-05",
+  "modified": "2022-12-05",
+  "mitre": {
+    "tactics": [
+      "TA1053"
+    ],
+    "techniques": [
+      "T005"
+    ]
+  },
+  "detection": {
+    "query": "selection_eid: {\"EventID\": 4702}\nselection_paths: {\"TaskContentNew|contains\": [\"\\\\AppData\\\\Local\\\\Temp\\\\\", \"\\\\AppData\\\\Roaming\\\\\", \"\\\\Users\\\\Public\\\\\", \"\\\\WINDOWS\\\\Temp\\\\\", \"C:\\\\Temp\\\\\", \"\\\\Desktop\\\\\", \"\\\\Downloads\\\\\", \"\\\\Temporary Internet\", \"C:\\\\ProgramData\\\\\", \"C:\\\\Perflogs\\\\\"]}\nselection_commands: {\"TaskContentNew|contains\": [\"regsvr32\", \"rundll32\", \"cmd.exe</Command>\", \"cmd</Command>\", \"<Arguments>/c \", \"<Arguments>/k \", \"<Arguments>/r \", \"powershell\", \"pwsh\", \"mshta\", \"wscript\", \"cscript\", \"certutil\", \"bitsadmin\", \"bash.exe\", \"bash \", \"scrcons\", \"wmic \", \"wmic.exe\", \"forfiles\", \"scriptrunner\", \"hh.exe\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "id": "9705a6a1-6db6-4a16-a987-15b7151e299b",
+  "name": "Cisco Discovery",
+  "description": "Find information about network devices that is not stored in config files",
+  "source": {
+    "type": "sigma",
+    "id": "9705a6a1-6db6-4a16-a987-15b7151e299b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/cisco_cli_discovery.yml",
+    "file_path": "tmp/repos/sigma/rules/network/cisco/aaa/cisco_cli_discovery.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1016",
+    "attackt1018",
+    "attackt1033",
+    "attackt1049",
+    "attackt1057",
+    "attackt1082",
+    "attackt1083",
+    "attackt1124",
+    "attackt1201"
+  ],
+  "author": "Austin Clark",
+  "references": [
+    "https://www.cisco.com/c/en/us/td/docs/server_nw_virtual/2-5_release/command_reference/show.html"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-08-12",
+  "modified": "2023-01-04",
+  "mitre": {
+    "tactics": [
+      "TA1016",
+      "TA1018",
+      "TA1033",
+      "TA1049",
+      "TA1057",
+      "TA1082",
+      "TA1083",
+      "TA1124",
+      "TA1201"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "keywords: [\"dir\", \"show arp\", \"show cdp\", \"show clock\", \"show ip interface\", \"show ip route\", \"show ip sockets\", \"show processes\", \"show ssh\", \"show users\", \"show version\"]",
+    "condition": "keywords",
+    "fields": []
+  },
+  "falsepositives": [
+    "Commonly used by administrators for troubleshooting"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "cisco",
+    "aaa"
+  ]
+}

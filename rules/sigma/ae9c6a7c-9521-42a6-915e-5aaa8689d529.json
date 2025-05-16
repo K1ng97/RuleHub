@@ -1,0 +1,49 @@
+{
+  "id": "ae9c6a7c-9521-42a6-915e-5aaa8689d529",
+  "name": "CobaltStrike Load by Rundll32",
+  "description": "Rundll32 can be use by Cobalt Strike with StartW function to load DLLs from the command line.",
+  "source": {
+    "type": "sigma",
+    "id": "ae9c6a7c-9521-42a6-915e-5aaa8689d529",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_hktl_cobaltstrike_load_by_rundll32.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_hktl_cobaltstrike_load_by_rundll32.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218011"
+  ],
+  "author": "Wojciech Lesicki",
+  "references": [
+    "https://www.cobaltstrike.com/help-windows-executable",
+    "https://redcanary.com/threat-detection-report/",
+    "https://thedfirreport.com/2020/10/18/ryuk-in-5-hours/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-06-01",
+  "modified": "2022-09-16",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": [
+      "T011"
+    ]
+  },
+  "detection": {
+    "query": "selection_rundll: [{\"Image|endswith\": \"\\\\rundll32.exe\"}, {\"OriginalFileName\": \"RUNDLL32.EXE\"}, {\"CommandLine|contains\": [\"rundll32.exe\", \"rundll32 \"]}]\nselection_params: {\"CommandLine|contains\": \".dll\", \"CommandLine|endswith\": [\" StartW\", \",StartW\"]}",
+    "condition": "all of selection*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

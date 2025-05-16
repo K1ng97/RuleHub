@@ -1,0 +1,49 @@
+{
+  "id": "7892ec59-c5bb-496d-8968-e5d210ca3ac4",
+  "name": "DPAPI Backup Keys And Certificate Export Activity IOC",
+  "description": "Detects file names with specific patterns seen generated and used by tools such as Mimikatz and DSInternals related to exported or stolen DPAPI backup keys and certificates.\n",
+  "source": {
+    "type": "sigma",
+    "id": "7892ec59-c5bb-496d-8968-e5d210ca3ac4",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_susp_dpapi_backup_and_cert_export_ioc.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_susp_dpapi_backup_and_cert_export_ioc.yml"
+  },
+  "tags": [
+    "attackt1552004",
+    "attackt1555"
+  ],
+  "author": "Nounou Mbeiri, Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://www.dsinternals.com/en/dpapi-backup-key-theft-auditing/",
+    "https://github.com/MichaelGrafnetter/DSInternals/blob/39ee8a69bbdc1cfd12c9afdd7513b4788c4895d4/Src/DSInternals.Common/Data/DPAPI/DPAPIBackupKey.cs#L28-L32"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "experimental",
+  "created": "2024-06-26",
+  "modified": "2024-06-26",
+  "mitre": {
+    "tactics": [
+      "TA1552",
+      "TA1555"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"TargetFilename|contains\": [\"ntds_capi_\", \"ntds_legacy_\", \"ntds_unknown_\"], \"TargetFilename|endswith\": [\".cer\", \".key\", \".pfx\", \".pvk\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

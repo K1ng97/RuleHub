@@ -1,0 +1,47 @@
+{
+  "id": "91e69562-2426-42ce-a647-711b8152ced6",
+  "name": "AADInternals PowerShell Cmdlets Execution - PsScript",
+  "description": "Detects ADDInternals Cmdlet execution. A tool for administering Azure AD and Office 365. Which can be abused by threat actors to attack Azure AD or Office 365.",
+  "source": {
+    "type": "sigma",
+    "id": "91e69562-2426-42ce-a647-711b8152ced6",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_aadinternals_cmdlets_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_aadinternals_cmdlets_execution.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackdiscovery",
+    "attackexecution",
+    "attackimpact",
+    "attackreconnaissance"
+  ],
+  "author": "Austin Songer (@austinsonger), Nasreddine Bencherchali (Nextron Systems), Swachchhanda Shrawan Poudel (Nextron Systems)",
+  "references": [
+    "https://o365blog.com/aadinternals/",
+    "https://github.com/Gerenios/AADInternals"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-12-23",
+  "modified": "2025-02-06",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"ScriptBlockText|contains\": [\"Add-AADInt\", \"ConvertTo-AADInt\", \"Disable-AADInt\", \"Enable-AADInt\", \"Export-AADInt\", \"Find-AADInt\", \"Get-AADInt\", \"Grant-AADInt\", \"Initialize-AADInt\", \"Install-AADInt\", \"Invoke-AADInt\", \"Join-AADInt\", \"New-AADInt\", \"Open-AADInt\", \"Read-AADInt\", \"Register-AADInt\", \"Remove-AADInt\", \"Reset-AADInt\", \"Resolve-AADInt\", \"Restore-AADInt\", \"Save-AADInt\", \"Search-AADInt\", \"Send-AADInt\", \"Set-AADInt\", \"Start-AADInt\", \"Unprotect-AADInt\", \"Update-AADInt\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use of the library for administrative activity"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

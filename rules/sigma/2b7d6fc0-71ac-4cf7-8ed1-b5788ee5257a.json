@@ -1,0 +1,45 @@
+{
+  "id": "2b7d6fc0-71ac-4cf7-8ed1-b5788ee5257a",
+  "name": "Account Lockout",
+  "description": "Identifies user account which has been locked because the user tried to sign in too many times with an incorrect user ID or password.",
+  "source": {
+    "type": "sigma",
+    "id": "2b7d6fc0-71ac-4cf7-8ed1-b5788ee5257a",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_account_lockout.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/signin_logs/azure_account_lockout.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1110"
+  ],
+  "author": "AlertIQ",
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/architecture/security-operations-privileged-accounts"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-10-10",
+  "modified": "2022-12-25",
+  "mitre": {
+    "tactics": [
+      "TA1110"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"ResultType\": 50053}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "signinlogs"
+  ]
+}

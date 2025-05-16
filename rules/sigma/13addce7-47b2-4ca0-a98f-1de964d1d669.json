@@ -1,0 +1,45 @@
+{
+  "id": "13addce7-47b2-4ca0-a98f-1de964d1d669",
+  "name": "SCM Database Handle Failure",
+  "description": "Detects non-system users failing to get a handle of the SCM database.",
+  "source": {
+    "type": "sigma",
+    "id": "13addce7-47b2-4ca0-a98f-1de964d1d669",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_scm_database_handle_failure.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_scm_database_handle_failure.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1010"
+  ],
+  "author": "Roberto Rodriguez @Cyb3rWard0g",
+  "references": [
+    "https://threathunterplaybook.com/hunts/windows/190826-RemoteSCMHandle/notebook.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-08-12",
+  "modified": "2022-07-11",
+  "mitre": {
+    "tactics": [
+      "TA1010"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 4656, \"ObjectType\": \"SC_MANAGER OBJECT\", \"ObjectName\": \"ServicesActive\", \"AccessMask\": \"0xf003f\"}\nfilter: {\"SubjectLogonId\": \"0x3e4\"}",
+    "condition": "selection and not filter",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

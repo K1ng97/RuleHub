@@ -1,0 +1,47 @@
+{
+  "id": "352a54e1-74ba-4929-9d47-8193d67aba1e",
+  "name": "Azure Domain Federation Settings Modified",
+  "description": "Identifies when an user or application modified the federation settings on the domain.",
+  "source": {
+    "type": "sigma",
+    "id": "352a54e1-74ba-4929-9d47-8193d67aba1e",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_federation_modified.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/audit_logs/azure_federation_modified.yml"
+  },
+  "tags": [
+    "attackinitial-access",
+    "attackt1078"
+  ],
+  "author": "Austin Songer",
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/active-directory/hybrid/how-to-connect-monitor-federation-changes"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-09-06",
+  "modified": "2022-06-08",
+  "mitre": {
+    "tactics": [
+      "TA1078"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"ActivityDisplayName\": \"Set federation settings on domain\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Federation Settings being modified or deleted may be performed by a system administrator.",
+    "Verify whether the user identity, user agent, and/or hostname should be making changes in your environment.",
+    "Federation Settings modified from unfamiliar users should be investigated. If known behavior is causing false positives, it can be exempted from the rule."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "auditlogs"
+  ]
+}

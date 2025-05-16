@@ -1,0 +1,59 @@
+{
+  "id": "f0d1feba-4344-4ca9-8121-a6c97bd6df52",
+  "name": "Credential Dumping Tools Service Execution - Security",
+  "description": "Detects well-known credential dumping tools execution via service execution events",
+  "source": {
+    "type": "sigma",
+    "id": "f0d1feba-4344-4ca9-8121-a6c97bd6df52",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_mal_creddumper.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_mal_creddumper.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackexecution",
+    "attacks0005",
+    "attackt1003001",
+    "attackt1003002",
+    "attackt1003004",
+    "attackt1003005",
+    "attackt1003006",
+    "attackt1569002"
+  ],
+  "author": "Florian Roth (Nextron Systems), Teymur Kheirkhabarov, Daniil Yugoslavskiy, oscd.community",
+  "references": [
+    "https://www.slideshare.net/heirhabarov/hunting-for-credentials-dumping-in-windows-environment"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2017-03-05",
+  "modified": "2022-11-29",
+  "mitre": {
+    "tactics": [
+      "TA1003",
+      "TA1569"
+    ],
+    "techniques": [
+      "T001",
+      "T002",
+      "T004",
+      "T005",
+      "T006"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 4697, \"ServiceFileName|contains\": [\"cachedump\", \"dumpsvc\", \"fgexec\", \"gsecdump\", \"mimidrv\", \"pwdump\", \"servpw\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate Administrator using credential dumping tool for password recovery"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

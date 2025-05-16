@@ -1,0 +1,49 @@
+{
+  "id": "70f00d10-60b2-4f34-b9a0-dc3df3fe762a",
+  "name": "Suspicious Service Installation Script",
+  "description": "Detects suspicious service installation scripts",
+  "source": {
+    "type": "sigma",
+    "id": "70f00d10-60b2-4f34-b9a0-dc3df3fe762a",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_system_susp_service_installation_script.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/system/service_control_manager/win_system_susp_service_installation_script.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1543003",
+    "car2013-09-005"
+  ],
+  "author": "pH-T (Nextron Systems)",
+  "references": [
+    "Internal Research"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-03-18",
+  "modified": "2024-03-05",
+  "mitre": {
+    "tactics": [
+      "TA1543"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection_eid: {\"Provider_Name\": \"Service Control Manager\", \"EventID\": 7045}\nselection_cmd_flags: {\"ImagePath|contains|windash\": [\" -c \", \" -r \", \" -k \"]}\nselection_binaries: {\"ImagePath|contains\": [\"cscript\", \"mshta\", \"powershell\", \"pwsh\", \"regsvr32\", \"rundll32\", \"wscript\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "system"
+  ]
+}

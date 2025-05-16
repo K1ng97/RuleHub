@@ -1,0 +1,47 @@
+{
+  "id": "b236190c-1c61-41e9-84b3-3fe03f6d76b0",
+  "name": "Potential Regsvr32 Commandline Flag Anomaly",
+  "description": "Detects a potential command line flag anomaly related to \"regsvr32\" in which the \"/i\" flag is used without the \"/n\" which should be uncommon.",
+  "source": {
+    "type": "sigma",
+    "id": "b236190c-1c61-41e9-84b3-3fe03f6d76b0",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_regsvr32_flags_anomaly.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_regsvr32_flags_anomaly.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218010"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://twitter.com/sbousseaden/status/1282441816986484737?s=12"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-07-13",
+  "modified": "2024-03-13",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": [
+      "T010"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"\\\\regsvr32.exe\", \"CommandLine|contains|windash\": \" -i:\"}\nfilter_main_flag: {\"CommandLine|contains|windash\": \" -n \"}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrator typo might cause some false positives"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

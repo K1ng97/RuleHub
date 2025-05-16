@@ -1,0 +1,48 @@
+{
+  "id": "c7942406-33dd-4377-a564-0f62db0593a3",
+  "name": "Suspicious CodePage Switch Via CHCP",
+  "description": "Detects a code page switch in command line or batch scripts to a rare language",
+  "source": {
+    "type": "sigma",
+    "id": "c7942406-33dd-4377-a564-0f62db0593a3",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_chcp_codepage_switch.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_chcp_codepage_switch.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1036"
+  ],
+  "author": "Florian Roth (Nextron Systems), Jonhnathan Ribeiro, oscd.community",
+  "references": [
+    "https://learn.microsoft.com/en-us/windows/win32/intl/code-page-identifiers",
+    "https://twitter.com/cglyer/status/1183756892952248325"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-10-14",
+  "modified": "2023-03-07",
+  "mitre": {
+    "tactics": [
+      "TA1036"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"\\\\chcp.com\", \"CommandLine|endswith\": [\" 936\", \" 1258\"]}",
+    "condition": "selection",
+    "fields": [
+      "ParentCommandLine"
+    ]
+  },
+  "falsepositives": [
+    "Administrative activity (adjust code pages according to your organization's region)"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

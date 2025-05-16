@@ -1,0 +1,43 @@
+{
+  "id": "b0c21379-f4ba-4bac-a958-897e260f964a",
+  "name": "Zscaler Potentially Abused File Download",
+  "description": "The following analytic identifies the download of potentially malicious file types, such as .scr, .dll, .bat, and .lnk, within a network. It leverages web proxy logs from Zscaler, focusing on blocked actions and analyzing fields like deviceowner, user, urlcategory, url, dest, and filename. This activity is significant as these file types are often used to spread malware, posing a threat to network security. If confirmed malicious, this activity could lead to malware execution, data compromise, or further network infiltration.",
+  "source": {
+    "type": "splunk",
+    "id": "b0c21379-f4ba-4bac-a958-897e260f964a",
+    "url": "https://github.com/splunk/security_content/blob/develop/zscaler_potentially_abused_file_download.yml",
+    "file_path": "tmp/repos/splunk/detections/web/zscaler_potentially_abused_file_download.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Gowthamaraj Rajendran, Rod Soto, Splunk",
+  "references": [
+    "https://help.zscaler.com/zia/nss-feed-output-format-web-logs"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`zscaler_proxy` url IN (\"*.scr\", \"*.dll\", \"*.bat\", \"*.lnk\") | stats count min(_time) as firstTime max(_time) as lastTime by deviceowner user urlcategory url src filename dest | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `zscaler_potentially_abused_file_download_filter`",
+    "condition": "You must install the latest version of Zscaler Add-on from Splunkbase. You must be ingesting Zscaler events into your Splunk environment through an ingester. This analytic was written to be used with the \"zscalernss-web\" sourcetype leveraging the Zscaler proxy data. This enables the integration with Splunk Enterprise Security. Security teams are encouraged to adjust the detection parameters, ensuring the detection is tailored to their specific environment.",
+    "fields": []
+  },
+  "falsepositives": [
+    "False positives are limited to Zscaler configuration."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

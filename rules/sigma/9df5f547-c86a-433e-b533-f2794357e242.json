@@ -1,0 +1,55 @@
+{
+  "id": "9df5f547-c86a-433e-b533-f2794357e242",
+  "name": "Classes Autorun Keys Modification",
+  "description": "Detects modification of autostart extensibility point (ASEP) in registry.",
+  "source": {
+    "type": "sigma",
+    "id": "9df5f547-c86a-433e-b533-f2794357e242",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_set_asep_reg_keys_modification_classes.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_set/registry_set_asep_reg_keys_modification_classes.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1547001"
+  ],
+  "author": "Victor Sergeev, Daniil Yugoslavskiy, Gleb Sukhodolskiy, Timur Zinniatullin, oscd.community, Tim Shelton, frack113 (split)",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1547.001/T1547.001.md",
+    "https://learn.microsoft.com/en-us/sysinternals/downloads/autoruns",
+    "https://gist.github.com/GlebSukhodolskiy/0fc5fa5f482903064b448890db1eaf9d"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-10-25",
+  "modified": "2023-08-17",
+  "mitre": {
+    "tactics": [
+      "TA1547"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_classes_base: {\"TargetObject|contains\": \"\\\\Software\\\\Classes\"}\nselection_classes_target: {\"TargetObject|contains\": [\"\\\\Folder\\\\ShellEx\\\\ExtShellFolderViews\", \"\\\\Folder\\\\ShellEx\\\\DragDropHandlers\", \"\\\\Folder\\\\Shellex\\\\ColumnHandlers\", \"\\\\Filter\", \"\\\\Exefile\\\\Shell\\\\Open\\\\Command\\\\(Default)\", \"\\\\Directory\\\\Shellex\\\\DragDropHandlers\", \"\\\\Directory\\\\Shellex\\\\CopyHookHandlers\", \"\\\\CLSID\\\\{AC757296-3522-4E11-9862-C17BE5A1767E}\\\\Instance\", \"\\\\CLSID\\\\{ABE3B9A4-257D-4B97-BD1A-294AF496222E}\\\\Instance\", \"\\\\CLSID\\\\{7ED96837-96F0-4812-B211-F13C24117ED3}\\\\Instance\", \"\\\\CLSID\\\\{083863F1-70DE-11d0-BD40-00A0C911CE86}\\\\Instance\", \"\\\\Classes\\\\AllFileSystemObjects\\\\ShellEx\\\\DragDropHandlers\", \"\\\\.exe\", \"\\\\.cmd\", \"\\\\ShellEx\\\\PropertySheetHandlers\", \"\\\\ShellEx\\\\ContextMenuHandlers\"]}\nfilter_empty: {\"Details\": \"(Empty)\"}\nfilter_msoffice: {\"Details\": \"{807583E5-5146-11D5-A672-00B0D022E945}\"}\nfilter_drivers: {\"Image\": \"C:\\\\Windows\\\\System32\\\\drvinst.exe\"}\nfilter_svchost: {\"Image\": \"C:\\\\Windows\\\\System32\\\\svchost.exe\", \"TargetObject|contains\": \"\\\\lnkfile\\\\shellex\\\\ContextMenuHandlers\\\\\"}",
+    "condition": "all of selection_* and not 1 of filter_*",
+    "fields": [
+      "SecurityID",
+      "ObjectName",
+      "OldValueType",
+      "NewValueType"
+    ]
+  },
+  "falsepositives": [
+    "Legitimate software automatically (mostly, during installation) sets up autorun keys for legitimate reason",
+    "Legitimate administrator sets up autorun keys for legitimate reason"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_set"
+  ]
+}

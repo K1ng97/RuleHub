@@ -1,0 +1,43 @@
+{
+  "id": "cf1dbc6b-6205-41b4-9b88-a83980d2255b",
+  "name": "Okta API Token Revoked",
+  "description": "Detects when a API Token is revoked.",
+  "source": {
+    "type": "sigma",
+    "id": "cf1dbc6b-6205-41b4-9b88-a83980d2255b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/okta_api_token_revoked.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/okta/okta_api_token_revoked.yml"
+  },
+  "tags": [
+    "attackimpact"
+  ],
+  "author": "Austin Songer @austinsonger",
+  "references": [
+    "https://developer.okta.com/docs/reference/api/system-log/",
+    "https://developer.okta.com/docs/reference/api/event-types/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-09-12",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"eventtype\": \"system.api_token.revoke\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "okta",
+    "okta"
+  ]
+}

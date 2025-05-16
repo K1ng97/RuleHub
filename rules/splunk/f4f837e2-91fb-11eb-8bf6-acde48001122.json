@@ -1,0 +1,43 @@
+{
+  "id": "f4f837e2-91fb-11eb-8bf6-acde48001122",
+  "name": "Disabling SystemRestore In Registry",
+  "description": "The following analytic detects the modification of registry keys to disable System Restore on a machine. It leverages data from the Endpoint.Registry data model, specifically monitoring changes to registry paths associated with System Restore settings. This activity is significant because disabling System Restore can hinder recovery efforts and is a tactic often used by Remote Access Trojans (RATs) to maintain persistence on an infected system. If confirmed malicious, this action could prevent system recovery, allowing the attacker to sustain their foothold and potentially cause further damage or data loss.",
+  "source": {
+    "type": "splunk",
+    "id": "f4f837e2-91fb-11eb-8bf6-acde48001122",
+    "url": "https://github.com/splunk/security_content/blob/develop/disabling_systemrestore_in_registry.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/disabling_systemrestore_in_registry.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk, Steven Dick",
+  "references": [
+    "https://tccontre.blogspot.com/2020/01/remcos-rat-evading-windows-defender-av.html"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Registry WHERE (Registry.registry_path= \"*\\\\SOFTWARE\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\SystemRestore\\\\DisableSR\" OR Registry.registry_path= \"*\\\\SOFTWARE\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\SystemRestore\\\\DisableConfig\" OR Registry.registry_path= \"*\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows NT\\\\SystemRestore\\\\DisableSR\" OR Registry.registry_path= \"*\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows NT\\\\SystemRestore\\\\DisableConfig\" Registry.registry_value_data = \"0x00000001\") by Registry.action Registry.dest Registry.process_guid Registry.process_id Registry.registry_hive Registry.registry_path Registry.registry_key_name Registry.registry_value_data Registry.registry_value_name Registry.registry_value_type Registry.status Registry.user Registry.vendor_product | `drop_dm_object_name(Registry)`| where isnotnull(registry_value_data) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `disabling_systemrestore_in_registry_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting logs with the registry value name, registry path, and registry value data from your endpoints. If you are using Sysmon, you must have at least version 2.0 of the official Sysmon TA. https://splunkbase.splunk.com/app/5709",
+    "fields": []
+  },
+  "falsepositives": [
+    "in some cases admin can disable systemrestore on a machine."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

@@ -1,0 +1,49 @@
+{
+  "id": "41504465-5e3a-4a5b-a5b4-2a0baadd4463",
+  "name": "PsExec Tool Execution From Suspicious Locations - PipeName",
+  "description": "Detects PsExec default pipe creation where the image executed is located in a suspicious location. Which could indicate that the tool is being used in an attack",
+  "source": {
+    "type": "sigma",
+    "id": "41504465-5e3a-4a5b-a5b4-2a0baadd4463",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/pipe_created_sysinternals_psexec_default_pipe_susp_location.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/pipe_created/pipe_created_sysinternals_psexec_default_pipe_susp_location.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attacks0029",
+    "attackt1569002"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://www.jpcert.or.jp/english/pub/sr/ir_research.html",
+    "https://jpcertcc.github.io/ToolAnalysisResultSheet"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-04",
+  "modified": "2023-09-20",
+  "mitre": {
+    "tactics": [
+      "TA1569"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"PipeName\": \"\\\\PSEXESVC\", \"Image|contains\": [\":\\\\Users\\\\Public\\\\\", \":\\\\Windows\\\\Temp\\\\\", \"\\\\AppData\\\\Local\\\\Temp\\\\\", \"\\\\Desktop\\\\\", \"\\\\Downloads\\\\\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Rare legitimate use of psexec from the locations mentioned above. This will require initial tuning based on your environment."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "pipe_created"
+  ]
+}

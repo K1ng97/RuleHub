@@ -1,0 +1,47 @@
+{
+  "id": "66d31e5f-52d6-40a4-9615-002d3789a119",
+  "name": "Remote Thread Creation By Uncommon Source Image",
+  "description": "Detects uncommon processes creating remote threads.",
+  "source": {
+    "type": "sigma",
+    "id": "66d31e5f-52d6-40a4-9615-002d3789a119",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/create_remote_thread_win_susp_uncommon_source_image.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/create_remote_thread/create_remote_thread_win_susp_uncommon_source_image.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackprivilege-escalation",
+    "attackt1055"
+  ],
+  "author": "Perez Diego (@darkquassar), oscd.community",
+  "references": [
+    "Personal research, statistical analysis",
+    "https://lolbas-project.github.io"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "experimental",
+  "created": "2019-10-27",
+  "modified": "2024-07-15",
+  "mitre": {
+    "tactics": [
+      "TA1055"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"SourceImage|endswith\": [\"\\\\explorer.exe\", \"\\\\iexplore.exe\", \"\\\\msiexec.exe\", \"\\\\powerpnt.exe\", \"\\\\schtasks.exe\", \"\\\\winlogon.exe\"]}\nfilter_main_winlogon_1: {\"SourceImage\": \"C:\\\\Windows\\\\System32\\\\winlogon.exe\", \"TargetImage\": [\"C:\\\\Windows\\\\System32\\\\services.exe\", \"C:\\\\Windows\\\\System32\\\\wininit.exe\", \"C:\\\\Windows\\\\System32\\\\csrss.exe\", \"C:\\\\Windows\\\\System32\\\\LogonUI.exe\"]}\nfilter_main_winlogon_2: {\"SourceImage\": \"C:\\\\Windows\\\\System32\\\\winlogon.exe\", \"TargetParentProcessId\": 4}\nfilter_main_schtasks_conhost: {\"SourceImage\": [\"C:\\\\Windows\\\\System32\\\\schtasks.exe\", \"C:\\\\Windows\\\\SysWOW64\\\\schtasks.exe\"], \"TargetImage\": \"C:\\\\Windows\\\\System32\\\\conhost.exe\"}\nfilter_main_explorer: {\"SourceImage\": \"C:\\\\Windows\\\\explorer.exe\", \"TargetImage|startswith\": [\"C:\\\\Program Files (x86)\\\\\", \"C:\\\\Program Files\\\\\", \"C:\\\\Windows\\\\System32\\\\\", \"C:\\\\Windows\\\\SysWOW64\\\\\"]}\nfilter_main_system: {\"TargetImage\": \"System\"}\nfilter_main_msiexec: {\"SourceImage|endswith\": \"\\\\msiexec.exe\", \"TargetImage|contains\": [\"\\\\AppData\\\\Local\\\\\", \"C:\\\\Program Files (x86)\\\\\", \"C:\\\\Program Files\\\\\"]}\nfilter_optional_aurora_smartconsole1: {\"SourceImage\": \"C:\\\\Program Files\\\\internet explorer\\\\iexplore.exe\", \"SourceCommandLine|contains|all\": [\"https://\", \".checkpoint.com/documents/\", \"SmartConsole_OLH/\", \"default.htm#cshid=\"]}\nfilter_optional_aurora_smartconsole2: {\"SourceImage\": \"C:\\\\Program Files\\\\internet explorer\\\\iexplore.exe\", \"SourceParentImage|startswith\": [\"C:\\\\Program Files\\\\\", \"C:\\\\Program Files (x86)\\\\\"], \"SourceParentImage|contains|all\": [\"\\\\CheckPoint\\\\SmartConsole\\\\\", \"\\\\SmartConsole.exe\"]}\nfilter_optional_powerpnt: {\"SourceImage|contains\": \"\\\\Microsoft Office\\\\\", \"SourceImage|endswith\": \"\\\\POWERPNT.EXE\", \"TargetImage\": \"C:\\\\Windows\\\\System32\\\\csrss.exe\"}\nfilter_main_null: {\"TargetImage\": null}\nfilter_main_empty: {\"TargetImage\": \"\"}",
+    "condition": "selection and not 1 of filter_main_* and not 1 of filter_optional_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "This rule is best put in testing first in order to create a baseline that reflects the data in your environment."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "create_remote_thread"
+  ]
+}

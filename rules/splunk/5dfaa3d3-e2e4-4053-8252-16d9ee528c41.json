@@ -1,0 +1,43 @@
+{
+  "id": "5dfaa3d3-e2e4-4053-8252-16d9ee528c41",
+  "name": "Azure AD Privileged Role Assigned to Service Principal",
+  "description": "The following analytic detects the assignment of privileged roles to service principals in Azure Active Directory (AD). It leverages the AuditLogs log category from ingested Azure AD events. This activity is significant because assigning elevated permissions to non-human entities can lead to unauthorized access or malicious activities. If confirmed malicious, attackers could exploit these service principals to gain elevated access to Azure resources, potentially compromising sensitive data and critical infrastructure. Monitoring this behavior helps prevent privilege escalation and ensures the security of Azure environments.",
+  "source": {
+    "type": "splunk",
+    "id": "5dfaa3d3-e2e4-4053-8252-16d9ee528c41",
+    "url": "https://github.com/splunk/security_content/blob/develop/azure_ad_privileged_role_assigned_to_service_principal.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/azure_ad_privileged_role_assigned_to_service_principal.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Mauricio Velazco, Splunk",
+  "references": [
+    "https://posts.specterops.io/azure-privilege-escalation-via-service-principal-abuse-210ae2be2a5"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`azure_monitor_aad` operationName=\"Add member to role\" | rename properties.* as * | search \"targetResources{}.type\"=ServicePrincipal | rename initiatedBy.user.userPrincipalName as initiatedBy | rename targetResources{}.modifiedProperties{}.newValue as roles | eval role=mvindex(roles,1) | rename targetResources{}.displayName as apps | eval displayName=mvindex(apps,0) | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by dest user src vendor_account vendor_product displayName initiatedBy result role signature | lookup privileged_azure_ad_roles azureadrole AS role OUTPUT isprvilegedadrole description | search isprvilegedadrole = True | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `azure_ad_privileged_role_assigned_to_service_principal_filter`",
+    "condition": "You must install the latest version of Splunk Add-on for Microsoft Cloud Services from Splunkbase (https://splunkbase.splunk.com/app/3110/#/details). You must be ingesting Azure Active Directory events into your Splunk environment. This analytic was written to be used with the azure:monitor:aad sourcetype leveraging the AuditLog log category.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrators may legitimately assign the privileged roles to Service Principals as part of administrative tasks. Filter as needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

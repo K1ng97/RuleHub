@@ -1,0 +1,44 @@
+{
+  "id": "4d28013d-3a0f-4d65-a33f-4e8009fee0ae",
+  "name": "O365 Email Security Feature Changed",
+  "description": "The following analytic identifies when specific O365 advanced security settings are altered within the Office 365 tenant. If an attacker successfully disables O365 security settings, they can operate within the tenant with reduced risk of detection. This can lead to unauthorized data access, data exfiltration, account compromise, or other malicious activities without leaving a detailed audit trail.",
+  "source": {
+    "type": "splunk",
+    "id": "4d28013d-3a0f-4d65-a33f-4e8009fee0ae",
+    "url": "https://github.com/splunk/security_content/blob/develop/o365_email_security_feature_changed.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/o365_email_security_feature_changed.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Steven Dick",
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/fundamentals/security-defaults",
+    "https://attack.mitre.org/techniques/T1562/008/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`o365_management_activity` Workload=Exchange AND Operation IN (\"Set-*\",\"Disable-*\",\"New-*\",\"Remove-*\") Operation IN (\"*AntiPhish*\",\"*SafeLink*\",\"*SafeAttachment*\",\"*Malware*\") | rename Id as object_id, UserId as user, Operation as signature, ObjectId as object | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by dest user src vendor_account vendor_product signature object_id object | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `o365_email_security_feature_changed_filter`",
+    "condition": "You must install the Splunk Microsoft Office 365 Add-on and ingest Office 365 management activity events.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrators might alter features for troubleshooting, performance reasons, or other administrative tasks. Filter as needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

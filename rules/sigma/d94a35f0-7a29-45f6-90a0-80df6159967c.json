@@ -1,0 +1,51 @@
+{
+  "id": "d94a35f0-7a29-45f6-90a0-80df6159967c",
+  "name": "Cisco Denial of Service",
+  "description": "Detect a system being shutdown or put into different boot mode",
+  "source": {
+    "type": "sigma",
+    "id": "d94a35f0-7a29-45f6-90a0-80df6159967c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/cisco_cli_dos.yml",
+    "file_path": "tmp/repos/sigma/rules/network/cisco/aaa/cisco_cli_dos.yml"
+  },
+  "tags": [
+    "attackimpact",
+    "attackt1495",
+    "attackt1529",
+    "attackt1565001"
+  ],
+  "author": "Austin Clark",
+  "references": [],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-08-15",
+  "modified": "2023-01-04",
+  "mitre": {
+    "tactics": [
+      "TA1495",
+      "TA1529",
+      "TA1565"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "keywords: [\"shutdown\", \"config-register 0x2100\", \"config-register 0x2142\"]",
+    "condition": "keywords",
+    "fields": [
+      "CmdSet"
+    ]
+  },
+  "falsepositives": [
+    "Legitimate administrators may run these commands, though rarely."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "cisco",
+    "aaa"
+  ]
+}

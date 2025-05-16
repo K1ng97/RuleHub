@@ -1,0 +1,46 @@
+{
+  "id": "64760eef-87f7-4ed3-93fd-655668ea9420",
+  "name": "Use of Scriptrunner.exe",
+  "description": "The \"ScriptRunner.exe\" binary can be abused to proxy execution through it and bypass possible whitelisting",
+  "source": {
+    "type": "sigma",
+    "id": "64760eef-87f7-4ed3-93fd-655668ea9420",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_lolbin_scriptrunner.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_lolbin_scriptrunner.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1218"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/Binaries/Scriptrunner/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-07-01",
+  "modified": "2022-07-01",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\ScriptRunner.exe\"}, {\"OriginalFileName\": \"ScriptRunner.exe\"}]\nselection_cli: {\"CommandLine|contains\": \" -appvscript \"}",
+    "condition": "all of selection*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use when App-v is deployed"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

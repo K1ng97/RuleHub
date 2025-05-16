@@ -1,0 +1,43 @@
+{
+  "id": "3b132a71-9335-4f33-9932-00bb4f6ac7e8",
+  "name": "Linux Deletion Of Cron Jobs",
+  "description": "The following analytic detects the deletion of cron jobs on a Linux machine. It leverages filesystem event logs to identify when files within the \"/etc/cron.*\" directory are deleted. This activity is significant because attackers or malware may delete cron jobs to disable scheduled security tasks or evade detection mechanisms. If confirmed malicious, this action could allow an attacker to disrupt system operations, evade security measures, or facilitate further malicious activities such as data wiping, as seen with the acidrain malware.",
+  "source": {
+    "type": "splunk",
+    "id": "3b132a71-9335-4f33-9932-00bb4f6ac7e8",
+    "url": "https://github.com/splunk/security_content/blob/develop/linux_deletion_of_cron_jobs.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/linux_deletion_of_cron_jobs.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://www.sentinelone.com/labs/acidrain-a-modem-wiper-rains-down-on-europe/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Filesystem where Filesystem.action=deleted Filesystem.file_path=\"/etc/cron.*\" by Filesystem.action Filesystem.dest Filesystem.file_access_time Filesystem.file_create_time Filesystem.file_hash Filesystem.file_modify_time Filesystem.file_name Filesystem.file_path Filesystem.file_acl Filesystem.file_size Filesystem.process_guid Filesystem.process_id Filesystem.user Filesystem.vendor_product | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`| `linux_deletion_of_cron_jobs_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting logs with the process name, parent process, and command-line executions from your endpoints. If you are using Sysmon, you can use the Add-on for Linux Sysmon from Splunkbase.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrator or network operator can execute this command. Please update the filter macros to remove false positives."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

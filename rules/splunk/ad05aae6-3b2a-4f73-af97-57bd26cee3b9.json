@@ -1,0 +1,46 @@
+{
+  "id": "ad05aae6-3b2a-4f73-af97-57bd26cee3b9",
+  "name": "WMI Permanent Event Subscription - Sysmon",
+  "description": "The following analytic identifies the creation of WMI permanent event subscriptions, which can be used to establish persistence or perform privilege escalation. It leverages Sysmon data, specifically EventCodes 19, 20, and 21, to detect the creation of WMI EventFilters, EventConsumers, and FilterToConsumerBindings. This activity is significant as it may indicate an attacker setting up mechanisms to execute code with elevated SYSTEM privileges when specific events occur. If confirmed malicious, this could allow the attacker to maintain persistence, escalate privileges, and execute arbitrary code, posing a severe threat to the environment.",
+  "source": {
+    "type": "splunk",
+    "id": "ad05aae6-3b2a-4f73-af97-57bd26cee3b9",
+    "url": "https://github.com/splunk/security_content/blob/develop/wmi_permanent_event_subscription___sysmon.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/wmi_permanent_event_subscription___sysmon.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Rico Valdez, Michael Haag, Splunk",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1546.003/T1546.003.md",
+    "https://www.eideon.com/2018-03-02-THL03-WMIBackdoors/",
+    "https://github.com/trustedsec/SysmonCommunityGuide/blob/master/chapters/WMI-events.md",
+    "https://in.security/2019/04/03/an-intro-into-abusing-and-identifying-wmi-event-subscriptions-for-persistence/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`sysmon` EventCode=21 | stats count min(_time) as firstTime max(_time) as lastTime by dest dvc object object_attrs object_category object_path signature signature_id src status user user_id vendor_product Consumer ConsumerNoQuotes Filter FilterNoQuotes | `security_content_ctime(firstTime)`| `security_content_ctime(lastTime)` | `wmi_permanent_event_subscription___sysmon_filter`",
+    "condition": "To successfully implement this search, you must be collecting Sysmon data using Sysmon version 6.1 or greater and have Sysmon configured to generate alerts for WMI activity (eventID= 19, 20, 21). In addition, you must have at least version 6.0.4 of the Sysmon TA installed to properly parse the fields.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Although unlikely, administrators may use event subscriptions for legitimate purposes."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

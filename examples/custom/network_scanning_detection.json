@@ -1,0 +1,97 @@
+{
+  "rule_metadata": {
+    "id": "custom-3f7b9e12-4c8d-42a5-b6e3-8d9f7c12e45a",
+    "title": "Network Port Scanning Detection",
+    "created_by": "RuleHub Examples",
+    "created_date": "2025-05-16",
+    "last_modified": "2025-05-16",
+    "version": "1.0.0",
+    "classification": "TLP:GREEN",
+    "rule_type": "detection",
+    "license": "MIT"
+  },
+  "description": {
+    "summary": "Detects potential port scanning activity on the network",
+    "details": "This rule identifies hosts that are attempting to connect to multiple ports on multiple destination hosts in a short period of time, which is indicative of port scanning activity.",
+    "rationale": "Port scanning is often used by attackers during the reconnaissance phase to identify potential targets and vulnerabilities."
+  },
+  "mitre_mapping": {
+    "tactics": [
+      {
+        "id": "TA0007",
+        "name": "Discovery"
+      },
+      {
+        "id": "TA0043",
+        "name": "Reconnaissance"
+      }
+    ],
+    "techniques": [
+      {
+        "id": "T1046",
+        "name": "Network Service Scanning"
+      },
+      {
+        "id": "T1595.001",
+        "name": "Active Scanning: Scanning IP Blocks"
+      }
+    ]
+  },
+  "detection": {
+    "platform": "network",
+    "data_sources": ["netflow", "firewall_logs", "network_connection"],
+    "query_logic": {
+      "timeframe": "5m",
+      "threshold": {
+        "unique_ports": 15,
+        "unique_destinations": 10
+      },
+      "exclusions": {
+        "source_ips": ["10.0.0.5", "10.0.0.10"],
+        "source_hostnames": ["monitoring-server", "security-scanner"]
+      }
+    },
+    "pseudocode": "FROM network_logs SELECT source_ip, COUNT(DISTINCT destination_port) AS unique_ports, COUNT(DISTINCT destination_ip) AS unique_destinations GROUP BY source_ip WHERE unique_ports > 15 AND unique_destinations > 10 WITHIN 5 minutes",
+    "implementation": {
+      "splunk": "index=network sourcetype=firewall | stats count(eval(dest_port)) as unique_ports count(eval(dest_ip)) as unique_destinations by src_ip | where unique_ports > 15 AND unique_destinations > 10",
+      "elasticsearch": "source_ip:* AND (destination_port:* OR destination_ip:*) | stats count(destination_port) as unique_ports count(destination_ip) as unique_destinations by source_ip | where unique_ports > 15 AND unique_destinations > 10",
+      "sigma": "See separate Sigma rule implementation"
+    }
+  },
+  "response_guidance": {
+    "severity": "medium",
+    "priority": 2,
+    "investigation_steps": [
+      "Verify if the source IP is an authorized security scanner or monitoring tool",
+      "Check if the scanning activity is part of scheduled vulnerability assessment",
+      "Review the specific ports being scanned to determine potential targets",
+      "Examine source IP reputation and historical behavior"
+    ],
+    "false_positives": [
+      "Vulnerability scanners and network monitoring tools",
+      "Network inventory tools",
+      "System administrators performing network troubleshooting",
+      "Automated service discovery mechanisms"
+    ],
+    "remediation": [
+      "If unauthorized, block the source IP at the firewall",
+      "Implement rate limiting for connection attempts",
+      "Review and harden exposed services",
+      "Ensure proper network segmentation is in place"
+    ]
+  },
+  "references": [
+    "https://attack.mitre.org/techniques/T1046/",
+    "https://attack.mitre.org/techniques/T1595/001/",
+    "https://nmap.org/book/port-scanning-basics.html"
+  ],
+  "tags": ["network", "reconnaissance", "discovery", "scanning", "lateral_movement", "enterprise"],
+  "testing": {
+    "validation_dataset": "network_scan_sample.pcap",
+    "validation_commands": [
+      "Run nmap scan: nmap -p 1-1000 10.0.0.0/24",
+      "Run masscan: masscan 10.0.0.0/24 -p 1-1000 --rate=1000"
+    ],
+    "expected_results": "Alert should trigger when scanning activity exceeds thresholds"
+  }
+}

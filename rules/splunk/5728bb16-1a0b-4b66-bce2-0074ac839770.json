@@ -1,0 +1,43 @@
+{
+  "id": "5728bb16-1a0b-4b66-bce2-0074ac839770",
+  "name": "Linux Auditd Hardware Addition Swapoff",
+  "description": "The following analytic detects the execution of the \"swapoff\" command, which disables the swapping of paging devices on a Linux system. It leverages data from Endpoint Detection and Response (EDR) agents, focusing on process execution logs. This activity is significant because disabling swap can be a tactic used by malware, such as Awfulshred, to evade detection and hinder forensic analysis. If confirmed malicious, this action could allow an attacker to manipulate system memory management, potentially leading to data corruption, system instability, or evasion of memory-based detection mechanisms.",
+  "source": {
+    "type": "splunk",
+    "id": "5728bb16-1a0b-4b66-bce2-0074ac839770",
+    "url": "https://github.com/splunk/security_content/blob/develop/linux_auditd_hardware_addition_swapoff.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/linux_auditd_hardware_addition_swapoff.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/overview-of-the-cyber-weapons-used-in-the-ukraine-russia-war/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`linux_auditd` proctitle = \"*swapoff*\" AND proctitle = \"*-a*\" | rename host as dest | stats count min(_time) as firstTime max(_time) as lastTime by proctitle dest | `security_content_ctime(firstTime)`| `security_content_ctime(lastTime)` | `linux_auditd_hardware_addition_swapoff_filter`",
+    "condition": "To implement this detection, the process begins by ingesting auditd data, that consists of SYSCALL, TYPE, EXECVE and PROCTITLE events, which captures command-line executions and process details on Unix/Linux systems. These logs should be ingested and processed using Splunk Add-on for Unix and Linux (https://splunkbase.splunk.com/app/833), which is essential for correctly parsing and categorizing the data. The next step involves normalizing the field names  to match the field names set by the Splunk Common Information Model (CIM) to ensure consistency across different data sources and enhance the efficiency of data modeling. This approach enables effective monitoring and detection of linux endpoints where auditd is deployed",
+    "fields": []
+  },
+  "falsepositives": [
+    "administrator may disable swapping of devices in a linux host. Filter is needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

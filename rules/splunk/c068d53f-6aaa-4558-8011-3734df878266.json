@@ -1,0 +1,45 @@
+{
+  "id": "c068d53f-6aaa-4558-8011-3734df878266",
+  "name": "O365 Application Registration Owner Added",
+  "description": "The following analytic identifies instances where a new owner is assigned to an application registration within an Azure AD and Office 365 tenant. It leverages O365 audit logs, specifically events related to changes in owner assignments within the AzureActiveDirectory workload. This activity is significant because assigning a new owner to an application registration can grant significant control over the application's configuration, permissions, and behavior. If confirmed malicious, an attacker could modify the application's settings, permissions, and behavior, leading to unauthorized data access, privilege escalation, or the introduction of malicious behavior within the application's operations.",
+  "source": {
+    "type": "splunk",
+    "id": "c068d53f-6aaa-4558-8011-3734df878266",
+    "url": "https://github.com/splunk/security_content/blob/develop/o365_application_registration_owner_added.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/o365_application_registration_owner_added.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "atomic_guid",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Mauricio Velazco, Splunk",
+  "references": [
+    "https://attack.mitre.org/techniques/T1098/",
+    "https://learn.microsoft.com/en-us/azure/active-directory/manage-apps/overview-assign-app-owners"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`o365_management_activity` Workload=AzureActiveDirectory Operation=\"Add owner to application.\" | eval app_id=mvindex('ModifiedProperties{}.NewValue', 0) | eval app_displayName=mvindex('ModifiedProperties{}.NewValue', 1) | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by signature dest user src vendor_account vendor_product app_id app_displayName object | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `o365_application_registration_owner_added_filter`",
+    "condition": "You must install the Splunk Microsoft Office 365 Add-on and ingest Office 365 management activity events.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Application owners may be added for legitimate reasons, filter as needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

@@ -1,0 +1,47 @@
+{
+  "id": "d2d642d7-b393-43fe-bae4-e81ed5915c4b",
+  "name": "Scheduled Task/Job At",
+  "description": "Detects the use of at/atd which are utilities that are used to schedule tasks.\nThey are often abused by adversaries to maintain persistence or to perform task scheduling for initial or recurring execution of malicious code\n",
+  "source": {
+    "type": "sigma",
+    "id": "d2d642d7-b393-43fe-bae4-e81ed5915c4b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_at_command.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_at_command.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1053002"
+  ],
+  "author": "Ömer Günal, oscd.community",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1053.002/T1053.002.md"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "stable",
+  "created": "2020-10-06",
+  "modified": "2022-07-07",
+  "mitre": {
+    "tactics": [
+      "TA1053"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": [\"/at\", \"/atd\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administration activities"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

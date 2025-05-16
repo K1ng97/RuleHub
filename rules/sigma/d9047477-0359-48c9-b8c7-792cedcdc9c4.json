@@ -1,0 +1,53 @@
+{
+  "id": "d9047477-0359-48c9-b8c7-792cedcdc9c4",
+  "name": "PUA - NirCmd Execution As LOCAL SYSTEM",
+  "description": "Detects the use of NirCmd tool for command execution as SYSTEM user",
+  "source": {
+    "type": "sigma",
+    "id": "d9047477-0359-48c9-b8c7-792cedcdc9c4",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_pua_nircmd_as_system.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_pua_nircmd_as_system.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attacks0029",
+    "attackt1569002"
+  ],
+  "author": "Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://www.nirsoft.net/utils/nircmd.html",
+    "https://www.winhelponline.com/blog/run-program-as-system-localsystem-account-windows/",
+    "https://www.nirsoft.net/utils/nircmd2.html#using"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-01-24",
+  "modified": "2023-02-13",
+  "mitre": {
+    "tactics": [
+      "TA1569"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|contains\": \" runassystem \"}",
+    "condition": "selection",
+    "fields": [
+      "CommandLine",
+      "ParentCommandLine"
+    ]
+  },
+  "falsepositives": [
+    "Legitimate use by administrators"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

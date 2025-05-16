@@ -1,0 +1,43 @@
+{
+  "id": "b49b6ef4-57cd-4d42-bd7e-64e00f11cc87",
+  "name": "Crowdstrike User Weak Password Policy",
+  "description": "The following analytic detects CrowdStrike alerts for weak password policy violations, identifying instances where passwords do not meet the required security standards. These alerts highlight potential vulnerabilities that could be exploited by attackers, emphasizing the need for stronger password practices. Addressing these alerts promptly helps to enhance overall security and protect sensitive information from unauthorized access.",
+  "source": {
+    "type": "splunk",
+    "id": "b49b6ef4-57cd-4d42-bd7e-64e00f11cc87",
+    "url": "https://github.com/splunk/security_content/blob/develop/crowdstrike_user_weak_password_policy.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/crowdstrike_user_weak_password_policy.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://www.crowdstrike.com/wp-content/uploads/2022/12/CrowdStrike-Falcon-Event-Streams-Add-on-Guide-v3.pdf"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`crowdstrike_identities`  primaryDisplayName != \"*admin*\" | rename riskFactors{}.severity as severity, riskFactors{}.type as risk_type, roles{}.type as role_type, accounts{}.domain as domain, accounts{}.dn as dn, accounts{}.samAccountName as user | stats count min(_time) as firstTime max(_time) as lastTime by  domain dn primaryDisplayName risk_type severity riskScore riskScoreSeverity user role_type | where risk_type = \"WEAK_PASSWORD_POLICY\" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `crowdstrike_user_weak_password_policy_filter`",
+    "condition": "To implement crowdstrike:identities logs, use the Falcon Streaming API. Set up an API client, authenticate with your CrowdStrike credentials, and subscribe to the \"crowdstrike:identities\" event stream. Process and store the logs as needed, integrating them into your logging or SIEM system for monitoring and analysis.",
+    "fields": []
+  },
+  "falsepositives": [
+    "unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

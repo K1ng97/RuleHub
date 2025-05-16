@@ -1,0 +1,43 @@
+{
+  "id": "530a6faa-ff3d-4022-b315-50828e77eef5",
+  "name": "Anydesk Remote Access Software Service Installation",
+  "description": "Detects the installation of the anydesk software service. Which could be an indication of anydesk abuse if you the software isn't already used.",
+  "source": {
+    "type": "sigma",
+    "id": "530a6faa-ff3d-4022-b315-50828e77eef5",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_system_service_install_anydesk.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/system/service_control_manager/win_system_service_install_anydesk.yml"
+  },
+  "tags": [
+    "attackpersistence"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems), Swachchhanda Shrawan Poudel (Nextron Systems)",
+  "references": [
+    "https://thedfirreport.com/2022/08/08/bumblebee-roasts-its-way-to-domain-admin/",
+    "https://thedfirreport.com/2025/02/24/confluence-exploit-leads-to-lockbit-ransomware/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-11",
+  "modified": "2025-02-24",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_provider: {\"Provider_Name\": \"Service Control Manager\", \"EventID\": 7045}\nselection_service: [{\"ServiceName|contains|all\": [\"AnyDesk\", \"Service\"]}, {\"ImagePath|contains\": \"AnyDesk\"}]",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate usage of the anydesk tool"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "system"
+  ]
+}

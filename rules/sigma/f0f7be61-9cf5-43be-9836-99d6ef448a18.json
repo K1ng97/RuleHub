@@ -1,0 +1,47 @@
+{
+  "id": "f0f7be61-9cf5-43be-9836-99d6ef448a18",
+  "name": "Uninstall Crowdstrike Falcon Sensor",
+  "description": "Adversaries may disable security tools to avoid possible detection of their tools and activities by uninstalling Crowdstrike Falcon",
+  "source": {
+    "type": "sigma",
+    "id": "f0f7be61-9cf5-43be-9836-99d6ef448a18",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_uninstall_crowdstrike_falcon.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_uninstall_crowdstrike_falcon.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1562001"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-07-12",
+  "modified": "2023-03-09",
+  "mitre": {
+    "tactics": [
+      "TA1562"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|contains|all\": [\"\\\\WindowsSensor.exe\", \" /uninstall\", \" /quiet\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrator might leverage the same command line for debugging or other purposes. However this action must be always investigated"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

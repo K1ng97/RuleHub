@@ -1,0 +1,47 @@
+{
+  "id": "731231b9-0b5d-4219-94dd-abb6959aa7ea",
+  "name": "Suspicious Rundll32 Activity Invoking Sys File",
+  "description": "Detects suspicious process related to rundll32 based on command line that includes a *.sys file as seen being used by UNC2452",
+  "source": {
+    "type": "sigma",
+    "id": "731231b9-0b5d-4219-94dd-abb6959aa7ea",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_rundll32_sys.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_rundll32_sys.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218011"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://www.microsoft.com/security/blog/2021/03/04/goldmax-goldfinder-sibot-analyzing-nobelium-malware/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-03-05",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": [
+      "T011"
+    ]
+  },
+  "detection": {
+    "query": "selection1: {\"CommandLine|contains\": \"rundll32.exe\"}\nselection2: {\"CommandLine|contains\": [\".sys,\", \".sys \"]}",
+    "condition": "all of selection*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

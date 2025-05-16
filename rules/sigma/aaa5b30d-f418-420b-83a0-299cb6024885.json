@@ -1,0 +1,47 @@
+{
+  "id": "aaa5b30d-f418-420b-83a0-299cb6024885",
+  "name": "Potential RDP Exploit CVE-2019-0708",
+  "description": "Detect suspicious error on protocol RDP, potential CVE-2019-0708",
+  "source": {
+    "type": "sigma",
+    "id": "aaa5b30d-f418-420b-83a0-299cb6024885",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_system_rdp_potential_cve_2019_0708.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/system/termdd/win_system_rdp_potential_cve_2019_0708.yml"
+  },
+  "tags": [
+    "attacklateral-movement",
+    "attackt1210",
+    "car2013-07-002"
+  ],
+  "author": "Lionel PRAT, Christophe BROCAS, @atc_project (improvements)",
+  "references": [
+    "https://web.archive.org/web/20190710034152/https://github.com/zerosum0x0/CVE-2019-0708",
+    "https://github.com/Ekultek/BlueKeep"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-05-24",
+  "modified": "2022-12-25",
+  "mitre": {
+    "tactics": [
+      "TA1210"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": [56, 50], \"Provider_Name\": \"TermDD\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Bad connections or network interruptions"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "system"
+  ]
+}

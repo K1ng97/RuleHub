@@ -1,0 +1,60 @@
+{
+  "id": "39a80702-d7ca-4a83-b776-525b1f86a36d",
+  "name": "Potential Secure Deletion with SDelete",
+  "description": "Detects files that have extensions commonly seen while SDelete is used to wipe files.",
+  "source": {
+    "type": "sigma",
+    "id": "39a80702-d7ca-4a83-b776-525b1f86a36d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_sdelete_potential_secure_deletion.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_sdelete_potential_secure_deletion.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackimpact",
+    "attacks0195",
+    "attackt1027005",
+    "attackt1070004",
+    "attackt1485",
+    "attackt1553002"
+  ],
+  "author": "Thomas Patzke",
+  "references": [
+    "https://jpcertcc.github.io/ToolAnalysisResultSheet/details/sdelete.htm",
+    "https://www.jpcert.or.jp/english/pub/sr/ir_research.html",
+    "https://learn.microsoft.com/en-gb/sysinternals/downloads/sdelete"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2017-06-14",
+  "modified": "2024-12-13",
+  "mitre": {
+    "tactics": [
+      "TA1027",
+      "TA1070",
+      "TA1485",
+      "TA1553"
+    ],
+    "techniques": [
+      "T002",
+      "T004",
+      "T005"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": [4656, 4663, 4658], \"ObjectName|endswith\": [\".AAA\", \".ZZZ\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate usage of SDelete",
+    "Files that are interacted with that have these extensions legitimately"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

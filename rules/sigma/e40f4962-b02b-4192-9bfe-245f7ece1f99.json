@@ -1,0 +1,52 @@
+{
+  "id": "e40f4962-b02b-4192-9bfe-245f7ece1f99",
+  "name": "Multifactor Authentication Denied",
+  "description": "User has indicated they haven't instigated the MFA prompt and could indicate an attacker has the password for the account.",
+  "source": {
+    "type": "sigma",
+    "id": "e40f4962-b02b-4192-9bfe-245f7ece1f99",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_mfa_denies.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/signin_logs/azure_mfa_denies.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackinitial-access",
+    "attackt1078004",
+    "attackt1110",
+    "attackt1621"
+  ],
+  "author": "AlertIQ",
+  "references": [
+    "https://www.microsoft.com/security/blog/2022/03/22/dev-0537-criminal-actor-targeting-organizations-for-data-exfiltration-and-destruction/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-03-24",
+  "modified": "2022-03-24",
+  "mitre": {
+    "tactics": [
+      "TA1078",
+      "TA1110",
+      "TA1621"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"AuthenticationRequirement\": \"multiFactorAuthentication\", \"Status|contains\": \"MFA Denied\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Users actually login but miss-click into the Deny button when MFA prompt."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "signinlogs"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "81a0ecb5-0a41-4ba1-b2ba-c944eb92bfa2",
+  "name": "Add Insecure Download Source To Winget",
+  "description": "Detects usage of winget to add a new insecure (http) download source.\nWinget will not allow the addition of insecure sources, hence this could indicate potential suspicious activity (or typos)\n",
+  "source": {
+    "type": "sigma",
+    "id": "81a0ecb5-0a41-4ba1-b2ba-c944eb92bfa2",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_winget_add_insecure_custom_source.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_winget_add_insecure_custom_source.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1059"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://learn.microsoft.com/en-us/windows/package-manager/winget/source",
+    "https://github.com/nasbench/Misc-Research/tree/b9596e8109dcdb16ec353f316678927e507a5b8d/LOLBINs/Winget"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-04-17",
+  "modified": "2023-04-17",
+  "mitre": {
+    "tactics": [
+      "TA1059"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\winget.exe\"}, {\"OriginalFileName\": \"winget.exe\"}]\nselection_cli: {\"CommandLine|contains|all\": [\"source \", \"add \", \"http://\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "False positives might occur if the users are unaware of such control checks"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

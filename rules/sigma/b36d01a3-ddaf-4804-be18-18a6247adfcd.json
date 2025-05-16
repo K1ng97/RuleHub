@@ -1,0 +1,43 @@
+{
+  "id": "b36d01a3-ddaf-4804-be18-18a6247adfcd",
+  "name": "Add Windows Capability Via PowerShell Cmdlet",
+  "description": "Detects usage of the \"Add-WindowsCapability\" cmdlet to add Windows capabilities. Notable capabilities could be \"OpenSSH\" and others.",
+  "source": {
+    "type": "sigma",
+    "id": "b36d01a3-ddaf-4804-be18-18a6247adfcd",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_powershell_add_windows_capability.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_powershell_add_windows_capability.yml"
+  },
+  "tags": [
+    "attackexecution"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=powershell",
+    "https://www.virustotal.com/gui/file/af1c82237b6e5a3a7cdbad82cc498d298c67845d92971bada450023d1335e267/content"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-01-22",
+  "modified": "2023-05-09",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": [\"\\\\powershell.exe\", \"\\\\pwsh.exe\"]}, {\"OriginalFileName\": [\"PowerShell.EXE\", \"pwsh.dll\"]}]\nselection_cmdlet: {\"CommandLine|contains\": \"Add-WindowsCapability\"}\nselection_capa: {\"CommandLine|contains\": \"OpenSSH.\"}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate usage of the capabilities by administrators or users. Add additional filters accordingly."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

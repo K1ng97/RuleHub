@@ -1,0 +1,57 @@
+{
+  "id": "50e606bf-04ce-4ca7-9d54-3449494bbd4b",
+  "name": "Cisco LDP Authentication Failures",
+  "description": "Detects LDP failures which may be indicative of brute force attacks to manipulate MPLS labels",
+  "source": {
+    "type": "sigma",
+    "id": "50e606bf-04ce-4ca7-9d54-3449494bbd4b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/cisco_ldp_md5_auth_failed.yml",
+    "file_path": "tmp/repos/sigma/rules/network/cisco/ldp/cisco_ldp_md5_auth_failed.yml"
+  },
+  "tags": [
+    "attackcollection",
+    "attackcredential-access",
+    "attackdefense-evasion",
+    "attackinitial-access",
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1078",
+    "attackt1110",
+    "attackt1557"
+  ],
+  "author": "Tim Brown",
+  "references": [
+    "https://www.blackhat.com/presentations/bh-usa-03/bh-us-03-convery-franz-v3.pdf"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-01-09",
+  "modified": "2023-01-09",
+  "mitre": {
+    "tactics": [
+      "TA1078",
+      "TA1110",
+      "TA1557"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_protocol: [\"LDP\"]\nselection_keywords: [\"SOCKET_TCP_PACKET_MD5_AUTHEN_FAIL\", \"TCPMD5AuthenFail\"]",
+    "condition": "selection_protocol and selection_keywords",
+    "fields": [
+      "tcpConnLocalAddress",
+      "tcpConnRemAddress"
+    ]
+  },
+  "falsepositives": [
+    "Unlikely. Except due to misconfigurations"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "cisco",
+    "ldp"
+  ]
+}

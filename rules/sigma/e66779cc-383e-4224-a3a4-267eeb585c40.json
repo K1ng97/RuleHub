@@ -1,0 +1,57 @@
+{
+  "id": "e66779cc-383e-4224-a3a4-267eeb585c40",
+  "name": "Bypass UAC via CMSTP",
+  "description": "Detect commandline usage of Microsoft Connection Manager Profile Installer (cmstp.exe) to install specially formatted local .INF files",
+  "source": {
+    "type": "sigma",
+    "id": "e66779cc-383e-4224-a3a4-267eeb585c40",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_uac_bypass_cmstp.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_uac_bypass_cmstp.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackprivilege-escalation",
+    "attackt1218003",
+    "attackt1548002"
+  ],
+  "author": "E.M. Anhaus (originally from Atomic Blue Detections, Endgame), oscd.community",
+  "references": [
+    "https://eqllib.readthedocs.io/en/latest/analytics/e584f1a1-c303-4885-8a66-21360c90995b.html",
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218.003/T1218.003.md",
+    "https://lolbas-project.github.io/lolbas/Binaries/Cmstp/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-10-24",
+  "modified": "2022-08-30",
+  "mitre": {
+    "tactics": [
+      "TA1218",
+      "TA1548"
+    ],
+    "techniques": [
+      "T002",
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\cmstp.exe\"}, {\"OriginalFileName\": \"CMSTP.EXE\"}]\nselection_cli: {\"CommandLine|contains\": [\"/s\", \"-s\", \"/au\", \"-au\", \"/ni\", \"-ni\"]}",
+    "condition": "all of selection*",
+    "fields": [
+      "ComputerName",
+      "User",
+      "CommandLine"
+    ]
+  },
+  "falsepositives": [
+    "Legitimate use of cmstp.exe utility by legitimate user"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

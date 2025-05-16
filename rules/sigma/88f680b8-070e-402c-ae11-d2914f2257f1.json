@@ -1,0 +1,47 @@
+{
+  "id": "88f680b8-070e-402c-ae11-d2914f2257f1",
+  "name": "PowerShell Base64 Encoded IEX Cmdlet",
+  "description": "Detects usage of a base64 encoded \"IEX\" cmdlet in a process command line",
+  "source": {
+    "type": "sigma",
+    "id": "88f680b8-070e-402c-ae11-d2914f2257f1",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_powershell_base64_iex.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_powershell_base64_iex.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1059001"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "Internal Research"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-08-23",
+  "modified": "2023-04-06",
+  "mitre": {
+    "tactics": [
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: [{\"CommandLine|base64offset|contains\": [\"IEX ([\", \"iex ([\", \"iex (New\", \"IEX (New\", \"IEX([\", \"iex([\", \"iex(New\", \"IEX(New\", \"IEX(('\", \"iex(('\"]}, {\"CommandLine|contains\": [\"SQBFAFgAIAAoAFsA\", \"kARQBYACAAKABbA\", \"JAEUAWAAgACgAWw\", \"aQBlAHgAIAAoAFsA\", \"kAZQB4ACAAKABbA\", \"pAGUAeAAgACgAWw\", \"aQBlAHgAIAAoAE4AZQB3A\", \"kAZQB4ACAAKABOAGUAdw\", \"pAGUAeAAgACgATgBlAHcA\", \"SQBFAFgAIAAoAE4AZQB3A\", \"kARQBYACAAKABOAGUAdw\", \"JAEUAWAAgACgATgBlAHcA\"]}]",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "id": "b124ddf4-778d-418e-907f-6dd3fc0d31cd",
+  "name": "Arbitrary File Download Via PresentationHost.EXE",
+  "description": "Detects usage of \"PresentationHost\" which is a utility that runs \".xbap\" (Browser Applications) files to download arbitrary files",
+  "source": {
+    "type": "sigma",
+    "id": "b124ddf4-778d-418e-907f-6dd3fc0d31cd",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_presentationhost_download.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_presentationhost_download.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1218"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://github.com/LOLBAS-Project/LOLBAS/pull/239/files"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-19",
+  "modified": "2023-11-09",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\presentationhost.exe\"}, {\"OriginalFileName\": \"PresentationHost.exe\"}]\nselection_cli: {\"CommandLine|contains\": [\"http://\", \"https://\", \"ftp://\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

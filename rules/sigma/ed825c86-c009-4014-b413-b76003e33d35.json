@@ -1,0 +1,46 @@
+{
+  "id": "ed825c86-c009-4014-b413-b76003e33d35",
+  "name": "Windows Binary Executed From WSL",
+  "description": "Detects the execution of Windows binaries from within a WSL instance.\nThis could be used to masquerade parent-child relationships\n",
+  "source": {
+    "type": "sigma",
+    "id": "ed825c86-c009-4014-b413-b76003e33d35",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_wsl_windows_binaries_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_wsl_windows_binaries_execution.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1202"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "Internal Research"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-02-14",
+  "modified": "2023-02-14",
+  "mitre": {
+    "tactics": [
+      "TA1202"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Image|re\": \"[a-zA-Z]:\\\\\\\\\", \"CurrentDirectory|contains\": \"\\\\\\\\\\\\\\\\wsl.localhost\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

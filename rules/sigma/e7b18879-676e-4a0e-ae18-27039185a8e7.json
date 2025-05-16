@@ -1,0 +1,48 @@
+{
+  "id": "e7b18879-676e-4a0e-ae18-27039185a8e7",
+  "name": "New Netsh Helper DLL Registered From A Suspicious Location",
+  "description": "Detects changes to the Netsh registry key to add a new DLL value that is located on a suspicious location. This change might be an indication of a potential persistence attempt by adding a malicious Netsh helper\n",
+  "source": {
+    "type": "sigma",
+    "id": "e7b18879-676e-4a0e-ae18-27039185a8e7",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_set_netsh_help_dll_persistence_susp_location.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_set/registry_set_netsh_help_dll_persistence_susp_location.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1546007"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://www.ired.team/offensive-security/persistence/t1128-netsh-helper-dll",
+    "https://pentestlab.blog/2019/10/29/persistence-netsh-helper-dll/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-11-28",
+  "modified": "2023-11-28",
+  "mitre": {
+    "tactics": [
+      "TA1546"
+    ],
+    "techniques": [
+      "T007"
+    ]
+  },
+  "detection": {
+    "query": "selection_target: {\"TargetObject|contains\": \"\\\\SOFTWARE\\\\Microsoft\\\\NetSh\"}\nselection_folders_1: {\"Details|contains\": [\":\\\\Perflogs\\\\\", \":\\\\Users\\\\Public\\\\\", \":\\\\Windows\\\\Temp\\\\\", \"\\\\AppData\\\\Local\\\\Temp\\\\\", \"\\\\Temporary Internet\"]}\nselection_folders_2: [{\"Details|contains|all\": [\":\\\\Users\\\\\", \"\\\\Favorites\\\\\"]}, {\"Details|contains|all\": [\":\\\\Users\\\\\", \"\\\\Favourites\\\\\"]}, {\"Details|contains|all\": [\":\\\\Users\\\\\", \"\\\\Contacts\\\\\"]}, {\"Details|contains|all\": [\":\\\\Users\\\\\", \"\\\\Pictures\\\\\"]}]",
+    "condition": "selection_target and 1 of selection_folders_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_set"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "id": "35b781cc-1a08-4a5a-80af-42fd7c315c6b",
+  "name": "Discovery Using AzureHound",
+  "description": "Detects AzureHound (A BloodHound data collector for Microsoft Azure) activity via the default User-Agent that is used during its operation after successful authentication.",
+  "source": {
+    "type": "sigma",
+    "id": "35b781cc-1a08-4a5a-80af-42fd7c315c6b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_ad_azurehound_discovery.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/signin_logs/azure_ad_azurehound_discovery.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1087004",
+    "attackt1526"
+  ],
+  "author": "Janantha Marasinghe",
+  "references": [
+    "https://github.com/BloodHoundAD/AzureHound"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-11-27",
+  "modified": "2022-11-27",
+  "mitre": {
+    "tactics": [
+      "TA1087",
+      "TA1526"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"userAgent|contains\": \"azurehound\", \"ResultType\": 0}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "signinlogs"
+  ]
+}

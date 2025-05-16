@@ -1,0 +1,44 @@
+{
+  "id": "5daf11c3-022b-4969-adb9-365e6c078c7c",
+  "name": "CodeIntegrity - Disallowed File For Protected Processes Has Been Blocked",
+  "description": "Detects block events for files that are disallowed by code integrity for protected processes",
+  "source": {
+    "type": "sigma",
+    "id": "5daf11c3-022b-4969-adb9-365e6c078c7c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_codeintegrity_blocked_protected_process_file.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/code_integrity/win_codeintegrity_blocked_protected_process_file.yml"
+  },
+  "tags": [
+    "attackprivilege-escalation"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-id-explanations",
+    "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-tag-explanations",
+    "Internal Research"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-06-06",
+  "modified": "2023-06-06",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 3104}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "codeintegrity-operational"
+  ]
+}

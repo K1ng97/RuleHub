@@ -1,0 +1,48 @@
+{
+  "id": "025bd229-fd1f-4fdb-97ab-20006e1a5368",
+  "name": "Unusual File Download from Direct IP Address",
+  "description": "Detects the download of suspicious file type from URLs with IP",
+  "source": {
+    "type": "sigma",
+    "id": "025bd229-fd1f-4fdb-97ab-20006e1a5368",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/create_stream_hash_susp_ip_domains.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/create_stream_hash/create_stream_hash_susp_ip_domains.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1564004"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems), Florian Roth (Nextron Systems)",
+  "references": [
+    "https://github.com/trustedsec/SysmonCommunityGuide/blob/adcdfee20999f422b974c8d4149bf4c361237db7/chapters/file-stream-creation-hash.md",
+    "https://labs.withsecure.com/publications/detecting-onenote-abuse"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-09-07",
+  "modified": "2023-02-10",
+  "mitre": {
+    "tactics": [
+      "TA1564"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Contents|re\": \"http[s]?://[0-9]{1,3}\\\\.[0-9]{1,3}\\\\.[0-9]{1,3}\\\\.[0-9]{1,3}\", \"TargetFilename|contains\": [\".ps1:Zone\", \".bat:Zone\", \".exe:Zone\", \".vbe:Zone\", \".vbs:Zone\", \".dll:Zone\", \".one:Zone\", \".cmd:Zone\", \".hta:Zone\", \".xll:Zone\", \".lnk:Zone\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "create_stream_hash"
+  ]
+}

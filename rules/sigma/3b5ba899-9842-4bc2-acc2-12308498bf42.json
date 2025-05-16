@@ -1,0 +1,43 @@
+{
+  "id": "3b5ba899-9842-4bc2-acc2-12308498bf42",
+  "name": "Office Application Initiated Network Connection Over Uncommon Ports",
+  "description": "Detects an office suit application (Word, Excel, PowerPoint, Outlook) communicating to target systems over uncommon ports.",
+  "source": {
+    "type": "sigma",
+    "id": "3b5ba899-9842-4bc2-acc2-12308498bf42",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/net_connection_win_office_uncommon_ports.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/network_connection/net_connection_win_office_uncommon_ports.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackdefense-evasion"
+  ],
+  "author": "X__Junior (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://blogs.blackberry.com/en/2023/07/romcom-targets-ukraine-nato-membership-talks-at-nato-summit"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "experimental",
+  "created": "2023-07-12",
+  "modified": "2024-07-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Initiated\": \"true\", \"Image|endswith\": [\"\\\\excel.exe\", \"\\\\outlook.exe\", \"\\\\powerpnt.exe\", \"\\\\winword.exe\", \"\\\\wordview.exe\"]}\nfilter_main_common_ports: {\"DestinationPort\": [53, 80, 139, 443, 445]}\nfilter_main_outlook_ports: {\"Image|contains\": \":\\\\Program Files\\\\Microsoft Office\\\\\", \"Image|endswith\": \"\\\\OUTLOOK.EXE\", \"DestinationPort\": [143, 465, 587, 993, 995]}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Other ports can be used, apply additional filters accordingly"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "network_connection"
+  ]
+}

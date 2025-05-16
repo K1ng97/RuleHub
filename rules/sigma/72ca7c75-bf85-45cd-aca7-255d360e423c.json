@@ -1,0 +1,49 @@
+{
+  "id": "72ca7c75-bf85-45cd-aca7-255d360e423c",
+  "name": "Potential Chrome Frame Helper DLL Sideloading",
+  "description": "Detects potential DLL sideloading of \"chrome_frame_helper.dll\"",
+  "source": {
+    "type": "sigma",
+    "id": "72ca7c75-bf85-45cd-aca7-255d360e423c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/image_load_side_load_chrome_frame_helper.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/image_load/image_load_side_load_chrome_frame_helper.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1574001"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems), Wietze Beukema (project and research)",
+  "references": [
+    "https://hijacklibs.net/entries/3rd_party/google/chrome_frame_helper.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-17",
+  "modified": "2023-05-15",
+  "mitre": {
+    "tactics": [
+      "TA1574"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ImageLoaded|endswith\": \"\\\\chrome_frame_helper.dll\"}\nfilter_main_path: {\"ImageLoaded|startswith\": [\"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\\", \"C:\\\\Program Files (x86)\\\\Google\\\\Chrome\\\\Application\\\\\"]}\nfilter_optional_user_path: {\"ImageLoaded|contains\": \"\\\\AppData\\\\local\\\\Google\\\\Chrome\\\\Application\\\\\"}",
+    "condition": "selection and not 1 of filter_main_* and not 1 of filter_optional_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "image_load"
+  ]
+}

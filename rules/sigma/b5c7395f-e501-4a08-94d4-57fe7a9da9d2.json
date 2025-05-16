@@ -1,0 +1,52 @@
+{
+  "id": "b5c7395f-e501-4a08-94d4-57fe7a9da9d2",
+  "name": "Potential Binary Proxy Execution Via Cdb.EXE",
+  "description": "Detects usage of \"cdb.exe\" to launch arbitrary processes or commands from a debugger script file",
+  "source": {
+    "type": "sigma",
+    "id": "b5c7395f-e501-4a08-94d4-57fe7a9da9d2",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_cdb_arbitrary_command_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_cdb_arbitrary_command_execution.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1106",
+    "attackt1127",
+    "attackt1218"
+  ],
+  "author": "Beyu Denis, oscd.community, Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/OtherMSBinaries/Cdb/",
+    "https://web.archive.org/web/20170715043507/http://www.exploit-monday.com/2016/08/windbg-cdb-shellcode-runner.html",
+    "https://twitter.com/nas_bench/status/1534957360032120833"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-10-26",
+  "modified": "2024-04-22",
+  "mitre": {
+    "tactics": [
+      "TA1106",
+      "TA1127",
+      "TA1218"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\cdb.exe\"}, {\"OriginalFileName\": \"CDB.Exe\"}]\nselection_cli: {\"CommandLine|contains\": [\" -c \", \" -cf \"]}",
+    "condition": "all of selection*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use of debugging tools"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

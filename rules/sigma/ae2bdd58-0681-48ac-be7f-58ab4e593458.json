@@ -1,0 +1,47 @@
+{
+  "id": "ae2bdd58-0681-48ac-be7f-58ab4e593458",
+  "name": "Tamper Windows Defender Remove-MpPreference - ScriptBlockLogging",
+  "description": "Detects attempts to remove Windows Defender configuration using the 'MpPreference' cmdlet",
+  "source": {
+    "type": "sigma",
+    "id": "ae2bdd58-0681-48ac-be7f-58ab4e593458",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_tamper_windows_defender_rem_mp.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_tamper_windows_defender_rem_mp.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1562001"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://techcommunity.microsoft.com/t5/core-infrastructure-and-security/windows-10-controlled-folder-access-event-search/ba-p/2326088"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-05",
+  "modified": "2022-08-05",
+  "mitre": {
+    "tactics": [
+      "TA1562"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_remove: {\"ScriptBlockText|contains\": \"Remove-MpPreference\"}\nselection_tamper: {\"ScriptBlockText|contains\": [\"-ControlledFolderAccessProtectedFolders \", \"-AttackSurfaceReductionRules_Ids \", \"-AttackSurfaceReductionRules_Actions \", \"-CheckForSignaturesBeforeRunningScan \"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate PowerShell scripts"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

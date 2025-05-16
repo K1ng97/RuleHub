@@ -1,0 +1,51 @@
+{
+  "id": "1b45b0d1-773f-4f23-aedc-814b759563b1",
+  "name": "Application AppID Uri Configuration Changes",
+  "description": "Detects when a configuration change is made to an applications AppID URI.",
+  "source": {
+    "type": "sigma",
+    "id": "1b45b0d1-773f-4f23-aedc-814b759563b1",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_app_appid_uri_changes.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/audit_logs/azure_app_appid_uri_changes.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1078004",
+    "attackt1552"
+  ],
+  "author": "Mark Morowczynski '@markmorow', Bailey Bercik '@baileybercik'",
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/architecture/security-operations-applications#appid-uri-added-modified-or-removed"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-06-02",
+  "modified": "2022-06-02",
+  "mitre": {
+    "tactics": [
+      "TA1078",
+      "TA1552"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"properties.message\": [\"Update Application\", \"Update Service principal\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "When and administrator is making legitimate AppID URI configuration changes to an application. This should be a planned event."
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "auditlogs"
+  ]
+}

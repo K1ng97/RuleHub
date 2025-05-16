@@ -1,0 +1,48 @@
+{
+  "id": "70b4156e-50fc-4523-aa50-c9dddf1993fc",
+  "name": "Bpfdoor TCP Ports Redirect",
+  "description": "All TCP traffic on particular port from attacker is routed to different port. ex. '/sbin/iptables -t nat -D PREROUTING -p tcp -s 192.168.1.1 --dport 22 -j REDIRECT --to-ports 42392'\nThe traffic looks like encrypted SSH communications going to TCP port 22, but in reality is being directed to the shell port once it hits the iptables rule for the attacker host only.\n",
+  "source": {
+    "type": "sigma",
+    "id": "70b4156e-50fc-4523-aa50-c9dddf1993fc",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/lnx_auditd_bpfdoor_port_redirect.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/auditd/lnx_auditd_bpfdoor_port_redirect.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1562004"
+  ],
+  "author": "Rafal Piasecki",
+  "references": [
+    "https://www.sandflysecurity.com/blog/bpfdoor-an-evasive-linux-backdoor-technical-analysis/",
+    "https://www.elastic.co/security-labs/a-peek-behind-the-bpfdoor"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-10",
+  "modified": "2022-08-10",
+  "mitre": {
+    "tactics": [
+      "TA1562"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "cmd: {\"type\": \"EXECVE\", \"a0|endswith\": \"iptables\", \"a1\": \"-t\", \"a2\": \"nat\"}\nkeywords: [\"--to-ports 42\", \"--to-ports 43\"]",
+    "condition": "cmd and keywords",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate ports redirect"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "auditd"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "id": "49cdce75-f814-4d56-a7a4-c64ec3a481f2",
+  "name": "O365 ApplicationImpersonation Role Assigned",
+  "description": "The following analytic detects the assignment of the ApplicationImpersonation role in Office 365 to a user or application. It uses the Office 365 Management Activity API to monitor Azure Active Directory audit logs for role assignment events. This activity is significant because the ApplicationImpersonation role allows impersonation of any user, enabling access to and modification of their mailbox. If confirmed malicious, an attacker could gain unauthorized access to sensitive information, manipulate mailbox data, and perform actions as a legitimate user, posing a severe security risk to the organization.",
+  "source": {
+    "type": "splunk",
+    "id": "49cdce75-f814-4d56-a7a4-c64ec3a481f2",
+    "url": "https://github.com/splunk/security_content/blob/develop/o365_applicationimpersonation_role_assigned.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/o365_applicationimpersonation_role_assigned.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Mauricio Velazco, Splunk",
+  "references": [
+    "https://attack.mitre.org/techniques/T1098/002/",
+    "https://www.mandiant.com/resources/blog/remediation-and-hardening-strategies-for-microsoft-365-to-defend-against-unc2452",
+    "https://www.mandiant.com/media/17656"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`o365_management_activity` Workload=Exchange Operation=\"New-ManagementRoleAssignment\" Role=ApplicationImpersonation | rename User as target_user | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by signature dest user src vendor_account vendor_product target_user | `security_content_ctime(lastTime)` | `o365_applicationimpersonation_role_assigned_filter`",
+    "condition": "You must install the Splunk Microsoft Office 365 Add-on and ingest Office 365 management activity events.",
+    "fields": []
+  },
+  "falsepositives": [
+    "While infrequent, the ApplicationImpersonation role may be granted for leigimate reasons, filter as needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

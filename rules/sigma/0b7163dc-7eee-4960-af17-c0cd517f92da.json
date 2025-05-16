@@ -1,0 +1,45 @@
+{
+  "id": "0b7163dc-7eee-4960-af17-c0cd517f92da",
+  "name": "Service Started/Stopped Via Wmic.EXE",
+  "description": "Detects usage of wmic to start or stop a service",
+  "source": {
+    "type": "sigma",
+    "id": "0b7163dc-7eee-4960-af17-c0cd517f92da",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_wmic_service_manipulation.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_wmic_service_manipulation.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1047"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://sushant747.gitbooks.io/total-oscp-guide/content/privilege_escalation_windows.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-06-20",
+  "modified": "2023-02-14",
+  "mitre": {
+    "tactics": [
+      "TA1047"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"OriginalFileName\": \"wmic.exe\"}, {\"Image|endswith\": \"\\\\WMIC.exe\"}]\nselection_cli: {\"CommandLine|contains|all\": [\" service \", \" call \"], \"CommandLine|contains\": [\"stopservice\", \"startservice\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

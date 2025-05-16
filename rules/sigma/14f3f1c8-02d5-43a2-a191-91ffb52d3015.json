@@ -1,0 +1,45 @@
+{
+  "id": "14f3f1c8-02d5-43a2-a191-91ffb52d3015",
+  "name": "RDS Database Security Group Modification",
+  "description": "Detects changes to the security group entries for RDS databases.\nThis can indicate that a misconfiguration has occurred which potentially exposes the database to the public internet, a wider audience within the VPC or that removal of valid rules has occurred which could impact the availability of the database to legitimate services and users.\n",
+  "source": {
+    "type": "sigma",
+    "id": "14f3f1c8-02d5-43a2-a191-91ffb52d3015",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/aws_cloudtrail_security_group_change_rds.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/aws/cloudtrail/aws_cloudtrail_security_group_change_rds.yml"
+  },
+  "tags": [
+    "attackinitial-access",
+    "attackt1190"
+  ],
+  "author": "jamesc-grafana",
+  "references": [
+    "https://www.gorillastack.com/blog/real-time-events/important-aws-cloudtrail-security-events-tracking/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2024-07-11",
+  "modified": "2024-07-11",
+  "mitre": {
+    "tactics": [
+      "TA1190"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"eventSource\": \"rds.amazonaws.com\", \"eventName\": [\"AuthorizeDBSecurityGroupIngress\", \"CreateDBSecurityGroup\", \"DeleteDBSecurityGroup\", \"RevokeDBSecurityGroupIngress\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Creation of a new Database that needs new security group rules"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "aws",
+    "cloudtrail"
+  ]
+}

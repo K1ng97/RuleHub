@@ -1,0 +1,51 @@
+{
+  "id": "910ab938-668b-401b-b08c-b596e80fdca5",
+  "name": "Transferring Files with Credential Data via Network Shares",
+  "description": "Transferring files with well-known filenames (sensitive files with credential data) using network shares",
+  "source": {
+    "type": "sigma",
+    "id": "910ab938-668b-401b-b08c-b596e80fdca5",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_transf_files_with_cred_data_via_network_shares.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_transf_files_with_cred_data_via_network_shares.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1003001",
+    "attackt1003002",
+    "attackt1003003"
+  ],
+  "author": "Teymur Kheirkhabarov, oscd.community",
+  "references": [
+    "https://www.slideshare.net/heirhabarov/hunting-for-credentials-dumping-in-windows-environment"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-10-22",
+  "modified": "2021-11-30",
+  "mitre": {
+    "tactics": [
+      "TA1003"
+    ],
+    "techniques": [
+      "T001",
+      "T002",
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 5145, \"RelativeTargetName|contains\": [\"\\\\mimidrv\", \"\\\\lsass\", \"\\\\windows\\\\minidump\\\\\", \"\\\\hiberfil\", \"\\\\sqldmpr\", \"\\\\sam\", \"\\\\ntds.dit\", \"\\\\security\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Transferring sensitive files for legitimate administration work by legitimate administrator"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

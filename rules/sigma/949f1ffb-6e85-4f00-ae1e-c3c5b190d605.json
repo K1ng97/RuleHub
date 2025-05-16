@@ -1,0 +1,48 @@
+{
+  "id": "949f1ffb-6e85-4f00-ae1e-c3c5b190d605",
+  "name": "Explorer Process Tree Break",
+  "description": "Detects a command line process that uses explorer.exe to launch arbitrary commands or binaries,\nwhich is similar to cmd.exe /c, only it breaks the process tree and makes its parent a new instance of explorer spawning from \"svchost\"\n",
+  "source": {
+    "type": "sigma",
+    "id": "949f1ffb-6e85-4f00-ae1e-c3c5b190d605",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_explorer_break_process_tree.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_explorer_break_process_tree.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1036"
+  ],
+  "author": "Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems), @gott_cyber",
+  "references": [
+    "https://twitter.com/CyberRaiju/status/1273597319322058752",
+    "https://twitter.com/bohops/status/1276357235954909188?s=12",
+    "https://twitter.com/nas_bench/status/1535322450858233858",
+    "https://securityboulevard.com/2019/09/deobfuscating-ostap-trickbots-34000-line-javascript-downloader/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-06-29",
+  "modified": "2024-06-04",
+  "mitre": {
+    "tactics": [
+      "TA1036"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: [{\"CommandLine|contains\": \"/factory,{75dff2b7-6936-4c06-a8bb-676a7b00b24b}\"}, {\"CommandLine|contains|all|windash\": [\"explorer.exe\", \" /root,\"]}]",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

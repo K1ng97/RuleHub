@@ -1,0 +1,42 @@
+{
+  "id": "a85f7765-698a-4088-afa0-ecfbf8d01fa4",
+  "name": "Potential Memory Dumping Activity Via LiveKD",
+  "description": "Detects execution of LiveKD based on PE metadata or image name",
+  "source": {
+    "type": "sigma",
+    "id": "a85f7765-698a-4088-afa0-ecfbf8d01fa4",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_sysinternals_livekd_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_sysinternals_livekd_execution.yml"
+  },
+  "tags": [
+    "attackdefense-evasion"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://learn.microsoft.com/en-us/sysinternals/downloads/livekd"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-05-15",
+  "modified": "2023-05-15",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: [{\"Image|endswith\": [\"\\\\livekd.exe\", \"\\\\livekd64.exe\"]}, {\"OriginalFileName\": \"livekd.exe\"}]",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administration and debugging activity (must be investigated)"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

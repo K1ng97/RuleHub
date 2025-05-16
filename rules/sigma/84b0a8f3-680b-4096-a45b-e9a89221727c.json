@@ -1,0 +1,46 @@
+{
+  "id": "84b0a8f3-680b-4096-a45b-e9a89221727c",
+  "name": "PCRE.NET Package Image Load",
+  "description": "Detects processes loading modules related to PCRE.NET package",
+  "source": {
+    "type": "sigma",
+    "id": "84b0a8f3-680b-4096-a45b-e9a89221727c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/image_load_dll_pcre_dotnet_dll_load.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/image_load/image_load_dll_pcre_dotnet_dll_load.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1059"
+  ],
+  "author": "Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)",
+  "references": [
+    "https://twitter.com/rbmaslen/status/1321859647091970051",
+    "https://twitter.com/tifkin_/status/1321916444557365248"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-29",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [
+      "TA1059"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"ImageLoaded|contains\": \"\\\\AppData\\\\Local\\\\Temp\\\\ba9ea7344a4a5f591d6e5dc32a13494b\\\\\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "image_load"
+  ]
+}

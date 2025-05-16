@@ -1,0 +1,46 @@
+{
+  "id": "d8b0a4fe-07a8-41be-bd39-b14afa025d95",
+  "name": "Activity from Anonymous IP Addresses",
+  "description": "Detects when a Microsoft Cloud App Security reported when users were active from an IP address that has been identified as an anonymous proxy IP address.",
+  "source": {
+    "type": "sigma",
+    "id": "d8b0a4fe-07a8-41be-bd39-b14afa025d95",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/microsoft365_activity_from_anonymous_ip_addresses.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/m365/threat_management/microsoft365_activity_from_anonymous_ip_addresses.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1573"
+  ],
+  "author": "Austin Songer @austinsonger",
+  "references": [
+    "https://learn.microsoft.com/en-us/defender-cloud-apps/anomaly-detection-policy",
+    "https://learn.microsoft.com/en-us/defender-cloud-apps/policy-template-reference"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-08-23",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [
+      "TA1573"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"eventSource\": \"SecurityComplianceCenter\", \"eventName\": \"Activity from anonymous IP addresses\", \"status\": \"success\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "User using a VPN or Proxy"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "m365",
+    "threat_management"
+  ]
+}

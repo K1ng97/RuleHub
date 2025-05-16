@@ -1,0 +1,51 @@
+{
+  "id": "396ae3eb-4174-4b9b-880e-dc0364d78a19",
+  "name": "Potential Persistence Via Outlook LoadMacroProviderOnBoot Setting",
+  "description": "Detects the modification of Outlook setting \"LoadMacroProviderOnBoot\" which if enabled allows the automatic loading of any configured VBA project/module",
+  "source": {
+    "type": "sigma",
+    "id": "396ae3eb-4174-4b9b-880e-dc0364d78a19",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_set_office_outlook_enable_load_macro_provider_on_boot.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_set/registry_set_office_outlook_enable_load_macro_provider_on_boot.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackpersistence",
+    "attackt1008",
+    "attackt1137",
+    "attackt1546"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://speakerdeck.com/heirhabarov/hunting-for-persistence-via-microsoft-exchange-server-or-outlook?slide=53",
+    "https://www.linkedin.com/pulse/outlook-backdoor-using-vba-samir-b-/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-04-05",
+  "modified": "2023-08-17",
+  "mitre": {
+    "tactics": [
+      "TA1008",
+      "TA1137",
+      "TA1546"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"TargetObject|endswith\": \"\\\\Outlook\\\\LoadMacroProviderOnBoot\", \"Details|contains\": \"0x00000001\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_set"
+  ]
+}

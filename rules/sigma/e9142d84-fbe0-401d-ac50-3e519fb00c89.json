@@ -1,0 +1,46 @@
+{
+  "id": "e9142d84-fbe0-401d-ac50-3e519fb00c89",
+  "name": "WhoAmI as Parameter",
+  "description": "Detects a suspicious process command line that uses whoami as first parameter (as e.g. used by EfsPotato)",
+  "source": {
+    "type": "sigma",
+    "id": "e9142d84-fbe0-401d-ac50-3e519fb00c89",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_susp_whoami_as_param.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_susp_whoami_as_param.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1033",
+    "car2016-03-001"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://twitter.com/blackarrowsec/status/1463805700602224645?s=12"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-11-29",
+  "modified": "2022-12-25",
+  "mitre": {
+    "tactics": [
+      "TA1033"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|contains\": \".exe whoami\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

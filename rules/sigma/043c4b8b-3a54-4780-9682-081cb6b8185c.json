@@ -1,0 +1,47 @@
+{
+  "id": "043c4b8b-3a54-4780-9682-081cb6b8185c",
+  "name": "Suspicious IIS Module Registration",
+  "description": "Detects a suspicious IIS module registration as described in Microsoft threat report on IIS backdoors",
+  "source": {
+    "type": "sigma",
+    "id": "043c4b8b-3a54-4780-9682-081cb6b8185c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_iis_susp_module_registration.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_iis_susp_module_registration.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1505004"
+  ],
+  "author": "Florian Roth (Nextron Systems), Microsoft (idea)",
+  "references": [
+    "https://www.microsoft.com/security/blog/2022/07/26/malicious-iis-extensions-quietly-open-persistent-backdoors-into-servers/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-04",
+  "modified": "2023-01-23",
+  "mitre": {
+    "tactics": [
+      "TA1505"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection_parent: {\"ParentImage|endswith\": \"\\\\w3wp.exe\"}\nselection_cli_1: {\"CommandLine|contains\": \"appcmd.exe add module\"}\nselection_cli_2: {\"CommandLine|contains\": \" system.enterpriseservices.internal.publish\", \"Image|endswith\": \"\\\\powershell.exe\"}\nselection_cli_3: {\"CommandLine|contains|all\": [\"gacutil\", \" /I\"]}",
+    "condition": "selection_parent and 1 of selection_cli_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrative activity"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

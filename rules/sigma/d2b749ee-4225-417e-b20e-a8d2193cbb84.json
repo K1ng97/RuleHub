@@ -1,0 +1,57 @@
+{
+  "id": "d2b749ee-4225-417e-b20e-a8d2193cbb84",
+  "name": "PUA - AdvancedRun Execution",
+  "description": "Detects the execution of AdvancedRun utility",
+  "source": {
+    "type": "sigma",
+    "id": "d2b749ee-4225-417e-b20e-a8d2193cbb84",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_pua_advancedrun.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_pua_advancedrun.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackprivilege-escalation",
+    "attackt1059003",
+    "attackt1134002",
+    "attackt1564003"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://twitter.com/splinter_code/status/1483815103279603714",
+    "https://medium.com/s2wblog/analysis-of-destructive-malware-whispergate-targeting-ukraine-9d5d158f19f3",
+    "https://www.elastic.co/security-labs/operation-bleeding-bear",
+    "https://www.winhelponline.com/blog/run-program-as-system-localsystem-account-windows/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-01-20",
+  "modified": "2023-02-21",
+  "mitre": {
+    "tactics": [
+      "TA1059",
+      "TA1134",
+      "TA1564"
+    ],
+    "techniques": [
+      "T002",
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: [{\"OriginalFileName\": \"AdvancedRun.exe\"}, {\"CommandLine|contains|all\": [\" /EXEFilename \", \" /Run\"]}, {\"CommandLine|contains|all\": [\" /WindowState 0\", \" /RunAs \", \" /CommandLine \"]}]",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

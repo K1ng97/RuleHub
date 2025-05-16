@@ -1,0 +1,45 @@
+{
+  "id": "2dad0cba-c62a-4a4f-949f-5f6ecd619769",
+  "name": "Split A File Into Pieces - Linux",
+  "description": "Detection use of the command \"split\" to split files into parts and possible transfer.",
+  "source": {
+    "type": "sigma",
+    "id": "2dad0cba-c62a-4a4f-949f-5f6ecd619769",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/lnx_auditd_split_file_into_pieces.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/auditd/lnx_auditd_split_file_into_pieces.yml"
+  },
+  "tags": [
+    "attackexfiltration",
+    "attackt1030"
+  ],
+  "author": "Igor Fits, oscd.community",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1030/T1030.md"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-15",
+  "modified": "2022-11-28",
+  "mitre": {
+    "tactics": [
+      "TA1030"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"type\": \"SYSCALL\", \"comm\": \"split\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administrative activity"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "auditd"
+  ]
+}

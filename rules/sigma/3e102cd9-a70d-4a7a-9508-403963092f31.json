@@ -1,0 +1,47 @@
+{
+  "id": "3e102cd9-a70d-4a7a-9508-403963092f31",
+  "name": "Linux Network Service Scanning Tools Execution",
+  "description": "Detects execution of network scanning and reconnaisance tools. These tools can be used for the enumeration of local or remote network services for example.",
+  "source": {
+    "type": "sigma",
+    "id": "3e102cd9-a70d-4a7a-9508-403963092f31",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_susp_network_utilities_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_susp_network_utilities_execution.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1046"
+  ],
+  "author": "Alejandro Ortuno, oscd.community, Georg Lauenstein (sure[secure])",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1046/T1046.md",
+    "https://github.com/projectdiscovery/naabu",
+    "https://github.com/Tib3rius/AutoRecon"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-21",
+  "modified": "2024-09-19",
+  "mitre": {
+    "tactics": [
+      "TA1046"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_netcat: {\"Image|endswith\": [\"/nc\", \"/ncat\", \"/netcat\", \"/socat\"]}\nselection_network_scanning_tools: {\"Image|endswith\": [\"/autorecon\", \"/hping\", \"/hping2\", \"/hping3\", \"/naabu\", \"/nmap\", \"/nping\", \"/telnet\", \"/zenmap\"]}\nfilter_main_netcat_listen_flag: {\"CommandLine|contains\": [\" --listen \", \" -l \"]}",
+    "condition": "(selection_netcat and not filter_main_netcat_listen_flag) or selection_network_scanning_tools",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administration activities"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

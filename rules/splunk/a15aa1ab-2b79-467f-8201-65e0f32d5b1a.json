@@ -1,0 +1,48 @@
+{
+  "id": "a15aa1ab-2b79-467f-8201-65e0f32d5b1a",
+  "name": "Windows RunMRU Command Execution",
+  "description": "The following analytic detects modifications to the Windows RunMRU registry key, which stores a history of commands executed through the Run dialog box (Windows+R). It leverages Endpoint Detection and Response (EDR) telemetry to monitor registry events targeting this key. This activity is significant as malware often uses the Run dialog to execute malicious commands while attempting to appear legitimate. If confirmed malicious, this could indicate an attacker using indirect command execution techniques for defense evasion or persistence. The detection excludes MRUList value changes to focus on actual command entries.",
+  "source": {
+    "type": "splunk",
+    "id": "a15aa1ab-2b79-467f-8201-65e0f32d5b1a",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_runmru_command_execution.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_runmru_command_execution.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "atomic_guid",
+    "cve",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Nasreddine Bencherchali, Michael Haag, Splunk",
+  "references": [
+    "https://medium.com/@ahmed.moh.farou2/fake-captcha-campaign-on-arabic-pirated-movie-sites-delivers-lumma-stealer-4f203f7adabf",
+    "https://medium.com/@shaherzakaria8/downloading-trojan-lumma-infostealer-through-capatcha-1f25255a0e71",
+    "https://www.forensafe.com/blogs/runmrukey.html",
+    "https://github.com/SigmaHQ/sigma/blob/master/rules-threat-hunting/windows/registry/registry_set/registry_set_runmru_command_execution.yml"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path=\"*\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\RunMRU*\" NOT Registry.registry_value_name=\"MRUList\" NOT Registry.registry_value_data=\"unknown\" by Registry.dest Registry.registry_value_data Registry.action Registry.process_guid Registry.process_id Registry.registry_key_name Registry.user Registry.registry_path Registry.registry_hive Registry.registry_value_name Registry.status Registry.vendor_product | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_runmru_command_execution_filter`",
+    "condition": "The detection is based on data that originates from Endpoint Detection and Response (EDR) agents. These agents are designed to provide security-related telemetry from the endpoints where the agent is installed. To implement this search, you must ingest logs that contain the process GUID, process name, and parent process. Additionally, you must ingest complete command-line executions. These logs must be processed using the appropriate Splunk Technology Add-ons that are specific to the EDR product. The logs must also be mapped to the `Registry` node of the `Endpoint` data model. Use the Splunk Common Information Model (CIM) to normalize the field names and speed up the data modeling process.",
+    "fields": []
+  },
+  "falsepositives": [
+    "This detection may generate a few false positives, such as legitimate software updates or legitimate system maintenance activities that modify the RunMRU key. However, the exclusion of MRUList value changes helps reduce the number of false positives by focusing only on actual command entries. Add any specific false positives to the built in filter to reduce findings as needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

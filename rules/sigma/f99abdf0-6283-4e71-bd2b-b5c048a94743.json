@@ -1,0 +1,48 @@
+{
+  "id": "f99abdf0-6283-4e71-bd2b-b5c048a94743",
+  "name": "Potentially Suspicious Office Document Executed From Trusted Location",
+  "description": "Detects the execution of an Office application that points to a document that is located in a trusted location. Attackers often used this to avoid macro security and execute their malicious code.",
+  "source": {
+    "type": "sigma",
+    "id": "f99abdf0-6283-4e71-bd2b-b5c048a94743",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_office_exec_from_trusted_locations.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_office_exec_from_trusted_locations.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1202"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "Internal Research",
+    "https://twitter.com/Max_Mal_/status/1633863678909874176",
+    "https://techcommunity.microsoft.com/t5/microsoft-365-blog/new-security-hardening-policies-for-trusted-documents/ba-p/3023465",
+    "https://twitter.com/_JohnHammond/status/1588155401752788994"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-06-21",
+  "modified": "2023-10-18",
+  "mitre": {
+    "tactics": [
+      "TA1202"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_parent: {\"ParentImage|endswith\": [\"\\\\explorer.exe\", \"\\\\dopus.exe\"]}\nselection_img: [{\"Image|endswith\": [\"\\\\EXCEL.EXE\", \"\\\\POWERPNT.EXE\", \"\\\\WINWORD.exe\"]}, {\"OriginalFileName\": [\"Excel.exe\", \"POWERPNT.EXE\", \"WinWord.exe\"]}]\nselection_trusted_location: {\"CommandLine|contains\": [\"\\\\AppData\\\\Roaming\\\\Microsoft\\\\Templates\", \"\\\\AppData\\\\Roaming\\\\Microsoft\\\\Word\\\\Startup\\\\\", \"\\\\Microsoft Office\\\\root\\\\Templates\\\\\", \"\\\\Microsoft Office\\\\Templates\\\\\"]}\nfilter_main_dotx: {\"CommandLine|endswith\": [\".dotx\", \".xltx\", \".potx\"]}",
+    "condition": "all of selection_* and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

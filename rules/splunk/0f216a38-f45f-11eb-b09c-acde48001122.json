@@ -1,0 +1,43 @@
+{
+  "id": "0f216a38-f45f-11eb-b09c-acde48001122",
+  "name": "Sqlite Module In Temp Folder",
+  "description": "The following analytic detects the creation of sqlite3.dll files in the %temp% folder. It leverages Sysmon EventCode 11 to identify when these files are written to the temporary directory. This activity is significant because it is associated with IcedID malware, which uses the sqlite3 module to parse browser databases and steal sensitive information such as banking details, credit card information, and credentials. If confirmed malicious, this behavior could lead to significant data theft and compromise of user accounts.",
+  "source": {
+    "type": "splunk",
+    "id": "0f216a38-f45f-11eb-b09c-acde48001122",
+    "url": "https://github.com/splunk/security_content/blob/develop/sqlite_module_in_temp_folder.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/sqlite_module_in_temp_folder.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://www.cisecurity.org/insights/white-papers/security-primer-icedid"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`sysmon` EventCode=11 (TargetFilename = \"*\\\\sqlite32.dll\" OR TargetFilename = \"*\\\\sqlite64.dll\") (TargetFilename = \"*\\\\temp\\\\*\") | stats count min(_time) as firstTime max(_time) as lastTime by action dest file_name file_path  process_guid process_id user_id vendor_product | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `sqlite_module_in_temp_folder_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting logs with the process name, parent process, and command-line executions from your endpoints. If you are using Sysmon, you must have at least version 6.0.4 of the Sysmon TA.",
+    "fields": []
+  },
+  "falsepositives": [
+    "unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

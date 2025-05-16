@@ -1,0 +1,54 @@
+{
+  "id": "6b98b92b-4f00-4f62-b4fe-4d1920215771",
+  "name": "Potential DLL Sideloading Of Non-Existent DLLs From System Folders",
+  "description": "Detects DLL sideloading of system DLLs that are not present on the system by default (at least not in system directories).\nUsually this technique is used to achieve UAC bypass or privilege escalation.\n",
+  "source": {
+    "type": "sigma",
+    "id": "6b98b92b-4f00-4f62-b4fe-4d1920215771",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/image_load_side_load_non_existent_dlls.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/image_load/image_load_side_load_non_existent_dlls.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1574001"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems), SBousseaden",
+  "references": [
+    "https://decoded.avast.io/martinchlumecky/png-steganography/",
+    "https://posts.specterops.io/lateral-movement-scm-and-dll-hijacking-primer-d2f61e8ab992",
+    "https://clement.notin.org/blog/2020/09/12/CVE-2020-7315-McAfee-Agent-DLL-injection/",
+    "https://github.com/Wh04m1001/SysmonEoP",
+    "https://www.hexacorn.com/blog/2013/12/08/beyond-good-ol-run-key-part-5/",
+    "http://remoteawesomethoughts.blogspot.com/2019/05/windows-10-task-schedulerservice.html"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-12-09",
+  "modified": "2024-01-10",
+  "mitre": {
+    "tactics": [
+      "TA1574"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ImageLoaded|endswith\": [\":\\\\Windows\\\\System32\\\\TSMSISrv.dll\", \":\\\\Windows\\\\System32\\\\TSVIPSrv.dll\", \":\\\\Windows\\\\System32\\\\wbem\\\\wbemcomn.dll\", \":\\\\Windows\\\\System32\\\\WLBSCTRL.dll\", \":\\\\Windows\\\\System32\\\\wow64log.dll\", \":\\\\Windows\\\\System32\\\\WptsExtensions.dll\"]}\nfilter_main_ms_signed: {\"Signed\": \"true\", \"SignatureStatus\": \"Valid\", \"Signature\": \"Microsoft Windows\"}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "image_load"
+  ]
+}

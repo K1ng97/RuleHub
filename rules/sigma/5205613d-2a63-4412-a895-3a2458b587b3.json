@@ -1,0 +1,45 @@
+{
+  "id": "5205613d-2a63-4412-a895-3a2458b587b3",
+  "name": "Network Connection Initiated By AddinUtil.EXE",
+  "description": "Detects a network connection initiated by the Add-In deployment cache updating utility \"AddInutil.exe\".\nThis could indicate a potential command and control communication as this tool doesn't usually initiate network activity.\n",
+  "source": {
+    "type": "sigma",
+    "id": "5205613d-2a63-4412-a895-3a2458b587b3",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/net_connection_win_addinutil_initiated.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/network_connection/net_connection_win_addinutil_initiated.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218"
+  ],
+  "author": "Michael McKinley (@McKinleyMike), Tony Latteri (@TheLatteri)",
+  "references": [
+    "https://www.blue-prints.blog/content/blog/posts/lolbin/addinutil-lolbas.html"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-09-18",
+  "modified": "2024-07-16",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Initiated\": \"true\", \"Image|endswith\": \"\\\\addinutil.exe\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "network_connection"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "424273ea-7cf8-43a6-b712-375f925e481f",
+  "name": "Scheduled Task Executed From A Suspicious Location",
+  "description": "Detects the execution of Scheduled Tasks where the Program being run is located in a suspicious location or it's an unusale program to be run from a Scheduled Task",
+  "source": {
+    "type": "sigma",
+    "id": "424273ea-7cf8-43a6-b712-375f925e481f",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_taskscheduler_execution_from_susp_locations.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/taskscheduler/win_taskscheduler_execution_from_susp_locations.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1053005"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "Internal Research"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-12-05",
+  "modified": "2023-02-07",
+  "mitre": {
+    "tactics": [
+      "TA1053"
+    ],
+    "techniques": [
+      "T005"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 129, \"Path|contains\": [\"C:\\\\Windows\\\\Temp\\\\\", \"\\\\AppData\\\\Local\\\\Temp\\\\\", \"\\\\Desktop\\\\\", \"\\\\Downloads\\\\\", \"\\\\Users\\\\Public\\\\\", \"C:\\\\Temp\\\\\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "taskscheduler"
+  ]
+}

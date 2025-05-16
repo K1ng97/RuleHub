@@ -1,0 +1,48 @@
+{
+  "id": "53389db6-ba46-48e3-a94c-e0f2cefe1583",
+  "name": "MITRE BZAR Indicators for Persistence",
+  "description": "Windows DCE-RPC functions which indicate a persistence techniques on the remote system. All credit for the Zeek mapping of the suspicious endpoint/operation field goes to MITRE.",
+  "source": {
+    "type": "sigma",
+    "id": "53389db6-ba46-48e3-a94c-e0f2cefe1583",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/zeek_dce_rpc_mitre_bzar_persistence.yml",
+    "file_path": "tmp/repos/sigma/rules/network/zeek/zeek_dce_rpc_mitre_bzar_persistence.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1547004"
+  ],
+  "author": "@neu5ron, SOC Prime",
+  "references": [
+    "https://github.com/mitre-attack/bzar#indicators-for-attck-persistence"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-03-19",
+  "modified": "2021-11-27",
+  "mitre": {
+    "tactics": [
+      "TA1547"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "op1: {\"endpoint\": \"spoolss\", \"operation\": \"RpcAddMonitor\"}\nop2: {\"endpoint\": \"spoolss\", \"operation\": \"RpcAddPrintProcessor\"}\nop3: {\"endpoint\": \"IRemoteWinspool\", \"operation\": \"RpcAsyncAddMonitor\"}\nop4: {\"endpoint\": \"IRemoteWinspool\", \"operation\": \"RpcAsyncAddPrintProcessor\"}\nop5: {\"endpoint\": \"ISecLogon\", \"operation\": \"SeclCreateProcessWithLogonW\"}\nop6: {\"endpoint\": \"ISecLogon\", \"operation\": \"SeclCreateProcessWithLogonExW\"}",
+    "condition": "1 of op*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Windows administrator tasks or troubleshooting",
+    "Windows management scripts or software"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "zeek",
+    "dce_rpc"
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "id": "c026e3dd-7e18-4abb-8f41-929e836efe74",
+  "name": "Detect Excessive Account Lockouts From Endpoint",
+  "description": "The following analytic detects endpoints causing a high number of account lockouts within a short period. It leverages the Windows security event logs ingested into the `Change` datamodel, specifically under the `Account_Management` node, to identify and count lockout events. This activity is significant as it may indicate a brute-force attack or misconfigured system causing repeated authentication failures. If confirmed malicious, this behavior could lead to account lockouts, disrupting user access and potentially indicating an ongoing attack attempting to compromise user credentials.",
+  "source": {
+    "type": "splunk",
+    "id": "c026e3dd-7e18-4abb-8f41-929e836efe74",
+    "url": "https://github.com/splunk/security_content/blob/develop/detect_excessive_account_lockouts_from_endpoint.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/detect_excessive_account_lockouts_from_endpoint.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "David Dorsey, Splunk",
+  "references": [],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.user) as user from datamodel=Change.All_Changes where All_Changes.result=\"*lock*\" by All_Changes.dest All_Changes.result |`drop_dm_object_name(\"All_Changes\")` |`drop_dm_object_name(\"Account_Management\")`| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | search count > 5 | `detect_excessive_account_lockouts_from_endpoint_filter`",
+    "condition": "You must ingest your Windows security event logs in the `Change` datamodel under the nodename is `Account_Management`, for this search to execute successfully. Please consider updating the cron schedule and the count of lockouts you want to monitor, according to your environment.\\n**Splunk>Phantom Playbook Integration** If Splunk>Phantom is also configured in your environment, a Playbook called \\\"Excessive Account Lockouts Enrichment and Response\\\" can be configured to run when any results are found by this detection search. The Playbook executes the Contextual and Investigative searches in this Story, conducts additional information gathering on Windows endpoints, and takes a response action to shut down the affected endpoint. To use this integration, install the Phantom App for Splunk `https://splunkbase.splunk.com/app/3411/`, add the correct hostname to the \\\"Phantom Instance\\\" field in the Adaptive Response Actions when configuring this detection search, and set the corresponding Playbook to active.\\nPlaybook Link:`https://my.phantom.us/4.1/playbook/excessive-account-lockouts-enrichment-and-response/`)",
+    "fields": []
+  },
+  "falsepositives": [
+    "It's possible that a widely used system, such as a kiosk, could cause a large number of account lockouts."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

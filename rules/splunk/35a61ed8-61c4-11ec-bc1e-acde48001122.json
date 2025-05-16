@@ -1,0 +1,46 @@
+{
+  "id": "35a61ed8-61c4-11ec-bc1e-acde48001122",
+  "name": "Suspicious Computer Account Name Change",
+  "description": "The following analytic detects a suspicious computer account name change in Active Directory. It leverages Event ID 4781, which logs account name changes, to identify instances where a computer account name is changed to one that does not end with a `$`. This behavior is significant as it may indicate an attempt to exploit CVE-2021-42278 and CVE-2021-42287, which can lead to domain controller impersonation and privilege escalation. If confirmed malicious, this activity could allow an attacker to gain elevated privileges and potentially control the domain.",
+  "source": {
+    "type": "splunk",
+    "id": "35a61ed8-61c4-11ec-bc1e-acde48001122",
+    "url": "https://github.com/splunk/security_content/blob/develop/suspicious_computer_account_name_change.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/suspicious_computer_account_name_change.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "cve",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Mauricio Velazco, Splunk",
+  "references": [
+    "https://exploit.ph/cve-2021-42287-cve-2021-42278-weaponisation.html",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-42278",
+    "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-42287"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`wineventlog_security` EventCode=4781 OldTargetUserName=\"*$\" NewTargetUserName!=\"*$\" | table _time, Computer, Caller_User_Name, OldTargetUserName, NewTargetUserName | rename Computer as dest | `suspicious_computer_account_name_change_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting Windows event logs from your hosts. In addition, the Splunk Windows TA is needed.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Renaming a computer account name to a name that not end with '$' is highly unsual and may not have any legitimate scenarios."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

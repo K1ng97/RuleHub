@@ -1,0 +1,49 @@
+{
+  "id": "05a2ab7e-ce11-4b63-86db-ab32e763e11d",
+  "name": "MMC Spawning Windows Shell",
+  "description": "Detects a Windows command line executable started from MMC",
+  "source": {
+    "type": "sigma",
+    "id": "05a2ab7e-ce11-4b63-86db-ab32e763e11d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_mmc_susp_child_process.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_mmc_susp_child_process.yml"
+  },
+  "tags": [
+    "attacklateral-movement",
+    "attackt1021003"
+  ],
+  "author": "Karneades, Swisscom CSIRT",
+  "references": [
+    "https://enigma0x3.net/2017/01/05/lateral-movement-using-the-mmc20-application-com-object/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-08-05",
+  "modified": "2022-07-14",
+  "mitre": {
+    "tactics": [
+      "TA1021"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection1: {\"ParentImage|endswith\": \"\\\\mmc.exe\"}\nselection2: [{\"Image|endswith\": [\"\\\\cmd.exe\", \"\\\\powershell.exe\", \"\\\\pwsh.exe\", \"\\\\wscript.exe\", \"\\\\cscript.exe\", \"\\\\sh.exe\", \"\\\\bash.exe\", \"\\\\reg.exe\", \"\\\\regsvr32.exe\"]}, {\"Image|contains\": \"\\\\BITSADMIN\"}]",
+    "condition": "all of selection*",
+    "fields": [
+      "CommandLine",
+      "Image",
+      "ParentCommandLine"
+    ]
+  },
+  "falsepositives": [],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

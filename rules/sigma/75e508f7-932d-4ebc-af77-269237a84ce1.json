@@ -1,0 +1,47 @@
+{
+  "id": "75e508f7-932d-4ebc-af77-269237a84ce1",
+  "name": "DLL Loaded From Suspicious Location Via Cmspt.EXE",
+  "description": "Detects cmstp loading \"dll\" or \"ocx\" files from suspicious locations",
+  "source": {
+    "type": "sigma",
+    "id": "75e508f7-932d-4ebc-af77-269237a84ce1",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/image_load_cmstp_load_dll_from_susp_location.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/image_load/image_load_cmstp_load_dll_from_susp_location.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218003"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://github.com/vadim-hunter/Detection-Ideas-Rules/blob/02bcbfc2bfb8b4da601bb30de0344ae453aa1afe/TTPs/Defense%20Evasion/T1218%20-%20Signed%20Binary%20Proxy%20Execution/T1218.003%20-%20CMSTP/Procedures.yaml"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-30",
+  "modified": "2023-02-17",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"\\\\cmstp.exe\", \"ImageLoaded|contains\": [\"\\\\PerfLogs\\\\\", \"\\\\ProgramData\\\\\", \"\\\\Users\\\\\", \"\\\\Windows\\\\Temp\\\\\", \"C:\\\\Temp\\\\\"], \"ImageLoaded|endswith\": [\".dll\", \".ocx\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "image_load"
+  ]
+}

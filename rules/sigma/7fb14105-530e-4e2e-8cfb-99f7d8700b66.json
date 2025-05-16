@@ -1,0 +1,49 @@
+{
+  "id": "7fb14105-530e-4e2e-8cfb-99f7d8700b66",
+  "name": "Atlassian Confluence CVE-2022-26134",
+  "description": "Detects spawning of suspicious child processes by Atlassian Confluence server which may indicate successful exploitation of CVE-2022-26134",
+  "source": {
+    "type": "sigma",
+    "id": "7fb14105-530e-4e2e-8cfb-99f7d8700b66",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_cve_2022_26134_atlassian_confluence.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_cve_2022_26134_atlassian_confluence.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackinitial-access",
+    "attackt1059",
+    "attackt1190",
+    "cve2022-26134"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://www.volexity.com/blog/2022/06/02/zero-day-exploitation-of-atlassian-confluence/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-06-03",
+  "modified": "2022-06-03",
+  "mitre": {
+    "tactics": [
+      "TA1059",
+      "TA1190"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"ParentImage|startswith\": \"/opt/atlassian/confluence/\", \"ParentImage|endswith\": \"/java\", \"CommandLine|contains\": [\"/bin/sh\", \"bash\", \"dash\", \"ksh\", \"zsh\", \"csh\", \"fish\", \"curl\", \"wget\", \"python\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

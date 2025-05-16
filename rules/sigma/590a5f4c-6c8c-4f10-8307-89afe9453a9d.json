@@ -1,0 +1,50 @@
+{
+  "id": "590a5f4c-6c8c-4f10-8307-89afe9453a9d",
+  "name": "Suspicious Child Process Created as System",
+  "description": "Detection of child processes spawned with SYSTEM privileges by parents with LOCAL SERVICE or NETWORK SERVICE accounts",
+  "source": {
+    "type": "sigma",
+    "id": "590a5f4c-6c8c-4f10-8307-89afe9453a9d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_susp_child_process_as_system_.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_susp_child_process_as_system_.yml"
+  },
+  "tags": [
+    "attackprivilege-escalation",
+    "attackt1134002"
+  ],
+  "author": "Teymur Kheirkhabarov, Roberto Rodriguez (@Cyb3rWard0g), Open Threat Research (OTR)",
+  "references": [
+    "https://speakerdeck.com/heirhabarov/hunting-for-privilege-escalation-in-windows-environment",
+    "https://foxglovesecurity.com/2016/09/26/rotten-potato-privilege-escalation-from-service-accounts-to-system/",
+    "https://github.com/antonioCoco/RogueWinRM",
+    "https://twitter.com/Cyb3rWard0g/status/1453123054243024897"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-10-26",
+  "modified": "2024-12-01",
+  "mitre": {
+    "tactics": [
+      "TA1134"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ParentUser|contains\": [\"AUTHORI\", \"AUTORI\"], \"ParentUser|endswith\": [\"\\\\NETWORK SERVICE\", \"\\\\LOCAL SERVICE\"], \"User|contains\": [\"AUTHORI\", \"AUTORI\"], \"User|endswith\": [\"\\\\SYSTEM\", \"\\\\Syst\\u00e8me\", \"\\\\\\u0421\\u0418\\u0421\\u0422\\u0415\\u041c\\u0410\"], \"IntegrityLevel\": [\"System\", \"S-1-16-16384\"]}\nfilter_rundll32: {\"Image|endswith\": \"\\\\rundll32.exe\", \"CommandLine|contains\": \"DavSetCookie\"}",
+    "condition": "selection and not 1 of filter_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

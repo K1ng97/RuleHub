@@ -1,0 +1,48 @@
+{
+  "id": "6daac7fc-77d1-449a-a71a-e6b4d59a0e54",
+  "name": "User Couldn't Call a Privileged Service 'LsaRegisterLogonProcess'",
+  "description": "The 'LsaRegisterLogonProcess' function verifies that the application making the function call is a logon process by checking that it has the SeTcbPrivilege privilege set. Possible Rubeus tries to get a handle to LSA.",
+  "source": {
+    "type": "sigma",
+    "id": "6daac7fc-77d1-449a-a71a-e6b4d59a0e54",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_user_couldnt_call_priv_service_lsaregisterlogonprocess.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_user_couldnt_call_priv_service_lsaregisterlogonprocess.yml"
+  },
+  "tags": [
+    "attacklateral-movement",
+    "attackprivilege-escalation",
+    "attackt1558003"
+  ],
+  "author": "Roberto Rodriguez (source), Ilyas Ochkov (rule), oscd.community",
+  "references": [
+    "https://posts.specterops.io/hunting-in-active-directory-unconstrained-delegation-forests-trusts-71f2b33688e1"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-10-24",
+  "modified": "2022-12-25",
+  "mitre": {
+    "tactics": [
+      "TA1558"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 4673, \"Service\": \"LsaRegisterLogonProcess()\", \"Keywords\": \"0x8010000000000000\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

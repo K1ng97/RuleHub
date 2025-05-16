@@ -1,0 +1,45 @@
+{
+  "id": "d21374ff-f574-44a7-9998-4a8c8bf33d7d",
+  "name": "WmiPrvSE Spawned A Process",
+  "description": "Detects WmiPrvSE spawning a process",
+  "source": {
+    "type": "sigma",
+    "id": "d21374ff-f574-44a7-9998-4a8c8bf33d7d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_wmiprvse_spawning_process.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_wmiprvse_spawning_process.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1047"
+  ],
+  "author": "Roberto Rodriguez @Cyb3rWard0g",
+  "references": [
+    "https://threathunterplaybook.com/hunts/windows/190815-RemoteServiceInstallation/notebook.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "stable",
+  "created": "2019-08-15",
+  "modified": "2023-03-23",
+  "mitre": {
+    "tactics": [
+      "TA1047"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"ParentImage|endswith\": \"\\\\WmiPrvSe.exe\"}\nfilter_logonid: {\"LogonId\": [\"0x3e7\", \"null\"]}\nfilter_system_user: {\"User|contains\": [\"AUTHORI\", \"AUTORI\"]}\nfilter_wmiprvse: {\"Image|endswith\": \"\\\\WmiPrvSE.exe\"}\nfilter_werfault: {\"Image|endswith\": \"\\\\WerFault.exe\"}\nfilter_null: {\"LogonId\": null}",
+    "condition": "selection and not 1 of filter_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "False positives are expected (e.g. in environments where WinRM is used legitimately)"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

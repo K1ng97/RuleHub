@@ -1,0 +1,43 @@
+{
+  "id": "8309c3a8-4d34-48ae-ad66-631658214653",
+  "name": "Windows Kerberos Local Successful Logon",
+  "description": "The following analytic identifies a local successful authentication event on a Windows endpoint using the Kerberos package. It detects EventCode 4624 with LogonType 3 and source address 127.0.0.1, indicating a login to the built-in local Administrator account. This activity is significant as it may suggest a Kerberos relay attack, a method attackers use to escalate privileges. If confirmed malicious, this could allow an attacker to gain unauthorized access to sensitive systems, execute arbitrary code, or create new accounts in Active Directory, leading to potential system compromise.",
+  "source": {
+    "type": "splunk",
+    "id": "8309c3a8-4d34-48ae-ad66-631658214653",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_kerberos_local_successful_logon.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_kerberos_local_successful_logon.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Michael Haag, Splunk",
+  "references": [
+    "https://github.com/Dec0ne/KrbRelayUp"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`wineventlog_security`  EventCode=4624 LogonType=3 AuthenticationPackageName=Kerberos action=success src=127.0.0.1 | stats count min(_time) as firstTime max(_time) as lastTime by action app authentication_method dest dvc process process_id process_name process_path signature signature_id src src_port status subject user user_group vendor_product | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_kerberos_local_successful_logon_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting Windows Security Event Logs with 4624 EventCode enabled. The Windows TA is also required.",
+    "fields": []
+  },
+  "falsepositives": [
+    "False positives are possible, filtering may be required to restrict to workstations vs domain controllers. Filter as needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

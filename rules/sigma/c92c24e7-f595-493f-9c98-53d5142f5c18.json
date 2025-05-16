@@ -1,0 +1,44 @@
+{
+  "id": "c92c24e7-f595-493f-9c98-53d5142f5c18",
+  "name": "CodeIntegrity - Unsigned Image Loaded",
+  "description": "Detects loaded unsigned image on the system",
+  "source": {
+    "type": "sigma",
+    "id": "c92c24e7-f595-493f-9c98-53d5142f5c18",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_codeintegrity_unsigned_image_loaded.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/code_integrity/win_codeintegrity_unsigned_image_loaded.yml"
+  },
+  "tags": [
+    "attackprivilege-escalation"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-id-explanations",
+    "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-tag-explanations",
+    "Internal Research"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-06-06",
+  "modified": "2023-06-06",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 3037}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "codeintegrity-operational"
+  ]
+}

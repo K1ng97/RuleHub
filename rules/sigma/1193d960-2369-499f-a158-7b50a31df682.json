@@ -1,0 +1,48 @@
+{
+  "id": "1193d960-2369-499f-a158-7b50a31df682",
+  "name": "Potential Suspicious Browser Launch From Document Reader Process",
+  "description": "Detects when a browser process or browser tab is launched from an application that handles document files such as Adobe, Microsoft Office, etc. And connects to a web application over http(s), this could indicate a possible phishing attempt.\n",
+  "source": {
+    "type": "sigma",
+    "id": "1193d960-2369-499f-a158-7b50a31df682",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_susp_browser_launch_from_document_reader_process.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_susp_browser_launch_from_document_reader_process.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1204002"
+  ],
+  "author": "Joseph Kamau",
+  "references": [
+    "https://app.any.run/tasks/69c5abaa-92ad-45ba-8c53-c11e23e05d04/",
+    "https://app.any.run/tasks/64043a79-165f-4052-bcba-e6e49f847ec1/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2024-05-27",
+  "modified": "2024-05-27",
+  "mitre": {
+    "tactics": [
+      "TA1204"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ParentImage|contains\": [\"Acrobat Reader\", \"Microsoft Office\", \"PDF Reader\"], \"Image|endswith\": [\"\\\\brave.exe\", \"\\\\chrome.exe\", \"\\\\firefox.exe\", \"\\\\msedge.exe\", \"\\\\opera.exe\", \"\\\\maxthon.exe\", \"\\\\seamonkey.exe\", \"\\\\vivaldi.exe\", \"\"], \"CommandLine|contains\": \"http\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely in most cases, further investigation should be done in the commandline of the browser process to determine the context of the URL accessed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

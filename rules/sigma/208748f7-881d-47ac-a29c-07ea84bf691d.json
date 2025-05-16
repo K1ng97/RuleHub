@@ -1,0 +1,51 @@
+{
+  "id": "208748f7-881d-47ac-a29c-07ea84bf691d",
+  "name": "Suspicious Outlook Child Process",
+  "description": "Detects a suspicious process spawning from an Outlook process.",
+  "source": {
+    "type": "sigma",
+    "id": "208748f7-881d-47ac-a29c-07ea84bf691d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_office_outlook_susp_child_processes.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_office_outlook_susp_child_processes.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1204002"
+  ],
+  "author": "Michael Haag, Florian Roth (Nextron Systems), Markus Neis, Elastic, FPT.EagleEye Team",
+  "references": [
+    "https://www.hybrid-analysis.com/sample/465aabe132ccb949e75b8ab9c5bda36d80cf2fd503d52b8bad54e295f28bbc21?environmentId=100",
+    "https://mgreen27.github.io/posts/2018/04/02/DownloadCradle.html"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-02-28",
+  "modified": "2023-02-04",
+  "mitre": {
+    "tactics": [
+      "TA1204"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ParentImage|endswith\": \"\\\\OUTLOOK.EXE\", \"Image|endswith\": [\"\\\\AppVLP.exe\", \"\\\\bash.exe\", \"\\\\cmd.exe\", \"\\\\cscript.exe\", \"\\\\forfiles.exe\", \"\\\\hh.exe\", \"\\\\mftrace.exe\", \"\\\\msbuild.exe\", \"\\\\msdt.exe\", \"\\\\mshta.exe\", \"\\\\msiexec.exe\", \"\\\\powershell.exe\", \"\\\\pwsh.exe\", \"\\\\regsvr32.exe\", \"\\\\schtasks.exe\", \"\\\\scrcons.exe\", \"\\\\scriptrunner.exe\", \"\\\\sh.exe\", \"\\\\svchost.exe\", \"\\\\wmic.exe\", \"\\\\wscript.exe\"]}",
+    "condition": "selection",
+    "fields": [
+      "CommandLine",
+      "ParentCommandLine"
+    ]
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

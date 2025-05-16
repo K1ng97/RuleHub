@@ -1,0 +1,135 @@
+name: 规则验证
+
+on:
+  pull_request:
+    paths:
+      - 'rules/**'
+      - 'config/**'
+    branches:
+      - main
+      - develop
+
+jobs:
+  validate:
+    name: 验证规则
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # 获取完整历史以便比较变更
+      
+      - name: 设置Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+      
+      - name: 安装依赖
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: 获取变更的规则文件
+        id: changed_files
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            # 获取PR中变更的文件
+            FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep -E "^rules/.*\.json$" || true)
+          else
+            # 获取最新提交中变更的规则文件
+            FILES=$(git diff --name-only HEAD~1 HEAD | grep -E "^rules/.*\.json$" || true)
+          fi
+          
+          echo "规则文件变更:"
+          echo "$FILES"
+          
+          # 设置输出变量
+          echo "files=$(echo $FILES | tr '\n' ' ')" >> $GITHUB_OUTPUT
+          
+          # 检查是否有规则文件变更
+          if [ -z "$FILES" ]; then
+            echo "no_rule_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "no_rule_changes=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: 规则语法验证
+        if: steps.changed_files.outputs.no_rule_changes == 'false'
+        run: |
+          python -m tools.validation.validator ${{ steps.changed_files.outputs.files }}
+      
+      - name: 检查重复规则
+        if: steps.changed_files.outputs.no_rule_changes == 'false'
+        run: |
+          python -m tools.validation.duplicate_detector ${{ steps.changed_files.outputs.files }}
+      
+      - name: 性能影响分析
+        if: steps.changed_files.outputs.no_rule_changes == 'false'
+        run: |
+          python -m tools.validation.performance_analyzer ${{ steps.changed_files.outputs.files }}
+      
+      - name: MITRE ATT&CK映射验证
+        if: steps.changed_files.outputs.no_rule_changes == 'false'
+        run: |
+          python -m tools.validation.mitre_mapper ${{ steps.changed_files.outputs.files }}
+      
+      - name: 生成验证报告
+        if: steps.changed_files.outputs.no_rule_changes == 'false'
+        run: |
+          cat validation_report.json
+      
+      - name: 添加PR评论
+        if: steps.changed_files.outputs.no_rule_changes == 'false' && github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            
+            try {
+              const reportData = fs.readFileSync('validation_report.json', 'utf8');
+              const report = JSON.parse(reportData);
+              
+              // 构建评论内容
+              let commentBody = `## 规则验证报告\n\n`;
+              
+              // 添加验证结果摘要
+              commentBody += `### 摘要\n`;
+              commentBody += `- 验证的规则数量: ${report.total_rules}\n`;
+              commentBody += `- 成功: ${report.passed_rules}\n`;
+              commentBody += `- 失败: ${report.failed_rules}\n\n`;
+              
+              // 添加具体错误信息
+              if (report.failed_rules > 0) {
+                commentBody += `### 错误详情\n\n`;
+                
+                for (const error of report.errors) {
+                  commentBody += `#### ${error.rule_id}\n`;
+                  commentBody += `- 文件: \`${error.file}\`\n`;
+                  commentBody += `- 错误: ${error.message}\n\n`;
+                }
+              }
+              
+              // 添加性能影响总结
+              if (report.performance_impact) {
+                commentBody += `### 性能影响\n\n`;
+                commentBody += `- 总体影响: ${report.performance_impact.overall_impact}\n`;
+                
+                if (report.performance_impact.high_impact_rules.length > 0) {
+                  commentBody += `- 高影响规则:\n`;
+                  for (const rule of report.performance_impact.high_impact_rules) {
+                    commentBody += `  - \`${rule.id}\`: ${rule.impact_score}\n`;
+                  }
+                }
+              }
+              
+              github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: commentBody
+              });
+            } catch (error) {
+              console.error('Error creating comment:', error);
+            }

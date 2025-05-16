@@ -1,0 +1,48 @@
+{
+  "id": "4ae3e30b-b03f-43aa-87e3-b622f4048eed",
+  "name": "Potential Arbitrary File Download Using Office Application",
+  "description": "Detects potential arbitrary file download using a Microsoft Office application",
+  "source": {
+    "type": "sigma",
+    "id": "4ae3e30b-b03f-43aa-87e3-b622f4048eed",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_office_arbitrary_cli_download.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_office_arbitrary_cli_download.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1202"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems), Beyu Denis, oscd.community",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/OtherMSBinaries/Winword/",
+    "https://lolbas-project.github.io/lolbas/OtherMSBinaries/Powerpnt/",
+    "https://lolbas-project.github.io/lolbas/OtherMSBinaries/Excel/",
+    "https://medium.com/@reegun/unsanitized-file-validation-leads-to-malicious-payload-download-via-office-binaries-202d02db7191"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-05-17",
+  "modified": "2023-06-22",
+  "mitre": {
+    "tactics": [
+      "TA1202"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": [\"\\\\EXCEL.EXE\", \"\\\\POWERPNT.EXE\", \"\\\\WINWORD.exe\"]}, {\"OriginalFileName\": [\"Excel.exe\", \"POWERPNT.EXE\", \"WinWord.exe\"]}]\nselection_http: {\"CommandLine|contains\": [\"http://\", \"https://\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

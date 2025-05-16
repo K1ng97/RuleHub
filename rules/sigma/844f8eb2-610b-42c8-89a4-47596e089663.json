@@ -1,0 +1,48 @@
+{
+  "id": "844f8eb2-610b-42c8-89a4-47596e089663",
+  "name": "Potential ShellDispatch.DLL Sideloading",
+  "description": "Detects potential DLL sideloading of \"ShellDispatch.dll\"",
+  "source": {
+    "type": "sigma",
+    "id": "844f8eb2-610b-42c8-89a4-47596e089663",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/image_load_side_load_shelldispatch.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/image_load/image_load_side_load_shelldispatch.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackprivilege-escalation",
+    "attackt1574001"
+  ],
+  "author": "X__Junior (Nextron Systems)",
+  "references": [
+    "https://www.hexacorn.com/blog/2023/06/07/this-lolbin-doesnt-exist/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-06-20",
+  "modified": "2023-06-20",
+  "mitre": {
+    "tactics": [
+      "TA1574"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ImageLoaded|endswith\": \"\\\\ShellDispatch.dll\"}\nfilter_main_legit_path: [{\"ImageLoaded|contains|all\": [\":\\\\Users\\\\\", \"\\\\AppData\\\\Local\\\\Temp\\\\\"]}, {\"ImageLoaded|contains\": \":\\\\Windows\\\\Temp\\\\\"}]",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Some installers may trigger some false positives"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "image_load"
+  ]
+}

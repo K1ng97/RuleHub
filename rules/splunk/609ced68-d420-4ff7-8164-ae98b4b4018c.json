@@ -1,0 +1,44 @@
+{
+  "id": "609ced68-d420-4ff7-8164-ae98b4b4018c",
+  "name": "ASL AWS IAM Delete Policy",
+  "description": "The following analytic identifies when a policy is deleted in AWS. It leverages Amazon Security Lake logs to detect the DeletePolicy API operation. Monitoring policy deletions is crucial as it can indicate unauthorized attempts to weaken security controls. If confirmed malicious, this activity could allow an attacker to remove critical security policies, potentially leading to privilege escalation or unauthorized access to sensitive resources.",
+  "source": {
+    "type": "splunk",
+    "id": "609ced68-d420-4ff7-8164-ae98b4b4018c",
+    "url": "https://github.com/splunk/security_content/blob/develop/asl_aws_iam_delete_policy.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/asl_aws_iam_delete_policy.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Patrick Bareiss, Splunk",
+  "references": [
+    "https://docs.aws.amazon.com/IAM/latest/APIReference/API_DeletePolicy.html",
+    "https://docs.aws.amazon.com/cli/latest/reference/iam/delete-policy.html"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`amazon_security_lake` api.operation=DeletePolicy | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by actor.user.uid api.operation api.service.name http_request.user_agent src_endpoint.ip actor.user.account.uid cloud.provider cloud.region | rename actor.user.uid as user api.operation as action api.service.name as dest http_request.user_agent as user_agent src_endpoint.ip as src actor.user.account.uid as vendor_account cloud.provider as vendor_product cloud.region as vendor_region | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `asl_aws_iam_delete_policy_filter`",
+    "condition": "The detection is based on Amazon Security Lake events from Amazon Web Services (AWS), which is a centralized data lake that provides security-related data from AWS services. To use this detection, you must ingest CloudTrail logs from Amazon Security Lake into Splunk. To run this search, ensure that you ingest events using the latest version of Splunk Add-on for Amazon Web Services (https://splunkbase.splunk.com/app/1876) or the Federated Analytics App.",
+    "fields": []
+  },
+  "falsepositives": [
+    "This detection will require tuning to provide high fidelity detection capabilties. Tune based on src addresses (corporate offices, VPN terminations) or by groups of users. Not every user with AWS access should have permission to delete policies (least privilege). In addition, this may be saved seperately and tuned for failed or success attempts only."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

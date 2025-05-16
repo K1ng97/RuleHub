@@ -1,0 +1,49 @@
+{
+  "id": "17a1be64-8d88-40bf-b5ff-a4f7a50ebcc8",
+  "name": "Suspicious New Service Creation",
+  "description": "Detects creation of a new service via \"sc\" command or the powershell \"new-service\" cmdlet with suspicious binary paths",
+  "source": {
+    "type": "sigma",
+    "id": "17a1be64-8d88-40bf-b5ff-a4f7a50ebcc8",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_susp_service_creation.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_susp_service_creation.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1543003"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1543.003/T1543.003.md",
+    "https://web.archive.org/web/20180331144337/https://www.fireeye.com/blog/threat-research/2018/03/sanny-malware-delivery-method-updated-in-recently-observed-attacks.html"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-07-14",
+  "modified": "2022-11-18",
+  "mitre": {
+    "tactics": [
+      "TA1543"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection_sc: {\"Image|endswith\": \"\\\\sc.exe\", \"CommandLine|contains|all\": [\"create\", \"binPath=\"]}\nselection_posh: {\"CommandLine|contains|all\": [\"New-Service\", \"-BinaryPathName\"]}\nsusp_binpath: {\"CommandLine|contains\": [\"powershell\", \"mshta\", \"wscript\", \"cscript\", \"svchost\", \"dllhost\", \"cmd \", \"cmd.exe /c\", \"cmd.exe /k\", \"cmd.exe /r\", \"rundll32\", \"C:\\\\Users\\\\Public\", \"\\\\Downloads\\\\\", \"\\\\Desktop\\\\\", \"\\\\Microsoft\\\\Windows\\\\Start Menu\\\\Programs\\\\Startup\\\\\", \"C:\\\\Windows\\\\TEMP\\\\\", \"\\\\AppData\\\\Local\\\\Temp\"]}",
+    "condition": "1 of selection* and susp_binpath",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

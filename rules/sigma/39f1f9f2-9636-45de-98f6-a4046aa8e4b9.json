@@ -1,0 +1,48 @@
+{
+  "id": "39f1f9f2-9636-45de-98f6-a4046aa8e4b9",
+  "name": "Potential Webshell Creation On Static Website",
+  "description": "Detects the creation of files with certain extensions on a static web site. This can be indicative of potential uploads of a web shell.",
+  "source": {
+    "type": "sigma",
+    "id": "39f1f9f2-9636-45de-98f6-a4046aa8e4b9",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_webshell_creation_detect.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_webshell_creation_detect.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1505003"
+  ],
+  "author": "Beyu Denis, oscd.community, Tim Shelton, Thurein Oo",
+  "references": [
+    "PT ESC rule and personal experience",
+    "https://github.com/swisskyrepo/PayloadsAllTheThings/blob/c95a0a1a2855dc0cd7f7327614545fe30482a636/Upload%20Insecure%20Files/README.md"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-10-22",
+  "modified": "2023-10-15",
+  "mitre": {
+    "tactics": [
+      "TA1505"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection_wwwroot_path: {\"TargetFilename|contains\": \"\\\\inetpub\\\\wwwroot\\\\\"}\nselection_wwwroot_ext: {\"TargetFilename|contains\": [\".ashx\", \".asp\", \".ph\", \".soap\"]}\nselection_htdocs_path: {\"TargetFilename|contains\": [\"\\\\www\\\\\", \"\\\\htdocs\\\\\", \"\\\\html\\\\\"]}\nselection_htdocs_ext: {\"TargetFilename|contains\": \".ph\"}\nfilter_main_temp: {\"TargetFilename|contains\": [\"\\\\AppData\\\\Local\\\\Temp\\\\\", \"\\\\Windows\\\\Temp\\\\\"]}\nfilter_main_system: {\"Image\": \"System\"}\nfilter_main_legitimate: {\"TargetFilename|contains\": \"\\\\xampp\"}",
+    "condition": "(all of selection_wwwroot_* or all of selection_htdocs_*) and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administrator or developer creating legitimate executable files in a web application folder"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

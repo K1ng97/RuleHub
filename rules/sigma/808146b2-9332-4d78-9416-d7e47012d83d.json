@@ -1,0 +1,48 @@
+{
+  "id": "808146b2-9332-4d78-9416-d7e47012d83d",
+  "name": "BPFDoor Abnormal Process ID or Lock File Accessed",
+  "description": "detects BPFDoor .lock and .pid files access in temporary file storage facility",
+  "source": {
+    "type": "sigma",
+    "id": "808146b2-9332-4d78-9416-d7e47012d83d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/lnx_auditd_bpfdoor_file_accessed.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/auditd/lnx_auditd_bpfdoor_file_accessed.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1059",
+    "attackt1106"
+  ],
+  "author": "Rafal Piasecki",
+  "references": [
+    "https://www.sandflysecurity.com/blog/bpfdoor-an-evasive-linux-backdoor-technical-analysis/",
+    "https://www.elastic.co/security-labs/a-peek-behind-the-bpfdoor"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-10",
+  "modified": "2022-08-10",
+  "mitre": {
+    "tactics": [
+      "TA1059",
+      "TA1106"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"type\": \"PATH\", \"name\": [\"/var/run/haldrund.pid\", \"/var/run/xinetd.lock\", \"/var/run/kdevrund.pid\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "auditd"
+  ]
+}

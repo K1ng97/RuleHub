@@ -1,0 +1,44 @@
+{
+  "id": "cb5a2333-56cf-4562-8fcb-22ba1bca728d",
+  "name": "Obfuscated IP Download Activity",
+  "description": "Detects use of an encoded/obfuscated version of an IP address (hex, octal...) in an URL combined with a download command",
+  "source": {
+    "type": "sigma",
+    "id": "cb5a2333-56cf-4562-8fcb-22ba1bca728d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_susp_obfuscated_ip_download.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_susp_obfuscated_ip_download.yml"
+  },
+  "tags": [
+    "attackdiscovery"
+  ],
+  "author": "Florian Roth (Nextron Systems), X__Junior (Nextron Systems)",
+  "references": [
+    "https://h.43z.one/ipconverter/",
+    "https://twitter.com/Yasser_Elsnbary/status/1553804135354564608",
+    "https://twitter.com/fr0s7_/status/1712780207105404948"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-03",
+  "modified": "2023-11-06",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_command: {\"CommandLine|contains\": [\"Invoke-WebRequest\", \"iwr \", \"wget \", \"curl \", \"DownloadFile\", \"DownloadString\"]}\nselection_ip_1: {\"CommandLine|contains\": [\" 0x\", \"//0x\", \".0x\", \".00x\"]}\nselection_ip_2: {\"CommandLine|contains|all\": [\"http://%\", \"%2e\"]}\nselection_ip_3: [{\"CommandLine|re\": \"https?://[0-9]{1,3}\\\\.[0-9]{1,3}\\\\.0[0-9]{3,4}\"}, {\"CommandLine|re\": \"https?://[0-9]{1,3}\\\\.0[0-9]{3,7}\"}, {\"CommandLine|re\": \"https?://0[0-9]{3,11}\"}, {\"CommandLine|re\": \"https?://(0[0-9]{1,11}\\\\.){3}0[0-9]{1,11}\"}, {\"CommandLine|re\": \"https?://0[0-9]{1,11}\"}, {\"CommandLine|re\": \" [0-7]{7,13}\"}]\nfilter_main_valid_ip: {\"CommandLine|re\": \"https?://((25[0-5]|(2[0-4]|1\\\\d|[1-9])?\\\\d)(\\\\.|\\\\b)){4}\"}",
+    "condition": "selection_command and 1 of selection_ip_* and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

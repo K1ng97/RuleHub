@@ -1,0 +1,47 @@
+{
+  "id": "1bac86ba-41aa-4f62-9d6b-405eac99b485",
+  "name": "Systemd Service Creation",
+  "description": "Detects a creation of systemd services which could be used by adversaries to execute malicious code.",
+  "source": {
+    "type": "sigma",
+    "id": "1bac86ba-41aa-4f62-9d6b-405eac99b485",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/lnx_auditd_systemd_service_creation.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/auditd/lnx_auditd_systemd_service_creation.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1543002"
+  ],
+  "author": "Pawel Mazur",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1543.002/T1543.002.md"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-02-03",
+  "modified": "2022-02-06",
+  "mitre": {
+    "tactics": [
+      "TA1543"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "path: {\"type\": \"PATH\", \"nametype\": \"CREATE\"}\nname_1: {\"name|startswith\": [\"/usr/lib/systemd/system/\", \"/etc/systemd/system/\"]}\nname_2: {\"name|contains\": \"/.config/systemd/user/\"}",
+    "condition": "path and 1 of name_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Admin work like legit service installs."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "auditd"
+  ]
+}

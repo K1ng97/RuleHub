@@ -1,0 +1,47 @@
+{
+  "id": "69aeb277-f15f-4d2d-b32a-55e883609563",
+  "name": "Windows Event Auditing Disabled",
+  "description": "Detects scenarios where system auditing (i.e.: Windows event log auditing) is disabled.\nThis may be used in a scenario where an entity would want to bypass local logging to evade detection when Windows event logging is enabled and reviewed.\nAlso, it is recommended to turn off \"Local Group Policy Object Processing\" via GPO, which will make sure that Active Directory GPOs take precedence over local/edited computer policies via something such as \"gpedit.msc\".\nPlease note, that disabling \"Local Group Policy Object Processing\" may cause an issue in scenarios of one off specific GPO modifications - however, it is recommended to perform these modifications in Active Directory anyways.\n",
+  "source": {
+    "type": "sigma",
+    "id": "69aeb277-f15f-4d2d-b32a-55e883609563",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_disable_event_auditing.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_disable_event_auditing.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1562002"
+  ],
+  "author": "@neu5ron, Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://docs.google.com/presentation/d/1dkrldTTlN3La-OjWtkWJBb4hVk6vfsSMBFBERs6R8zA/edit"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2017-11-19",
+  "modified": "2023-11-15",
+  "mitre": {
+    "tactics": [
+      "TA1562"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 4719, \"AuditPolicyChanges|contains\": [\"%%8448\", \"%%8450\"]}\nfilter_main_guid: {\"SubcategoryGuid\": [\"{0CCE9210-69AE-11D9-BED3-505054503030}\", \"{0CCE9211-69AE-11D9-BED3-505054503030}\", \"{0CCE9212-69AE-11D9-BED3-505054503030}\", \"{0CCE9215-69AE-11D9-BED3-505054503030}\", \"{0CCE9217-69AE-11D9-BED3-505054503030}\", \"{0CCE921B-69AE-11D9-BED3-505054503030}\", \"{0CCE922B-69AE-11D9-BED3-505054503030}\", \"{0CCE922F-69AE-11D9-BED3-505054503030}\", \"{0CCE9230-69AE-11D9-BED3-505054503030}\", \"{0CCE9235-69AE-11D9-BED3-505054503030}\", \"{0CCE9236-69AE-11D9-BED3-505054503030}\", \"{0CCE9237-69AE-11D9-BED3-505054503030}\", \"{0CCE923F-69AE-11D9-BED3-505054503030}\", \"{0CCE9240-69AE-11D9-BED3-505054503030}\", \"{0CCE9242-69AE-11D9-BED3-505054503030}\"]}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

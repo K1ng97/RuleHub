@@ -1,0 +1,50 @@
+{
+  "id": "54786ddc-5b8a-11ed-9b6a-0242ac120002",
+  "name": "Suspicious Ping/Del Command Combination",
+  "description": "Detects a method often used by ransomware. Which combines the \"ping\" to wait a couple of seconds and then \"del\" to delete the file in question. Its used to hide the file responsible for the initial infection for example",
+  "source": {
+    "type": "sigma",
+    "id": "54786ddc-5b8a-11ed-9b6a-0242ac120002",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_cmd_ping_del_combined_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_cmd_ping_del_combined_execution.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1070004"
+  ],
+  "author": "Ilya Krestinichev",
+  "references": [
+    "https://blog.sygnia.co/kaseya-ransomware-supply-chain-attack",
+    "https://media.kasperskycontenthub.com/wp-content/uploads/sites/43/2022/06/23093553/Common-TTPs-of-the-modern-ransomware_low-res.pdf",
+    "https://www.acronis.com/en-us/blog/posts/lockbit-ransomware/",
+    "https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/blackbyte-exbyte-ransomware"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-11-03",
+  "modified": "2024-03-05",
+  "mitre": {
+    "tactics": [
+      "TA1070"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection_count: {\"CommandLine|contains|windash\": \" -n \"}\nselection_nul: {\"CommandLine|contains\": \"Nul\"}\nselection_del_param: {\"CommandLine|contains|windash\": [\" -f \", \" -q \"]}\nselection_all: {\"CommandLine|contains|all\": [\"ping\", \"del \"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

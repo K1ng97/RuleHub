@@ -1,0 +1,47 @@
+{
+  "id": "0b8baa3f-575c-46ee-8715-d6f28cc7d33c",
+  "name": "NTDS.DIT Created",
+  "description": "Detects creation of a file named \"ntds.dit\" (Active Directory Database)",
+  "source": {
+    "type": "sigma",
+    "id": "0b8baa3f-575c-46ee-8715-d6f28cc7d33c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_ntds_dit_creation.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_ntds_dit_creation.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1003003"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "Internal Research"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-05-05",
+  "modified": "2023-05-05",
+  "mitre": {
+    "tactics": [
+      "TA1003"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"TargetFilename|endswith\": \"ntds.dit\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

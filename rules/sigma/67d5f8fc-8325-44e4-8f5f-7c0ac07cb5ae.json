@@ -1,0 +1,45 @@
+{
+  "id": "67d5f8fc-8325-44e4-8f5f-7c0ac07cb5ae",
+  "name": "Measurable Increase Of Successful Authentications",
+  "description": "Detects when successful sign-ins increased by 10% or greater.",
+  "source": {
+    "type": "sigma",
+    "id": "67d5f8fc-8325-44e4-8f5f-7c0ac07cb5ae",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_ad_auth_sucess_increase.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/signin_logs/azure_ad_auth_sucess_increase.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1078"
+  ],
+  "author": "Mark Morowczynski '@markmorow', MikeDuddington, '@dudders1', Tim Shelton",
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/architecture/security-operations-user-accounts#monitoring-for-successful-unusual-sign-ins"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-11",
+  "modified": "2022-08-18",
+  "mitre": {
+    "tactics": [
+      "TA1078"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Status\": \"Success\", \"Count\": \"<10%\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Increase of users in the environment"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "signinlogs"
+  ]
+}

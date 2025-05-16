@@ -1,0 +1,44 @@
+{
+  "id": "174afcfa-6e40-4ae9-af64-496546389294",
+  "name": "Credential Dumping Attempt Via Svchost",
+  "description": "Detects when a process tries to access the memory of svchost to potentially dump credentials.",
+  "source": {
+    "type": "sigma",
+    "id": "174afcfa-6e40-4ae9-af64-496546389294",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_access_win_svchost_credential_dumping.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_access/proc_access_win_svchost_credential_dumping.yml"
+  },
+  "tags": [
+    "attackt1548"
+  ],
+  "author": "Florent Labouyrie",
+  "references": [
+    "Internal Research"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-04-30",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [
+      "TA1548"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"TargetImage|endswith\": \"\\\\svchost.exe\", \"GrantedAccess\": \"0x143a\"}\nfilter_main_known_processes: {\"SourceImage|endswith\": [\"\\\\services.exe\", \"\\\\msiexec.exe\"]}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_access"
+  ]
+}

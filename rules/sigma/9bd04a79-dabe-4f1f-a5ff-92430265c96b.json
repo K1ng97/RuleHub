@@ -1,0 +1,45 @@
+{
+  "id": "9bd04a79-dabe-4f1f-a5ff-92430265c96b",
+  "name": "Privilege Escalation via Named Pipe Impersonation",
+  "description": "Detects a remote file copy attempt to a hidden network share. This may indicate lateral movement or data staging activity.",
+  "source": {
+    "type": "sigma",
+    "id": "9bd04a79-dabe-4f1f-a5ff-92430265c96b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_susp_priv_escalation_via_named_pipe.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_susp_priv_escalation_via_named_pipe.yml"
+  },
+  "tags": [
+    "attacklateral-movement",
+    "attackt1021"
+  ],
+  "author": "Tim Rauch, Elastic (idea)",
+  "references": [
+    "https://www.elastic.co/guide/en/security/current/privilege-escalation-via-named-pipe-impersonation.html"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-09-27",
+  "modified": "2022-12-30",
+  "mitre": {
+    "tactics": [
+      "TA1021"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_name: [{\"Image|endswith\": [\"\\\\cmd.exe\", \"\\\\powershell.exe\"]}, {\"OriginalFileName\": [\"Cmd.Exe\", \"PowerShell.EXE\"]}]\nselection_args: {\"CommandLine|contains|all\": [\"echo\", \">\", \"\\\\\\\\\\\\\\\\.\\\\\\\\pipe\\\\\\\\\"]}",
+    "condition": "all of selection*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Other programs that cause these patterns (please report)"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

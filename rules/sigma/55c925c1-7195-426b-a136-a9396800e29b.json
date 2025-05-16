@@ -1,0 +1,44 @@
+{
+  "id": "55c925c1-7195-426b-a136-a9396800e29b",
+  "name": "Potential Suspicious Windows Feature Enabled",
+  "description": "Detects usage of the built-in PowerShell cmdlet \"Enable-WindowsOptionalFeature\" used as a Deployment Image Servicing and Management tool.\nSimilar to DISM.exe, this cmdlet is used to enumerate, install, uninstall, configure, and update features and packages in Windows images\n",
+  "source": {
+    "type": "sigma",
+    "id": "55c925c1-7195-426b-a136-a9396800e29b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_enable_susp_windows_optional_feature.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_enable_susp_windows_optional_feature.yml"
+  },
+  "tags": [
+    "attackdefense-evasion"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://learn.microsoft.com/en-us/powershell/module/dism/enable-windowsoptionalfeature?view=windowsserver2022-ps",
+    "https://learn.microsoft.com/en-us/windows/win32/projfs/enabling-windows-projected-file-system",
+    "https://learn.microsoft.com/en-us/windows/wsl/install-on-server"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-09-10",
+  "modified": "2022-12-29",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_cmd: {\"ScriptBlockText|contains|all\": [\"Enable-WindowsOptionalFeature\", \"-Online\", \"-FeatureName\"]}\nselection_feature: {\"ScriptBlockText|contains\": [\"TelnetServer\", \"Internet-Explorer-Optional-amd64\", \"TFTP\", \"SMB1Protocol\", \"Client-ProjFS\", \"Microsoft-Windows-Subsystem-Linux\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate usage of the features listed in the rule."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

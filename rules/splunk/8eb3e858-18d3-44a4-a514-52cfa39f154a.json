@@ -1,0 +1,43 @@
+{
+  "id": "8eb3e858-18d3-44a4-a514-52cfa39f154a",
+  "name": "Linux Auditd Service Restarted",
+  "description": "The following analytic detects the restarting or re-enabling of services on Linux systems using the `systemctl` or `service` commands. It leverages data from Linux Auditd, focusing on process and command-line execution logs. This activity is significant as adversaries may use it to maintain persistence or execute unauthorized actions. If confirmed malicious, this behavior could lead to repeated execution of malicious payloads, unauthorized access, or data destruction. Security analysts should investigate these events to mitigate risks and prevent further compromise.",
+  "source": {
+    "type": "splunk",
+    "id": "8eb3e858-18d3-44a4-a514-52cfa39f154a",
+    "url": "https://github.com/splunk/security_content/blob/develop/linux_auditd_service_restarted.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/linux_auditd_service_restarted.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://attack.mitre.org/techniques/T1543/003/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`linux_auditd`  proctitle IN (\"*systemctl *\", \"*service *\") AND proctitle IN (\"*restart*\", \"*reenable*\", \"*reload*\") | rename host as dest | stats count min(_time) as firstTime max(_time) as lastTime by  proctitle  dest | `security_content_ctime(firstTime)` |`security_content_ctime(lastTime)` | `linux_auditd_service_restarted_filter`",
+    "condition": "To implement this detection, the process begins by ingesting auditd data, that consist SYSCALL, TYPE, EXECVE and PROCTITLE events, which captures command-line executions and process details on Unix/Linux systems. These logs should be ingested and processed using Splunk Add-on for Unix and Linux (https://splunkbase.splunk.com/app/833), which is essential for correctly parsing and categorizing the data. The next step involves normalizing the field names  to match the field names set by the Splunk Common Information Model (CIM) to ensure consistency across different data sources and enhance the efficiency of data modeling. This approach enables effective monitoring and detection of linux endpoints where auditd is deployed",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrator or network operator can use this commandline for automation purposes. Please update the filter macros to remove false positives."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

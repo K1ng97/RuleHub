@@ -1,0 +1,43 @@
+{
+  "id": "ac3311f5-661d-4e99-bd1f-3ec665b05441",
+  "name": "Windows Mail Protocol In Non-Common Process Path",
+  "description": "The following analytic detects a Windows application establishing an SMTP connection from a non-common installation path. It leverages Sysmon EventCode 3 to identify processes not typically associated with email clients (e.g., Thunderbird, Outlook) making SMTP connections. This activity is significant as adversaries, including malware like AgentTesla, use such connections for Command and Control (C2) communication to exfiltrate stolen data. If confirmed malicious, this behavior could lead to unauthorized data exfiltration, including sensitive information like desktop screenshots, browser data, and system details, compromising the affected host.",
+  "source": {
+    "type": "splunk",
+    "id": "ac3311f5-661d-4e99-bd1f-3ec665b05441",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_mail_protocol_in_non_common_process_path.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_mail_protocol_in_non_common_process_path.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://malpedia.caad.fkie.fraunhofer.de/details/win.agent_tesla"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`sysmon` EventCode=3 NOT(Image IN(\"*\\\\program files*\", \"*\\\\thunderbird.exe\",\"*\\\\outlook.exe\")) (DestinationPortName=\"smtp\" OR DestinationPort=25 OR DestinationPort=587) | stats count min(_time) as firstTime max(_time) as lastTime by action app dest dest_ip dest_port direction dvc protocol protocol_version src src_ip src_port transport user vendor_product process_name process_exec process_guid process_id | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_mail_protocol_in_non_common_process_path_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting logs with the process name and sysmon eventcode = 3 connection events from your endpoints. If you are using Sysmon, you must have at least version 6.0.4 of the Sysmon TA.",
+    "fields": []
+  },
+  "falsepositives": [
+    "third party application may use this network protocol as part of its feature. Filter is needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

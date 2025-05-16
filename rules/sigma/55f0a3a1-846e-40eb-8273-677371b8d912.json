@@ -1,0 +1,49 @@
+{
+  "id": "55f0a3a1-846e-40eb-8273-677371b8d912",
+  "name": "Outlook EnableUnsafeClientMailRules Setting Enabled",
+  "description": "Detects an attacker trying to enable the outlook security setting \"EnableUnsafeClientMailRules\" which allows outlook to run applications or execute macros",
+  "source": {
+    "type": "sigma",
+    "id": "55f0a3a1-846e-40eb-8273-677371b8d912",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_office_outlook_enable_unsafe_client_mail_rules.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_office_outlook_enable_unsafe_client_mail_rules.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1059",
+    "attackt1202"
+  ],
+  "author": "Markus Neis, Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://www.fireeye.com/blog/threat-research/2018/12/overruled-containing-a-potentially-destructive-adversary.html",
+    "https://speakerdeck.com/heirhabarov/hunting-for-persistence-via-microsoft-exchange-server-or-outlook?slide=44",
+    "https://support.microsoft.com/en-us/topic/how-to-control-the-rule-actions-to-start-an-application-or-run-a-macro-in-outlook-2016-and-outlook-2013-e4964b72-173c-959d-5d7b-ead562979048"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2018-12-27",
+  "modified": "2023-02-09",
+  "mitre": {
+    "tactics": [
+      "TA1059",
+      "TA1202"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|contains\": \"\\\\Outlook\\\\Security\\\\EnableUnsafeClientMailRules\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

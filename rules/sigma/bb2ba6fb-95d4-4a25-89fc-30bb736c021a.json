@@ -1,0 +1,42 @@
+{
+  "id": "bb2ba6fb-95d4-4a25-89fc-30bb736c021a",
+  "name": "PowerShell Core DLL Loaded Via Office Application",
+  "description": "Detects PowerShell core DLL being loaded by an Office Product",
+  "source": {
+    "type": "sigma",
+    "id": "bb2ba6fb-95d4-4a25-89fc-30bb736c021a",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/image_load_office_powershell_dll_load.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/image_load/image_load_office_powershell_dll_load.yml"
+  },
+  "tags": [
+    "attackdefense-evasion"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "Internal Research"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-06-01",
+  "modified": "2023-06-01",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": [\"\\\\excel.exe\", \"\\\\mspub.exe\", \"\\\\outlook.exe\", \"\\\\onenote.exe\", \"\\\\onenoteim.exe\", \"\\\\powerpnt.exe\", \"\\\\winword.exe\"], \"ImageLoaded|contains\": [\"\\\\System.Management.Automation.Dll\", \"\\\\System.Management.Automation.ni.Dll\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "image_load"
+  ]
+}

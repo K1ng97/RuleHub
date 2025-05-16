@@ -1,0 +1,47 @@
+{
+  "id": "bbf59793-6efb-4fa1-95ca-a7d288e52c88",
+  "name": "Winlogon Notify Key Logon Persistence",
+  "description": "Adversaries may abuse features of Winlogon to execute DLLs and/or executables when a user logs in.\nWinlogon.exe is a Windows component responsible for actions at logon/logoff as well as the secure attention sequence (SAS) triggered by Ctrl-Alt-Delete.\n",
+  "source": {
+    "type": "sigma",
+    "id": "bbf59793-6efb-4fa1-95ca-a7d288e52c88",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_set_winlogon_notify_key.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_set/registry_set_winlogon_notify_key.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1547004"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1547.004/T1547.004.md#atomic-test-3---winlogon-notify-key-logon-persistence---powershell"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-12-30",
+  "modified": "2023-08-17",
+  "mitre": {
+    "tactics": [
+      "TA1547"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"TargetObject|endswith\": \"\\\\SOFTWARE\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\Winlogon\\\\Notify\\\\logon\", \"Details|endswith\": \".dll\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_set"
+  ]
+}

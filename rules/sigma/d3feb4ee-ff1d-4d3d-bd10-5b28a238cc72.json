@@ -1,0 +1,45 @@
+{
+  "id": "d3feb4ee-ff1d-4d3d-bd10-5b28a238cc72",
+  "name": "File and Directory Discovery - Linux",
+  "description": "Detects usage of system utilities such as \"find\", \"tree\", \"findmnt\", etc, to discover files, directories and network shares.\n",
+  "source": {
+    "type": "sigma",
+    "id": "d3feb4ee-ff1d-4d3d-bd10-5b28a238cc72",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_file_and_directory_discovery.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_file_and_directory_discovery.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1083"
+  ],
+  "author": "Daniil Yugoslavskiy, oscd.community, CheraghiMilad",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1083/T1083.md"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-19",
+  "modified": "2024-12-01",
+  "mitre": {
+    "tactics": [
+      "TA1083"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_file_with_asterisk: {\"Image|endswith\": \"/file\", \"CommandLine|re\": \"(.){200,}\"}\nselection_recursive_ls: {\"Image|endswith\": \"/ls\", \"CommandLine|contains\": \"-R\"}\nselection_find_execution: {\"Image|endswith\": \"/find\"}\nselection_tree_execution: {\"Image|endswith\": \"/tree\"}\nselection_findmnt_execution: {\"Image|endswith\": \"/findmnt\"}\nselection_locate_execution: {\"Image|endswith\": \"/mlocate\"}",
+    "condition": "1 of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate activities"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

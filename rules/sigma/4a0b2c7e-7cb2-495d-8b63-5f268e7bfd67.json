@@ -1,0 +1,48 @@
+{
+  "id": "4a0b2c7e-7cb2-495d-8b63-5f268e7bfd67",
+  "name": "Renamed ProcDump Execution",
+  "description": "Detects the execution of a renamed ProcDump executable.\nThis often done by attackers or malware in order to evade defensive mechanisms.\n",
+  "source": {
+    "type": "sigma",
+    "id": "4a0b2c7e-7cb2-495d-8b63-5f268e7bfd67",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_renamed_sysinternals_procdump.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_renamed_sysinternals_procdump.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1036003"
+  ],
+  "author": "Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://learn.microsoft.com/en-us/sysinternals/downloads/procdump"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-11-18",
+  "modified": "2024-06-25",
+  "mitre": {
+    "tactics": [
+      "TA1036"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection_ofn: {\"OriginalFileName\": \"procdump\"}\nselection_cli_dump_flag: {\"CommandLine|contains|windash\": [\" -ma \", \" -mp \"]}\nselection_cli_eula_flag: {\"CommandLine|contains|windash\": \" /accepteula\"}\nfilter_main_known_names: {\"Image|endswith\": [\"\\\\procdump.exe\", \"\\\\procdump64.exe\"]}",
+    "condition": "(selection_ofn or all of selection_cli_*) and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Procdump illegally bundled with legitimate software.",
+    "Administrators who rename binaries (should be investigated)."
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

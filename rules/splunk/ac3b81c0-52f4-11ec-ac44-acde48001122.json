@@ -1,0 +1,43 @@
+{
+  "id": "ac3b81c0-52f4-11ec-ac44-acde48001122",
+  "name": "Unusual Number of Computer Service Tickets Requested",
+  "description": "The following analytic identifies an unusual number of computer service ticket requests from a single source, leveraging Event ID 4769, \"A Kerberos service ticket was requested.\" It uses statistical analysis, including standard deviation and the 3-sigma rule, to detect anomalies in service ticket requests. This activity is significant as it may indicate malicious behavior such as lateral movement, malware staging, or reconnaissance. If confirmed malicious, an attacker could gain unauthorized access to multiple endpoints, facilitating further compromise and potential data exfiltration.",
+  "source": {
+    "type": "splunk",
+    "id": "ac3b81c0-52f4-11ec-ac44-acde48001122",
+    "url": "https://github.com/splunk/security_content/blob/develop/unusual_number_of_computer_service_tickets_requested.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/unusual_number_of_computer_service_tickets_requested.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Mauricio Velazco, Splunk",
+  "references": [
+    "https://attack.mitre.org/techniques/T1078/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "experimental",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`wineventlog_security` EventCode=4769 Service_Name=\"*$\" Account_Name!=\"*$*\" | bucket span=2m _time | stats dc(Service_Name) AS unique_targets values(Service_Name) as host_targets by _time, Client_Address, Account_Name | eventstats avg(unique_targets) as comp_avg , stdev(unique_targets) as comp_std by Client_Address, Account_Name | eval upperBound=(comp_avg+comp_std*3) | eval isOutlier=if(unique_targets >10 and unique_targets >= upperBound, 1, 0) | `unusual_number_of_computer_service_tickets_requested_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting Domain Controller and Kerberos events. The Advanced Security Audit policy setting `Audit Kerberos Authentication Service` within `Account Logon` needs to be enabled.",
+    "fields": []
+  },
+  "falsepositives": [
+    "An single endpoint requesting a large number of computer service tickets is not common behavior. Possible false positive scenarios include but are not limited to vulnerability scanners, administration systeams and missconfigured systems."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

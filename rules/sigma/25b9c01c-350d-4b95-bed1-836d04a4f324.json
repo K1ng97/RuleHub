@@ -1,0 +1,48 @@
+{
+  "id": "25b9c01c-350d-4b95-bed1-836d04a4f324",
+  "name": "Moriya Rootkit - System",
+  "description": "Detects the use of Moriya rootkit as described in the securelist's Operation TunnelSnake report",
+  "source": {
+    "type": "sigma",
+    "id": "25b9c01c-350d-4b95-bed1-836d04a4f324",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_system_moriya_rootkit.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/system/service_control_manager/win_system_moriya_rootkit.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1543003"
+  ],
+  "author": "Bhabesh Raj",
+  "references": [
+    "https://securelist.com/operation-tunnelsnake-and-moriya-rootkit/101831"
+  ],
+  "severity": "critical",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-05-06",
+  "modified": "2022-11-29",
+  "mitre": {
+    "tactics": [
+      "TA1543"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Provider_Name\": \"Service Control Manager\", \"EventID\": 7045, \"ServiceName\": \"ZzNetSvc\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "critical",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "system"
+  ]
+}

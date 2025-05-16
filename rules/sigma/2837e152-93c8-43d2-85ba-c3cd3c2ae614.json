@@ -1,0 +1,47 @@
+{
+  "id": "2837e152-93c8-43d2-85ba-c3cd3c2ae614",
+  "name": "Powershell Local Email Collection",
+  "description": "Adversaries may target user email on local systems to collect sensitive information.\nFiles containing email data can be acquired from a users local system, such as Outlook storage or cache files.\n",
+  "source": {
+    "type": "sigma",
+    "id": "2837e152-93c8-43d2-85ba-c3cd3c2ae614",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_susp_mail_acces.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_susp_mail_acces.yml"
+  },
+  "tags": [
+    "attackcollection",
+    "attackt1114001"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1114.001/T1114.001.md"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-07-21",
+  "modified": "2022-12-25",
+  "mitre": {
+    "tactics": [
+      "TA1114"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ScriptBlockText|contains\": [\"Get-Inbox.ps1\", \"Microsoft.Office.Interop.Outlook\", \"Microsoft.Office.Interop.Outlook.olDefaultFolders\", \"-comobject outlook.application\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

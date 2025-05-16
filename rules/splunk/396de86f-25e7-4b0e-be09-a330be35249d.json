@@ -1,0 +1,43 @@
+{
+  "id": "396de86f-25e7-4b0e-be09-a330be35249d",
+  "name": "Windows MSExchange Management Mailbox Cmdlet Usage",
+  "description": "The following analytic identifies suspicious Cmdlet usage in Exchange Management logs, focusing on commands like New-MailboxExportRequest and New-ManagementRoleAssignment. It leverages EventCode 1 and specific Message patterns to detect potential ProxyShell and ProxyNotShell abuse. This activity is significant as it may indicate unauthorized access or manipulation of mailboxes and roles, which are critical for maintaining email security. If confirmed malicious, attackers could export mailbox data, assign new roles, or search mailboxes, leading to data breaches and privilege escalation.",
+  "source": {
+    "type": "splunk",
+    "id": "396de86f-25e7-4b0e-be09-a330be35249d",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_msexchange_management_mailbox_cmdlet_usage.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_msexchange_management_mailbox_cmdlet_usage.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Michael Haag, Splunk",
+  "references": [
+    "https://gist.github.com/MHaggis/f66f1d608ea046efb9157020cd34c178"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`msexchange_management` EventCode=1 Message IN (\"*New-MailboxExportRequest*\", \"*New-ManagementRoleAssignment*\", \"*New-MailboxSearch*\", \"*Get-Recipient*\", \"*Search-Mailbox*\") | stats count min(_time) as firstTime max(_time) as lastTime by host Message | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | rename host AS dest | `windows_msexchange_management_mailbox_cmdlet_usage_filter`",
+    "condition": "The following analytic requires collecting the Exchange Management logs via a input. An example inputs is here https://gist.github.com/MHaggis/f66f1d608ea046efb9157020cd34c178. We used multiline as the XML format of the logs will require props/transforms. Multiline gives us everything we need in Message for now. Update the macro with your correct sourcetype.",
+    "fields": []
+  },
+  "falsepositives": [
+    "False positives may be present when an Administrator utilizes the cmdlets in the query. Filter or monitor as needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

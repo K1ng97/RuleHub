@@ -1,0 +1,45 @@
+{
+  "id": "5e3cc4d8-3e68-43db-8656-eaaeefdec9cc",
+  "name": "Suspicious Invoke-WebRequest Execution",
+  "description": "Detects a suspicious call to Invoke-WebRequest cmdlet where the and output is located in a suspicious location",
+  "source": {
+    "type": "sigma",
+    "id": "5e3cc4d8-3e68-43db-8656-eaaeefdec9cc",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_powershell_invoke_webrequest_download.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_powershell_invoke_webrequest_download.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1105"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://www.sentinelone.com/blog/living-off-windows-defender-lockbit-ransomware-sideloads-cobalt-strike-through-microsoft-security-tool/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-02",
+  "modified": "2024-02-23",
+  "mitre": {
+    "tactics": [
+      "TA1105"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": [\"\\\\powershell.exe\", \"\\\\pwsh.exe\"]}, {\"OriginalFileName\": [\"PowerShell.EXE\", \"pwsh.dll\"]}]\nselection_commands: {\"CommandLine|contains\": [\"curl \", \"Invoke-WebRequest\", \"iwr \", \"wget \"]}\nselection_flags: {\"CommandLine|contains\": [\" -ur\", \" -o\"]}\nselection_susp_locations: {\"CommandLine|contains\": [\"\\\\AppData\\\\\", \"\\\\Desktop\\\\\", \"\\\\Temp\\\\\", \"\\\\Users\\\\Public\\\\\", \"%AppData%\", \"%Public%\", \"%Temp%\", \"%tmp%\", \":\\\\Windows\\\\\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

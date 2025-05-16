@@ -1,0 +1,45 @@
+{
+  "id": "6f583da0-3a90-4566-a4ed-83c09fe18bbf",
+  "name": "Account Created And Deleted Within A Close Time Frame",
+  "description": "Detects when an account was created and deleted in a short period of time.",
+  "source": {
+    "type": "sigma",
+    "id": "6f583da0-3a90-4566-a4ed-83c09fe18bbf",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_ad_account_created_deleted.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/audit_logs/azure_ad_account_created_deleted.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1078"
+  ],
+  "author": "Mark Morowczynski '@markmorow', MikeDuddington, '@dudders1', Tim Shelton",
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/architecture/security-operations-user-accounts#short-lived-accounts"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-11",
+  "modified": "2022-08-18",
+  "mitre": {
+    "tactics": [
+      "TA1078"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"properties.message\": [\"Add user\", \"Delete user\"], \"Status\": \"Success\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legit administrative action"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "auditlogs"
+  ]
+}

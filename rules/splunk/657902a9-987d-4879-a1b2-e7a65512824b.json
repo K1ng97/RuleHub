@@ -1,0 +1,44 @@
+{
+  "id": "657902a9-987d-4879-a1b2-e7a65512824b",
+  "name": "AWS Disable Bucket Versioning",
+  "description": "The following analytic detects when AWS S3 bucket versioning is suspended by a user. It leverages AWS CloudTrail logs to identify `PutBucketVersioning` events with the `VersioningConfiguration.Status` set to `Suspended`. This activity is significant because disabling versioning can prevent recovery of deleted or modified data, which is a common tactic in ransomware attacks. If confirmed malicious, this action could lead to data loss and hinder recovery efforts, severely impacting data integrity and availability.",
+  "source": {
+    "type": "splunk",
+    "id": "657902a9-987d-4879-a1b2-e7a65512824b",
+    "url": "https://github.com/splunk/security_content/blob/develop/aws_disable_bucket_versioning.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/aws_disable_bucket_versioning.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Bhavin Patel, Splunk",
+  "references": [
+    "https://invictus-ir.medium.com/ransomware-in-the-cloud-7f14805bbe82",
+    "https://bleemb.medium.com/data-exfiltration-with-native-aws-s3-features-c94ae4d13436"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`cloudtrail` eventName= PutBucketVersioning \"requestParameters.VersioningConfiguration.Status\"=Suspended | rename user_name as user, requestParameters.bucketName as bucket_name | stats count min(_time) as firstTime max(_time) as lastTime by signature dest user user_agent src vendor_account vendor_region vendor_product bucket_name | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `aws_disable_bucket_versioning_filter`",
+    "condition": "You must install splunk AWS add on and Splunk App for AWS. This search works with AWS CloudTrail logs.",
+    "fields": []
+  },
+  "falsepositives": [
+    "It is possible that an AWS Administrator has legitimately disabled versioning on certain buckets to avoid costs."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

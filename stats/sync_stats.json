@@ -1,0 +1,73 @@
+{
+  "total_sources": 4,
+  "successful_sources": 3,
+  "failed_sources": 0,
+  "total_rules": 4568,
+  "converted_rules": 4568,
+  "failed_rules": 0,
+  "start_time": 1747373594.966825,
+  "end_time": 1747373621.646484,
+  "duration": 26.679658889770508,
+  "details": {
+    "sigma": {
+      "success": true,
+      "start_time": 1747373594.9670742,
+      "end_time": 1747373608.330816,
+      "duration": 13.363741874694824,
+      "total_rules": 2804,
+      "converted_rules": 2804,
+      "failed_rules": 0,
+      "error": null
+    },
+    "elastic": {
+      "success": true,
+      "start_time": 1747373594.9671528,
+      "end_time": 1747373605.939604,
+      "duration": 10.972451210021973,
+      "total_rules": 0,
+      "converted_rules": 0,
+      "failed_rules": 0,
+      "error": null
+    },
+    "splunk": {
+      "success": true,
+      "start_time": 1747373605.939662,
+      "end_time": 1747373620.290326,
+      "duration": 14.350664138793945,
+      "total_rules": 1764,
+      "converted_rules": 1764,
+      "failed_rules": 0,
+      "error": null
+    }
+  },
+  "indexing": {
+    "total_sources": 5,
+    "total_rules": 4568,
+    "source_stats": {
+      "elastic": {
+        "name": "elastic",
+        "rules_count": 0
+      },
+      "other": {
+        "name": "other",
+        "rules_count": 0
+      },
+      "sigma": {
+        "name": "sigma",
+        "rules_count": 2804
+      },
+      "splunk": {
+        "name": "splunk",
+        "rules_count": 1764
+      },
+      "custom": {
+        "name": "custom",
+        "rules_count": 0
+      }
+    },
+    "start_time": "2025-05-16T13:33:40.290945",
+    "end_time": "2025-05-16T13:33:41.643781",
+    "success": true,
+    "duration": 1.352836
+  }
+}

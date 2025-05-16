@@ -1,0 +1,49 @@
+{
+  "id": "84f52741-8834-4a8c-a413-2eb2269aa6c8",
+  "name": "DllUnregisterServer Function Call Via Msiexec.EXE",
+  "description": "Detects MsiExec loading a DLL and calling its DllUnregisterServer function",
+  "source": {
+    "type": "sigma",
+    "id": "84f52741-8834-4a8c-a413-2eb2269aa6c8",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_msiexec_dll.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_msiexec_dll.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218007"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218.007/T1218.007.md",
+    "https://lolbas-project.github.io/lolbas/Binaries/Msiexec/",
+    "https://twitter.com/_st0pp3r_/status/1583914515996897281"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-04-24",
+  "modified": "2024-03-13",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": [
+      "T007"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\msiexec.exe\"}, {\"OriginalFileName\": \"\\\\msiexec.exe\"}]\nselection_flag: {\"CommandLine|contains|windash\": \" -z \"}\nselection_dll: {\"CommandLine|contains\": \".dll\"}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

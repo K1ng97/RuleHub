@@ -1,0 +1,47 @@
+{
+  "id": "ded2b07a-d12f-4284-9b76-653e37b6c8b0",
+  "name": "Potentially Suspicious Ping/Copy Command Combination",
+  "description": "Detects uncommon and potentially suspicious one-liner command containing both \"ping\" and \"copy\" at the same time, which is usually used by malware.\n",
+  "source": {
+    "type": "sigma",
+    "id": "ded2b07a-d12f-4284-9b76-653e37b6c8b0",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_cmd_ping_copy_combined_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_cmd_ping_copy_combined_execution.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1070004"
+  ],
+  "author": "X__Junior (Nextron Systems)",
+  "references": [
+    "Internal Research"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-07-18",
+  "modified": "2024-03-06",
+  "mitre": {
+    "tactics": [
+      "TA1070"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection_cmd: [{\"Image|endswith\": \"\\\\cmd.exe\"}, {\"OriginalFileName\": \"Cmd.Exe\"}]\nselection_action: {\"CommandLine|contains|all\": [\"ping\", \"copy \"]}\nselection_cli_1: {\"CommandLine|contains|windash\": \" -n \"}\nselection_cli_2: {\"CommandLine|contains|windash\": \" -y \"}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

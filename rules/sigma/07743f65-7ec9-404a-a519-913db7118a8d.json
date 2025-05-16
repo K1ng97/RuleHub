@@ -1,0 +1,48 @@
+{
+  "id": "07743f65-7ec9-404a-a519-913db7118a8d",
+  "name": "COM Hijack via Sdclt",
+  "description": "Detects changes to 'HKCU\\Software\\Classes\\Folder\\shell\\open\\command\\DelegateExecute'",
+  "source": {
+    "type": "sigma",
+    "id": "07743f65-7ec9-404a-a519-913db7118a8d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_set_comhijack_sdclt.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_set/registry_set_comhijack_sdclt.yml"
+  },
+  "tags": [
+    "attackprivilege-escalation",
+    "attackt1546",
+    "attackt1548"
+  ],
+  "author": "Omkar Gudhate",
+  "references": [
+    "http://blog.sevagas.com/?Yet-another-sdclt-UAC-bypass",
+    "https://www.exploit-db.com/exploits/47696"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-09-27",
+  "modified": "2023-09-28",
+  "mitre": {
+    "tactics": [
+      "TA1546",
+      "TA1548"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"TargetObject|contains\": \"\\\\Software\\\\Classes\\\\Folder\\\\shell\\\\open\\\\command\\\\DelegateExecute\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_set"
+  ]
+}

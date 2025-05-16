@@ -1,0 +1,47 @@
+{
+  "id": "327ff235-94eb-4f06-b9de-aaee571324be",
+  "name": "Regsvr32 Execution From Highly Suspicious Location",
+  "description": "Detects execution of regsvr32 where the DLL is located in a highly suspicious locations",
+  "source": {
+    "type": "sigma",
+    "id": "327ff235-94eb-4f06-b9de-aaee571324be",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_regsvr32_susp_exec_path_2.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_regsvr32_susp_exec_path_2.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218010"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "Internal Research"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-05-26",
+  "modified": "2023-05-26",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": [
+      "T010"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\regsvr32.exe\"}, {\"OriginalFileName\": \"REGSVR32.EXE\"}]\nselection_path_1: {\"CommandLine|contains\": [\":\\\\PerfLogs\\\\\", \":\\\\Temp\\\\\", \"\\\\Windows\\\\Registration\\\\CRMLog\", \"\\\\Windows\\\\System32\\\\com\\\\dmp\\\\\", \"\\\\Windows\\\\System32\\\\FxsTmp\\\\\", \"\\\\Windows\\\\System32\\\\Microsoft\\\\Crypto\\\\RSA\\\\MachineKeys\\\\\", \"\\\\Windows\\\\System32\\\\spool\\\\drivers\\\\color\\\\\", \"\\\\Windows\\\\System32\\\\spool\\\\PRINTERS\\\\\", \"\\\\Windows\\\\System32\\\\spool\\\\SERVERS\\\\\", \"\\\\Windows\\\\System32\\\\Tasks_Migrated\\\\\", \"\\\\Windows\\\\System32\\\\Tasks\\\\Microsoft\\\\Windows\\\\SyncCenter\\\\\", \"\\\\Windows\\\\SysWOW64\\\\com\\\\dmp\\\\\", \"\\\\Windows\\\\SysWOW64\\\\FxsTmp\\\\\", \"\\\\Windows\\\\SysWOW64\\\\Tasks\\\\Microsoft\\\\Windows\\\\PLA\\\\System\\\\\", \"\\\\Windows\\\\SysWOW64\\\\Tasks\\\\Microsoft\\\\Windows\\\\SyncCenter\\\\\", \"\\\\Windows\\\\Tasks\\\\\", \"\\\\Windows\\\\Tracing\\\\\"]}\nselection_path_2: {\"CommandLine|contains\": [\" \\\"C:\\\\\", \" C:\\\\\", \" 'C:\\\\\", \"D:\\\\\"]}\nselection_exclude_known_dirs: {\"CommandLine|contains\": [\"C:\\\\Program Files (x86)\\\\\", \"C:\\\\Program Files\\\\\", \"C:\\\\ProgramData\\\\\", \"C:\\\\Users\\\\\", \" C:\\\\Windows\\\\\", \" \\\"C:\\\\Windows\\\\\", \" 'C:\\\\Windows\\\\\"]}\nfilter_main_empty: {\"CommandLine\": \"\"}\nfilter_main_null: {\"CommandLine\": null}",
+    "condition": "selection_img and (selection_path_1 or (selection_path_2 and not selection_exclude_known_dirs)) and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

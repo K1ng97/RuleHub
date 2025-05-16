@@ -1,0 +1,43 @@
+{
+  "id": "c6998a30-fef4-4e89-97ac-3bb0123719b4",
+  "name": "O365 Email Access By Security Administrator",
+  "description": "The following analytic identifies when a user with sufficient access to O365 Security & Compliance portal uses premium investigation features (Threat Explorer) to directly view email. Adversaries may exploit privileged access with this premium feature to enumerate or exfiltrate sensitive data.",
+  "source": {
+    "type": "splunk",
+    "id": "c6998a30-fef4-4e89-97ac-3bb0123719b4",
+    "url": "https://github.com/splunk/security_content/blob/develop/o365_email_access_by_security_administrator.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/o365_email_access_by_security_administrator.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Steven Dick",
+  "references": [
+    "https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/threat-explorer-investigate-delivered-malicious-email?view=o365-worldwide"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`o365_management_activity` Workload=SecurityComplianceCenter Operation=AdminMailAccess | rename InternetMessageId as signature_id, UserId as src_user | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by signature dest user src vendor_account vendor_product src_user signature_id | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `o365_email_access_by_security_administrator_filter`",
+    "condition": "You must install the Splunk Microsoft Office 365 Add-on and ingest Office 365 management activity events. Threat Explorer is a premium feature with o365, logging may not be available with proper license.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitamate access by security administators for incident response measures."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

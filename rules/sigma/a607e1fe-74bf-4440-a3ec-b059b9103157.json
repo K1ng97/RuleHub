@@ -1,0 +1,49 @@
+{
+  "id": "a607e1fe-74bf-4440-a3ec-b059b9103157",
+  "name": "AWS SecurityHub Findings Evasion",
+  "description": "Detects the modification of the findings on SecurityHub.",
+  "source": {
+    "type": "sigma",
+    "id": "a607e1fe-74bf-4440-a3ec-b059b9103157",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/aws_securityhub_finding_evasion.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/aws/cloudtrail/aws_securityhub_finding_evasion.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1562"
+  ],
+  "author": "Sittikorn S",
+  "references": [
+    "https://docs.aws.amazon.com/cli/latest/reference/securityhub/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "stable",
+  "created": "2021-06-28",
+  "modified": "2021-06-28",
+  "mitre": {
+    "tactics": [
+      "TA1562"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"eventSource\": \"securityhub.amazonaws.com\", \"eventName\": [\"BatchUpdateFindings\", \"DeleteInsight\", \"UpdateFindings\", \"UpdateInsight\"]}",
+    "condition": "selection",
+    "fields": [
+      "sourceIPAddress",
+      "userIdentity.arn"
+    ]
+  },
+  "falsepositives": [
+    "System or Network administrator behaviors",
+    "DEV, UAT, SAT environment. You should apply this rule with PROD environment only."
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "aws",
+    "cloudtrail"
+  ]
+}

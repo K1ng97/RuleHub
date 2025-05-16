@@ -1,0 +1,50 @@
+{
+  "id": "e55a5195-4724-480e-a77e-3ebe64bd3759",
+  "name": "Invoke-Obfuscation Via Use MSHTA - PowerShell",
+  "description": "Detects Obfuscated Powershell via use MSHTA in Scripts",
+  "source": {
+    "type": "sigma",
+    "id": "e55a5195-4724-480e-a77e-3ebe64bd3759",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_invoke_obfuscation_via_use_mhsta.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_invoke_obfuscation_via_use_mhsta.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1027",
+    "attackt1059001"
+  ],
+  "author": "Nikita Nazarov, oscd.community",
+  "references": [
+    "https://github.com/SigmaHQ/sigma/issues/1009"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-08",
+  "modified": "2022-11-29",
+  "mitre": {
+    "tactics": [
+      "TA1027",
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_4104: {\"ScriptBlockText|contains|all\": [\"set\", \"&&\", \"mshta\", \"vbscript:createobject\", \".run\", \"(window.close)\"]}",
+    "condition": "selection_4104",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

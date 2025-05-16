@@ -1,0 +1,44 @@
+{
+  "id": "9982bff4-fc5d-49a3-ab9e-2dbbab2a711b",
+  "name": "Cisco Secure Application Alerts",
+  "description": "The following analytic is to leverage alerts from Cisco SecureApp, which identifies and monitors exploit attempts targeting business applications. The primary attack observed involves exploiting vulnerabilities in web applications, including injection attacks (SQL, API abuse), deserialization vulnerabilities, remote code execution attempts, LOG4J and zero day attacks. These attacks are typically aimed at gaining unauthorized access, exfiltrating sensitive data, or disrupting application functionality.\n\nCisco SecureApp provides real-time detection of these threats by analyzing application-layer events and correlating attack behavior with known vulnerability signatures. This detection methodology helps the Security Operations Center (SOC) by:\n\n* Identifying active exploitation attempts in real-time, allowing for quicker incident response.\n* Categorizing attack severity to prioritize remediation efforts based on risk level.\n* Providing visibility into attacker tactics, including source IP, attack techniques, and affected applications.\n* Generating risk-based scoring and contextual alerts to enhance decision-making within SOC workflows.\n* Helping analysts determine whether an attack was merely an attempt or if it successfully exploited a vulnerability.\n\nBy leveraging this information, SOC teams can proactively mitigate security threats, patch vulnerable applications, and enforce security controls to prevent further exploitation.\n",
+  "source": {
+    "type": "splunk",
+    "id": "9982bff4-fc5d-49a3-ab9e-2dbbab2a711b",
+    "url": "https://github.com/splunk/security_content/blob/develop/cisco_secure_application_alerts.yml",
+    "file_path": "tmp/repos/splunk/detections/application/cisco_secure_application_alerts.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "manual_test",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Ryan Long, Bhavin Patel, Splunk",
+  "references": [
+    "https://docs.appdynamics.com/appd/24.x/latest/en/application-security-monitoring/integrate-cisco-secure-application-with-splunk"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`appdynamics_security` blocked=false \n| rename attackEvents{}.attackOutcome AS attackOutcome, \"attackEvents{}.vulnerabilityInfo.*\" AS * \n| fields - tag::eventtype, eventtype, host, id, index, linecount, punct, source, sourcetype, splunk_server, tag, SourceType, app clientAddressType, application, tier, \"attackEvents{}.*\" \n| eval socketOut=mvjoin(socketOut,\" AND \") \n| eval risk_score=kennaScore \n| fillnull risk_score value=\"0\" \n| eval risk_object=app_name \n| stats values(*) as * by attackId \n| eval severity=case(\n    risk_score>=100 OR signature=\"LOG4J\", \"critical\",\n    risk_score>50 AND risk_score<75, \"high\",\n    risk_score=0 AND attackOutcome=\"EXPLOITED\", \"high\",\n    risk_score<=50 AND attackOutcome!=\"OBSERVED\", \"medium\",\n    risk_score=0 AND attackOutcome=\"ATTEMPTED\", \"medium\",\n    risk_score=0, \"low\",\n    risk_score=0 AND attackOutcome=\"OBSERVED\", \"low\"\n    ) \n| eval risk_message=case(\n  (signature=\"API\" OR signature=\"LOG4J\" OR signature=\"SSRF\"), \"An attempt to exploit a \".signature.\" vulnerability was made from a \".src_category.\" IP address \".src_ip.\". The server \".dest_nt_host.\" hosting application \".app_name.\" was accessed, and data may have been exfiltrated to \".socketOut.\".\",\n  (signature=\"MALIP\" OR signature=\"SQL\"), \"A vulnerability is being \".attackOutcome.\" from a \".src_category.\" IP address \".src_ip.\". The server \".dest_nt_host.\" hosting application \".app_name.\" was accessed.\",\n  (signature=\"DESEREAL\"), \"The application \".app_name.\" deserializes untrusted data without sufficiently verifying that the resulting data will be valid. Data which is untrusted cannot be trusted to be well-formed. Malformed data or unexpected data could be used to abuse application logic, deny service, or execute arbitrary code, when deserialized.\"\n  )\n| `cisco_secure_application_alerts_filter`",
+    "condition": "In order to properly run this search, you need to ingest alerts data from AppD SecureApp, specifically ingesting data via HEC. You will also need to ensure that the data is going to sourcetype - `appdynamics_security`. You will need to install the Splunk Add-on for AppDynamics.",
+    "fields": []
+  },
+  "falsepositives": [
+    "No known false positives for this detection. If the alerts are noisy, consider tuning this detection by using the _filter macro in this search, and/or updating the tool this alert originates from."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

@@ -1,0 +1,46 @@
+{
+  "id": "a166f74e-bf44-409d-b9ba-ea4b2dd8b3cd",
+  "name": "Macro Enabled In A Potentially Suspicious Document",
+  "description": "Detects registry changes to Office trust records where the path is located in a potentially suspicious location",
+  "source": {
+    "type": "sigma",
+    "id": "a166f74e-bf44-409d-b9ba-ea4b2dd8b3cd",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_set_office_trust_record_susp_location.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_set/registry_set_office_trust_record_susp_location.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1112"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://twitter.com/inversecos/status/1494174785621819397",
+    "Internal Research"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-06-21",
+  "modified": "2023-08-17",
+  "mitre": {
+    "tactics": [
+      "TA1112"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_value: {\"TargetObject|contains\": \"\\\\Security\\\\Trusted Documents\\\\TrustRecords\"}\nselection_paths: {\"TargetObject|contains\": [\"/AppData/Local/Microsoft/Windows/INetCache/\", \"/AppData/Local/Temp/\", \"/PerfLogs/\", \"C:/Users/Public/\", \"file:///D:/\", \"file:///E:/\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_set"
+  ]
+}

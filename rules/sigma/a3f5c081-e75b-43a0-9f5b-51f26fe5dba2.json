@@ -1,0 +1,43 @@
+{
+  "id": "a3f5c081-e75b-43a0-9f5b-51f26fe5dba2",
+  "name": "Potential Suspicious Winget Package Installation",
+  "description": "Detects potential suspicious winget package installation from a suspicious source.",
+  "source": {
+    "type": "sigma",
+    "id": "a3f5c081-e75b-43a0-9f5b-51f26fe5dba2",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/create_stream_hash_winget_susp_package_source.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/create_stream_hash/create_stream_hash_winget_susp_package_source.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackpersistence"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://github.com/nasbench/Misc-Research/tree/b9596e8109dcdb16ec353f316678927e507a5b8d/LOLBINs/Winget"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-04-18",
+  "modified": "2023-04-18",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Contents|startswith\": \"[ZoneTransfer]  ZoneId=3\", \"Contents|contains\": [\"://1\", \"://2\", \"://3\", \"://4\", \"://5\", \"://6\", \"://7\", \"://8\", \"://9\"], \"TargetFilename|endswith\": \":Zone.Identifier\", \"TargetFilename|contains\": \"\\\\AppData\\\\Local\\\\Temp\\\\WinGet\\\\\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "create_stream_hash"
+  ]
+}

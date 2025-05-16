@@ -1,0 +1,43 @@
+{
+  "id": "16fe46bb-4f64-46aa-817d-ff7bec4a2352",
+  "name": "LiveKD Driver Creation",
+  "description": "Detects the creation of the LiveKD driver, which is used for live kernel debugging",
+  "source": {
+    "type": "sigma",
+    "id": "16fe46bb-4f64-46aa-817d-ff7bec4a2352",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_sysinternals_livekd_driver.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_sysinternals_livekd_driver.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackprivilege-escalation"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "Internal Research"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-05-16",
+  "modified": "2023-05-16",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"TargetFilename\": \"C:\\\\Windows\\\\System32\\\\drivers\\\\LiveKdD.SYS\", \"Image|endswith\": [\"\\\\livekd.exe\", \"\\\\livek64.exe\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate usage of LiveKD for debugging purposes will also trigger this"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

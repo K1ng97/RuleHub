@@ -1,0 +1,46 @@
+{
+  "id": "258b6593-215d-4a26-a141-c8e31c1299a6",
+  "name": "Anomalous User Activity",
+  "description": "Indicates that there are anomalous patterns of behavior like suspicious changes to the directory.",
+  "source": {
+    "type": "sigma",
+    "id": "258b6593-215d-4a26-a141-c8e31c1299a6",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_identity_protection_anomalous_user.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/identity_protection/azure_identity_protection_anomalous_user.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1098"
+  ],
+  "author": "Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'",
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks#anomalous-user-activity",
+    "https://learn.microsoft.com/en-us/entra/architecture/security-operations-user-accounts#unusual-sign-ins"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-09-03",
+  "modified": "2023-09-03",
+  "mitre": {
+    "tactics": [
+      "TA1098"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"riskEventType\": \"anomalousUserActivity\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "We recommend investigating the sessions flagged by this detection in the context of other sign-ins from the user."
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "riskdetection"
+  ]
+}

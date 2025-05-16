@@ -1,0 +1,49 @@
+{
+  "id": "7e9cf7b6-e827-11ed-a05b-0242ac120003",
+  "name": "Suspicious Non-Browser Network Communication With Google API",
+  "description": "Detects a non-browser process interacting with the Google API which could indicate the use of a covert C2 such as Google Sheet C2 (GC2-sheet)\n",
+  "source": {
+    "type": "sigma",
+    "id": "7e9cf7b6-e827-11ed-a05b-0242ac120003",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/net_connection_win_domain_google_api_non_browser_access.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/network_connection/net_connection_win_domain_google_api_non_browser_access.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1102"
+  ],
+  "author": "Gavin Knapp",
+  "references": [
+    "https://github.com/looCiprian/GC2-sheet",
+    "https://youtu.be/n2dFlSaBBKo",
+    "https://services.google.com/fh/files/blogs/gcat_threathorizons_full_apr2023.pdf",
+    "https://www.tanium.com/blog/apt41-deploys-google-gc2-for-attacks-cyber-threat-intelligence-roundup/",
+    "https://www.bleepingcomputer.com/news/security/hackers-abuse-google-command-and-control-red-team-tool-in-attacks/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "experimental",
+  "created": "2023-05-01",
+  "modified": "2025-02-22",
+  "mitre": {
+    "tactics": [
+      "TA1102"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"DestinationHostname|contains\": [\"drive.googleapis.com\", \"oauth2.googleapis.com\", \"sheets.googleapis.com\", \"www.googleapis.com\"]}\nfilter_optional_brave: {\"Image|endswith\": \"\\\\brave.exe\"}\nfilter_optional_chrome: {\"Image|endswith\": [\":\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\", \":\\\\Program Files (x86)\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\"]}\nfilter_optional_google_drive: {\"Image|contains\": \":\\\\Program Files\\\\Google\\\\Drive File Stream\\\\\", \"Image|endswith\": \"\\\\GoogleDriveFS.exe\"}\nfilter_optional_firefox: {\"Image|endswith\": [\":\\\\Program Files\\\\Mozilla Firefox\\\\firefox.exe\", \":\\\\Program Files (x86)\\\\Mozilla Firefox\\\\firefox.exe\"]}\nfilter_optional_ie: {\"Image|endswith\": [\":\\\\Program Files (x86)\\\\Internet Explorer\\\\iexplore.exe\", \":\\\\Program Files\\\\Internet Explorer\\\\iexplore.exe\"]}\nfilter_optional_maxthon: {\"Image|endswith\": \"\\\\maxthon.exe\"}\nfilter_optional_edge_1: [{\"Image|contains\": \":\\\\Program Files (x86)\\\\Microsoft\\\\EdgeWebView\\\\Application\\\\\"}, {\"Image|endswith\": [\":\\\\Program Files (x86)\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\", \":\\\\Program Files\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\", \"\\\\WindowsApps\\\\MicrosoftEdge.exe\"]}]\nfilter_optional_edge_2: {\"Image|contains\": [\":\\\\Program Files (x86)\\\\Microsoft\\\\EdgeCore\\\\\", \":\\\\Program Files\\\\Microsoft\\\\EdgeCore\\\\\"], \"Image|endswith\": [\"\\\\msedge.exe\", \"\\\\msedgewebview2.exe\"]}\nfilter_optional_opera: {\"Image|endswith\": \"\\\\opera.exe\"}\nfilter_optional_safari: {\"Image|endswith\": \"\\\\safari.exe\"}\nfilter_optional_seamonkey: {\"Image|endswith\": \"\\\\seamonkey.exe\"}\nfilter_optional_vivaldi: {\"Image|endswith\": \"\\\\vivaldi.exe\"}\nfilter_optional_whale: {\"Image|endswith\": \"\\\\whale.exe\"}\nfilter_optional_googleupdate: {\"Image|endswith\": \"\\\\GoogleUpdate.exe\"}\nfilter_optional_outlook_exe: {\"Image|endswith\": \"\\\\outlook.exe\"}\nfilter_main_null: {\"Image\": null}\nfilter_main_empty: {\"Image\": \"\"}",
+    "condition": "selection and not 1 of filter_main_* and not 1 of filter_optional_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate applications communicating with the \"googleapis.com\" endpoints that are not already in the exclusion list. This is environmental dependent and requires further testing and tuning."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "network_connection"
+  ]
+}

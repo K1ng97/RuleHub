@@ -1,0 +1,45 @@
+{
+  "id": "ddf82fcb-e9ee-40e3-8712-a50b5bf323fc",
+  "name": "Windows PowerShell ScheduleTask",
+  "description": "The following analytic detects potential malicious activities involving PowerShell's task scheduling cmdlets. It leverages PowerShell Script Block Logging (EventCode 4104) to identify unusual or suspicious use of cmdlets like 'New-ScheduledTask' and 'Set-ScheduledTask'. This activity is significant as attackers often use these cmdlets for persistence and remote execution of malicious code. If confirmed malicious, this could allow attackers to maintain access, deliver additional payloads, or execute ransomware, leading to data theft or other severe impacts. Immediate investigation and mitigation are crucial to prevent further compromise.",
+  "source": {
+    "type": "splunk",
+    "id": "ddf82fcb-e9ee-40e3-8712-a50b5bf323fc",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_powershell_scheduletask.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_powershell_scheduletask.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "atomic_guid",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Michael Haag, Splunk",
+  "references": [
+    "https://learn.microsoft.com/en-us/powershell/module/scheduledtasks/?view=windowsserver2022-ps",
+    "https://thedfirreport.com/2023/06/12/a-truly-graceful-wipe-out/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`powershell` EventCode=4104 ScriptBlockText IN (\"*New-ScheduledTask*\", \"*New-ScheduledTaskAction*\", \"*New-ScheduledTaskSettingsSet*\", \"*New-ScheduledTaskTrigger*\", \"*Register-ClusteredScheduledTask*\", \"*Register-ScheduledTask*\", \"*Set-ClusteredScheduledTask*\", \"*Set-ScheduledTask*\", \"*Start-ScheduledTask*\", \"*Enable-ScheduledTask*\") | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by dest signature signature_id user_id vendor_product EventID Guid Opcode Name Path ProcessID ScriptBlockId ScriptBlockText | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_powershell_scheduletask_filter`",
+    "condition": "To successfully implement this analytic, you will need to enable PowerShell Script Block Logging on some or all endpoints. Additional setup here https://docs.splunk.com/Documentation/UBA/5.0.4.1/GetDataIn/AddPowerShell#Configure_module_logging_for_PowerShell.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Benign administrative tasks can also trigger alerts, necessitating a firm understanding of the typical system behavior and precise tuning of the analytic to reduce false positives."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

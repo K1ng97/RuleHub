@@ -1,0 +1,48 @@
+{
+  "id": "25ffa65d-76d8-4da5-a832-3f2b0136e133",
+  "name": "PUA - Sysinternal Tool Execution - Registry",
+  "description": "Detects the execution of a Sysinternals Tool via the creation of the \"accepteula\" registry key",
+  "source": {
+    "type": "sigma",
+    "id": "25ffa65d-76d8-4da5-a832-3f2b0136e133",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_add_pua_sysinternals_execution_via_eula.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_add/registry_add_pua_sysinternals_execution_via_eula.yml"
+  },
+  "tags": [
+    "attackresource-development",
+    "attackt1588002"
+  ],
+  "author": "Markus Neis",
+  "references": [
+    "https://twitter.com/Moti_B/status/1008587936735035392"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2017-08-28",
+  "modified": "2023-02-07",
+  "mitre": {
+    "tactics": [
+      "TA1588"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventType\": \"CreateKey\", \"TargetObject|endswith\": \"\\\\EulaAccepted\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use of SysInternals tools",
+    "Programs that use the same Registry Key"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_add"
+  ]
+}

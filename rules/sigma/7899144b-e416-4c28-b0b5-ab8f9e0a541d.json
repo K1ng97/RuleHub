@@ -1,0 +1,43 @@
+{
+  "id": "7899144b-e416-4c28-b0b5-ab8f9e0a541d",
+  "name": "Okta Application Modified or Deleted",
+  "description": "Detects when an application is modified or deleted.",
+  "source": {
+    "type": "sigma",
+    "id": "7899144b-e416-4c28-b0b5-ab8f9e0a541d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/okta_application_modified_or_deleted.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/okta/okta_application_modified_or_deleted.yml"
+  },
+  "tags": [
+    "attackimpact"
+  ],
+  "author": "Austin Songer @austinsonger",
+  "references": [
+    "https://developer.okta.com/docs/reference/api/system-log/",
+    "https://developer.okta.com/docs/reference/api/event-types/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-09-12",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"eventtype\": [\"application.lifecycle.update\", \"application.lifecycle.delete\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "okta",
+    "okta"
+  ]
+}

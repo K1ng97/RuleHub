@@ -1,0 +1,48 @@
+{
+  "id": "a29808fd-ef50-49ff-9c7a-59a9b040b404",
+  "name": "HackTool - Pypykatz Credentials Dumping Activity",
+  "description": "Detects the usage of \"pypykatz\" to obtain stored credentials. Adversaries may attempt to extract credential material from the Security Account Manager (SAM) database through Windows registry where the SAM database is stored",
+  "source": {
+    "type": "sigma",
+    "id": "a29808fd-ef50-49ff-9c7a-59a9b040b404",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_hktl_pypykatz.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_hktl_pypykatz.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1003002"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/skelsec/pypykatz",
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1003.002/T1003.002.md#atomic-test-2---registry-parse-with-pypykatz"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-01-05",
+  "modified": "2023-02-05",
+  "mitre": {
+    "tactics": [
+      "TA1003"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": [\"\\\\pypykatz.exe\", \"\\\\python.exe\"], \"CommandLine|contains|all\": [\"live\", \"registry\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

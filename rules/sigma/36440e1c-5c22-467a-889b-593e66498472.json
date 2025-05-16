@@ -1,0 +1,46 @@
+{
+  "id": "36440e1c-5c22-467a-889b-593e66498472",
+  "name": "Malicious IP Address Sign-In Suspicious",
+  "description": "Indicates sign-in from a malicious IP address known to be malicious at time of sign-in.",
+  "source": {
+    "type": "sigma",
+    "id": "36440e1c-5c22-467a-889b-593e66498472",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_identity_protection_malicious_ip_address_suspicious.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/identity_protection/azure_identity_protection_malicious_ip_address_suspicious.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1090"
+  ],
+  "author": "Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'",
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks#malicious-ip-address",
+    "https://learn.microsoft.com/en-us/entra/architecture/security-operations-user-accounts#unusual-sign-ins"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-09-07",
+  "modified": "2023-09-07",
+  "mitre": {
+    "tactics": [
+      "TA1090"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"riskEventType\": \"suspiciousIPAddress\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "We recommend investigating the sessions flagged by this detection in the context of other sign-ins from the user."
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "riskdetection"
+  ]
+}

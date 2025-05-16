@@ -1,0 +1,48 @@
+{
+  "id": "e6e88853-5f20-4c4a-8d26-cd469fd8d31f",
+  "name": "Ntdsutil Abuse",
+  "description": "Detects potential abuse of ntdsutil to dump ntds.dit database",
+  "source": {
+    "type": "sigma",
+    "id": "e6e88853-5f20-4c4a-8d26-cd469fd8d31f",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_esent_ntdsutil_abuse.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/application/esent/win_esent_ntdsutil_abuse.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1003003"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://twitter.com/mgreen27/status/1558223256704122882",
+    "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/jj574207(v=ws.11)"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-14",
+  "modified": "2022-08-14",
+  "mitre": {
+    "tactics": [
+      "TA1003"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Provider_Name\": \"ESENT\", \"EventID\": [216, 325, 326, 327], \"Data|contains\": \"ntds.dit\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate backup operation/creating shadow copies"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "application"
+  ]
+}

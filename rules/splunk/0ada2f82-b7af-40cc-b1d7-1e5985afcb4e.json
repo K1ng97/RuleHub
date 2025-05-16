@@ -1,0 +1,45 @@
+{
+  "id": "0ada2f82-b7af-40cc-b1d7-1e5985afcb4e",
+  "name": "Windows Find Domain Organizational Units with GetDomainOU",
+  "description": "The following analytic detects the execution of the `Get-DomainOU` cmdlet, a part of the PowerView toolkit used for Windows domain enumeration. It leverages PowerShell Script Block Logging (EventCode=4104) to identify this activity. Detecting `Get-DomainOU` usage is significant as adversaries may use it to gather information about organizational units within Active Directory, which can facilitate lateral movement or privilege escalation. If confirmed malicious, this activity could allow attackers to map the domain structure, aiding in further exploitation and persistence within the network.",
+  "source": {
+    "type": "splunk",
+    "id": "0ada2f82-b7af-40cc-b1d7-1e5985afcb4e",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_find_domain_organizational_units_with_getdomainou.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_find_domain_organizational_units_with_getdomainou.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Gowthamaraj Rajendran, Mauricio Velazco, Splunk",
+  "references": [
+    "https://powersploit.readthedocs.io/en/latest/Recon/Get-DomainOU/",
+    "https://attack.mitre.org/techniques/T1087/002/",
+    "https://book.hacktricks.xyz/windows-hardening/basic-powershell-for-pentesters/powerview"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`powershell` EventCode=4104 ScriptBlockText = \"*Get-DomainOU*\" | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by dest signature signature_id user_id vendor_product EventID Guid Opcode Name Path ProcessID ScriptBlockId ScriptBlockText | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_find_domain_organizational_units_with_getdomainou_filter`",
+    "condition": "The following Hunting analytic requires PowerShell operational logs to be imported. Modify the powershell macro as needed to match the sourcetype or add index. This analytic is specific to 4104, or PowerShell Script Block Logging.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrators may leverage PowerSploit tools for legitimate reasons, filter as needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

@@ -1,0 +1,44 @@
+{
+  "id": "605cc93a-70e4-4ee3-9a3d-1a62e8c9b6c2",
+  "name": "O365 Threat Intelligence Suspicious Email Delivered",
+  "description": "The following analytic identifies when a suspicious email is detected within the Microsoft Office 365 ecosystem through the Advanced Threat Protection engine and delivered to an end user. Attackers may execute several attacks through email, any detections from built-in Office 365 capabilities should be monitored and responded to appropriately. Certain premium Office 365 capabilities such as Safe Attachment and Safe Links further enhance these detection and response functions.",
+  "source": {
+    "type": "splunk",
+    "id": "605cc93a-70e4-4ee3-9a3d-1a62e8c9b6c2",
+    "url": "https://github.com/splunk/security_content/blob/develop/o365_threat_intelligence_suspicious_email_delivered.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/o365_threat_intelligence_suspicious_email_delivered.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Steven Dick",
+  "references": [
+    "https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-malware-protection-for-spo-odfb-teams-about?view=o365-worldwide",
+    "https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/office-365-ti?view=o365-worldwide"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`o365_management_activity` Workload=ThreatIntelligence Operation=TIMailData DeliveryAction!=Blocked Directionality=InBound | rename P2Sender as src_user, P1Sender as sender, Recipients{} as user, DeliveryAction as action | stats values(SenderIp) as src, values(Subject) as subject, values(user) as user, values(action) as action, values(SystemOverrides{}.Details) as reason, values(LatestDeliveryLocation) as result, values(ThreatsAndDetectionTech{}) as category, values(AttachmentData{}.FileName) as file_name, values(AttachmentData{}.FileType) as file_type, values(AttachmentData{}.SHA256) as file_hash values(DetectionMethod) as signature, min(_time) as firstTime max(_time) as lastTime, count by src_user,sender,dest,vendor_account,vendor_product | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `o365_threat_intelligence_suspicious_email_delivered_filter`",
+    "condition": "You must install the Splunk Microsoft Office 365 Add-on and ingest Office 365 management activity events. The threat intelligence workload is typically only visible to E3/E5 level customers.",
+    "fields": []
+  },
+  "falsepositives": [
+    "unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

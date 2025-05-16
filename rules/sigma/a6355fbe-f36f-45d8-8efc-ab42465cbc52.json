@@ -1,0 +1,45 @@
+{
+  "id": "a6355fbe-f36f-45d8-8efc-ab42465cbc52",
+  "name": "Delegated Permissions Granted For All Users",
+  "description": "Detects when highly privileged delegated permissions are granted on behalf of all users",
+  "source": {
+    "type": "sigma",
+    "id": "a6355fbe-f36f-45d8-8efc-ab42465cbc52",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_app_delegated_permissions_all_users.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/audit_logs/azure_app_delegated_permissions_all_users.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1528"
+  ],
+  "author": "Bailey Bercik '@baileybercik', Mark Morowczynski '@markmorow'",
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/architecture/security-operations-applications#application-granted-highly-privileged-permissions"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-07-28",
+  "modified": "2022-07-28",
+  "mitre": {
+    "tactics": [
+      "TA1528"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"properties.message\": \"Add delegated permission grant\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "When the permission is legitimately needed for the app"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "auditlogs"
+  ]
+}

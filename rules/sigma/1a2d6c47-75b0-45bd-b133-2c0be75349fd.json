@@ -1,0 +1,45 @@
+{
+  "id": "1a2d6c47-75b0-45bd-b133-2c0be75349fd",
+  "name": "Wdigest CredGuard Registry Modification",
+  "description": "Detects potential malicious modification of the property value of IsCredGuardEnabled from\nHKLM:\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\WDigest to disable Cred Guard on a system.\nThis is usually used with UseLogonCredential to manipulate the caching credentials.\n",
+  "source": {
+    "type": "sigma",
+    "id": "1a2d6c47-75b0-45bd-b133-2c0be75349fd",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_event_disable_wdigest_credential_guard.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_event/registry_event_disable_wdigest_credential_guard.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1112"
+  ],
+  "author": "Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)",
+  "references": [
+    "https://teamhydra.blog/2020/08/25/bypassing-credential-guard/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-08-25",
+  "modified": "2021-11-27",
+  "mitre": {
+    "tactics": [
+      "TA1112"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"TargetObject|endswith\": \"\\\\IsCredGuardEnabled\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_event"
+  ]
+}

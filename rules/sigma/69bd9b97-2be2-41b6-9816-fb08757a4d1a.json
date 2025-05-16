@@ -1,0 +1,48 @@
+{
+  "id": "69bd9b97-2be2-41b6-9816-fb08757a4d1a",
+  "name": "Potentially Suspicious Execution From Parent Process In Public Folder",
+  "description": "Detects a potentially suspicious execution of a parent process located in the \"\\Users\\Public\" folder executing a child process containing references to shell or scripting binaries and commandlines.\n",
+  "source": {
+    "type": "sigma",
+    "id": "69bd9b97-2be2-41b6-9816-fb08757a4d1a",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_susp_execution_from_public_folder_as_parent.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_susp_execution_from_public_folder_as_parent.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1059",
+    "attackt1564"
+  ],
+  "author": "Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://redcanary.com/blog/blackbyte-ransomware/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-02-25",
+  "modified": "2024-07-12",
+  "mitre": {
+    "tactics": [
+      "TA1059",
+      "TA1564"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_parent: {\"ParentImage|contains\": \":\\\\Users\\\\Public\\\\\"}\nselection_child: [{\"Image|endswith\": [\"\\\\bitsadmin.exe\", \"\\\\certutil.exe\", \"\\\\cmd.exe\", \"\\\\cscript.exe\", \"\\\\mshta.exe\", \"\\\\powershell.exe\", \"\\\\pwsh.exe\", \"\\\\regsvr32.exe\", \"\\\\rundll32.exe\", \"\\\\wscript.exe\"]}, {\"CommandLine|contains\": [\"bitsadmin\", \"certutil\", \"cscript\", \"mshta\", \"powershell\", \"regsvr32\", \"rundll32\", \"wscript\"]}]",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

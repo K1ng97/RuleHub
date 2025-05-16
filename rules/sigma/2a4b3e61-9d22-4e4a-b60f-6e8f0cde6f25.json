@@ -1,0 +1,46 @@
+{
+  "id": "2a4b3e61-9d22-4e4a-b60f-6e8f0cde6f25",
+  "name": "Potential Provisioning Registry Key Abuse For Binary Proxy Execution",
+  "description": "Detects potential abuse of the provisioning registry key for indirect command execution through \"Provlaunch.exe\".",
+  "source": {
+    "type": "sigma",
+    "id": "2a4b3e61-9d22-4e4a-b60f-6e8f0cde6f25",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_registry_provlaunch_provisioning_command.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_registry_provlaunch_provisioning_command.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems), Swachchhanda Shrawan Poudel",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/Binaries/Provlaunch/",
+    "https://twitter.com/0gtweet/status/1674399582162153472"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-08-08",
+  "modified": "2023-08-08",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|contains\": \"SOFTWARE\\\\Microsoft\\\\Provisioning\\\\Commands\\\\\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

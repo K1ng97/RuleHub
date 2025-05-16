@@ -1,0 +1,45 @@
+{
+  "id": "70ad0861-d1fe-491c-a45f-fa48148a300d",
+  "name": "File Download via CertOC.EXE",
+  "description": "Detects when a user downloads a file by using CertOC.exe",
+  "source": {
+    "type": "sigma",
+    "id": "70ad0861-d1fe-491c-a45f-fa48148a300d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_certoc_download.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_certoc_download.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1105"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/Binaries/Certoc/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-05-16",
+  "modified": "2023-10-18",
+  "mitre": {
+    "tactics": [
+      "TA1105"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\certoc.exe\"}, {\"OriginalFileName\": \"CertOC.exe\"}]\nselection_cli: {\"CommandLine|contains|all\": [\"-GetCACAPS\", \"http\"]}",
+    "condition": "all of selection*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

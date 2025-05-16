@@ -1,0 +1,43 @@
+{
+  "id": "33be4333-2c6b-44f4-ae28-102cdbde0a31",
+  "name": "Suspicious Msbuild Execution By Uncommon Parent Process",
+  "description": "Detects suspicious execution of 'Msbuild.exe' by a uncommon parent process",
+  "source": {
+    "type": "sigma",
+    "id": "33be4333-2c6b-44f4-ae28-102cdbde0a31",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_msbuild_susp_parent_process.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_msbuild_susp_parent_process.yml"
+  },
+  "tags": [
+    "attackdefense-evasion"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://app.any.run/tasks/abdf586e-df0c-4d39-89a7-06bf24913401/",
+    "https://www.echotrail.io/insights/search/msbuild.exe"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-11-17",
+  "modified": "2022-11-17",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: [{\"Image|endswith\": \"\\\\MSBuild.exe\"}, {\"OriginalFileName\": \"MSBuild.exe\"}]\nfilter_parent: {\"ParentImage|endswith\": [\"\\\\devenv.exe\", \"\\\\cmd.exe\", \"\\\\msbuild.exe\", \"\\\\python.exe\", \"\\\\explorer.exe\", \"\\\\nuget.exe\"]}",
+    "condition": "selection and not filter_parent",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

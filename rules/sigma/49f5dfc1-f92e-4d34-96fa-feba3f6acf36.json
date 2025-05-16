@@ -1,0 +1,47 @@
+{
+  "id": "49f5dfc1-f92e-4d34-96fa-feba3f6acf36",
+  "name": "Disabling Security Tools - Builtin",
+  "description": "Detects disabling security tools",
+  "source": {
+    "type": "sigma",
+    "id": "49f5dfc1-f92e-4d34-96fa-feba3f6acf36",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/lnx_syslog_security_tools_disabling_syslog.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/builtin/syslog/lnx_syslog_security_tools_disabling_syslog.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1562004"
+  ],
+  "author": "Ömer Günal, Alejandro Ortuno, oscd.community",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.004/T1562.004.md"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-06-17",
+  "modified": "2022-11-26",
+  "mitre": {
+    "tactics": [
+      "TA1562"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "keywords: [\"stopping iptables\", \"stopping ip6tables\", \"stopping firewalld\", \"stopping cbdaemon\", \"stopping falcon-sensor\"]",
+    "condition": "keywords",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administration activities"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "syslog"
+  ]
+}

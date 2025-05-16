@@ -1,0 +1,47 @@
+{
+  "id": "65c3ca2c-525f-4ced-968e-246a713d164f",
+  "name": "Visual Studio NodejsTools PressAnyKey Renamed Execution",
+  "description": "Detects renamed execution of \"Microsoft.NodejsTools.PressAnyKey.exe\", which can be abused as a LOLBIN to execute arbitrary binaries",
+  "source": {
+    "type": "sigma",
+    "id": "65c3ca2c-525f-4ced-968e-246a713d164f",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_renamed_pressanykey.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_renamed_pressanykey.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1218"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems), Florian Roth (Nextron Systems)",
+  "references": [
+    "https://twitter.com/mrd0x/status/1463526834918854661",
+    "https://gist.github.com/nasbench/a989ce64cefa8081bd50cf6ad8c491b5"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-04-11",
+  "modified": "2023-04-11",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"OriginalFileName\": \"Microsoft.NodejsTools.PressAnyKey.exe\"}\nfilter_main_legit_name: {\"Image|endswith\": \"\\\\Microsoft.NodejsTools.PressAnyKey.exe\"}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

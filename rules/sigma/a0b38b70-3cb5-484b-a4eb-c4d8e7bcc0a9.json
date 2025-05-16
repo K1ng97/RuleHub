@@ -1,0 +1,48 @@
+{
+  "id": "a0b38b70-3cb5-484b-a4eb-c4d8e7bcc0a9",
+  "name": "Okta New Admin Console Behaviours",
+  "description": "Detects when Okta identifies new activity in the Admin Console.",
+  "source": {
+    "type": "sigma",
+    "id": "a0b38b70-3cb5-484b-a4eb-c4d8e7bcc0a9",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/okta_new_behaviours_admin_console.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/okta/okta_new_behaviours_admin_console.yml"
+  },
+  "tags": [
+    "attackinitial-access",
+    "attackt1078004"
+  ],
+  "author": "kelnage",
+  "references": [
+    "https://developer.okta.com/docs/reference/api/system-log/",
+    "https://sec.okta.com/articles/2023/08/cross-tenant-impersonation-prevention-and-detection"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "experimental",
+  "created": "2023-09-07",
+  "modified": "2024-06-26",
+  "mitre": {
+    "tactics": [
+      "TA1078"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection_event: {\"eventtype\": \"policy.evaluate_sign_on\", \"target.displayname\": \"Okta Admin Console\"}\nselection_positive: [{\"debugcontext.debugdata.behaviors|contains\": \"POSITIVE\"}, {\"debugcontext.debugdata.logonlysecuritydata|contains\": \"POSITIVE\"}]",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "When an admin begins using the Admin Console and one of Okta's heuristics incorrectly identifies the behavior as being unusual."
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "okta",
+    "okta"
+  ]
+}

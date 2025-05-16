@@ -1,0 +1,47 @@
+{
+  "id": "e31033fc-33f0-4020-9a16-faf9b31cbf08",
+  "name": "PUA - Netcat Suspicious Execution",
+  "description": "Detects execution of Netcat. Adversaries may use a non-application layer protocol for communication between host and C2 server or among infected hosts within a network",
+  "source": {
+    "type": "sigma",
+    "id": "e31033fc-33f0-4020-9a16-faf9b31cbf08",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_pua_netcat.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_pua_netcat.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1095"
+  ],
+  "author": "frack113, Florian Roth (Nextron Systems)",
+  "references": [
+    "https://nmap.org/ncat/",
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1095/T1095.md",
+    "https://www.revshells.com/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-07-21",
+  "modified": "2023-02-08",
+  "mitre": {
+    "tactics": [
+      "TA1095"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: {\"Image|endswith\": [\"\\\\nc.exe\", \"\\\\ncat.exe\", \"\\\\netcat.exe\"]}\nselection_cmdline: {\"CommandLine|contains\": [\" -lvp \", \" -lvnp\", \" -l -v -p \", \" -lv -p \", \" -l --proxy-type http \", \" -vnl --exec \", \" -vnl -e \", \" --lua-exec \", \" --sh-exec \"]}",
+    "condition": "1 of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate ncat use"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

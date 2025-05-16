@@ -1,0 +1,47 @@
+{
+  "id": "cdb15e19-c2d0-432a-928e-e49c8c60dcf2",
+  "name": "Potential DLL Sideloading Of MsCorSvc.DLL",
+  "description": "Detects potential DLL sideloading of \"mscorsvc.dll\".",
+  "source": {
+    "type": "sigma",
+    "id": "cdb15e19-c2d0-432a-928e-e49c8c60dcf2",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/image_load_side_load_mscorsvc.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/image_load/image_load_side_load_mscorsvc.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1574001"
+  ],
+  "author": "Wietze Beukema",
+  "references": [
+    "https://hijacklibs.net/entries/microsoft/built-in/mscorsvc.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "experimental",
+  "created": "2024-07-11",
+  "modified": "2024-07-11",
+  "mitre": {
+    "tactics": [
+      "TA1574"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ImageLoaded|endswith\": \"\\\\mscorsvc.dll\"}\nfilter_main_generic: {\"ImageLoaded|startswith\": [\"C:\\\\Windows\\\\Microsoft.NET\\\\Framework\\\\\", \"C:\\\\Windows\\\\Microsoft.NET\\\\Framework64\\\\\", \"C:\\\\Windows\\\\WinSxS\\\\\"]}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate applications loading their own versions of the DLL mentioned in this rule."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "image_load"
+  ]
+}

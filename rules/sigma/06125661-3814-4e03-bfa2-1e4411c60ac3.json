@@ -1,0 +1,45 @@
+{
+  "id": "06125661-3814-4e03-bfa2-1e4411c60ac3",
+  "name": "Backup Files Deleted",
+  "description": "Detects deletion of files with extensions often used for backup files. Adversaries may delete or remove built-in operating system data and turn off services designed to aid in the recovery of a corrupted system to prevent recovery.",
+  "source": {
+    "type": "sigma",
+    "id": "06125661-3814-4e03-bfa2-1e4411c60ac3",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_delete_win_delete_backup_file.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_delete/file_delete_win_delete_backup_file.yml"
+  },
+  "tags": [
+    "attackimpact",
+    "attackt1490"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1490/T1490.md#atomic-test-6---windows---delete-backup-files"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-01-02",
+  "modified": "2023-02-15",
+  "mitre": {
+    "tactics": [
+      "TA1490"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": [\"\\\\cmd.exe\", \"\\\\powershell.exe\", \"\\\\pwsh.exe\", \"\\\\wt.exe\", \"\\\\rundll32.exe\", \"\\\\regsvr32.exe\"], \"TargetFilename|endswith\": [\".VHD\", \".bac\", \".bak\", \".wbcat\", \".bkf\", \".set\", \".win\", \".dsk\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate usage"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_delete"
+  ]
+}

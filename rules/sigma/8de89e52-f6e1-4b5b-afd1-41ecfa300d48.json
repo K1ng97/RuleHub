@@ -1,0 +1,44 @@
+{
+  "id": "8de89e52-f6e1-4b5b-afd1-41ecfa300d48",
+  "name": "Suspicious WindowsTerminal Child Processes",
+  "description": "Detects suspicious children spawned via the Windows Terminal application which could be a sign of persistence via WindowsTerminal (see references section)",
+  "source": {
+    "type": "sigma",
+    "id": "8de89e52-f6e1-4b5b-afd1-41ecfa300d48",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_windows_terminal_susp_children.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_windows_terminal_susp_children.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackpersistence"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://persistence-info.github.io/Data/windowsterminalprofile.html",
+    "https://twitter.com/nas_bench/status/1550836225652686848"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-07-25",
+  "modified": "2023-02-14",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_parent: {\"ParentImage|endswith\": [\"\\\\WindowsTerminal.exe\", \"\\\\wt.exe\"]}\nselection_susp: [{\"Image|endswith\": [\"\\\\rundll32.exe\", \"\\\\regsvr32.exe\", \"\\\\certutil.exe\", \"\\\\cscript.exe\", \"\\\\wscript.exe\", \"\\\\csc.exe\"]}, {\"Image|contains\": [\"C:\\\\Users\\\\Public\\\\\", \"\\\\Downloads\\\\\", \"\\\\Desktop\\\\\", \"\\\\AppData\\\\Local\\\\Temp\\\\\", \"\\\\Windows\\\\TEMP\\\\\"]}, {\"CommandLine|contains\": [\" iex \", \" icm\", \"Invoke-\", \"Import-Module \", \"ipmo \", \"DownloadString(\", \" /c \", \" /k \", \" /r \"]}]\nfilter_builtin_visual_studio_shell: {\"CommandLine|contains|all\": [\"Import-Module\", \"Microsoft.VisualStudio.DevShell.dll\", \"Enter-VsDevShell\"]}\nfilter_open_settings: {\"CommandLine|contains|all\": [\"\\\\AppData\\\\Local\\\\Packages\\\\Microsoft.WindowsTerminal_\", \"\\\\LocalState\\\\settings.json\"]}\nfilter_vsdevcmd: {\"CommandLine|contains|all\": [\"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\\", \"\\\\Common7\\\\Tools\\\\VsDevCmd.bat\"]}",
+    "condition": "all of selection_* and not 1 of filter_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Other legitimate \"Windows Terminal\" profiles"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "id": "146aace8-9bd6-42ba-be7a-0070d8027b76",
+  "name": "Potentially Suspicious Child Process Of WinRAR.EXE",
+  "description": "Detects potentially suspicious child processes of WinRAR.exe.",
+  "source": {
+    "type": "sigma",
+    "id": "146aace8-9bd6-42ba-be7a-0070d8027b76",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_winrar_susp_child_process.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_winrar_susp_child_process.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1203"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://www.group-ib.com/blog/cve-2023-38831-winrar-zero-day/",
+    "https://github.com/knight0x07/WinRAR-Code-Execution-Vulnerability-CVE-2023-38831/blob/26ab6c40b6d2c09bb4fc60feaa4a3a90cfd20c23/Part-1-Overview.md"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-08-31",
+  "modified": "2023-08-31",
+  "mitre": {
+    "tactics": [
+      "TA1203"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_parent: {\"ParentImage|endswith\": \"\\\\WinRAR.exe\"}\nselection_binaries: [{\"Image|endswith\": [\"\\\\cmd.exe\", \"\\\\cscript.exe\", \"\\\\mshta.exe\", \"\\\\powershell.exe\", \"\\\\pwsh.exe\", \"\\\\regsvr32.exe\", \"\\\\rundll32.exe\", \"\\\\wscript.exe\"]}, {\"OriginalFileName\": [\"Cmd.Exe\", \"cscript.exe\", \"mshta.exe\", \"PowerShell.EXE\", \"pwsh.dll\", \"regsvr32.exe\", \"RUNDLL32.EXE\", \"wscript.exe\"]}]",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

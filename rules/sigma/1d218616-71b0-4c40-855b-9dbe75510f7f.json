@@ -1,0 +1,49 @@
+{
+  "id": "1d218616-71b0-4c40-855b-9dbe75510f7f",
+  "name": "Potential NetWire RAT Activity - Registry",
+  "description": "Detects registry keys related to NetWire RAT",
+  "source": {
+    "type": "sigma",
+    "id": "1d218616-71b0-4c40-855b-9dbe75510f7f",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_add_malware_netwire.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_add/registry_add_malware_netwire.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1112"
+  ],
+  "author": "Christopher Peacock",
+  "references": [
+    "https://www.fortinet.com/blog/threat-research/new-netwire-rat-variant-spread-by-phishing",
+    "https://resources.infosecinstitute.com/topic/netwire-malware-what-it-is-how-it-works-and-how-to-prevent-it-malware-spotlight/",
+    "https://unit42.paloaltonetworks.com/guloader-installing-netwire-rat/",
+    "https://blogs.blackberry.com/en/2021/09/threat-thursday-netwire-rat-is-coming-down-the-line",
+    "https://app.any.run/tasks/41ecdbde-4997-4301-a350-0270448b4c8f/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-10-07",
+  "modified": "2023-02-07",
+  "mitre": {
+    "tactics": [
+      "TA1112"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"EventType\": \"CreateKey\", \"TargetObject|contains\": \"\\\\software\\\\NetWire\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_add"
+  ]
+}

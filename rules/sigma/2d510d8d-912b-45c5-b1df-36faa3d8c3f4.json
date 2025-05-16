@@ -1,0 +1,42 @@
+{
+  "id": "2d510d8d-912b-45c5-b1df-36faa3d8c3f4",
+  "name": "NetSupport Manager Service Install",
+  "description": "Detects NetSupport Manager service installation on the target system.",
+  "source": {
+    "type": "sigma",
+    "id": "2d510d8d-912b-45c5-b1df-36faa3d8c3f4",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_system_service_install_netsupport_manager.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/system/service_control_manager/win_system_service_install_netsupport_manager.yml"
+  },
+  "tags": [
+    "attackpersistence"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "http://resources.netsupportsoftware.com/resources/manualpdfs/nsm_manual_uk.pdf"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-10-31",
+  "modified": "2022-10-31",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_root: {\"Provider_Name\": \"Service Control Manager\", \"EventID\": 7045}\nselection_service: [{\"ImagePath|contains\": \"\\\\NetSupport Manager\\\\client32.exe\"}, {\"ServiceName\": \"Client32\"}]",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use of the tool"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "system"
+  ]
+}

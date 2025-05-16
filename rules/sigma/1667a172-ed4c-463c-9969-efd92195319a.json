@@ -1,0 +1,45 @@
+{
+  "id": "1667a172-ed4c-463c-9969-efd92195319a",
+  "name": "Okta Policy Modified or Deleted",
+  "description": "Detects when an Okta policy is modified or deleted.",
+  "source": {
+    "type": "sigma",
+    "id": "1667a172-ed4c-463c-9969-efd92195319a",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/okta_policy_modified_or_deleted.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/okta/okta_policy_modified_or_deleted.yml"
+  },
+  "tags": [
+    "attackimpact"
+  ],
+  "author": "Austin Songer @austinsonger",
+  "references": [
+    "https://developer.okta.com/docs/reference/api/system-log/",
+    "https://developer.okta.com/docs/reference/api/event-types/"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-09-12",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"eventtype\": [\"policy.lifecycle.update\", \"policy.lifecycle.delete\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Okta Policies being modified or deleted may be performed by a system administrator.",
+    "Verify whether the user identity, user agent, and/or hostname should be making changes in your environment.",
+    "Okta Policies modified or deleted from unfamiliar users should be investigated. If known behavior is causing false positives, it can be exempted from the rule."
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "okta",
+    "okta"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "91109523-17f0-4248-a800-f81d9e7c081d",
+  "name": "PowerShell WMI Win32_Product Install MSI",
+  "description": "Detects the execution of an MSI file using PowerShell and the WMI Win32_Product class",
+  "source": {
+    "type": "sigma",
+    "id": "91109523-17f0-4248-a800-f81d9e7c081d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_win32_product_install_msi.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_win32_product_install_msi.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218007"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218.007/T1218.007.md"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-04-24",
+  "modified": "2022-04-24",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": [
+      "T007"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ScriptBlockText|contains|all\": [\"Invoke-CimMethod \", \"-ClassName \", \"Win32_Product \", \"-MethodName \", \".msi\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

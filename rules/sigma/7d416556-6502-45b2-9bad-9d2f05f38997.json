@@ -1,0 +1,45 @@
+{
+  "id": "7d416556-6502-45b2-9bad-9d2f05f38997",
+  "name": "Powershell Sensitive File Discovery",
+  "description": "Detect adversaries enumerate sensitive files",
+  "source": {
+    "type": "sigma",
+    "id": "7d416556-6502-45b2-9bad-9d2f05f38997",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_sensitive_file_discovery.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_sensitive_file_discovery.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1083"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://twitter.com/malmoeb/status/1570814999370801158"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-09-16",
+  "modified": "2022-09-16",
+  "mitre": {
+    "tactics": [
+      "TA1083"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_action: {\"ScriptBlockText|contains\": [\"ls\", \"get-childitem\", \"gci\"]}\nselection_recurse: {\"ScriptBlockText|contains\": \"-recurse\"}\nselection_file: {\"ScriptBlockText|contains\": [\".pass\", \".kdbx\", \".kdb\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

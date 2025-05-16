@@ -1,0 +1,48 @@
+{
+  "id": "340ee172-4b67-4fb4-832f-f961bdc1f3aa",
+  "name": "Password Reset By User Account",
+  "description": "Detect when a user has reset their password in Azure AD",
+  "source": {
+    "type": "sigma",
+    "id": "340ee172-4b67-4fb4-832f-f961bdc1f3aa",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_user_password_change.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/audit_logs/azure_user_password_change.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackpersistence",
+    "attackt1078004"
+  ],
+  "author": "YochanaHenderson, '@Yochana-H'",
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/architecture/security-operations-privileged-accounts"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-03",
+  "modified": "2022-08-03",
+  "mitre": {
+    "tactics": [
+      "TA1078"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Category\": \"UserManagement\", \"Status\": \"Success\", \"Initiatedby\": \"UPN\"}\nfilter: {\"Target|contains\": \"UPN\", \"ActivityType|contains\": \"Password reset\"}",
+    "condition": "selection and filter",
+    "fields": []
+  },
+  "falsepositives": [
+    "If this was approved by System Administrator or confirmed user action."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "auditlogs"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "id": "5f60740a-f57b-4e76-82a1-15b6ff2cb134",
+  "name": "Registry Modification Via Regini.EXE",
+  "description": "Detects the execution of regini.exe which can be used to modify registry keys, the changes are imported from one or more text files.",
+  "source": {
+    "type": "sigma",
+    "id": "5f60740a-f57b-4e76-82a1-15b6ff2cb134",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_regini_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_regini_execution.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1112"
+  ],
+  "author": "Eli Salem, Sander Wiebing, oscd.community",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/Binaries/Regini/",
+    "https://gist.github.com/api0cradle/cdd2d0d0ec9abb686f0e89306e277b8f",
+    "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/regini"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-08",
+  "modified": "2023-02-08",
+  "mitre": {
+    "tactics": [
+      "TA1112"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: [{\"Image|endswith\": \"\\\\regini.exe\"}, {\"OriginalFileName\": \"REGINI.EXE\"}]\nfilter: {\"CommandLine|re\": \":[^ \\\\\\\\]\"}",
+    "condition": "selection and not filter",
+    "fields": [
+      "ParentImage",
+      "CommandLine"
+    ]
+  },
+  "falsepositives": [
+    "Legitimate modification of keys"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

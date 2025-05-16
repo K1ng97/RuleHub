@@ -1,0 +1,48 @@
+{
+  "id": "6ffc7f88-415b-4278-a80d-b957d6539e1a",
+  "name": "Windows SIP WinVerifyTrust Failed Trust Validation",
+  "description": "The following analytic detects failed trust validation attempts using Windows Event Log - CAPI2 (CryptoAPI 2). It specifically triggers on EventID 81, which indicates that \"The digital signature of the object did not verify.\" This detection leverages the CAPI2 Operational log to identify instances where digital signatures fail to validate. Monitoring this activity is crucial as it can indicate attempts to execute untrusted or potentially malicious binaries. If confirmed malicious, this activity could allow attackers to bypass security controls and execute unauthorized code, leading to potential system compromise.",
+  "source": {
+    "type": "splunk",
+    "id": "6ffc7f88-415b-4278-a80d-b957d6539e1a",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_sip_winverifytrust_failed_trust_validation.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_sip_winverifytrust_failed_trust_validation.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "atomic_guid",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Michael Haag, Splunk",
+  "references": [
+    "https://attack.mitre.org/techniques/T1553/003/",
+    "https://specterops.io/wp-content/uploads/sites/3/2022/06/SpecterOps_Subverting_Trust_in_Windows.pdf",
+    "https://github.com/gtworek/PSBits/tree/master/SIP",
+    "https://github.com/mattifestation/PoCSubjectInterfacePackage",
+    "https://pentestlab.blog/2017/11/06/hijacking-digital-signatures/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`capi2_operational` EventID=81 \"The digital signature of the object did not verify.\" | xmlkv UserData_Xml | stats count min(_time) as firstTime max(_time) as lastTime by Computer, UserData_Xml | rename Computer as dest | `windows_sip_winverifytrust_failed_trust_validation_filter`",
+    "condition": "To implement this analytic, one will need to enable the Microsoft-Windows-CAPI2/Operational log within the Windows Event Log. Note this is a debug log for many purposes, and the analytic only focuses in on EventID 81. Review the following gist for additional enabling information.",
+    "fields": []
+  },
+  "falsepositives": [
+    "False positives may be present in some instances of legitimate binaries with invalid signatures. Filter as needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

@@ -1,0 +1,48 @@
+{
+  "id": "4ae68615-866f-4304-b24b-ba048dfa5ca7",
+  "name": "AWS ElastiCache Security Group Created",
+  "description": "Detects when an ElastiCache security group has been created.",
+  "source": {
+    "type": "sigma",
+    "id": "4ae68615-866f-4304-b24b-ba048dfa5ca7",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/aws_elasticache_security_group_created.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/aws/cloudtrail/aws_elasticache_security_group_created.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1136",
+    "attackt1136003"
+  ],
+  "author": "Austin Songer @austinsonger",
+  "references": [
+    "https://github.com/elastic/detection-rules/blob/598f3d7e0a63221c0703ad9a0ea7e22e7bc5961e/rules/integrations/aws/persistence_elasticache_security_group_creation.toml"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-07-24",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [
+      "TA1136"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"eventSource\": \"elasticache.amazonaws.com\", \"eventName\": \"CreateCacheSecurityGroup\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "A ElastiCache security group may be created by a system or network administrator. Verify whether the user identity, user agent, and/or hostname should be making changes in your environment. Security group creations from unfamiliar users or hosts should be investigated. If known behavior is causing false positives, it can be exempted from the rule."
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "aws",
+    "cloudtrail"
+  ]
+}

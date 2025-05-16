@@ -1,0 +1,46 @@
+{
+  "id": "94a66f46-5b64-46ce-80b2-75dcbe627cc0",
+  "name": "Roles Activation Doesn't Require MFA",
+  "description": "Identifies when a privilege role can be activated without performing mfa.",
+  "source": {
+    "type": "sigma",
+    "id": "94a66f46-5b64-46ce-80b2-75dcbe627cc0",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_pim_role_no_mfa_required.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/privileged_identity_management/azure_pim_role_no_mfa_required.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1078"
+  ],
+  "author": "Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'",
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-how-to-configure-security-alerts#roles-dont-require-multi-factor-authentication-for-activation"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-09-14",
+  "modified": "2023-09-14",
+  "mitre": {
+    "tactics": [
+      "TA1078"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"riskEventType\": \"noMfaOnRoleActivationAlertIncident\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Investigate if user is performing MFA at sign-in."
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "pim"
+  ]
+}

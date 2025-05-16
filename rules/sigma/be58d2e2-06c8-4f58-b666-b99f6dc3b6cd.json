@@ -1,0 +1,48 @@
+{
+  "id": "be58d2e2-06c8-4f58-b666-b99f6dc3b6cd",
+  "name": "Suspicious Process Masquerading As SvcHost.EXE",
+  "description": "Detects a suspicious process that is masquerading as the legitimate \"svchost.exe\" by naming its binary \"svchost.exe\" and executing from an uncommon location.\nAdversaries often disguise their malicious binaries by naming them after legitimate system processes like \"svchost.exe\" to evade detection.\n",
+  "source": {
+    "type": "sigma",
+    "id": "be58d2e2-06c8-4f58-b666-b99f6dc3b6cd",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_svchost_masqueraded_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_svchost_masqueraded_execution.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1036005"
+  ],
+  "author": "Swachchhanda Shrawan Poudel",
+  "references": [
+    "https://tria.ge/240731-jh4crsycnb/behavioral2",
+    "https://redcanary.com/blog/threat-detection/process-masquerading/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "experimental",
+  "created": "2024-08-07",
+  "modified": "2024-08-07",
+  "mitre": {
+    "tactics": [
+      "TA1036"
+    ],
+    "techniques": [
+      "T005"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"\\\\svchost.exe\"}\nfilter_main_img_location: {\"Image\": [\"C:\\\\Windows\\\\System32\\\\svchost.exe\", \"C:\\\\Windows\\\\SysWOW64\\\\svchost.exe\"]}\nfilter_main_ofn: {\"OriginalFileName\": \"svchost.exe\"}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

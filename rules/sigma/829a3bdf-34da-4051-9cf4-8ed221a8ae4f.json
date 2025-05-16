@@ -1,0 +1,49 @@
+{
+  "id": "829a3bdf-34da-4051-9cf4-8ed221a8ae4f",
+  "name": "Microsoft Office DLL Sideload",
+  "description": "Detects DLL sideloading of DLLs that are part of Microsoft Office from non standard location",
+  "source": {
+    "type": "sigma",
+    "id": "829a3bdf-34da-4051-9cf4-8ed221a8ae4f",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/image_load_side_load_office_dlls.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/image_load/image_load_side_load_office_dlls.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1574001"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems), Wietze Beukema (project and research)",
+  "references": [
+    "https://hijacklibs.net/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-17",
+  "modified": "2023-03-15",
+  "mitre": {
+    "tactics": [
+      "TA1574"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ImageLoaded|endswith\": \"\\\\outllib.dll\"}\nfilter: {\"ImageLoaded|startswith\": [\"C:\\\\Program Files\\\\Microsoft Office\\\\OFFICE\", \"C:\\\\Program Files (x86)\\\\Microsoft Office\\\\OFFICE\", \"C:\\\\Program Files\\\\Microsoft Office\\\\Root\\\\OFFICE\", \"C:\\\\Program Files (x86)\\\\Microsoft Office\\\\Root\\\\OFFICE\"]}",
+    "condition": "selection and not filter",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "image_load"
+  ]
+}

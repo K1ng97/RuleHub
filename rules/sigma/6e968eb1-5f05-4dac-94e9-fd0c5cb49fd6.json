@@ -1,0 +1,45 @@
+{
+  "id": "6e968eb1-5f05-4dac-94e9-fd0c5cb49fd6",
+  "name": "Uncommon Link.EXE Parent Process",
+  "description": "Detects an uncommon parent process of \"LINK.EXE\".\nLink.EXE in Microsoft incremental linker. Its a utility usually bundled with Visual Studio installation.\nMultiple utilities often found in the same folder (editbin.exe, dumpbin.exe, lib.exe, etc) have a hardcode call to the \"LINK.EXE\" binary without checking its validity.\nThis would allow an attacker to sideload any binary with the name \"link.exe\" if one of the aforementioned tools get executed from a different location.\nBy filtering the known locations of such utilities we can spot uncommon parent process of LINK.EXE that might be suspicious or malicious.\n",
+  "source": {
+    "type": "sigma",
+    "id": "6e968eb1-5f05-4dac-94e9-fd0c5cb49fd6",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_link_uncommon_parent_process.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_link_uncommon_parent_process.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://twitter.com/0gtweet/status/1560732860935729152"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-22",
+  "modified": "2024-06-27",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"\\\\link.exe\", \"CommandLine|contains\": \"LINK /\"}\nfilter_main_visual_studio: {\"ParentImage|startswith\": [\"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\\", \"C:\\\\Program Files (x86)\\\\Microsoft Visual Studio\\\\\"], \"ParentImage|contains\": [\"\\\\VC\\\\bin\\\\\", \"\\\\VC\\\\Tools\\\\\"]}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

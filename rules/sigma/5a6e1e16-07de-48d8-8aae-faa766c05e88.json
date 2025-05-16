@@ -1,0 +1,42 @@
+{
+  "id": "5a6e1e16-07de-48d8-8aae-faa766c05e88",
+  "name": "Potential Cookies Session Hijacking",
+  "description": "Detects execution of \"curl.exe\" with the \"-c\" flag in order to save cookie data.",
+  "source": {
+    "type": "sigma",
+    "id": "5a6e1e16-07de-48d8-8aae-faa766c05e88",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_curl_cookie_hijacking.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_curl_cookie_hijacking.yml"
+  },
+  "tags": [
+    "attackexecution"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://curl.se/docs/manpage.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-07-27",
+  "modified": "2023-07-27",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\curl.exe\"}, {\"OriginalFileName\": \"curl.exe\"}]\nselection_cli: [{\"CommandLine|re\": \"\\\\s-c\\\\s\"}, {\"CommandLine|contains\": \"--cookie-jar\"}]",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

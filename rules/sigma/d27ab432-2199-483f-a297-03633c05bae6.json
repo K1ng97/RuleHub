@@ -1,0 +1,48 @@
+{
+  "id": "d27ab432-2199-483f-a297-03633c05bae6",
+  "name": "OS Architecture Discovery Via Grep",
+  "description": "Detects the use of grep to identify information about the operating system architecture. Often combined beforehand with the execution of \"uname\" or \"cat /proc/cpuinfo\"\n",
+  "source": {
+    "type": "sigma",
+    "id": "d27ab432-2199-483f-a297-03633c05bae6",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_grep_os_arch_discovery.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_grep_os_arch_discovery.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1082"
+  ],
+  "author": "Joseliyo Sanchez, @Joseliyo_Jstnk",
+  "references": [
+    "https://blogs.jpcert.or.jp/en/2023/05/gobrat.html",
+    "https://jstnk9.github.io/jstnk9/research/GobRAT-Malware/",
+    "https://www.virustotal.com/gui/file/60bcd645450e4c846238cf0e7226dc40c84c96eba99f6b2cffcd0ab4a391c8b3/detection",
+    "https://www.virustotal.com/gui/file/3e44c807a25a56f4068b5b8186eee5002eed6f26d665a8b791c472ad154585d1/detection"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-06-02",
+  "modified": "2023-06-02",
+  "mitre": {
+    "tactics": [
+      "TA1082"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_process: {\"Image|endswith\": \"/grep\"}\nselection_architecture: {\"CommandLine|endswith\": [\"aarch64\", \"arm\", \"i386\", \"i686\", \"mips\", \"x86_64\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

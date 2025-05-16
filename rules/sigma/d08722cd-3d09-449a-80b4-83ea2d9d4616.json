@@ -1,0 +1,47 @@
+{
+  "id": "d08722cd-3d09-449a-80b4-83ea2d9d4616",
+  "name": "Hidden Files and Directories",
+  "description": "Detects adversary creating hidden file or directory, by detecting directories or files with . as the first character",
+  "source": {
+    "type": "sigma",
+    "id": "d08722cd-3d09-449a-80b4-83ea2d9d4616",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/lnx_auditd_hidden_files_directories.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/auditd/lnx_auditd_hidden_files_directories.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1564001"
+  ],
+  "author": "Pawel Mazur",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1564.001/T1564.001.md"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-09-06",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [
+      "TA1564"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "commands: {\"type\": \"EXECVE\", \"a0\": [\"mkdir\", \"touch\", \"vim\", \"nano\", \"vi\"]}\narguments: [{\"a1|contains\": \"/.\"}, {\"a1|startswith\": \".\"}, {\"a2|contains\": \"/.\"}, {\"a2|startswith\": \".\"}]",
+    "condition": "commands and arguments",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "auditd"
+  ]
+}

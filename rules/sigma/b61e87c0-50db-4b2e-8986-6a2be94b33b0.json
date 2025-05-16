@@ -1,0 +1,47 @@
+{
+  "id": "b61e87c0-50db-4b2e-8986-6a2be94b33b0",
+  "name": "Directory Service Restore Mode(DSRM) Registry Value Tampering",
+  "description": "Detects changes to \"DsrmAdminLogonBehavior\" registry value.\nDuring a Domain Controller (DC) promotion, administrators create a Directory Services Restore Mode (DSRM) local administrator account with a password that rarely changes. The DSRM account is an “Administrator” account that logs in with the DSRM mode when the server is booting up to restore AD backups or recover the server from a failure.\nAttackers could abuse DSRM account to maintain their persistence and access to the organization's Active Directory.\nIf the \"DsrmAdminLogonBehavior\" value is set to \"0\", the administrator account can only be used if the DC starts in DSRM.\nIf the \"DsrmAdminLogonBehavior\" value is set to \"1\", the administrator account can only be used if the local AD DS service is stopped.\nIf the \"DsrmAdminLogonBehavior\" value is set to \"2\", the administrator account can always be used.\n",
+  "source": {
+    "type": "sigma",
+    "id": "b61e87c0-50db-4b2e-8986-6a2be94b33b0",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_set_dsrm_tampering.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_set/registry_set_dsrm_tampering.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1556"
+  ],
+  "author": "Nischal Khadgi",
+  "references": [
+    "https://adsecurity.org/?p=1785",
+    "https://www.sentinelone.com/blog/detecting-dsrm-account-misconfigurations/",
+    "https://book.hacktricks.xyz/windows-hardening/active-directory-methodology/dsrm-credentials"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "experimental",
+  "created": "2024-07-11",
+  "modified": "2024-07-11",
+  "mitre": {
+    "tactics": [
+      "TA1556"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"TargetObject|endswith\": \"\\\\Control\\\\Lsa\\\\DsrmAdminLogonBehavior\"}\nfilter_main_default_value: {\"Details\": \"DWORD (0x00000000)\"}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_set"
+  ]
+}

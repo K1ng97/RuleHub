@@ -1,0 +1,49 @@
+{
+  "id": "50a3c7aa-ec29-44a4-92c1-fce229eef6fc",
+  "name": "CA Policy Updated by Non Approved Actor",
+  "description": "Monitor and alert on conditional access changes. Is Initiated by (actor) approved to make changes? Review Modified Properties and compare \"old\" vs \"new\" value.",
+  "source": {
+    "type": "sigma",
+    "id": "50a3c7aa-ec29-44a4-92c1-fce229eef6fc",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_aad_secops_ca_policy_updatedby_bad_actor.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/audit_logs/azure_aad_secops_ca_policy_updatedby_bad_actor.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackpersistence",
+    "attackt1548",
+    "attackt1556"
+  ],
+  "author": "Corissa Koopmans, '@corissalea'",
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/architecture/security-operations-infrastructure#conditional-access"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-07-19",
+  "modified": "2024-05-28",
+  "mitre": {
+    "tactics": [
+      "TA1548",
+      "TA1556"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"properties.message\": \"Update conditional access policy\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Misconfigured role permissions",
+    "Verify whether the user identity, user agent, and/or hostname should be making changes in your environment."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "auditlogs"
+  ]
+}

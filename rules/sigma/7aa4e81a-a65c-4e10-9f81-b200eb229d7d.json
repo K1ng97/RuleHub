@@ -1,0 +1,47 @@
+{
+  "id": "7aa4e81a-a65c-4e10-9f81-b200eb229d7d",
+  "name": "Potential Persistence Via VMwareToolBoxCmd.EXE VM State Change Script",
+  "description": "Detects execution of the \"VMwareToolBoxCmd.exe\" with the \"script\" and \"set\" flag to setup a specific script to run for a specific VM state",
+  "source": {
+    "type": "sigma",
+    "id": "7aa4e81a-a65c-4e10-9f81-b200eb229d7d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_vmware_toolbox_cmd_persistence.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_vmware_toolbox_cmd_persistence.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackpersistence",
+    "attackt1059"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://bohops.com/2021/10/08/analyzing-and-detecting-a-vmtools-persistence-technique/",
+    "https://www.hexacorn.com/blog/2017/01/14/beyond-good-ol-run-key-part-53/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-06-14",
+  "modified": "2023-06-14",
+  "mitre": {
+    "tactics": [
+      "TA1059"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\VMwareToolBoxCmd.exe\"}, {\"OriginalFileName\": \"toolbox-cmd.exe\"}]\nselection_cli: {\"CommandLine|contains|all\": [\" script \", \" set \"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

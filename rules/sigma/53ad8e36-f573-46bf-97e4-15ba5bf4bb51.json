@@ -1,0 +1,46 @@
+{
+  "id": "53ad8e36-f573-46bf-97e4-15ba5bf4bb51",
+  "name": "Password Change on Directory Service Restore Mode (DSRM) Account",
+  "description": "Detects potential attempts made to set the Directory Services Restore Mode administrator password.\nThe Directory Service Restore Mode (DSRM) account is a local administrator account on Domain Controllers.\nAttackers may change the password in order to obtain persistence.\n",
+  "source": {
+    "type": "sigma",
+    "id": "53ad8e36-f573-46bf-97e4-15ba5bf4bb51",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_susp_dsrm_password_change.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_susp_dsrm_password_change.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1098"
+  ],
+  "author": "Thomas Patzke",
+  "references": [
+    "https://adsecurity.org/?p=1714",
+    "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4794"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "stable",
+  "created": "2017-02-19",
+  "modified": "2020-08-23",
+  "mitre": {
+    "tactics": [
+      "TA1098"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 4794}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Initial installation of a domain controller."
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

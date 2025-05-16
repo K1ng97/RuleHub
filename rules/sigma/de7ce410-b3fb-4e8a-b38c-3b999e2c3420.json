@@ -1,0 +1,47 @@
+{
+  "id": "de7ce410-b3fb-4e8a-b38c-3b999e2c3420",
+  "name": "PAExec Service Installation",
+  "description": "Detects PAExec service installation",
+  "source": {
+    "type": "sigma",
+    "id": "de7ce410-b3fb-4e8a-b38c-3b999e2c3420",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_system_service_install_paexec.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/system/service_control_manager/win_system_service_install_paexec.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1569002"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://www.poweradmin.com/paexec/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-10-26",
+  "modified": "2022-10-26",
+  "mitre": {
+    "tactics": [
+      "TA1569"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection_eid: {\"Provider_Name\": \"Service Control Manager\", \"EventID\": 7045}\nselection_image: [{\"ServiceName|startswith\": \"PAExec-\"}, {\"ImagePath|startswith\": \"C:\\\\WINDOWS\\\\PAExec-\"}]",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "system"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "id": "be6d868d-33b6-4aaa-912e-724fb555b11a",
+  "name": "Azure AD Successful Authentication From Different Ips",
+  "description": "The following analytic detects an Azure AD account successfully authenticating from multiple unique IP addresses within a 30-minute window. It leverages Azure AD SignInLogs to identify instances where the same user logs in from different IPs in a short time frame. This behavior is significant as it may indicate compromised credentials being used by an adversary, potentially following a phishing attack. If confirmed malicious, this activity could allow unauthorized access to corporate resources, leading to data breaches or further exploitation within the network.",
+  "source": {
+    "type": "splunk",
+    "id": "be6d868d-33b6-4aaa-912e-724fb555b11a",
+    "url": "https://github.com/splunk/security_content/blob/develop/azure_ad_successful_authentication_from_different_ips.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/azure_ad_successful_authentication_from_different_ips.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Mauricio Velazco, Splunk",
+  "references": [
+    "https://attack.mitre.org/techniques/T1110",
+    "https://attack.mitre.org/techniques/T1110.001",
+    "https://attack.mitre.org/techniques/T1110.003"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`azure_monitor_aad` properties.authenticationDetails{}.succeeded=true category=SignInLogs | rename properties.* as * | bucket span=30m _time | fillnull | stats count min(_time) as firstTime max(_time) as lastTime dc(src) AS unique_ips values(dest) as dest values(src) as src by user vendor_account vendor_product signature | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | where unique_ips > 1 | `azure_ad_successful_authentication_from_different_ips_filter`",
+    "condition": "You must install the latest version of Splunk Add-on for Microsoft Cloud Services from Splunkbase (https://splunkbase.splunk.com/app/3110/#/details). You must be ingesting Azure Active Directory events into your Splunk environment through an EventHub. This analytic was written to be used with the azure:monitor:aad sourcetype leveraging the Signin log category.",
+    "fields": []
+  },
+  "falsepositives": [
+    "A user with successful authentication events from different Ips may also represent the legitimate use of more than one device. Filter as needed and/or customize the threshold to fit your environment."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

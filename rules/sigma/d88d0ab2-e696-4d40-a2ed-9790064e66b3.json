@@ -1,0 +1,46 @@
+{
+  "id": "d88d0ab2-e696-4d40-a2ed-9790064e66b3",
+  "name": "Modification of IE Registry Settings",
+  "description": "Detects modification of the registry settings used for Internet Explorer and other Windows components that use these settings. An attacker can abuse this registry key to add a domain to the trusted sites Zone or insert javascript for persistence",
+  "source": {
+    "type": "sigma",
+    "id": "d88d0ab2-e696-4d40-a2ed-9790064e66b3",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_set_persistence_ie.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_set/registry_set_persistence_ie.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1112"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1112/T1112.md#atomic-test-4---add-domain-to-trusted-sites-zone",
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1112/T1112.md#atomic-test-5---javascript-in-registry"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-01-22",
+  "modified": "2023-08-17",
+  "mitre": {
+    "tactics": [
+      "TA1112"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_domains: {\"TargetObject|contains\": \"\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Internet Settings\"}\nfilter_dword: {\"Details|startswith\": \"DWORD\"}\nfilter_office: {\"Details\": [\"Cookie:\", \"Visited:\", \"(Empty)\"]}\nfilter_path: {\"TargetObject|contains\": [\"\\\\Cache\", \"\\\\ZoneMap\", \"\\\\WpadDecision\"]}\nfilter_binary: {\"Details\": \"Binary Data\"}\nfilter_accepted_documents: {\"TargetObject|contains\": \"\\\\Accepted Documents\\\\\"}",
+    "condition": "selection_domains and not 1 of filter_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_set"
+  ]
+}

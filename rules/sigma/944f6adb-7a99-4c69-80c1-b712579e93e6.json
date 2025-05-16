@@ -1,0 +1,49 @@
+{
+  "id": "944f6adb-7a99-4c69-80c1-b712579e93e6",
+  "name": "Suspicious Browser Activity",
+  "description": "Indicates anomalous behavior based on suspicious sign-in activity across multiple tenants from different countries in the same browser",
+  "source": {
+    "type": "sigma",
+    "id": "944f6adb-7a99-4c69-80c1-b712579e93e6",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_identity_protection_suspicious_browser.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/identity_protection/azure_identity_protection_suspicious_browser.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackinitial-access",
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1078"
+  ],
+  "author": "Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'",
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks#suspicious-browser",
+    "https://learn.microsoft.com/en-us/entra/architecture/security-operations-user-accounts#unusual-sign-ins"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-09-03",
+  "modified": "2023-09-03",
+  "mitre": {
+    "tactics": [
+      "TA1078"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"riskEventType\": \"suspiciousBrowser\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "We recommend investigating the sessions flagged by this detection in the context of other sign-ins from the user."
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "riskdetection"
+  ]
+}

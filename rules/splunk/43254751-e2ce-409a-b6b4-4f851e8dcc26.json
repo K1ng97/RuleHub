@@ -1,0 +1,43 @@
+{
+  "id": "43254751-e2ce-409a-b6b4-4f851e8dcc26",
+  "name": "Windows Modify Registry to Add or Modify Firewall Rule",
+  "description": "The following analytic detects a potential addition or modification of firewall rules, signaling possible configuration changes or security policy adjustments. It tracks commands such as netsh advfirewall firewall add rule and netsh advfirewall firewall set rule, which may indicate attempts to alter network access controls. Monitoring these actions ensures the integrity of firewall settings and helps prevent unauthorized network access.",
+  "source": {
+    "type": "splunk",
+    "id": "43254751-e2ce-409a-b6b4-4f851e8dcc26",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_modify_registry_to_add_or_modify_firewall_rule.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_modify_registry_to_add_or_modify_firewall_rule.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://www.bleepingcomputer.com/news/security/new-shrinklocker-ransomware-uses-bitlocker-to-encrypt-your-files/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Registry WHERE Registry.registry_path= \"*\\\\System\\\\CurrentControlSet\\\\Services\\\\SharedAccess\\\\Parameters\\\\FirewallPolicy\\\\FirewallRules\\\\*\"  Registry.action = modified by Registry.action Registry.dest Registry.process_guid Registry.process_id Registry.registry_hive Registry.registry_path Registry.registry_key_name Registry.registry_value_data Registry.registry_value_name Registry.registry_value_type Registry.status Registry.user Registry.vendor_product | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_modify_registry_to_add_or_modify_firewall_rule_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting logs with the registry value name, registry path, and registry value data from your endpoints. If you are using Sysmon, you must have at least version 2.0 of the official Sysmon TA. https://splunkbase.splunk.com/app/5709",
+    "fields": []
+  },
+  "falsepositives": [
+    "network admin may add/remove/modify public inbound firewall rule that may cause this rule to be triggered."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

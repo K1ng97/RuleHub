@@ -1,0 +1,49 @@
+{
+  "id": "de46c52b-0bf8-4936-a327-aace94f94ac6",
+  "name": "Process Explorer Driver Creation By Non-Sysinternals Binary",
+  "description": "Detects creation of the Process Explorer drivers by processes other than Process Explorer (procexp) itself.\nHack tools or malware may use the Process Explorer driver to elevate privileges, drops it to disk for a few moments, runs a service using that driver and removes it afterwards.\n",
+  "source": {
+    "type": "sigma",
+    "id": "de46c52b-0bf8-4936-a327-aace94f94ac6",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_sysinternals_procexp_driver_susp_creation.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_sysinternals_procexp_driver_susp_creation.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1068"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer",
+    "https://github.com/Yaxser/Backstab",
+    "https://www.elastic.co/security-labs/stopping-vulnerable-driver-attacks",
+    "https://news.sophos.com/en-us/2023/04/19/aukill-edr-killer-malware-abuses-process-explorer-driver/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-05-05",
+  "modified": "2023-05-05",
+  "mitre": {
+    "tactics": [
+      "TA1068"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"TargetFilename|contains\": \"\\\\PROCEXP\", \"TargetFilename|endswith\": \".sys\"}\nfilter_main_process_explorer: {\"Image|endswith\": [\"\\\\procexp.exe\", \"\\\\procexp64.exe\"]}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Some false positives may occur with legitimate renamed process explorer binaries"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

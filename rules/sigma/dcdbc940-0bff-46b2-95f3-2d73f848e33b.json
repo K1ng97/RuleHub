@@ -1,0 +1,51 @@
+{
+  "id": "dcdbc940-0bff-46b2-95f3-2d73f848e33b",
+  "name": "Suspicious Spool Service Child Process",
+  "description": "Detects suspicious print spool service (spoolsv.exe) child processes.",
+  "source": {
+    "type": "sigma",
+    "id": "dcdbc940-0bff-46b2-95f3-2d73f848e33b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_spoolsv_susp_child_processes.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_spoolsv_susp_child_processes.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackprivilege-escalation",
+    "attackt1068",
+    "attackt1203"
+  ],
+  "author": "Justin C. (@endisphotic), @dreadphones (detection), Thomas Patzke (Sigma rule)",
+  "references": [
+    "https://github.com/microsoft/Microsoft-365-Defender-Hunting-Queries/blob/efa17a600b43c897b4b7463cc8541daa1987eeb4/Exploits/Print%20Spooler%20RCE/Suspicious%20Spoolsv%20Child%20Process.md"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-07-11",
+  "modified": "2024-12-01",
+  "mitre": {
+    "tactics": [
+      "TA1068",
+      "TA1203"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "spoolsv: {\"ParentImage|endswith\": \"\\\\spoolsv.exe\", \"IntegrityLevel\": [\"System\", \"S-1-16-16384\"]}\nsuspicious_unrestricted: {\"Image|endswith\": [\"\\\\gpupdate.exe\", \"\\\\whoami.exe\", \"\\\\nltest.exe\", \"\\\\taskkill.exe\", \"\\\\wmic.exe\", \"\\\\taskmgr.exe\", \"\\\\sc.exe\", \"\\\\findstr.exe\", \"\\\\curl.exe\", \"\\\\wget.exe\", \"\\\\certutil.exe\", \"\\\\bitsadmin.exe\", \"\\\\accesschk.exe\", \"\\\\wevtutil.exe\", \"\\\\bcdedit.exe\", \"\\\\fsutil.exe\", \"\\\\cipher.exe\", \"\\\\schtasks.exe\", \"\\\\write.exe\", \"\\\\wuauclt.exe\", \"\\\\systeminfo.exe\", \"\\\\reg.exe\", \"\\\\query.exe\"]}\nsuspicious_net: {\"Image|endswith\": [\"\\\\net.exe\", \"\\\\net1.exe\"]}\nsuspicious_net_filter: {\"CommandLine|contains\": \"start\"}\nsuspicious_cmd: {\"Image|endswith\": \"\\\\cmd.exe\"}\nsuspicious_cmd_filter: {\"CommandLine|contains\": [\".spl\", \"route add\", \"program files\"]}\nsuspicious_netsh: {\"Image|endswith\": \"\\\\netsh.exe\"}\nsuspicious_netsh_filter: {\"CommandLine|contains\": [\"add portopening\", \"rule name\"]}\nsuspicious_powershell: {\"Image|endswith\": [\"\\\\powershell.exe\", \"\\\\pwsh.exe\"]}\nsuspicious_powershell_filter: {\"CommandLine|contains\": \".spl\"}\nsuspicious_rundll32_img: [{\"Image|endswith\": \"\\\\rundll32.exe\"}, {\"OriginalFileName\": \"RUNDLL32.EXE\"}]\nsuspicious_rundll32_cli: {\"CommandLine|endswith\": \"rundll32.exe\"}",
+    "condition": "spoolsv and ( suspicious_unrestricted or (suspicious_net and not suspicious_net_filter) or (suspicious_cmd and not suspicious_cmd_filter) or (suspicious_netsh and not suspicious_netsh_filter) or (suspicious_powershell and not suspicious_powershell_filter) or all of suspicious_rundll32_* )",
+    "fields": [
+      "Image",
+      "CommandLine"
+    ]
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

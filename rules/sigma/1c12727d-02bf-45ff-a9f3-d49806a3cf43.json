@@ -1,0 +1,46 @@
+{
+  "id": "1c12727d-02bf-45ff-a9f3-d49806a3cf43",
+  "name": "Renamed Plink Execution",
+  "description": "Detects the execution of a renamed version of the Plink binary",
+  "source": {
+    "type": "sigma",
+    "id": "1c12727d-02bf-45ff-a9f3-d49806a3cf43",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_renamed_plink.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_renamed_plink.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1036"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://thedfirreport.com/2022/06/06/will-the-real-msiexec-please-stand-up-exploit-leads-to-data-exfiltration/",
+    "https://the.earth.li/~sgtatham/putty/0.58/htmldoc/Chapter7.html"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-06-06",
+  "modified": "2023-02-03",
+  "mitre": {
+    "tactics": [
+      "TA1036"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: [{\"OriginalFileName\": \"Plink\"}, {\"CommandLine|contains|all\": [\" -l forward\", \" -P \", \" -R \"]}]\nfilter: {\"Image|endswith\": \"\\\\plink.exe\"}",
+    "condition": "selection and not filter",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

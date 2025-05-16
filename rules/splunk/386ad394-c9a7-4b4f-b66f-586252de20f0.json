@@ -1,0 +1,45 @@
+{
+  "id": "386ad394-c9a7-4b4f-b66f-586252de20f0",
+  "name": "Windows Large Number of Computer Service Tickets Requested",
+  "description": "The following analytic detects a high volume of Kerberos service ticket requests, specifically more than 30, from a single source within a 5-minute window. It leverages Event ID 4769, which logs when a Kerberos service ticket is requested, focusing on requests with computer names as the Service Name. This behavior is significant as it may indicate malicious activities such as lateral movement, malware staging, or reconnaissance. If confirmed malicious, an attacker could gain unauthorized access to multiple endpoints, potentially compromising the entire network.",
+  "source": {
+    "type": "splunk",
+    "id": "386ad394-c9a7-4b4f-b66f-586252de20f0",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_large_number_of_computer_service_tickets_requested.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_large_number_of_computer_service_tickets_requested.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Mauricio Velazco, Splunk",
+  "references": [
+    "https://thedfirreport.com/2023/01/23/sharefinder-how-threat-actors-discover-file-shares/",
+    "https://attack.mitre.org/techniques/T1135/",
+    "https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4769"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`wineventlog_security` EventCode=4769 ServiceName=\"*$\" TargetUserName!=\"*$\" | bucket span=5m _time | stats dc(ServiceName) AS unique_targets values(ServiceName) as host_targets values(dest) as dest by _time, IpAddress, TargetUserName | where unique_targets > 30 | `windows_large_number_of_computer_service_tickets_requested_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting Domain Controller and Kerberos events. The Advanced Security Audit policy setting `Audit Kerberos Authentication Service` within `Account Logon` needs to be enabled.",
+    "fields": []
+  },
+  "falsepositives": [
+    "An single endpoint requesting a large number of kerberos service tickets is not common behavior. Possible false positive scenarios include but are not limited to vulnerability scanners, administration systems and missconfigured systems."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

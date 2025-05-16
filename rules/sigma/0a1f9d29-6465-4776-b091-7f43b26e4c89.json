@@ -1,0 +1,48 @@
+{
+  "id": "0a1f9d29-6465-4776-b091-7f43b26e4c89",
+  "name": "Prefetch File Deleted",
+  "description": "Detects the deletion of a prefetch file which may indicate an attempt to destroy forensic evidence",
+  "source": {
+    "type": "sigma",
+    "id": "0a1f9d29-6465-4776-b091-7f43b26e4c89",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_delete_win_delete_prefetch.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_delete/file_delete_win_delete_prefetch.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1070004"
+  ],
+  "author": "Cedric MAURUGEON",
+  "references": [
+    "Internal Research",
+    "https://www.group-ib.com/blog/hunting-for-ttps-with-prefetch-files/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-09-29",
+  "modified": "2024-01-25",
+  "mitre": {
+    "tactics": [
+      "TA1070"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"TargetFilename|contains\": \":\\\\Windows\\\\Prefetch\\\\\", \"TargetFilename|endswith\": \".pf\"}\nfilter_main_svchost: {\"Image|endswith\": \":\\\\windows\\\\system32\\\\svchost.exe\", \"User|contains\": [\"AUTHORI\", \"AUTORI\"]}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_delete"
+  ]
+}

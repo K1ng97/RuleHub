@@ -1,0 +1,47 @@
+{
+  "id": "37db85d1-b089-490a-a59a-c7b6f984f480",
+  "name": "Sysmon Discovery Via Default Driver Altitude Using Findstr.EXE",
+  "description": "Detects usage of \"findstr\" with the argument \"385201\". Which could indicate potential discovery of an installed Sysinternals Sysmon service using the default driver altitude (even if the name is changed).",
+  "source": {
+    "type": "sigma",
+    "id": "37db85d1-b089-490a-a59a-c7b6f984f480",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_findstr_sysmon_discovery_via_default_altitude.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_findstr_sysmon_discovery_via_default_altitude.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1518001"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1518.001/T1518.001.md#atomic-test-5---security-software-discovery---sysmon-service"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-12-16",
+  "modified": "2023-11-14",
+  "mitre": {
+    "tactics": [
+      "TA1518"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": [\"\\\\find.exe\", \"\\\\findstr.exe\"]}, {\"OriginalFileName\": [\"FIND.EXE\", \"FINDSTR.EXE\"]}]\nselection_cli: {\"CommandLine|contains\": \" 385201\"}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

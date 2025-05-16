@@ -1,0 +1,51 @@
+{
+  "id": "db014773-7375-4f4e-b83b-133337c0ffee",
+  "name": "AWS IAM S3Browser Templated S3 Bucket Policy Creation",
+  "description": "Detects S3 browser utility creating Inline IAM policy containing default S3 bucket name placeholder value of \"<YOUR-BUCKET-NAME>\".",
+  "source": {
+    "type": "sigma",
+    "id": "db014773-7375-4f4e-b83b-133337c0ffee",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/aws_iam_s3browser_templated_s3_bucket_policy_creation.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/aws/cloudtrail/aws_iam_s3browser_templated_s3_bucket_policy_creation.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackpersistence",
+    "attackt1059009",
+    "attackt1078004"
+  ],
+  "author": "daniel.bohannon@permiso.io (@danielhbohannon)",
+  "references": [
+    "https://permiso.io/blog/s/unmasking-guivil-new-cloud-threat-actor"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-05-17",
+  "modified": "2023-05-17",
+  "mitre": {
+    "tactics": [
+      "TA1059",
+      "TA1078"
+    ],
+    "techniques": [
+      "T004",
+      "T009"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"eventSource\": \"iam.amazonaws.com\", \"eventName\": \"PutUserPolicy\", \"userAgent|contains\": \"S3 Browser\", \"requestParameters|contains|all\": [\"\\\"arn:aws:s3:::<YOUR-BUCKET-NAME>/*\\\"\", \"\\\"s3:GetObject\\\"\", \"\\\"Allow\\\"\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Valid usage of S3 browser with accidental creation of default Inline IAM policy without changing default S3 bucket name placeholder value"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "aws",
+    "cloudtrail"
+  ]
+}

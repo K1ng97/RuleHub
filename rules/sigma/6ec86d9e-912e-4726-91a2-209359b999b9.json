@@ -1,0 +1,43 @@
+{
+  "id": "6ec86d9e-912e-4726-91a2-209359b999b9",
+  "name": "Amsi.DLL Loaded Via LOLBIN Process",
+  "description": "Detects loading of \"Amsi.dll\" by a living of the land process. This could be an indication of a \"PowerShell without PowerShell\" attack",
+  "source": {
+    "type": "sigma",
+    "id": "6ec86d9e-912e-4726-91a2-209359b999b9",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/image_load_dll_amsi_suspicious_process.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/image_load/image_load_dll_amsi_suspicious_process.yml"
+  },
+  "tags": [
+    "attackdefense-evasion"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "Internal Research",
+    "https://www.paloaltonetworks.com/blog/security-operations/stopping-powershell-without-powershell/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-06-01",
+  "modified": "2023-09-20",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"ImageLoaded|endswith\": \"\\\\amsi.dll\", \"Image|endswith\": [\"\\\\ExtExport.exe\", \"\\\\odbcconf.exe\", \"\\\\regsvr32.exe\", \"\\\\rundll32.exe\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "image_load"
+  ]
+}

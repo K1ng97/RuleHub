@@ -1,0 +1,47 @@
+{
+  "id": "dbe4b9c5-c254-4258-9688-d6af0b7967fd",
+  "name": "Screen Capture with Import Tool",
+  "description": "Detects adversary creating screen capture of a desktop with Import Tool.\nHighly recommended using rule on servers, due to high usage of screenshot utilities on user workstations.\nImageMagick must be installed.\n",
+  "source": {
+    "type": "sigma",
+    "id": "dbe4b9c5-c254-4258-9688-d6af0b7967fd",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/lnx_auditd_screencapture_import.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/auditd/lnx_auditd_screencapture_import.yml"
+  },
+  "tags": [
+    "attackcollection",
+    "attackt1113"
+  ],
+  "author": "Pawel Mazur",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1113/T1113.md",
+    "https://linux.die.net/man/1/import",
+    "https://imagemagick.org/"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-09-21",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [
+      "TA1113"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "import: {\"type\": \"EXECVE\", \"a0\": \"import\"}\nimport_window_root: {\"a1\": \"-window\", \"a2\": \"root\", \"a3|endswith\": [\".png\", \".jpg\", \".jpeg\"]}\nimport_no_window_root: {\"a1|endswith\": [\".png\", \".jpg\", \".jpeg\"]}",
+    "condition": "import and (import_window_root or import_no_window_root)",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use of screenshot utility"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "auditd"
+  ]
+}

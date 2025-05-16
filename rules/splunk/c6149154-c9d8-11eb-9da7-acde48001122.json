@@ -1,0 +1,46 @@
+{
+  "id": "c6149154-c9d8-11eb-9da7-acde48001122",
+  "name": "Windows Registry Modification for Safe Mode Persistence",
+  "description": "The following analytic identifies modifications to the SafeBoot registry keys, specifically within the Minimal and Network paths. This detection leverages registry activity logs from endpoint data sources like Sysmon or EDR tools. Monitoring these keys is crucial as adversaries can use them to persist drivers or services in Safe Mode, with Network allowing network connections. If confirmed malicious, this activity could enable attackers to maintain persistence even in Safe Mode, potentially bypassing certain security measures and facilitating further malicious actions.",
+  "source": {
+    "type": "splunk",
+    "id": "c6149154-c9d8-11eb-9da7-acde48001122",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_registry_modification_for_safe_mode_persistence.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_registry_modification_for_safe_mode_persistence.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Michael Haag, Splunk",
+  "references": [
+    "https://malware.news/t/threat-analysis-unit-tau-threat-intelligence-notification-snatch-ransomware/36365",
+    "https://redcanary.com/blog/tracking-driver-inventory-to-expose-rootkits/",
+    "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1112/T1112.md",
+    "https://blog.didierstevens.com/2007/03/26/playing-with-safe-mode/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Registry where Registry.registry_path IN (\"*SYSTEM\\\\CurrentControlSet\\\\Control\\\\SafeBoot\\\\Minimal\\\\*\",\"*SYSTEM\\\\CurrentControlSet\\\\Control\\\\SafeBoot\\\\Network\\\\*\") by Registry.action Registry.dest Registry.process_guid Registry.process_id Registry.registry_hive Registry.registry_path Registry.registry_key_name Registry.registry_value_data Registry.registry_value_name Registry.registry_value_type Registry.status Registry.user Registry.vendor_product | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_registry_modification_for_safe_mode_persistence_filter`",
+    "condition": "To successfully implement this search, you must be ingesting data that records registry activity from your hosts to populate the endpoint data model in the registry node. This is typically populated via endpoint detection-and-response product, such as Carbon Black or endpoint data sources, such as Sysmon. The data used for this search is typically generated via logs that report reads and writes to the registry.",
+    "fields": []
+  },
+  "falsepositives": [
+    "updated windows application needed in safe boot may used this registry"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

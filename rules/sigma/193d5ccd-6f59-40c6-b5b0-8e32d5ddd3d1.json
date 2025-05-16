@@ -1,0 +1,48 @@
+{
+  "id": "193d5ccd-6f59-40c6-b5b0-8e32d5ddd3d1",
+  "name": "Xwizard.EXE Execution From Non-Default Location",
+  "description": "Detects the execution of Xwizard tool from a non-default directory.\nWhen executed from a non-default directory, this utility can be abused in order to side load a custom version of \"xwizards.dll\".\n",
+  "source": {
+    "type": "sigma",
+    "id": "193d5ccd-6f59-40c6-b5b0-8e32d5ddd3d1",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_xwizard_execution_non_default_location.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_xwizard_execution_non_default_location.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1574001"
+  ],
+  "author": "Christian Burkard (Nextron Systems)",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/Binaries/Xwizard/",
+    "http://www.hexacorn.com/blog/2017/07/31/the-wizard-of-x-oppa-plugx-style/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-09-20",
+  "modified": "2024-08-15",
+  "mitre": {
+    "tactics": [
+      "TA1574"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: [{\"Image|endswith\": \"\\\\xwizard.exe\"}, {\"OriginalFileName\": \"xwizard.exe\"}]\nfilter_main_legit_location: {\"Image|startswith\": [\"C:\\\\Windows\\\\System32\\\\\", \"C:\\\\Windows\\\\SysWOW64\\\\\", \"C:\\\\Windows\\\\WinSxS\\\\\"]}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Windows installed on non-C drive"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

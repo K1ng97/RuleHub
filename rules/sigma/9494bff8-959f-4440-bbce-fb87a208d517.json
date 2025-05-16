@@ -1,0 +1,46 @@
+{
+  "id": "9494bff8-959f-4440-bbce-fb87a208d517",
+  "name": "Changes to Device Registration Policy",
+  "description": "Monitor and alert for changes to the device registration policy.",
+  "source": {
+    "type": "sigma",
+    "id": "9494bff8-959f-4440-bbce-fb87a208d517",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_ad_device_registration_policy_changes.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/audit_logs/azure_ad_device_registration_policy_changes.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackprivilege-escalation",
+    "attackt1484"
+  ],
+  "author": "Michael Epping, '@mepples21'",
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/architecture/security-operations-devices#device-registrations-and-joins-outside-policy"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-06-28",
+  "modified": "2022-06-28",
+  "mitre": {
+    "tactics": [
+      "TA1484"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Category\": \"Policy\", \"ActivityDisplayName\": \"Set device registration policies\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "auditlogs"
+  ]
+}

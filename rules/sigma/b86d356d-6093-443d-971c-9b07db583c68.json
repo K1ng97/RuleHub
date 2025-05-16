@@ -1,0 +1,48 @@
+{
+  "id": "b86d356d-6093-443d-971c-9b07db583c68",
+  "name": "Suspicious Curl Change User Agents - Linux",
+  "description": "Detects a suspicious curl process start on linux with set useragent options",
+  "source": {
+    "type": "sigma",
+    "id": "b86d356d-6093-443d-971c-9b07db583c68",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_susp_curl_useragent.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_susp_curl_useragent.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1071001"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://curl.se/docs/manpage.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-09-15",
+  "modified": "2022-09-15",
+  "mitre": {
+    "tactics": [
+      "TA1071"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"/curl\", \"CommandLine|contains\": [\" -A \", \" --user-agent \"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Scripts created by developers and admins",
+    "Administrative activity"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

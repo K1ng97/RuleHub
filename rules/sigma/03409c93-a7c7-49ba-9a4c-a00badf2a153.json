@@ -1,0 +1,46 @@
+{
+  "id": "03409c93-a7c7-49ba-9a4c-a00badf2a153",
+  "name": "Troubleshooting Pack Cmdlet Execution",
+  "description": "Detects execution of \"TroubleshootingPack\" cmdlets to leverage CVE-2022-30190 or action similar to \"msdt\" lolbin (as described in LOLBAS)",
+  "source": {
+    "type": "sigma",
+    "id": "03409c93-a7c7-49ba-9a4c-a00badf2a153",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_susp_follina_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_susp_follina_execution.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1202"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://twitter.com/nas_bench/status/1537919885031772161",
+    "https://lolbas-project.github.io/lolbas/Binaries/Msdt/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-06-21",
+  "modified": "2022-06-21",
+  "mitre": {
+    "tactics": [
+      "TA1202"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"ScriptBlockText|contains|all\": [\"Invoke-TroubleshootingPack\", \"C:\\\\Windows\\\\Diagnostics\\\\System\\\\PCW\", \"-AnswerFile\", \"-Unattended\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate usage of \"TroubleshootingPack\" cmdlet for troubleshooting purposes"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "id": "90dcf730-1b71-4ae7-9ffc-6fcf62bd0132",
+  "name": "Suspicious ZipExec Execution",
+  "description": "ZipExec is a Proof-of-Concept (POC) tool to wrap binary-based tools into a password-protected zip file.",
+  "source": {
+    "type": "sigma",
+    "id": "90dcf730-1b71-4ae7-9ffc-6fcf62bd0132",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_hktl_zipexec.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_hktl_zipexec.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1202",
+    "attackt1218"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://twitter.com/SBousseaden/status/1451237393017839616",
+    "https://github.com/Tylous/ZipExec"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-11-07",
+  "modified": "2022-12-25",
+  "mitre": {
+    "tactics": [
+      "TA1202",
+      "TA1218"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "run: {\"CommandLine|contains|all\": [\"/generic:Microsoft_Windows_Shell_ZipFolder:filename=\", \".zip\", \"/pass:\", \"/user:\"]}\ndelete: {\"CommandLine|contains|all\": [\"/delete\", \"Microsoft_Windows_Shell_ZipFolder:filename=\", \".zip\"]}",
+    "condition": "run or delete",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

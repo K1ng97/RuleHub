@@ -1,0 +1,47 @@
+{
+  "id": "178e615d-e666-498b-9630-9ed363038101",
+  "name": "Elevated System Shell Spawned From Uncommon Parent Location",
+  "description": "Detects when a shell program such as the Windows command prompt or PowerShell is launched with system privileges from a uncommon parent location.",
+  "source": {
+    "type": "sigma",
+    "id": "178e615d-e666-498b-9630-9ed363038101",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_susp_elevated_system_shell_uncommon_parent.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_susp_elevated_system_shell_uncommon_parent.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackprivilege-escalation",
+    "attackt1059"
+  ],
+  "author": "frack113, Tim Shelton (update fp)",
+  "references": [
+    "https://github.com/Wh04m1001/SysmonEoP"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-12-05",
+  "modified": "2025-03-06",
+  "mitre": {
+    "tactics": [
+      "TA1059"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_shell: [{\"Image|endswith\": [\"\\\\powershell.exe\", \"\\\\powershell_ise.exe\", \"\\\\pwsh.exe\", \"\\\\cmd.exe\"]}, {\"OriginalFileName\": [\"PowerShell.EXE\", \"powershell_ise.EXE\", \"pwsh.dll\", \"Cmd.Exe\"]}]\nselection_user: {\"User|contains\": [\"AUTHORI\", \"AUTORI\"], \"LogonId\": \"0x3e7\"}\nfilter_main_generic: {\"ParentImage|contains\": [\":\\\\Program Files (x86)\\\\\", \":\\\\Program Files\\\\\", \":\\\\ProgramData\\\\\", \":\\\\Windows\\\\System32\\\\\", \":\\\\Windows\\\\SysWOW64\\\\\", \":\\\\Windows\\\\Temp\\\\\", \":\\\\Windows\\\\WinSxS\\\\\"]}\nfilter_optional_manageengine: {\"ParentImage|endswith\": \":\\\\ManageEngine\\\\ADManager Plus\\\\pgsql\\\\bin\\\\postgres.exe\", \"Image|endswith\": \"\\\\cmd.exe\"}\nfilter_optional_asgard: {\"CommandLine|contains\": \":\\\\WINDOWS\\\\system32\\\\cmd.exe /c \\\"\", \"CurrentDirectory|contains\": \":\\\\WINDOWS\\\\Temp\\\\asgard2-agent\\\\\"}\nfilter_optional_ibm_spectrumprotect: {\"ParentImage|contains\": \":\\\\IBM\\\\SpectrumProtect\\\\webserver\\\\scripts\\\\\", \"CommandLine|contains\": \":\\\\IBM\\\\SpectrumProtect\\\\webserver\\\\scripts\\\\\"}\nfilter_main_parent_null: {\"ParentImage\": null}\nfilter_main_parent_empty: {\"ParentImage\": [\"\", \"-\"]}",
+    "condition": "all of selection_* and not 1 of filter_main_* and not 1 of filter_optional_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Some legitimate applications may spawn shells from uncommon parent locations. Apply additional filters and perform an initial baseline before deploying."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "700fb7e8-2981-401c-8430-be58e189e741",
+  "name": "Suspicious Package Installed - Linux",
+  "description": "Detects installation of suspicious packages using system installation utilities",
+  "source": {
+    "type": "sigma",
+    "id": "700fb7e8-2981-401c-8430-be58e189e741",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_install_suspicioua_packages.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_install_suspicioua_packages.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1553004"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://gist.githubusercontent.com/MichaelKoczwara/12faba9c061c12b5814b711166de8c2f/raw/e2068486692897b620c25fde1ea258c8218fe3d3/history.txt"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-01-03",
+  "modified": "2023-01-03",
+  "mitre": {
+    "tactics": [
+      "TA1553"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection_tool_apt: {\"Image|endswith\": [\"/apt\", \"/apt-get\"], \"CommandLine|contains\": \"install\"}\nselection_tool_yum: {\"Image|endswith\": \"/yum\", \"CommandLine|contains\": [\"localinstall\", \"install\"]}\nselection_tool_rpm: {\"Image|endswith\": \"/rpm\", \"CommandLine|contains\": \"-i\"}\nselection_tool_dpkg: {\"Image|endswith\": \"/dpkg\", \"CommandLine|contains\": [\"--install\", \"-i\"]}\nselection_keyword: {\"CommandLine|contains\": [\"nmap\", \" nc\", \"netcat\", \"wireshark\", \"tshark\", \"openconnect\", \"proxychains\"]}",
+    "condition": "1 of selection_tool_* and selection_keyword",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administration activities"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

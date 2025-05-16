@@ -1,0 +1,47 @@
+{
+  "id": "b593fd50-7335-4682-a36c-4edcb68e4641",
+  "name": "Monero Crypto Coin Mining Pool Lookup",
+  "description": "Detects suspicious DNS queries to Monero mining pools",
+  "source": {
+    "type": "sigma",
+    "id": "b593fd50-7335-4682-a36c-4edcb68e4641",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/net_dns_pua_cryptocoin_mining_xmr.yml",
+    "file_path": "tmp/repos/sigma/rules/network/dns/net_dns_pua_cryptocoin_mining_xmr.yml"
+  },
+  "tags": [
+    "attackexfiltration",
+    "attackimpact",
+    "attackt1496",
+    "attackt1567"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://www.nextron-systems.com/2021/10/24/monero-mining-pool-fqdns/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "stable",
+  "created": "2021-10-24",
+  "modified": "2021-10-24",
+  "mitre": {
+    "tactics": [
+      "TA1496",
+      "TA1567"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"query|contains\": [\"pool.minexmr.com\", \"fr.minexmr.com\", \"de.minexmr.com\", \"sg.minexmr.com\", \"ca.minexmr.com\", \"us-west.minexmr.com\", \"pool.supportxmr.com\", \"mine.c3pool.com\", \"xmr-eu1.nanopool.org\", \"xmr-eu2.nanopool.org\", \"xmr-us-east1.nanopool.org\", \"xmr-us-west1.nanopool.org\", \"xmr-asia1.nanopool.org\", \"xmr-jp1.nanopool.org\", \"xmr-au1.nanopool.org\", \"xmr.2miners.com\", \"xmr.hashcity.org\", \"xmr.f2pool.com\", \"xmrpool.eu\", \"pool.hashvault.pro\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate crypto coin mining"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "dns"
+  ]
+}

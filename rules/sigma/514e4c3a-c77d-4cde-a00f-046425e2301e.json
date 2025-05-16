@@ -1,0 +1,50 @@
+{
+  "id": "514e4c3a-c77d-4cde-a00f-046425e2301e",
+  "name": "Abuse of Service Permissions to Hide Services Via Set-Service",
+  "description": "Detects usage of the \"Set-Service\" powershell cmdlet to configure a new SecurityDescriptor that allows a service to be hidden from other utilities such as \"sc.exe\", \"Get-Service\"...etc. (Works only in powershell 7)",
+  "source": {
+    "type": "sigma",
+    "id": "514e4c3a-c77d-4cde-a00f-046425e2301e",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_powershell_hide_services_via_set_service.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_powershell_hide_services_via_set_service.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1574011"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://twitter.com/Alh4zr3d/status/1580925761996828672",
+    "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/set-service?view=powershell-7.2"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-10-17",
+  "modified": "2022-10-17",
+  "mitre": {
+    "tactics": [
+      "TA1574"
+    ],
+    "techniques": [
+      "T011"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\pwsh.exe\"}, {\"OriginalFileName\": \"pwsh.dll\"}]\nselection_sddl: {\"CommandLine|contains|all\": [\"Set-Service \", \"DCLCWPDTSD\"]}\nselection_cmdlet: {\"CommandLine|contains\": [\"-SecurityDescriptorSddl \", \"-sd \"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Rare intended use of hidden services"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

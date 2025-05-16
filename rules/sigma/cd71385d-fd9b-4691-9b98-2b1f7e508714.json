@@ -1,0 +1,46 @@
+{
+  "id": "cd71385d-fd9b-4691-9b98-2b1f7e508714",
+  "name": "Lolbin Runexehelper Use As Proxy",
+  "description": "Detect usage of the \"runexehelper.exe\" binary as a proxy to launch other programs",
+  "source": {
+    "type": "sigma",
+    "id": "cd71385d-fd9b-4691-9b98-2b1f7e508714",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_lolbin_runexehelper.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_lolbin_runexehelper.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://twitter.com/0gtweet/status/1206692239839289344",
+    "https://lolbas-project.github.io/lolbas/Binaries/Runexehelper/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-12-29",
+  "modified": "2022-12-29",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"ParentImage|endswith\": \"\\\\runexehelper.exe\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "6812a10b-60ea-420c-832f-dfcc33b646ba",
+  "name": "Potential PowerShell Execution Via DLL",
+  "description": "Detects potential PowerShell execution from a DLL instead of the usual PowerShell process as seen used in PowerShdll.\nThis detection assumes that PowerShell commands are passed via the CommandLine.\n",
+  "source": {
+    "type": "sigma",
+    "id": "6812a10b-60ea-420c-832f-dfcc33b646ba",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_susp_powershell_execution_via_dll.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_susp_powershell_execution_via_dll.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218011"
+  ],
+  "author": "Markus Neis, Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://github.com/p3nt4/PowerShdll/blob/62cfa172fb4e1f7f4ac00ca942685baeb88ff356/README.md"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2018-08-25",
+  "modified": "2024-03-07",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": [
+      "T011"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": [\"\\\\InstallUtil.exe\", \"\\\\RegAsm.exe\", \"\\\\RegSvcs.exe\", \"\\\\regsvr32.exe\", \"\\\\rundll32.exe\"]}, {\"OriginalFileName\": [\"InstallUtil.exe\", \"RegAsm.exe\", \"RegSvcs.exe\", \"REGSVR32.EXE\", \"RUNDLL32.EXE\"]}]\nselection_cli: {\"CommandLine|contains\": [\"Default.GetString\", \"DownloadString\", \"FromBase64String\", \"ICM \", \"IEX \", \"Invoke-Command\", \"Invoke-Expression\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

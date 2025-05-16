@@ -1,0 +1,50 @@
+{
+  "id": "f9405037-bc97-4eb7-baba-167dad399b83",
+  "name": "Github New Secret Created",
+  "description": "Detects when a user creates action secret for the organization, environment, codespaces or repository.",
+  "source": {
+    "type": "sigma",
+    "id": "f9405037-bc97-4eb7-baba-167dad399b83",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/github_new_secret_created.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/github/github_new_secret_created.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackinitial-access",
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1078004"
+  ],
+  "author": "Muhammad Faisal (@faisalusuf)",
+  "references": [
+    "https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/reviewing-the-audit-log-for-your-organization#audit-log-actions"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-01-20",
+  "modified": "2023-01-20",
+  "mitre": {
+    "tactics": [
+      "TA1078"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"action\": [\"codespaces.create_an_org_secret\", \"environment.create_actions_secret\", \"org.create_actions_secret\", \"repo.create_actions_secret\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "This detection cloud be noisy depending on the environment. It is recommended to keep a check on the new secrets when created and validate the \"actor\"."
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "github",
+    "audit"
+  ]
+}

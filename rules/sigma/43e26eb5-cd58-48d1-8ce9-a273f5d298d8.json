@@ -1,0 +1,47 @@
+{
+  "id": "43e26eb5-cd58-48d1-8ce9-a273f5d298d8",
+  "name": "Potential Container Discovery Via Inodes Listing",
+  "description": "Detects listing of the inodes of the \"/\" directory to determine if the we are running inside of a container.",
+  "source": {
+    "type": "sigma",
+    "id": "43e26eb5-cd58-48d1-8ce9-a273f5d298d8",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_susp_inod_listing.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_susp_inod_listing.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1082"
+  ],
+  "author": "Seth Hanford",
+  "references": [
+    "https://blog.skyplabs.net/posts/container-detection/",
+    "https://stackoverflow.com/questions/20010199/how-to-determine-if-a-process-runs-inside-lxc-docker"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-08-23",
+  "modified": "2023-08-23",
+  "mitre": {
+    "tactics": [
+      "TA1082"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"/ls\", \"CommandLine|contains|all\": [\" -*i\", \" -*d\"], \"CommandLine|endswith\": \" /\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate system administrator usage of these commands",
+    "Some container tools or deployments may use these techniques natively to determine how they proceed with execution, and will need to be filtered"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

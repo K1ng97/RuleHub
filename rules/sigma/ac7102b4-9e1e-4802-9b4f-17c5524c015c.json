@@ -1,0 +1,48 @@
+{
+  "id": "ac7102b4-9e1e-4802-9b4f-17c5524c015c",
+  "name": "New PowerShell Instance Created",
+  "description": "Detects the execution of PowerShell via the creation of a named pipe starting with PSHost",
+  "source": {
+    "type": "sigma",
+    "id": "ac7102b4-9e1e-4802-9b4f-17c5524c015c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/pipe_created_powershell_execution_pipe.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/pipe_created/pipe_created_powershell_execution_pipe.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1059001"
+  ],
+  "author": "Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)",
+  "references": [
+    "https://threathunterplaybook.com/hunts/windows/190610-PwshAlternateHosts/notebook.html",
+    "https://threathunterplaybook.com/hunts/windows/190410-LocalPwshExecution/notebook.html"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-09-12",
+  "modified": "2023-11-30",
+  "mitre": {
+    "tactics": [
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"PipeName|startswith\": \"\\\\PSHost\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Likely"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "pipe_created"
+  ]
+}

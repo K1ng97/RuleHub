@@ -1,0 +1,42 @@
+{
+  "id": "0b0cd537-fc77-4e6e-a973-e53495c1083d",
+  "name": "Renamed Office Binary Execution",
+  "description": "Detects the execution of a renamed office binary",
+  "source": {
+    "type": "sigma",
+    "id": "0b0cd537-fc77-4e6e-a973-e53495c1083d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_renamed_office_processes.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_renamed_office_processes.yml"
+  },
+  "tags": [
+    "attackdefense-evasion"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://infosec.exchange/@sbousseaden/109542254124022664"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-12-20",
+  "modified": "2023-11-13",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: [{\"OriginalFileName\": [\"Excel.exe\", \"MSACCESS.EXE\", \"MSPUB.EXE\", \"OneNote.exe\", \"OneNoteM.exe\", \"OUTLOOK.EXE\", \"POWERPNT.EXE\", \"WinWord.exe\"]}, {\"Description\": [\"Microsoft Access\", \"Microsoft Excel\", \"Microsoft OneNote\", \"Microsoft Outlook\", \"Microsoft PowerPoint\", \"Microsoft Publisher\", \"Microsoft Word\", \"Sent to OneNote Tool\"]}]\nfilter_main_legit_names: {\"Image|endswith\": [\"\\\\EXCEL.exe\", \"\\\\excelcnv.exe\", \"\\\\MSACCESS.exe\", \"\\\\MSPUB.EXE\", \"\\\\ONENOTE.EXE\", \"\\\\ONENOTEM.EXE\", \"\\\\OUTLOOK.EXE\", \"\\\\POWERPNT.EXE\", \"\\\\WINWORD.exe\"]}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

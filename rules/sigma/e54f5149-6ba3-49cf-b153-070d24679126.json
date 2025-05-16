@@ -1,0 +1,50 @@
+{
+  "id": "e54f5149-6ba3-49cf-b153-070d24679126",
+  "name": "Invoke-Obfuscation VAR++ LAUNCHER OBFUSCATION - PowerShell",
+  "description": "Detects Obfuscated Powershell via VAR++ LAUNCHER",
+  "source": {
+    "type": "sigma",
+    "id": "e54f5149-6ba3-49cf-b153-070d24679126",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_invoke_obfuscation_via_var.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_invoke_obfuscation_via_var.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1027",
+    "attackt1059001"
+  ],
+  "author": "Timur Zinniatullin, oscd.community",
+  "references": [
+    "https://github.com/SigmaHQ/sigma/issues/1009"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-13",
+  "modified": "2024-04-05",
+  "mitre": {
+    "tactics": [
+      "TA1027",
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_4104: {\"ScriptBlockText|re\": \"(?i)&&set.*(\\\\{\\\\d\\\\}){2,}\\\\\\\\\\\"\\\\s+?-f.*&&.*cmd.*/c\"}",
+    "condition": "selection_4104",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

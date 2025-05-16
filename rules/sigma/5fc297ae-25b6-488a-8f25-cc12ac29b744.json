@@ -1,0 +1,48 @@
+{
+  "id": "5fc297ae-25b6-488a-8f25-cc12ac29b744",
+  "name": "Potentially Suspicious Usage Of Qemu",
+  "description": "Detects potentially suspicious execution of the Qemu utility in a Windows environment.\nThreat actors have leveraged this utility and this technique for achieving network access as reported by Kaspersky.\n",
+  "source": {
+    "type": "sigma",
+    "id": "5fc297ae-25b6-488a-8f25-cc12ac29b744",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_qemu_suspicious_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_qemu_suspicious_execution.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1090",
+    "attackt1572"
+  ],
+  "author": "Muhammad Faisal (@faisalusuf), Hunter Juhan (@threatHNTR)",
+  "references": [
+    "https://securelist.com/network-tunneling-with-qemu/111803/",
+    "https://www.qemu.org/docs/master/system/invocation.html#hxtool-5"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2024-06-03",
+  "modified": "2024-06-03",
+  "mitre": {
+    "tactics": [
+      "TA1090",
+      "TA1572"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|contains\": [\"-m 1M\", \"-m 2M\", \"-m 3M\"], \"CommandLine|contains|all\": [\"restrict=off\", \"-netdev \", \"connect=\", \"-nographic\"]}\nfilter_main_normal_usecase: {\"CommandLine|contains\": [\" -cdrom \", \" type=virt \", \" -blockdev \"]}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

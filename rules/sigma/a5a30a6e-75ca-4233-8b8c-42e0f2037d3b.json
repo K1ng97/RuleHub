@@ -1,0 +1,50 @@
+{
+  "id": "a5a30a6e-75ca-4233-8b8c-42e0f2037d3b",
+  "name": "Invoke-Obfuscation Via Use Rundll32 - PowerShell",
+  "description": "Detects Obfuscated Powershell via use Rundll32 in Scripts",
+  "source": {
+    "type": "sigma",
+    "id": "a5a30a6e-75ca-4233-8b8c-42e0f2037d3b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_invoke_obfuscation_via_use_rundll32.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_invoke_obfuscation_via_use_rundll32.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1027",
+    "attackt1059001"
+  ],
+  "author": "Nikita Nazarov, oscd.community",
+  "references": [
+    "https://github.com/SigmaHQ/sigma/issues/1009"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-10-08",
+  "modified": "2022-11-29",
+  "mitre": {
+    "tactics": [
+      "TA1027",
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_4104: {\"ScriptBlockText|contains|all\": [\"&&\", \"rundll32\", \"shell32.dll\", \"shellexec_rundll\"], \"ScriptBlockText|contains\": [\"value\", \"invoke\", \"comspec\", \"iex\"]}",
+    "condition": "selection_4104",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

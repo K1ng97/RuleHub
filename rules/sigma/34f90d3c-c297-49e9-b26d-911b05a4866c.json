@@ -1,0 +1,48 @@
+{
+  "id": "34f90d3c-c297-49e9-b26d-911b05a4866c",
+  "name": "Powershell Keylogging",
+  "description": "Adversaries may log user keystrokes to intercept credentials as the user types them.",
+  "source": {
+    "type": "sigma",
+    "id": "34f90d3c-c297-49e9-b26d-911b05a4866c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_keylogging.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_keylogging.yml"
+  },
+  "tags": [
+    "attackcollection",
+    "attackt1056001"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218/T1218.md",
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1056.001/src/Get-Keystrokes.ps1"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-07-30",
+  "modified": "2022-07-11",
+  "mitre": {
+    "tactics": [
+      "TA1056"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_basic: {\"ScriptBlockText|contains\": \"Get-Keystrokes\"}\nselection_high: {\"ScriptBlockText|contains|all\": [\"Get-ProcAddress user32.dll GetAsyncKeyState\", \"Get-ProcAddress user32.dll GetForegroundWindow\"]}",
+    "condition": "1 of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "id": "80b708f3-d034-40e4-a6c8-d23b7a7db3d1",
+  "name": "Invoke-Obfuscation Via Stdin - Security",
+  "description": "Detects Obfuscated Powershell via Stdin in Scripts",
+  "source": {
+    "type": "sigma",
+    "id": "80b708f3-d034-40e4-a6c8-d23b7a7db3d1",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_invoke_obfuscation_via_stdin_services_security.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_invoke_obfuscation_via_stdin_services_security.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1027",
+    "attackt1059001"
+  ],
+  "author": "Nikita Nazarov, oscd.community",
+  "references": [
+    "https://github.com/SigmaHQ/sigma/issues/1009"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-12",
+  "modified": "2022-11-29",
+  "mitre": {
+    "tactics": [
+      "TA1027",
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 4697, \"ServiceFileName|contains|all\": [\"set\", \"&&\"], \"ServiceFileName|contains\": [\"environment\", \"invoke\", \"${input)\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

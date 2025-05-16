@@ -1,0 +1,44 @@
+{
+  "id": "b5aa7d60-c17e-4538-97de-09029d6cd76b",
+  "name": "Suspicious Digital Signature Of AppX Package",
+  "description": "Detects execution of AppX packages with known suspicious or malicious signature",
+  "source": {
+    "type": "sigma",
+    "id": "b5aa7d60-c17e-4538-97de-09029d6cd76b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_appxpackaging_om_sups_appx_signature.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/appxpackaging_om/win_appxpackaging_om_sups_appx_signature.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "Internal Research",
+    "https://www.sentinelone.com/labs/inside-malicious-windows-apps-for-malware-deployment/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-01-16",
+  "modified": "2023-01-16",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 157, \"subjectName\": \"CN=Foresee Consulting Inc., O=Foresee Consulting Inc., L=North York, S=Ontario, C=CA, SERIALNUMBER=1004913-1, OID.1.3.6.1.4.1.311.60.2.1.3=CA, OID.2.5.4.15=Private Organization\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "appxpackaging-om"
+  ]
+}

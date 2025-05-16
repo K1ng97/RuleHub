@@ -1,0 +1,45 @@
+{
+  "id": "a360d2b2-065a-11ec-b0bf-acde48001122",
+  "name": "Get DomainPolicy with Powershell Script Block",
+  "description": "The following analytic detects the execution of the `Get-DomainPolicy` cmdlet using PowerShell Script Block Logging (EventCode=4104). It leverages logs capturing script block text to identify attempts to obtain the password policy in a Windows domain. This activity is significant as it indicates potential reconnaissance efforts by adversaries or Red Teams to gather domain policy information, which is crucial for planning further attacks. If confirmed malicious, this behavior could lead to detailed knowledge of domain security settings, aiding in privilege escalation or lateral movement within the network.",
+  "source": {
+    "type": "splunk",
+    "id": "a360d2b2-065a-11ec-b0bf-acde48001122",
+    "url": "https://github.com/splunk/security_content/blob/develop/get_domainpolicy_with_powershell_script_block.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/get_domainpolicy_with_powershell_script_block.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://github.com/S1ckB0y1337/Active-Directory-Exploitation-Cheat-Sheet",
+    "https://powersploit.readthedocs.io/en/latest/Recon/Get-DomainPolicy/",
+    "https://attack.mitre.org/techniques/T1201/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`powershell` EventCode=4104 ScriptBlockText =\"*Get-DomainPolicy*\" | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by dest signature signature_id user_id vendor_product EventID Guid Opcode Name Path ProcessID ScriptBlockId ScriptBlockText | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `get_domainpolicy_with_powershell_script_block_filter`",
+    "condition": "The following analytic requires PowerShell operational logs to be imported. Modify the powershell macro as needed to match the sourcetype or add index. This analytic is specific to 4104, or PowerShell Script Block Logging.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrators or power users may use this command for troubleshooting."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

@@ -1,0 +1,44 @@
+{
+  "id": "5c82f0b9-3c6d-477f-a318-0e14a1df73e0",
+  "name": "Okta Security Threat Detected",
+  "description": "Detects when an security threat is detected in Okta.",
+  "source": {
+    "type": "sigma",
+    "id": "5c82f0b9-3c6d-477f-a318-0e14a1df73e0",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/okta_security_threat_detected.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/okta/okta_security_threat_detected.yml"
+  },
+  "tags": [
+    "attackcommand-and-control"
+  ],
+  "author": "Austin Songer @austinsonger",
+  "references": [
+    "https://okta.github.io/okta-help/en/prod/Content/Topics/Security/threat-insight/configure-threatinsight-system-log.htm",
+    "https://developer.okta.com/docs/reference/api/system-log/",
+    "https://developer.okta.com/docs/reference/api/event-types/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-09-12",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"eventtype\": \"security.threat.detected\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "okta",
+    "okta"
+  ]
+}

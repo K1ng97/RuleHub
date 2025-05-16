@@ -1,0 +1,47 @@
+{
+  "id": "91a2c315-9ee6-4052-a853-6f6a8238f90d",
+  "name": "Findstr GPP Passwords",
+  "description": "Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller. This value can be decrypted with gpp-decrypt.",
+  "source": {
+    "type": "sigma",
+    "id": "91a2c315-9ee6-4052-a853-6f6a8238f90d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_findstr_gpp_passwords.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_findstr_gpp_passwords.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1552006"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1552.006/T1552.006.md#atomic-test-1---gpp-passwords-findstr"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-12-27",
+  "modified": "2023-11-11",
+  "mitre": {
+    "tactics": [
+      "TA1552"
+    ],
+    "techniques": [
+      "T006"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": [\"\\\\find.exe\", \"\\\\findstr.exe\"]}, {\"OriginalFileName\": [\"FIND.EXE\", \"FINDSTR.EXE\"]}]\nselection_cli: {\"CommandLine|contains|all\": [\"cpassword\", \"\\\\sysvol\\\\\", \".xml\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

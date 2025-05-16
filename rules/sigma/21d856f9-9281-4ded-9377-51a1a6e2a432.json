@@ -1,0 +1,47 @@
+{
+  "id": "21d856f9-9281-4ded-9377-51a1a6e2a432",
+  "name": "Potential Persistence Via Logon Scripts - CommandLine",
+  "description": "Detects the addition of a new LogonScript to the registry value \"UserInitMprLogonScript\" for potential persistence",
+  "source": {
+    "type": "sigma",
+    "id": "21d856f9-9281-4ded-9377-51a1a6e2a432",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_registry_logon_script.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_registry_logon_script.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1037001"
+  ],
+  "author": "Tom Ueltschi (@c_APT_ure)",
+  "references": [
+    "https://cocomelonc.github.io/persistence/2022/12/09/malware-pers-20.html"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-01-12",
+  "modified": "2023-06-09",
+  "mitre": {
+    "tactics": [
+      "TA1037"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|contains\": \"UserInitMprLogonScript\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate addition of Logon Scripts via the command line by administrators or third party tools"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

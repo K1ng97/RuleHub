@@ -1,0 +1,49 @@
+{
+  "id": "4f6edb78-5c21-42ab-a558-fd2a6fc1fd57",
+  "name": "Potential 7za.DLL Sideloading",
+  "description": "Detects potential DLL sideloading of \"7za.dll\"",
+  "source": {
+    "type": "sigma",
+    "id": "4f6edb78-5c21-42ab-a558-fd2a6fc1fd57",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/image_load_side_load_7za.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/image_load/image_load_side_load_7za.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1574001"
+  ],
+  "author": "X__Junior",
+  "references": [
+    "https://www.gov.pl/attachment/ee91f24d-3e67-436d-aa50-7fa56acf789d"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-06-09",
+  "modified": "2023-06-09",
+  "mitre": {
+    "tactics": [
+      "TA1574"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ImageLoaded|endswith\": \"\\\\7za.dll\"}\nfilter_main_legit_path: {\"Image|startswith\": [\"C:\\\\Program Files (x86)\\\\\", \"C:\\\\Program Files\\\\\"], \"ImageLoaded|startswith\": [\"C:\\\\Program Files (x86)\\\\\", \"C:\\\\Program Files\\\\\"]}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate third party application located in \"AppData\" may leverage this DLL to offer 7z compression functionality and may generate false positives. Apply additional filters as needed."
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "image_load"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "id": "941e5c45-cda7-4864-8cea-bbb7458d194a",
+  "name": "Suspicious Remote Logon with Explicit Credentials",
+  "description": "Detects suspicious processes logging on with explicit credentials",
+  "source": {
+    "type": "sigma",
+    "id": "941e5c45-cda7-4864-8cea-bbb7458d194a",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_susp_logon_explicit_credentials.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_susp_logon_explicit_credentials.yml"
+  },
+  "tags": [
+    "attacklateral-movement",
+    "attackt1078"
+  ],
+  "author": "oscd.community, Teymur Kheirkhabarov @HeirhabarovT, Zach Stanford @svch0st, Tim Shelton",
+  "references": [
+    "https://drive.google.com/file/d/1lKya3_mLnR3UQuCoiYruO3qgu052_iS_/view"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-05",
+  "modified": "2022-08-03",
+  "mitre": {
+    "tactics": [
+      "TA1078"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 4648, \"ProcessName|endswith\": [\"\\\\cmd.exe\", \"\\\\powershell.exe\", \"\\\\pwsh.exe\", \"\\\\winrs.exe\", \"\\\\wmic.exe\", \"\\\\net.exe\", \"\\\\net1.exe\", \"\\\\reg.exe\"]}\nfilter1: {\"TargetServerName\": \"localhost\"}\nfilter2: {\"SubjectUserName|endswith\": \"$\", \"TargetUserName|endswith\": \"$\"}",
+    "condition": "selection and not 1 of filter*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrators that use the RunAS command or scheduled tasks"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

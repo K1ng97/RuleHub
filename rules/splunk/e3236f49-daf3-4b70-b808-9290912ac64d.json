@@ -1,0 +1,43 @@
+{
+  "id": "e3236f49-daf3-4b70-b808-9290912ac64d",
+  "name": "AWS High Number Of Failed Authentications For User",
+  "description": "The following analytic detects an AWS account experiencing more than 20 failed authentication attempts within a 5-minute window. It leverages AWS CloudTrail logs to identify multiple failed ConsoleLogin events. This behavior is significant as it may indicate a brute force attack targeting the account. If confirmed malicious, the attacker could potentially gain unauthorized access, leading to data breaches or further exploitation of the AWS environment. Security teams should consider adjusting the threshold based on their specific environment to reduce false positives.",
+  "source": {
+    "type": "splunk",
+    "id": "e3236f49-daf3-4b70-b808-9290912ac64d",
+    "url": "https://github.com/splunk/security_content/blob/develop/aws_high_number_of_failed_authentications_for_user.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/aws_high_number_of_failed_authentications_for_user.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Bhavin Patel, Splunk",
+  "references": [
+    "https://www.trendmicro.com/cloudoneconformity/knowledge-base/aws/IAM/password-policy.html"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`cloudtrail` eventName=ConsoleLogin action=failure | bucket span=10m _time | rename user_name as user | stats dc(_raw) AS failed_attempts values(src) as src values(user_agent) as user_agent by _time, user, signature, dest, vendor_account vendor_region, vendor_product | where failed_attempts > 20 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `aws_high_number_of_failed_authentications_for_user_filter`",
+    "condition": "You must install Splunk AWS Add on and Splunk App for AWS. This search works with AWS CloudTrail logs.",
+    "fields": []
+  },
+  "falsepositives": [
+    "A user with more than 20 failed authentication attempts in the span of 5 minutes may also be triggered by a broken application."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

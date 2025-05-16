@@ -1,0 +1,48 @@
+{
+  "id": "b7216a7d-687e-4c8d-82b1-3080b2ad961f",
+  "name": "Modify Group Policy Settings - ScriptBlockLogging",
+  "description": "Detect malicious GPO modifications can be used to implement many other malicious behaviors.",
+  "source": {
+    "type": "sigma",
+    "id": "b7216a7d-687e-4c8d-82b1-3080b2ad961f",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_modify_group_policy_settings.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_modify_group_policy_settings.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackprivilege-escalation",
+    "attackt1484001"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/40b77d63808dd4f4eafb83949805636735a1fd15/atomics/T1484.001/T1484.001.md"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-19",
+  "modified": "2022-08-19",
+  "mitre": {
+    "tactics": [
+      "TA1484"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_path: {\"ScriptBlockText|contains\": \"\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\System\"}\nselection_key: {\"ScriptBlockText|contains\": [\"GroupPolicyRefreshTimeDC\", \"GroupPolicyRefreshTimeOffsetDC\", \"GroupPolicyRefreshTime\", \"GroupPolicyRefreshTimeOffset\", \"EnableSmartScreen\", \"ShellSmartScreenLevel\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

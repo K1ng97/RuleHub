@@ -1,0 +1,50 @@
+{
+  "id": "11d00fff-5dc3-428c-8184-801f292faec0",
+  "name": "Service Registry Key Read Access Request",
+  "description": "Detects \"read access\" requests on the services registry key.\nAdversaries may execute their own malicious payloads by hijacking the Registry entries used by services.\nAdversaries may use flaws in the permissions for Registry keys related to services to redirect from the originally specified executable to one that they control, in order to launch their own code when a service starts.\n",
+  "source": {
+    "type": "sigma",
+    "id": "11d00fff-5dc3-428c-8184-801f292faec0",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_registry_permissions_weakness_check.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_registry_permissions_weakness_check.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1574011"
+  ],
+  "author": "Center for Threat Informed Defense (CTID) Summiting the Pyramid Team",
+  "references": [
+    "https://center-for-threat-informed-defense.github.io/summiting-the-pyramid/analytics/service_registry_permissions_weakness_check/",
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1574.011/T1574.011.md#atomic-test-1---service-registry-permissions-weakness"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-09-28",
+  "modified": "2023-09-28",
+  "mitre": {
+    "tactics": [
+      "TA1574"
+    ],
+    "techniques": [
+      "T011"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 4663, \"ObjectName|contains|all\": [\"\\\\SYSTEM\\\\\", \"ControlSet\\\\Services\\\\\"], \"AccessList|contains\": \"%%1538\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Likely from legitimate applications reading their key. Requires heavy tuning"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

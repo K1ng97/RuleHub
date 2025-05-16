@@ -1,0 +1,42 @@
+{
+  "id": "9f31aa8e-e37c-46bc-bce1-8b3be646d026",
+  "name": "Detect AWS Console Login by User from New Region",
+  "description": "The following analytic identifies AWS console login attempts by users from a new region. It leverages AWS CloudTrail events and compares current login regions against a baseline of previously seen regions for each user. This activity is significant as it may indicate unauthorized access attempts or compromised credentials. If confirmed malicious, an attacker could gain unauthorized access to AWS resources, potentially leading to data breaches, resource manipulation, or further lateral movement within the cloud environment.",
+  "source": {
+    "type": "splunk",
+    "id": "9f31aa8e-e37c-46bc-bce1-8b3be646d026",
+    "url": "https://github.com/splunk/security_content/blob/develop/detect_aws_console_login_by_user_from_new_region.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/detect_aws_console_login_by_user_from_new_region.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "manual_test",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Bhavin Patel, Eric McGinnis Splunk",
+  "references": [],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats earliest(_time) as firstTime latest(_time) as lastTime from datamodel=Authentication where Authentication.signature=ConsoleLogin by Authentication.user Authentication.src | iplocation Authentication.src | `drop_dm_object_name(Authentication)` | rename Region as justSeenRegion | table firstTime lastTime user justSeenRegion | join user type=outer [| inputlookup previously_seen_users_console_logins | rename Region as previouslySeenRegion | stats min(firstTime) AS earliestseen by user previouslySeenRegion | fields earliestseen user previouslySeenRegion] | eval userRegion=if(firstTime >= relative_time(now(), \"-24h@h\"), \"New Region\",\"Previously Seen Region\") | where userRegion= \"New Region\" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | table firstTime lastTime user previouslySeenRegion justSeenRegion userRegion | `detect_aws_console_login_by_user_from_new_region_filter`",
+    "condition": "You must install and configure the Splunk Add-on for AWS (version 5.1.0 or later) and Enterprise Security 6.2, which contains the required updates to the Authentication data model for cloud use cases. Run the `Previously Seen Users in AWS CloudTrail - Initial` support search only once to create a baseline of previously seen IAM users within the last 30 days. Run `Previously Seen Users in AWS CloudTrail - Update` hourly (or more frequently depending on how often you run the detection searches) to refresh the baselines. You can also provide additional filtering for this search by customizing the `detect_aws_console_login_by_user_from_new_region_filter` macro.",
+    "fields": []
+  },
+  "falsepositives": [
+    "When a legitimate new user logins for the first time, this activity will be detected. Check how old the account is and verify that the user activity is legitimate."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

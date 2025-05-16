@@ -1,0 +1,46 @@
+{
+  "id": "bef0bc5a-b9ae-425d-85c6-7b2d705980c6",
+  "name": "Python Initiated Connection",
+  "description": "Detects a Python process initiating a network connection. While this often relates to package installation, it can also indicate a potential malicious script communicating with a C&C server.",
+  "source": {
+    "type": "sigma",
+    "id": "bef0bc5a-b9ae-425d-85c6-7b2d705980c6",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/net_connection_win_python.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/network_connection/net_connection_win_python.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1046"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1046/T1046.md#atomic-test-4---port-scan-using-python",
+    "https://pypi.org/project/scapy/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-12-10",
+  "modified": "2025-03-05",
+  "mitre": {
+    "tactics": [
+      "TA1046"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Initiated\": \"true\", \"Image|contains|all\": [\"\\\\python\", \".exe\"]}\nfilter_optional_conda: {\"ParentImage\": \"C:\\\\ProgramData\\\\Anaconda3\\\\Scripts\\\\conda.exe\", \"CommandLine|contains|all\": [\":\\\\ProgramData\\\\Anaconda3\\\\Scripts\\\\conda-script.py\", \"update\"]}\nfilter_optional_conda_jupyter_notebook: {\"ParentImage\": \"C:\\\\ProgramData\\\\Anaconda3\\\\python.exe\", \"CommandLine|contains\": \"C:\\\\ProgramData\\\\Anaconda3\\\\Scripts\\\\jupyter-notebook-script.py\"}\nfilter_main_local_communication: {\"DestinationIp\": \"127.0.0.1\", \"SourceIp\": \"127.0.0.1\"}\nfilter_main_pip: {\"CommandLine|contains|all\": [\"pip.exe\", \"install\"]}",
+    "condition": "selection and not 1 of filter_main_* and not 1 of filter_optional_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate python scripts using the socket library or similar will trigger this. Apply additional filters and perform an initial baseline before deploying."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "network_connection"
+  ]
+}

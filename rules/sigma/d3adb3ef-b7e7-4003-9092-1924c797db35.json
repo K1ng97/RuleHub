@@ -1,0 +1,47 @@
+{
+  "id": "d3adb3ef-b7e7-4003-9092-1924c797db35",
+  "name": "AWS Identity Center Identity Provider Change",
+  "description": "Detects a change in the AWS Identity Center (FKA AWS SSO) identity provider.\nA change in identity provider allows an attacker to establish persistent access or escalate privileges via user impersonation.\n",
+  "source": {
+    "type": "sigma",
+    "id": "d3adb3ef-b7e7-4003-9092-1924c797db35",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/aws_sso_idp_change.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/aws/cloudtrail/aws_sso_idp_change.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1556"
+  ],
+  "author": "Michael McIntyre @wtfender",
+  "references": [
+    "https://docs.aws.amazon.com/singlesignon/latest/userguide/app-enablement.html",
+    "https://docs.aws.amazon.com/singlesignon/latest/userguide/sso-info-in-cloudtrail.html",
+    "https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsiamidentitycentersuccessortoawssinglesign-on.html"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-09-27",
+  "modified": "2023-09-27",
+  "mitre": {
+    "tactics": [
+      "TA1556"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"eventSource\": [\"sso-directory.amazonaws.com\", \"sso.amazonaws.com\"], \"eventName\": [\"AssociateDirectory\", \"DisableExternalIdPConfigurationForDirectory\", \"DisassociateDirectory\", \"EnableExternalIdPConfigurationForDirectory\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Authorized changes to the AWS account's identity provider"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "aws",
+    "cloudtrail"
+  ]
+}

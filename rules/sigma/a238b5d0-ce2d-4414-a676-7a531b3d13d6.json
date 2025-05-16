@@ -1,0 +1,52 @@
+{
+  "id": "a238b5d0-ce2d-4414-a676-7a531b3d13d6",
+  "name": "ETW Trace Evasion Activity",
+  "description": "Detects command line activity that tries to clear or disable any ETW trace log which could be a sign of logging evasion.\n",
+  "source": {
+    "type": "sigma",
+    "id": "a238b5d0-ce2d-4414-a676-7a531b3d13d6",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_susp_etw_trace_evasion.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_susp_etw_trace_evasion.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1070",
+    "attackt1562006",
+    "car2016-04-002"
+  ],
+  "author": "@neu5ron, Florian Roth (Nextron Systems), Jonhnathan Ribeiro, oscd.community",
+  "references": [
+    "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wevtutil",
+    "https://abuse.io/lockergoga.txt",
+    "https://medium.com/palantir/tampering-with-windows-event-tracing-background-offense-and-defense-4be7ac62ac63"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-03-22",
+  "modified": "2022-06-28",
+  "mitre": {
+    "tactics": [
+      "TA1070",
+      "TA1562"
+    ],
+    "techniques": [
+      "T006"
+    ]
+  },
+  "detection": {
+    "query": "selection_clear_1: {\"CommandLine|contains|all\": [\"cl\", \"/Trace\"]}\nselection_clear_2: {\"CommandLine|contains|all\": [\"clear-log\", \"/Trace\"]}\nselection_disable_1: {\"CommandLine|contains|all\": [\"sl\", \"/e:false\"]}\nselection_disable_2: {\"CommandLine|contains|all\": [\"set-log\", \"/e:false\"]}\nselection_disable_3: {\"CommandLine|contains|all\": [\"logman\", \"update\", \"trace\", \"--p\", \"-ets\"]}\nselection_pwsh_remove: {\"CommandLine|contains\": \"Remove-EtwTraceProvider\"}\nselection_pwsh_set: {\"CommandLine|contains|all\": [\"Set-EtwTraceProvider\", \"0x11\"]}",
+    "condition": "1 of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

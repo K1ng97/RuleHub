@@ -1,0 +1,52 @@
+{
+  "id": "f74107df-b6c6-4e80-bf00-4170b658162b",
+  "name": "Sudo Privilege Escalation CVE-2019-14287",
+  "description": "Detects users trying to exploit sudo vulnerability reported in CVE-2019-14287",
+  "source": {
+    "type": "sigma",
+    "id": "f74107df-b6c6-4e80-bf00-4170b658162b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_sudo_cve_2019_14287.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_sudo_cve_2019_14287.yml"
+  },
+  "tags": [
+    "attackprivilege-escalation",
+    "attackt1068",
+    "attackt1548003",
+    "cve2019-14287"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://www.openwall.com/lists/oss-security/2019/10/14/1",
+    "https://access.redhat.com/security/cve/cve-2019-14287",
+    "https://twitter.com/matthieugarin/status/1183970598210412546"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-10-15",
+  "modified": "2022-10-05",
+  "mitre": {
+    "tactics": [
+      "TA1068",
+      "TA1548"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|contains\": \" -u#\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

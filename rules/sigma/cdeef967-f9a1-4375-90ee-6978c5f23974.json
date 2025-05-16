@@ -1,0 +1,44 @@
+{
+  "id": "cdeef967-f9a1-4375-90ee-6978c5f23974",
+  "name": "Azure Application Credential Modified",
+  "description": "Identifies when a application credential is modified.",
+  "source": {
+    "type": "sigma",
+    "id": "cdeef967-f9a1-4375-90ee-6978c5f23974",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_app_credential_modification.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/activity_logs/azure_app_credential_modification.yml"
+  },
+  "tags": [
+    "attackimpact"
+  ],
+  "author": "Austin Songer @austinsonger",
+  "references": [
+    "https://www.cloud-architekt.net/auditing-of-msi-and-service-principals/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-09-02",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"properties.message\": \"Update application - Certificates and secrets management\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Application credential added may be performed by a system administrator.",
+    "Verify whether the user identity, user agent, and/or hostname should be making changes in your environment.",
+    "Application credential added from unfamiliar users should be investigated. If known behavior is causing false positives, it can be exempted from the rule."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "activitylogs"
+  ]
+}

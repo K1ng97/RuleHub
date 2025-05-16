@@ -1,0 +1,44 @@
+{
+  "id": "97fbabf8-8e1b-47a2-b7d5-a418d2b95e3d",
+  "name": "AWS New Lambda Layer Attached",
+  "description": "Detects when a user attached a Lambda layer to an existing Lambda function.\nA malicious Lambda layer could execute arbitrary code in the context of the function's IAM role.\nThis would give an adversary access to resources that the function has access to.\n",
+  "source": {
+    "type": "sigma",
+    "id": "97fbabf8-8e1b-47a2-b7d5-a418d2b95e3d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/aws_new_lambda_layer_attached.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/aws/cloudtrail/aws_new_lambda_layer_attached.yml"
+  },
+  "tags": [
+    "attackprivilege-escalation"
+  ],
+  "author": "Austin Songer",
+  "references": [
+    "https://docs.aws.amazon.com/lambda/latest/dg/API_UpdateFunctionConfiguration.html",
+    "https://github.com/clearvector/lambda-spy"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-09-23",
+  "modified": "2025-03-17",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"eventSource\": \"lambda.amazonaws.com\", \"eventName|startswith\": \"UpdateFunctionConfiguration\", \"requestParameters.layers|contains\": \"*\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Lambda Layer being attached may be performed by a system administrator. Verify whether the user identity, user agent, and/or hostname should be making changes in your environment.",
+    "Lambda Layer being attached from unfamiliar users should be investigated. If known behavior is causing false positives, it can be exempted from the rule."
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "aws",
+    "cloudtrail"
+  ]
+}

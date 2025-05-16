@@ -1,0 +1,51 @@
+{
+  "id": "f356a9c4-effd-4608-bbf8-408afd5cd006",
+  "name": "Suspicious Cobalt Strike DNS Beaconing - Sysmon",
+  "description": "Detects a program that invoked suspicious DNS queries known from Cobalt Strike beacons",
+  "source": {
+    "type": "sigma",
+    "id": "f356a9c4-effd-4608-bbf8-408afd5cd006",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/dns_query_win_mal_cobaltstrike.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/dns_query/dns_query_win_mal_cobaltstrike.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1071004"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://www.icebrg.io/blog/footprints-of-fin7-tracking-actor-patterns",
+    "https://www.sekoia.io/en/hunting-and-detecting-cobalt-strike/"
+  ],
+  "severity": "critical",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-11-09",
+  "modified": "2023-01-16",
+  "mitre": {
+    "tactics": [
+      "TA1071"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection1: {\"QueryName|startswith\": [\"aaa.stage.\", \"post.1\"]}\nselection2: {\"QueryName|contains\": \".stage.123456.\"}",
+    "condition": "1 of selection*",
+    "fields": [
+      "Image",
+      "CommandLine"
+    ]
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "critical",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "dns_query"
+  ]
+}

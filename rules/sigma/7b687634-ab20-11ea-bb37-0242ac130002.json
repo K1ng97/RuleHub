@@ -1,0 +1,53 @@
+{
+  "id": "7b687634-ab20-11ea-bb37-0242ac130002",
+  "name": "Windows Pcap Drivers",
+  "description": "Detects Windows Pcap driver installation based on a list of associated .sys files.",
+  "source": {
+    "type": "sigma",
+    "id": "7b687634-ab20-11ea-bb37-0242ac130002",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_pcap_drivers.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_pcap_drivers.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackdiscovery",
+    "attackt1040"
+  ],
+  "author": "Cian Heasley",
+  "references": [
+    "https://ragged-lab.blogspot.com/2020/06/capturing-pcap-driver-installations.html#more"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-06-10",
+  "modified": "2023-04-14",
+  "mitre": {
+    "tactics": [
+      "TA1040"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 4697, \"ServiceFileName|contains\": [\"pcap\", \"npcap\", \"npf\", \"nm3\", \"ndiscap\", \"nmnt\", \"windivert\", \"USBPcap\", \"pktmon\"]}",
+    "condition": "selection",
+    "fields": [
+      "EventID",
+      "ServiceFileName",
+      "Account_Name",
+      "Computer_Name",
+      "Originating_Computer",
+      "ServiceName"
+    ]
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "13acf386-b8c6-4fe0-9a6e-c4756b974698",
+  "name": "Remote PowerShell Sessions Network Connections (WinRM)",
+  "description": "Detects basic PowerShell Remoting (WinRM) by monitoring for network inbound connections to ports 5985 OR 5986",
+  "source": {
+    "type": "sigma",
+    "id": "13acf386-b8c6-4fe0-9a6e-c4756b974698",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_remote_powershell_session.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_remote_powershell_session.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1059001"
+  ],
+  "author": "Roberto Rodriguez @Cyb3rWard0g",
+  "references": [
+    "https://threathunterplaybook.com/hunts/windows/190511-RemotePwshExecution/notebook.html"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-09-12",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 5156, \"DestPort\": [5985, 5986], \"LayerRTID\": 44}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use of remote PowerShell execution"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

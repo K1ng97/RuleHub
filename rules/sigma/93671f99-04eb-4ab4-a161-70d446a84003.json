@@ -1,0 +1,48 @@
+{
+  "id": "93671f99-04eb-4ab4-a161-70d446a84003",
+  "name": "Capture Credentials with Rpcping.exe",
+  "description": "Detects using Rpcping.exe to send a RPC test connection to the target server (-s) and force the NTLM hash to be sent in the process.",
+  "source": {
+    "type": "sigma",
+    "id": "93671f99-04eb-4ab4-a161-70d446a84003",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_rpcping_credential_capture.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_rpcping_credential_capture.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1003"
+  ],
+  "author": "Julia Fomina, oscd.community",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/Binaries/Rpcping/",
+    "https://twitter.com/vysecurity/status/974806438316072960",
+    "https://twitter.com/vysecurity/status/873181705024266241",
+    "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/hh875578(v=ws.11)"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-09",
+  "modified": "2024-03-13",
+  "mitre": {
+    "tactics": [
+      "TA1003"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "use_rpcping: {\"Image|endswith\": \"\\\\rpcping.exe\"}\nremote_server: {\"CommandLine|contains|windash\": \"-s\"}\nntlm_auth: [{\"CommandLine|contains|all|windash\": [\"-u\", \"NTLM\"]}, {\"CommandLine|contains|all|windash\": [\"-t\", \"ncacn_np\"]}]",
+    "condition": "use_rpcping and remote_server and ntlm_auth",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

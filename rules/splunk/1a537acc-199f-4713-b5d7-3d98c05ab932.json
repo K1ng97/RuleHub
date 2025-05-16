@@ -1,0 +1,44 @@
+{
+  "id": "1a537acc-199f-4713-b5d7-3d98c05ab932",
+  "name": "MOVEit Empty Key Fingerprint Authentication Attempt",
+  "description": "This detection identifies attempts to authenticate with an empty public key fingerprint in Progress MOVEit Transfer, which is a key indicator of potential exploitation of the CVE-2024-5806 vulnerability. Such attempts are characteristic of the authentication bypass technique used in this vulnerability, where attackers try to impersonate valid users without providing proper credentials. While occasional empty key fingerprint authentication attempts might occur due to misconfigurations, a sudden increase or attempts from unexpected sources could signify malicious activity. This analytic helps security teams identify and investigate potential exploitation attempts of the MOVEit Transfer authentication bypass vulnerability.",
+  "source": {
+    "type": "splunk",
+    "id": "1a537acc-199f-4713-b5d7-3d98c05ab932",
+    "url": "https://github.com/splunk/security_content/blob/develop/moveit_empty_key_fingerprint_authentication_attempt.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/moveit_empty_key_fingerprint_authentication_attempt.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "cve",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Michael Haag, Splunk",
+  "references": [
+    "https://labs.watchtowr.com/auth-bypass-in-un-limited-scenarios-progress-moveit-transfer-cve-2024-5806/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`moveit_sftp_logs` \"UserAuthRequestHandler: SftpPublicKeyAuthenticator: Attempted to authenticate empty public key fingerprint\" | stats count by source _raw | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `moveit_empty_key_fingerprint_authentication_attempt_filter`",
+    "condition": "The MOVEit logs must be collected in Splunk. Currently, there is no TA available for MOVEit. Modify the analytic as needed to match the log format of your environment.",
+    "fields": []
+  },
+  "falsepositives": [
+    "False positives may occur, therefore utilize the analytic as a jump off point to identify potential empty key fingerprint authentication attempts."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

@@ -1,0 +1,46 @@
+{
+  "id": "f8a56cb7-a363-44ed-a82f-5926bb44cd05",
+  "name": "BITS Transfer Job Download To Potential Suspicious Folder",
+  "description": "Detects new BITS transfer job where the LocalName/Saved file is stored in a potentially suspicious location",
+  "source": {
+    "type": "sigma",
+    "id": "f8a56cb7-a363-44ed-a82f-5926bb44cd05",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_bits_client_new_trasnfer_susp_local_folder.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/bits_client/win_bits_client_new_trasnfer_susp_local_folder.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackpersistence",
+    "attackt1197"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1197/T1197.md"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-06-28",
+  "modified": "2023-03-27",
+  "mitre": {
+    "tactics": [
+      "TA1197"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 16403, \"LocalName|contains\": [\"\\\\Desktop\\\\\", \"C:\\\\Users\\\\Public\\\\\", \"C:\\\\PerfLogs\\\\\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "bits-client"
+  ]
+}

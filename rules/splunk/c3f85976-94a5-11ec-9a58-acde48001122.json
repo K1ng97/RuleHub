@@ -1,0 +1,43 @@
+{
+  "id": "c3f85976-94a5-11ec-9a58-acde48001122",
+  "name": "Windows Excessive Disabled Services Event",
+  "description": "The following analytic identifies an excessive number of system events where services are modified from start to disabled. It leverages Windows Event Logs (EventCode 7040) to detect multiple service state changes on a single host. This activity is significant as it may indicate an adversary attempting to disable security applications or other critical services, potentially leading to defense evasion or destructive actions. If confirmed malicious, this behavior could allow attackers to disable security defenses, disrupt system operations, and achieve their objectives on the compromised system.",
+  "source": {
+    "type": "splunk",
+    "id": "c3f85976-94a5-11ec-9a58-acde48001122",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_excessive_disabled_services_event.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_excessive_disabled_services_event.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://blog.talosintelligence.com/2018/02/olympic-destroyer.html"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`wineventlog_system` EventCode=7040 \"disabled\" | stats count values(EventData_Xml) as MessageList dc(EventData_Xml) as MessageCount min(_time) as firstTime max(_time) as lastTime by Computer EventCode UserID | rename Computer as dest | where count >=10 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_excessive_disabled_services_event_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting logs with the Service name, Service File Name Service Start type, and Service Type from your endpoints.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

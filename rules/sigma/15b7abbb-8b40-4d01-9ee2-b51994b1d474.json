@@ -1,0 +1,42 @@
+{
+  "id": "15b7abbb-8b40-4d01-9ee2-b51994b1d474",
+  "name": "Suspicious PowerShell Mailbox SMTP Forward Rule",
+  "description": "Detects usage of the powerShell Set-Mailbox Cmdlet to set-up an SMTP forwarding rule.",
+  "source": {
+    "type": "sigma",
+    "id": "15b7abbb-8b40-4d01-9ee2-b51994b1d474",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_exchange_mailbox_smpt_forwarding_rule.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_exchange_mailbox_smpt_forwarding_rule.yml"
+  },
+  "tags": [
+    "attackexfiltration"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://m365internals.com/2022/10/07/hunting-in-on-premises-exchange-server-logs/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-10-26",
+  "modified": "2022-10-26",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"ScriptBlockText|contains|all\": [\"Set-Mailbox \", \" -DeliverToMailboxAndForward \", \" -ForwardingSmtpAddress \"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate usage of the cmdlet to forward emails"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

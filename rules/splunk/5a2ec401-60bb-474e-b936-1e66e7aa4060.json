@@ -1,0 +1,44 @@
+{
+  "id": "5a2ec401-60bb-474e-b936-1e66e7aa4060",
+  "name": "Azure AD Service Principal Authentication",
+  "description": "The following analytic identifies authentication events of service principals in Azure Active Directory. It leverages the `azure_monitor_aad` data source, specifically targeting \"Sign-in activity\" within ServicePrincipalSignInLogs. This detection gathers details such as sign-in frequency, timing, source IPs, and accessed resources. Monitoring these events is significant for SOC teams to distinguish between normal application authentication and potential anomalies, which could indicate compromised credentials or malicious activities. If confirmed malicious, attackers could gain unauthorized access to resources, leading to data breaches or further exploitation within the environment.",
+  "source": {
+    "type": "splunk",
+    "id": "5a2ec401-60bb-474e-b936-1e66e7aa4060",
+    "url": "https://github.com/splunk/security_content/blob/develop/azure_ad_service_principal_authentication.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/azure_ad_service_principal_authentication.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Mauricio Velazco, Splunk",
+  "references": [
+    "https://attack.mitre.org/techniques/T1078/004/",
+    "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/concept-sign-ins#service-principal-sign-ins"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`azure_monitor_aad` operationName=\"Sign-in activity\" category=ServicePrincipalSignInLogs | rename properties.* as * | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by dest user src vendor_account vendor_product resourceDisplayName resourceId signature | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `azure_ad_service_principal_authentication_filter`",
+    "condition": "You must install the latest version of Splunk Add-on for Microsoft Cloud Services from Splunkbase (https://splunkbase.splunk.com/app/3110/#/details). You must be ingesting Azure Active Directory events into your Splunk environment through an EventHub. This analytic was written to be used with the azure:monitor:aad sourcetype leveraging the SignInLogs log category.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Service Principals will legitimally authenticate remotely to your tenant. Implementing this detection after establishing a baseline enables a more accurate identification of security threats, ensuring proactive and informed responses to safeguard the Azure AD environment. source ips."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

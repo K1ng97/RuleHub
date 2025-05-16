@@ -1,0 +1,48 @@
+{
+  "id": "969c7590-8c19-4797-8c1b-23155de6e7ac",
+  "name": "Okta Identity Provider Created",
+  "description": "Detects when a new identity provider is created for Okta.",
+  "source": {
+    "type": "sigma",
+    "id": "969c7590-8c19-4797-8c1b-23155de6e7ac",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/okta_identity_provider_created.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/okta/okta_identity_provider_created.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1098001"
+  ],
+  "author": "kelnage",
+  "references": [
+    "https://developer.okta.com/docs/reference/api/system-log/",
+    "https://sec.okta.com/articles/2023/08/cross-tenant-impersonation-prevention-and-detection"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-09-07",
+  "modified": "2023-09-07",
+  "mitre": {
+    "tactics": [
+      "TA1098"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"eventtype\": \"system.idp.lifecycle.create\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "When an admin creates a new, authorised identity provider."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "okta",
+    "okta"
+  ]
+}

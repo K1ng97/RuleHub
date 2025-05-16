@@ -1,0 +1,46 @@
+{
+  "id": "ff246f56-7f24-402a-baca-b86540e3925c",
+  "name": "Microsoft 365 - User Restricted from Sending Email",
+  "description": "Detects when a Security Compliance Center reported a user who exceeded sending limits of the service policies and because of this has been restricted from sending email.",
+  "source": {
+    "type": "sigma",
+    "id": "ff246f56-7f24-402a-baca-b86540e3925c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/microsoft365_user_restricted_from_sending_email.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/m365/threat_management/microsoft365_user_restricted_from_sending_email.yml"
+  },
+  "tags": [
+    "attackinitial-access",
+    "attackt1199"
+  ],
+  "author": "austinsonger",
+  "references": [
+    "https://learn.microsoft.com/en-us/defender-cloud-apps/anomaly-detection-policy",
+    "https://learn.microsoft.com/en-us/defender-cloud-apps/policy-template-reference"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-08-19",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [
+      "TA1199"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"eventSource\": \"SecurityComplianceCenter\", \"eventName\": \"User restricted from sending email\", \"status\": \"success\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "m365",
+    "threat_management"
+  ]
+}

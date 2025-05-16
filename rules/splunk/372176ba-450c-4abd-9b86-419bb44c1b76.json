@@ -1,0 +1,44 @@
+{
+  "id": "372176ba-450c-4abd-9b86-419bb44c1b76",
+  "name": "GitHub Enterprise Disable Classic Branch Protection Rule",
+  "description": "The following analytic detects when classic branch protection rules are disabled in GitHub Enterprise. The detection monitors GitHub Enterprise audit logs for branch protection removal events by tracking actor details, repository information, and associated metadata. For a SOC, identifying disabled branch protection is critical as it could indicate attempts to bypass code review requirements and security controls. Branch protection rules are essential security controls that enforce code review, prevent force pushes, and maintain code quality. Disabling these protections could allow malicious actors to directly push unauthorized code changes or backdoors to protected branches. The impact of disabled branch protection includes potential code tampering, bypass of security reviews, introduction of vulnerabilities or malicious code, and compromise of software supply chain integrity. This activity could be part of a larger attack chain where an adversary first disables security controls before attempting to inject malicious code.",
+  "source": {
+    "type": "splunk",
+    "id": "372176ba-450c-4abd-9b86-419bb44c1b76",
+    "url": "https://github.com/splunk/security_content/blob/develop/github_enterprise_disable_classic_branch_protection_rule.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/github_enterprise_disable_classic_branch_protection_rule.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Patrick Bareiss, Splunk",
+  "references": [
+    "https://www.googlecloudcommunity.com/gc/Community-Blog/Monitoring-for-Suspicious-GitHub-Activity-with-Google-Security/ba-p/763610",
+    "https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/streaming-the-audit-log-for-your-enterprise#setting-up-streaming-to-splunk"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`github_enterprise` action=protected_branch.destroy | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by actor, actor_id, actor_ip, actor_is_bot, actor_location.country_code, business, business_id, org, org_id, repo, repo_id, user_agent, action, name | eval user=actor | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `github_enterprise_disable_classic_branch_protection_rule_filter`",
+    "condition": "You must ingest GitHub Enterprise logs using Audit log streaming as described in this documentation https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/streaming-the-audit-log-for-your-enterprise#setting-up-streaming-to-splunk using a Splunk HTTP Event Collector.",
+    "fields": []
+  },
+  "falsepositives": [
+    "unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

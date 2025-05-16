@@ -1,0 +1,48 @@
+{
+  "id": "9d15044a-7cfe-4d23-8085-6ebc11df7685",
+  "name": "Potential Persistence Via Visual Studio Tools for Office",
+  "description": "Detects persistence via Visual Studio Tools for Office (VSTO) add-ins in Office applications.",
+  "source": {
+    "type": "sigma",
+    "id": "9d15044a-7cfe-4d23-8085-6ebc11df7685",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_set_persistence_office_vsto.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_set/registry_set_persistence_office_vsto.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1137006"
+  ],
+  "author": "Bhabesh Raj",
+  "references": [
+    "https://twitter.com/_vivami/status/1347925307643355138",
+    "https://vanmieghem.io/stealth-outlook-persistence/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-01-10",
+  "modified": "2023-08-28",
+  "mitre": {
+    "tactics": [
+      "TA1137"
+    ],
+    "techniques": [
+      "T006"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"TargetObject|contains\": [\"\\\\Software\\\\Microsoft\\\\Office\\\\Outlook\\\\Addins\\\\\", \"\\\\Software\\\\Microsoft\\\\Office\\\\Word\\\\Addins\\\\\", \"\\\\Software\\\\Microsoft\\\\Office\\\\Excel\\\\Addins\\\\\", \"\\\\Software\\\\Microsoft\\\\Office\\\\Powerpoint\\\\Addins\\\\\", \"\\\\Software\\\\Microsoft\\\\VSTO\\\\Security\\\\Inclusion\\\\\"]}\nfilter_image: {\"Image|endswith\": [\"\\\\msiexec.exe\", \"\\\\regsvr32.exe\"]}\nfilter_office: {\"Image|endswith\": [\"\\\\excel.exe\", \"\\\\integrator.exe\", \"\\\\OfficeClickToRun.exe\", \"\\\\winword.exe\", \"\\\\visio.exe\"]}\nfilter_teams: {\"Image|endswith\": \"\\\\Teams.exe\"}\nfilter_avg: {\"Image\": \"C:\\\\Program Files\\\\AVG\\\\Antivirus\\\\RegSvr.exe\", \"TargetObject|contains\": \"\\\\Microsoft\\\\Office\\\\Outlook\\\\Addins\\\\Antivirus.AsOutExt\\\\\"}",
+    "condition": "selection and not 1 of filter_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate Addin Installation"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_set"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "id": "5589ab4f-a767-433c-961d-c91f3f704db1",
+  "name": "Potential SMB Relay Attack Tool Execution",
+  "description": "Detects different hacktools used for relay attacks on Windows for privilege escalation",
+  "source": {
+    "type": "sigma",
+    "id": "5589ab4f-a767-433c-961d-c91f3f704db1",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_hktl_relay_attacks_tools.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_hktl_relay_attacks_tools.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1557001"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://foxglovesecurity.com/2016/09/26/rotten-potato-privilege-escalation-from-service-accounts-to-system/",
+    "https://pentestlab.blog/2017/04/13/hot-potato/",
+    "https://github.com/ohpe/juicy-potato",
+    "https://hunter2.gitbook.io/darthsidious/other/war-stories/domain-admin-in-30-minutes",
+    "https://hunter2.gitbook.io/darthsidious/execution/responder-with-ntlm-relay-and-empire",
+    "https://www.localpotato.com/"
+  ],
+  "severity": "critical",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-07-24",
+  "modified": "2023-02-14",
+  "mitre": {
+    "tactics": [
+      "TA1557"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_pe: {\"Image|contains\": [\"PetitPotam\", \"RottenPotato\", \"HotPotato\", \"JuicyPotato\", \"\\\\just_dce_\", \"Juicy Potato\", \"\\\\temp\\\\rot.exe\", \"\\\\Potato.exe\", \"\\\\SpoolSample.exe\", \"\\\\Responder.exe\", \"\\\\smbrelayx\", \"\\\\ntlmrelayx\", \"\\\\LocalPotato\"]}\nselection_script: {\"CommandLine|contains\": [\"Invoke-Tater\", \" smbrelay\", \" ntlmrelay\", \"cme smb \", \" /ntlm:NTLMhash \", \"Invoke-PetitPotam\", \".exe -t * -p \"]}\nselection_juicypotato_enum: {\"CommandLine|contains\": \".exe -c \\\"{\", \"CommandLine|endswith\": \"}\\\" -z\"}\nfilter_hotpotatoes: {\"Image|contains\": [\"HotPotatoes6\", \"HotPotatoes7\", \"HotPotatoes \"]}",
+    "condition": "1 of selection_* and not 1 of filter_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate files with these rare hacktool names"
+  ],
+  "level": "critical",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

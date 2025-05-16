@@ -1,0 +1,47 @@
+{
+  "id": "90217a70-13fc-48e4-b3db-0d836c5824ac",
+  "name": "GAC DLL Loaded Via Office Applications",
+  "description": "Detects any GAC DLL being loaded by an Office Product",
+  "source": {
+    "type": "sigma",
+    "id": "90217a70-13fc-48e4-b3db-0d836c5824ac",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/image_load_office_dotnet_gac_dll_load.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/image_load/image_load_office_dotnet_gac_dll_load.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1204002"
+  ],
+  "author": "Antonlovesdnb",
+  "references": [
+    "https://medium.com/threatpunter/detecting-adversary-tradecraft-with-image-load-event-logging-and-eql-8de93338c16"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-02-19",
+  "modified": "2023-02-10",
+  "mitre": {
+    "tactics": [
+      "TA1204"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": [\"\\\\excel.exe\", \"\\\\mspub.exe\", \"\\\\onenote.exe\", \"\\\\onenoteim.exe\", \"\\\\outlook.exe\", \"\\\\powerpnt.exe\", \"\\\\winword.exe\"], \"ImageLoaded|startswith\": \"C:\\\\Windows\\\\Microsoft.NET\\\\assembly\\\\GAC_MSIL\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate macro usage. Add the appropriate filter according to your environment"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "image_load"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "id": "b66aeaa4-586f-428b-8a2b-c4fd3039d8d3",
+  "name": "O365 Email Receive and Hard Delete Takeover Behavior",
+  "description": "The following analytic identifies when an O365 email recipient receives and then deletes emails related to password or banking/payroll changes within a short period. This behavior may indicate a compromised account where the threat actor is attempting to redirect the victims payroll to an attacker controlled bank account.",
+  "source": {
+    "type": "splunk",
+    "id": "b66aeaa4-586f-428b-8a2b-c4fd3039d8d3",
+    "url": "https://github.com/splunk/security_content/blob/develop/o365_email_receive_and_hard_delete_takeover_behavior.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/o365_email_receive_and_hard_delete_takeover_behavior.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Steven Dick",
+  "references": [
+    "https://attack.mitre.org/techniques/T1114/",
+    "https://www.hhs.gov/sites/default/files/help-desk-social-engineering-sector-alert-tlpclear.pdf",
+    "https://intelligence.abnormalsecurity.com/attack-library/threat-actor-convincingly-impersonates-employee-requesting-direct-deposit-update-in-likely-ai-generated-attack"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`o365_messagetrace` subject IN (\"*banking*\",\"*direct deposit*\",\"*pay-to*\",\"*password *\",\"*passcode *\",\"*OTP *\",\"*MFA *\",\"*Account Recovery*\")\n| eval mailtime = _time\n| bin _time span=4hr\n| eval user = lower(RecipientAddress)\n| eval InternetMessageId = lower(MessageId)\n| join InternetMessageId, user max=0\n  [\n  | search `o365_management_activity` Workload=Exchange Operation IN (\"HardDelete\") AND Folder.Path IN (\"\\\\Sent Items\",\"\\\\Recoverable Items\\\\Deletions\")\n  | spath path=AffectedItems{}  output=AffectedItemSplit\n  | fields _time,ClientProcessName,ClientIPAddress,ClientInfoString,UserId,Operation,ResultStatus,MailboxOwnerUPN,AffectedItemSplit,Folder.Path \n  | mvexpand AffectedItemSplit | spath input=AffectedItemSplit\n  | search Subject IN (\"*banking*\",\"*direct deposit*\",\"*pay-to*\",\"*password *\",\"*passcode *\",\"*OTP *\",\"*MFA *\",\"*Account Recovery*\") \n  | eval deltime = _time\n  | bin _time span=4hr\n  | eval InternetMessageId = lower(InternetMessageId), user = lower(UserId), subject = Subject\n  ]\n| stats values(ClientIPAddress) as src, values(ClientInfoString) as http_user_agent, values(Folder.Path) as file_path, values(Operation) as signature, values(ResultStatus) as result, values(InternetMessageId) as signature_id, count, min(mailtime) as firstTime, max(deltime) as lastTime by user,subject\n| `security_content_ctime(firstTime)` \n| `security_content_ctime(lastTime)`\n| `o365_email_receive_and_hard_delete_takeover_behavior_filter`",
+    "condition": "You must install the Splunk Microsoft Office 365 Add-on and ingest Office 365 management activity events AND Message Trace events.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Possible new user/account onboarding processes."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

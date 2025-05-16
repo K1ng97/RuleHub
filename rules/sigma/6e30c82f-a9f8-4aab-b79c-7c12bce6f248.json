@@ -1,0 +1,57 @@
+{
+  "id": "6e30c82f-a9f8-4aab-b79c-7c12bce6f248",
+  "name": "File Download Via Bitsadmin To An Uncommon Target Folder",
+  "description": "Detects usage of bitsadmin downloading a file to uncommon target folder",
+  "source": {
+    "type": "sigma",
+    "id": "6e30c82f-a9f8-4aab-b79c-7c12bce6f248",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_bitsadmin_download_uncommon_targetfolder.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_bitsadmin_download_uncommon_targetfolder.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackpersistence",
+    "attacks0190",
+    "attackt1036003",
+    "attackt1197"
+  ],
+  "author": "Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://blog.netspi.com/15-ways-to-download-a-file/#bitsadmin",
+    "https://isc.sans.edu/diary/22264",
+    "https://lolbas-project.github.io/lolbas/Binaries/Bitsadmin/",
+    "https://blog.talosintelligence.com/breaking-the-silence-recent-truebot-activity/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-06-28",
+  "modified": "2023-02-15",
+  "mitre": {
+    "tactics": [
+      "TA1036",
+      "TA1197"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\bitsadmin.exe\"}, {\"OriginalFileName\": \"bitsadmin.exe\"}]\nselection_flags: {\"CommandLine|contains\": [\" /transfer \", \" /create \", \" /addfile \"]}\nselection_folder: {\"CommandLine|contains\": [\"%AppData%\", \"%temp%\", \"%tmp%\", \"\\\\AppData\\\\Local\\\\\", \"C:\\\\Windows\\\\Temp\\\\\"]}",
+    "condition": "all of selection_*",
+    "fields": [
+      "CommandLine",
+      "ParentCommandLine"
+    ]
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

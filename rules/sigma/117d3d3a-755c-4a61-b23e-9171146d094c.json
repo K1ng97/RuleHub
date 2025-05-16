@@ -1,0 +1,52 @@
+{
+  "id": "117d3d3a-755c-4a61-b23e-9171146d094c",
+  "name": "Suspicious Outlook Macro Created",
+  "description": "Detects the creation of a macro file for Outlook.",
+  "source": {
+    "type": "sigma",
+    "id": "117d3d3a-755c-4a61-b23e-9171146d094c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_office_outlook_susp_macro_creation.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_office_outlook_susp_macro_creation.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackpersistence",
+    "attackt1008",
+    "attackt1137",
+    "attackt1546"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://www.mdsec.co.uk/2020/11/a-fresh-outlook-on-mail-based-persistence/",
+    "https://speakerdeck.com/heirhabarov/hunting-for-persistence-via-microsoft-exchange-server-or-outlook?slide=53",
+    "https://www.linkedin.com/pulse/outlook-backdoor-using-vba-samir-b-/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-02-08",
+  "modified": "2023-02-08",
+  "mitre": {
+    "tactics": [
+      "TA1008",
+      "TA1137",
+      "TA1546"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"TargetFilename|endswith\": \"\\\\Microsoft\\\\Outlook\\\\VbaProject.OTM\"}\nfilter: {\"Image|endswith\": \"\\\\outlook.exe\"}",
+    "condition": "selection and not filter",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

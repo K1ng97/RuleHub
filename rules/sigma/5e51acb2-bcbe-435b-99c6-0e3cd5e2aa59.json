@@ -1,0 +1,54 @@
+{
+  "id": "5e51acb2-bcbe-435b-99c6-0e3cd5e2aa59",
+  "name": "Cisco Stage Data",
+  "description": "Various protocols maybe used to put data on the device for exfil or infil",
+  "source": {
+    "type": "sigma",
+    "id": "5e51acb2-bcbe-435b-99c6-0e3cd5e2aa59",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/cisco_cli_moving_data.yml",
+    "file_path": "tmp/repos/sigma/rules/network/cisco/aaa/cisco_cli_moving_data.yml"
+  },
+  "tags": [
+    "attackcollection",
+    "attackcommand-and-control",
+    "attackexfiltration",
+    "attacklateral-movement",
+    "attackt1074",
+    "attackt1105",
+    "attackt1560001"
+  ],
+  "author": "Austin Clark",
+  "references": [],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-08-12",
+  "modified": "2023-01-04",
+  "mitre": {
+    "tactics": [
+      "TA1074",
+      "TA1105",
+      "TA1560"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "keywords: [\"tftp\", \"rcp\", \"puts\", \"copy\", \"configure replace\", \"archive tar\"]",
+    "condition": "keywords",
+    "fields": [
+      "CmdSet"
+    ]
+  },
+  "falsepositives": [
+    "Generally used to copy configs or IOS images"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "cisco",
+    "aaa"
+  ]
+}

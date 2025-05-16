@@ -1,0 +1,48 @@
+{
+  "id": "0d18728b-f5bf-4381-9dcf-915539fff6c2",
+  "name": "Suspicious Cobalt Strike DNS Beaconing - DNS Client",
+  "description": "Detects a program that invoked suspicious DNS queries known from Cobalt Strike beacons",
+  "source": {
+    "type": "sigma",
+    "id": "0d18728b-f5bf-4381-9dcf-915539fff6c2",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_dns_client__mal_cobaltstrike.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/dns_client/win_dns_client__mal_cobaltstrike.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1071004"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://www.icebrg.io/blog/footprints-of-fin7-tracking-actor-patterns",
+    "https://www.sekoia.io/en/hunting-and-detecting-cobalt-strike/"
+  ],
+  "severity": "critical",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-01-16",
+  "modified": "2023-01-16",
+  "mitre": {
+    "tactics": [
+      "TA1071"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection_eid: {\"EventID\": 3008}\nselection_query_1: {\"QueryName|startswith\": [\"aaa.stage.\", \"post.1\"]}\nselection_query_2: {\"QueryName|contains\": \".stage.123456.\"}",
+    "condition": "selection_eid and 1 of selection_query_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "critical",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "dns-client"
+  ]
+}

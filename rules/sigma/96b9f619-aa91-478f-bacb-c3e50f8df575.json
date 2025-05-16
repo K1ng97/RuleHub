@@ -1,0 +1,51 @@
+{
+  "id": "96b9f619-aa91-478f-bacb-c3e50f8df575",
+  "name": "Remote PowerShell Session (PS Module)",
+  "description": "Detects remote PowerShell sessions",
+  "source": {
+    "type": "sigma",
+    "id": "96b9f619-aa91-478f-bacb-c3e50f8df575",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_pm_remote_powershell_session.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_module/posh_pm_remote_powershell_session.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attacklateral-movement",
+    "attackt1021006",
+    "attackt1059001"
+  ],
+  "author": "Roberto Rodriguez @Cyb3rWard0g, Tim Shelton",
+  "references": [
+    "https://threathunterplaybook.com/hunts/windows/190511-RemotePwshExecution/notebook.html"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-08-10",
+  "modified": "2023-01-20",
+  "mitre": {
+    "tactics": [
+      "TA1021",
+      "TA1059"
+    ],
+    "techniques": [
+      "T001",
+      "T006"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ContextInfo|contains|all\": [\" = ServerRemoteHost \", \"wsmprovhost.exe\"]}\nfilter_pwsh_archive: {\"ContextInfo|contains\": \"\\\\Windows\\\\system32\\\\WindowsPowerShell\\\\v1.0\\\\Modules\\\\Microsoft.PowerShell.Archive\\\\Microsoft.PowerShell.Archive.psm1\"}",
+    "condition": "selection and not 1 of filter_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use remote PowerShell sessions"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_module"
+  ]
+}

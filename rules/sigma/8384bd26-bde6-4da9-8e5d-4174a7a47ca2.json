@@ -1,0 +1,47 @@
+{
+  "id": "8384bd26-bde6-4da9-8e5d-4174a7a47ca2",
+  "name": "Query Tor Onion Address - DNS Client",
+  "description": "Detects DNS resolution of an .onion address related to Tor routing networks",
+  "source": {
+    "type": "sigma",
+    "id": "8384bd26-bde6-4da9-8e5d-4174a7a47ca2",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_dns_client_tor_onion.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/dns_client/win_dns_client_tor_onion.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1090003"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://www.logpoint.com/en/blog/detecting-tor-use-with-logpoint/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-02-20",
+  "modified": "2022-02-20",
+  "mitre": {
+    "tactics": [
+      "TA1090"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 3008, \"QueryName|contains\": \".onion\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "dns-client"
+  ]
+}

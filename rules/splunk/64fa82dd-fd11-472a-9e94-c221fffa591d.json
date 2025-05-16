@@ -1,0 +1,45 @@
+{
+  "id": "64fa82dd-fd11-472a-9e94-c221fffa591d",
+  "name": "Windows Modify Registry Utilize ProgIDs",
+  "description": "The following analytic detects modifications to the Windows Registry specifically targeting Programmatic Identifier associations to bypass User Account Control (UAC) Windows OS feature. ValleyRAT may create or alter registry entries to targetted progIDs like `.pwn` files with malicious processes, allowing it to execute harmful scripts or commands when these files are opened. By monitoring for unusual changes in registry keys linked to ProgIDs, this detection enables security analysts to identify potential threats like ValleyRAT execution attempts. Early detection of these modifications helps mitigate unauthorized execution and prevents further exploitation of the system.",
+  "source": {
+    "type": "splunk",
+    "id": "64fa82dd-fd11-472a-9e94-c221fffa591d",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_modify_registry_utilize_progids.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_modify_registry_utilize_progids.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://www.proofpoint.com/us/blog/threat-insight/chinese-malware-appears-earnest-across-cybercrime-threat-landscape",
+    "https://www.fortinet.com/blog/threat-research/valleyrat-campaign-targeting-chinese-speakers",
+    "https://v3ded.github.io/redteam/utilizing-programmatic-identifiers-progids-for-uac-bypasses"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats `security_content_summariesonly` count FROM datamodel=Endpoint.Registry WHERE Registry.registry_path= \"*\\\\ms-settings\\\\CurVer\\\\(Default)\" by Registry.action Registry.dest Registry.process_guid Registry.process_id Registry.registry_hive Registry.registry_path Registry.registry_key_name Registry.registry_value_data Registry.registry_value_name Registry.registry_value_type Registry.status Registry.user Registry.vendor_product | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_modify_registry_utilize_progids_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting logs with the registry value name, registry path, and registry value data from your endpoints. If you are using Sysmon, you must have at least version 2.0 of the official Sysmon TA. https://splunkbase.splunk.com/app/5709",
+    "fields": []
+  },
+  "falsepositives": [
+    "unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

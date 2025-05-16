@@ -1,0 +1,69 @@
+{
+  "id": "401e5d00-b944-11ea-8f9a-00163ecd60ae",
+  "name": "File Was Not Allowed To Run",
+  "description": "Detect run not allowed files. Applocker is a very useful tool, especially on servers where unprivileged users have access. For example terminal servers. You need configure applocker and log collect to receive these events.",
+  "source": {
+    "type": "sigma",
+    "id": "401e5d00-b944-11ea-8f9a-00163ecd60ae",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_applocker_file_was_not_allowed_to_run.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/applocker/win_applocker_file_was_not_allowed_to_run.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1059001",
+    "attackt1059003",
+    "attackt1059005",
+    "attackt1059006",
+    "attackt1059007",
+    "attackt1204002"
+  ],
+  "author": "Pushkarev Dmitry",
+  "references": [
+    "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/applocker/what-is-applocker",
+    "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/applocker/using-event-viewer-with-applocker",
+    "https://nxlog.co/documentation/nxlog-user-guide/applocker.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-06-28",
+  "modified": "2021-11-27",
+  "mitre": {
+    "tactics": [
+      "TA1059",
+      "TA1204"
+    ],
+    "techniques": [
+      "T001",
+      "T002",
+      "T003",
+      "T005",
+      "T006",
+      "T007"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": [8004, 8007, 8022, 8025]}",
+    "condition": "selection",
+    "fields": [
+      "PolicyName",
+      "RuleId",
+      "RuleName",
+      "TargetUser",
+      "TargetProcessId",
+      "FilePath",
+      "FileHash",
+      "Fqbn"
+    ]
+  },
+  "falsepositives": [
+    "Need tuning applocker or add exceptions in SIEM"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "applocker"
+  ]
+}

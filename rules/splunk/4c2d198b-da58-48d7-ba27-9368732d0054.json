@@ -1,0 +1,43 @@
+{
+  "id": "4c2d198b-da58-48d7-ba27-9368732d0054",
+  "name": "Windows Multi hop Proxy TOR Website Query",
+  "description": "The following analytic identifies DNS queries to known TOR proxy websites, such as \"*.torproject.org\" and \"www.theonionrouter.com\". It leverages Sysmon EventCode 22 to detect these queries by monitoring DNS query events from endpoints. This activity is significant because adversaries often use TOR proxies to disguise the source of their malicious traffic, making it harder to trace their actions. If confirmed malicious, this behavior could indicate an attempt to obfuscate network traffic, potentially allowing attackers to exfiltrate data or communicate with command and control servers undetected.",
+  "source": {
+    "type": "splunk",
+    "id": "4c2d198b-da58-48d7-ba27-9368732d0054",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_multi_hop_proxy_tor_website_query.yml",
+    "file_path": "tmp/repos/splunk/detections/network/windows_multi_hop_proxy_tor_website_query.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://malpedia.caad.fkie.fraunhofer.de/details/win.agent_tesla"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`sysmon` EventCode=22 QueryName IN (\"*.torproject.org\", \"www.theonionrouter.com\") | stats count min(_time) as firstTime max(_time) as lastTime by answer answer_count dvc process_exec process_guid process_name query query_count reply_code_id signature signature_id src user_id vendor_product QueryName QueryResults QueryStatus | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_multi_hop_proxy_tor_website_query_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting logs with the process name and sysmon eventcode = 22 dns query events from your endpoints. If you are using Sysmon, you must have at least version 6.0.4 of the Sysmon TA.",
+    "fields": []
+  },
+  "falsepositives": [
+    "third party application may use this proxies if allowed in production environment. Filter is needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

@@ -1,0 +1,51 @@
+{
+  "id": "b17ea6f7-6e90-447e-a799-e6c0a493d6ce",
+  "name": "Shadow Copies Creation Using Operating Systems Utilities",
+  "description": "Shadow Copies creation using operating systems utilities, possible credential access",
+  "source": {
+    "type": "sigma",
+    "id": "b17ea6f7-6e90-447e-a799-e6c0a493d6ce",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_susp_shadow_copies_creation.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_susp_shadow_copies_creation.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1003",
+    "attackt1003002",
+    "attackt1003003"
+  ],
+  "author": "Teymur Kheirkhabarov, Daniil Yugoslavskiy, oscd.community",
+  "references": [
+    "https://www.slideshare.net/heirhabarov/hunting-for-credentials-dumping-in-windows-environment",
+    "https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/tutorial-for-ntds-goodness-vssadmin-wmis-ntdsdit-system/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-10-22",
+  "modified": "2022-11-10",
+  "mitre": {
+    "tactics": [
+      "TA1003"
+    ],
+    "techniques": [
+      "T002",
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": [\"\\\\powershell.exe\", \"\\\\pwsh.exe\", \"\\\\wmic.exe\", \"\\\\vssadmin.exe\"]}, {\"OriginalFileName\": [\"PowerShell.EXE\", \"pwsh.dll\", \"wmic.exe\", \"VSSADMIN.EXE\"]}]\nselection_cli: {\"CommandLine|contains|all\": [\"shadow\", \"create\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administrator working with shadow copies, access for backup purposes"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

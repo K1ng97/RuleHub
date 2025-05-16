@@ -1,0 +1,46 @@
+{
+  "id": "67add051-9ee7-4ad3-93ba-42935615ae8d",
+  "name": "PUA - Process Hacker Driver Load",
+  "description": "Detects driver load of the Process Hacker tool",
+  "source": {
+    "type": "sigma",
+    "id": "67add051-9ee7-4ad3-93ba-42935615ae8d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/driver_load_win_pua_process_hacker.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/driver_load/driver_load_win_pua_process_hacker.yml"
+  },
+  "tags": [
+    "attackprivilege-escalation",
+    "attackt1543",
+    "cve2021-21551"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://processhacker.sourceforge.io/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-11-16",
+  "modified": "2024-11-23",
+  "mitre": {
+    "tactics": [
+      "TA1543"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: [{\"ImageLoaded|endswith\": \"\\\\kprocesshacker.sys\"}, {\"Hashes|contains\": [\"IMPHASH=821D74031D3F625BCBD0DF08B70F1E77\", \"IMPHASH=F86759BB4DE4320918615DC06E998A39\", \"IMPHASH=0A64EEB85419257D0CE32BD5D55C3A18\", \"IMPHASH=6E7B34DFC017700B1517B230DF6FF0D0\"]}]",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use of process hacker or system informer by developers or system administrators"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "driver_load"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "4f84b697-c9ed-4420-8ab5-e09af5b2345d",
+  "name": "New DLL Added to AppInit_DLLs Registry Key",
+  "description": "DLLs that are specified in the AppInit_DLLs value in the Registry key HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Windows are loaded by user32.dll into every process that loads user32.dll",
+  "source": {
+    "type": "sigma",
+    "id": "4f84b697-c9ed-4420-8ab5-e09af5b2345d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_event_new_dll_added_to_appinit_dlls_registry_key.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_event/registry_event_new_dll_added_to_appinit_dlls_registry_key.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1546010"
+  ],
+  "author": "Ilyas Ochkov, oscd.community, Tim Shelton",
+  "references": [
+    "https://eqllib.readthedocs.io/en/latest/analytics/822dc4c5-b355-4df8-bd37-29c458997b8f.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-10-25",
+  "modified": "2022-12-25",
+  "mitre": {
+    "tactics": [
+      "TA1546"
+    ],
+    "techniques": [
+      "T010"
+    ]
+  },
+  "detection": {
+    "query": "selection: [{\"TargetObject|endswith\": [\"\\\\SOFTWARE\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\Windows\\\\AppInit_Dlls\", \"\\\\SOFTWARE\\\\Wow6432Node\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\Windows\\\\AppInit_Dlls\"]}, {\"NewName|endswith\": [\"\\\\SOFTWARE\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\Windows\\\\AppInit_Dlls\", \"\\\\SOFTWARE\\\\Wow6432Node\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\Windows\\\\AppInit_Dlls\"]}]\nfilter: {\"Details\": \"(Empty)\"}",
+    "condition": "selection and not filter",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_event"
+  ]
+}

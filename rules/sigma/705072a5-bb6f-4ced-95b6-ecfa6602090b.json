@@ -1,0 +1,47 @@
+{
+  "id": "705072a5-bb6f-4ced-95b6-ecfa6602090b",
+  "name": "WebDav Put Request",
+  "description": "A General detection for WebDav user-agent being used to PUT files on a WebDav network share. This could be an indicator of exfiltration.",
+  "source": {
+    "type": "sigma",
+    "id": "705072a5-bb6f-4ced-95b6-ecfa6602090b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/zeek_http_webdav_put_request.yml",
+    "file_path": "tmp/repos/sigma/rules/network/zeek/zeek_http_webdav_put_request.yml"
+  },
+  "tags": [
+    "attackexfiltration",
+    "attackt1048003"
+  ],
+  "author": "Roberto Rodriguez (Cyb3rWard0g), OTR (Open Threat Research)",
+  "references": [
+    "https://github.com/OTRF/detection-hackathon-apt29/issues/17"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-05-02",
+  "modified": "2024-03-13",
+  "mitre": {
+    "tactics": [
+      "TA1048"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"user_agent|contains\": \"WebDAV\", \"method\": \"PUT\"}\nfilter: {\"id.resp_h|cidr\": [\"10.0.0.0/8\", \"127.0.0.0/8\", \"172.16.0.0/12\", \"192.168.0.0/16\", \"169.254.0.0/16\"]}",
+    "condition": "selection and not filter",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "zeek",
+    "http"
+  ]
+}

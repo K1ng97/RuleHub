@@ -1,0 +1,45 @@
+{
+  "id": "fcd6dfeb-191c-46a0-a29c-c306382145ab",
+  "name": "Azure AD PIM Role Assigned",
+  "description": "The following analytic detects the assignment of an Azure AD Privileged Identity Management (PIM) role. It leverages Azure Active Directory events to identify when a user is added as an eligible member to a PIM role. This activity is significant because PIM roles grant elevated privileges, and their assignment should be closely monitored to prevent unauthorized access. If confirmed malicious, an attacker could exploit this to gain privileged access, potentially leading to unauthorized actions, data breaches, or further compromise of the environment.",
+  "source": {
+    "type": "splunk",
+    "id": "fcd6dfeb-191c-46a0-a29c-c306382145ab",
+    "url": "https://github.com/splunk/security_content/blob/develop/azure_ad_pim_role_assigned.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/azure_ad_pim_role_assigned.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Mauricio Velazco, Splunk",
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-configure",
+    "https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-how-to-activate-role",
+    "https://microsoft.github.io/Azure-Threat-Research-Matrix/PrivilegeEscalation/AZT401/AZT401/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`azure_monitor_aad` operationName=\"Add eligible member to role in PIM completed*\" | rename properties.* as * | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by dest user src vendor_account vendor_product signature | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `azure_ad_pim_role_assigned_filter`",
+    "condition": "You must install the latest version of Splunk Add-on for Microsoft Cloud Services from Splunkbase(https://splunkbase.splunk.com/app/3110/#/details). You must be ingesting Azure Active Directory events into your Splunk environment. This analytic was written to be used with the azure:monitor:aad sourcetype leveraging the AuditLog log category.",
+    "fields": []
+  },
+  "falsepositives": [
+    "As part of legitimate administrative behavior, users may be assigned PIM roles. Filter as needed"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

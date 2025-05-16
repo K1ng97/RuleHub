@@ -1,0 +1,45 @@
+{
+  "id": "79609c82-a488-426e-abcf-9f341a39365d",
+  "name": "All Rules Have Been Deleted From The Windows Firewall Configuration",
+  "description": "Detects when a all the rules have been deleted from the Windows Defender Firewall configuration",
+  "source": {
+    "type": "sigma",
+    "id": "79609c82-a488-426e-abcf-9f341a39365d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_firewall_as_delete_all_rules.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/firewall_as/win_firewall_as_delete_all_rules.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1562004"
+  ],
+  "author": "frack113, Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-r2-and-2008/dd364427(v=ws.10)"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-01-17",
+  "modified": "2024-01-22",
+  "mitre": {
+    "tactics": [
+      "TA1562"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": [2033, 2059]}\nfilter_main_svchost: {\"ModifyingApplication|endswith\": \":\\\\Windows\\\\System32\\\\svchost.exe\"}\nfilter_optional_msmpeng: {\"ModifyingApplication|contains|all\": [\":\\\\ProgramData\\\\Microsoft\\\\Windows Defender\\\\Platform\\\\\", \"\\\\MsMpEng.exe\"]}",
+    "condition": "selection and not 1 of filter_main_* and not 1 of filter_optional_*",
+    "fields": []
+  },
+  "falsepositives": [],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "firewall-as"
+  ]
+}

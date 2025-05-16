@@ -1,0 +1,45 @@
+{
+  "id": "20db5f70-34b4-4e83-8926-fa26119de173",
+  "name": "Windows IIS Components Get-WebGlobalModule Module Query",
+  "description": "The following analytic identifies the execution of the PowerShell cmdlet Get-WebGlobalModule, which lists all IIS Modules installed on a system. It leverages PowerShell input data to detect this activity by capturing the module names and the image paths of the DLLs. This activity is significant for a SOC because it can indicate an attempt to enumerate installed IIS modules, which could be a precursor to exploiting vulnerabilities or misconfigurations. If confirmed malicious, this could allow an attacker to gain insights into the web server's configuration, potentially leading to further exploitation or privilege escalation.",
+  "source": {
+    "type": "splunk",
+    "id": "20db5f70-34b4-4e83-8926-fa26119de173",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_iis_components_get_webglobalmodule_module_query.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_iis_components_get_webglobalmodule_module_query.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Michael Haag, Splunk",
+  "references": [
+    "https://docs.splunk.com/Documentation/Splunk/9.0.2/Data/MonitorWindowsdatawithPowerShellscripts",
+    "https://gist.github.com/MHaggis/64396dfd9fc3734e1d1901a8f2f07040",
+    "https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1505.004"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`iis_get_webglobalmodule` | stats count min(_time) as firstTime max(_time) as lastTime by host name image | rename host as dest | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_iis_components_get_webglobalmodule_module_query_filter`",
+    "condition": "You must ingest the PwSh cmdlet Get-WebGlobalModule in order to utilize this analytic. Follow https://gist.github.com/MHaggis/64396dfd9fc3734e1d1901a8f2f07040",
+    "fields": []
+  },
+  "falsepositives": [
+    "This analytic is meant to assist with hunting modules across a fleet of IIS servers. Filter and modify as needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

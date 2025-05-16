@@ -1,0 +1,49 @@
+{
+  "id": "3be619f4-d9ec-4ea8-a173-18fdd01996ab",
+  "name": "Flush Iptables Ufw Chain",
+  "description": "Detect use of iptables to flush all firewall rules, tables and chains and allow all network traffic",
+  "source": {
+    "type": "sigma",
+    "id": "3be619f4-d9ec-4ea8-a173-18fdd01996ab",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_iptables_flush_ufw.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_iptables_flush_ufw.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1562004"
+  ],
+  "author": "Joseliyo Sanchez, @Joseliyo_Jstnk",
+  "references": [
+    "https://blogs.blackberry.com/",
+    "https://www.cyberciti.biz/tips/linux-iptables-how-to-flush-all-rules.html",
+    "https://twitter.com/Joseliyo_Jstnk/status/1620131033474822144"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-01-18",
+  "modified": "2023-01-18",
+  "mitre": {
+    "tactics": [
+      "TA1562"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: {\"Image|endswith\": [\"/iptables\", \"/xtables-legacy-multi\", \"/iptables-legacy-multi\", \"/ip6tables\", \"/ip6tables-legacy-multi\"]}\nselection_params: {\"CommandLine|contains\": [\"-F\", \"-Z\", \"-X\"]}\nselection_ufw: {\"CommandLine|contains\": [\"ufw-logging-deny\", \"ufw-logging-allow\", \"ufw6-logging-deny\", \"ufw6-logging-allow\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Network administrators"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

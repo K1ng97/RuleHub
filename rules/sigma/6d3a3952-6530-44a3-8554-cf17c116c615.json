@@ -1,0 +1,45 @@
+{
+  "id": "6d3a3952-6530-44a3-8554-cf17c116c615",
+  "name": "Potentially Suspicious JWT Token Search Via CLI",
+  "description": "Detects possible search for JWT tokens via CLI by looking for the string \"eyJ0eX\" or \"eyJhbG\".\nThis string is used as an anchor to look for the start of the JWT token used by microsoft office and similar apps.\n",
+  "source": {
+    "type": "sigma",
+    "id": "6d3a3952-6530-44a3-8554-cf17c116c615",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_susp_jwt_token_search.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_susp_jwt_token_search.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1528"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://mrd0x.com/stealing-tokens-from-office-applications/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-10-25",
+  "modified": "2024-10-06",
+  "mitre": {
+    "tactics": [
+      "TA1528"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|contains\": [\"eyJ0eXAiOi\", \"eyJhbGciOi\", \" eyJ0eX\", \" \\\"eyJ0eX\\\"\", \" 'eyJ0eX'\", \" eyJhbG\", \" \\\"eyJhbG\\\"\", \" 'eyJhbG'\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "bbc865e4-7fcd-45a6-8ff1-95ced28ec5b2",
+  "name": "NtdllPipe Like Activity Execution",
+  "description": "Detects command that type the content of ntdll.dll to a different file or a pipe in order to evade AV / EDR detection. As seen being used in the POC NtdllPipe",
+  "source": {
+    "type": "sigma",
+    "id": "bbc865e4-7fcd-45a6-8ff1-95ced28ec5b2",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_cmd_ntdllpipe_redirect.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_cmd_ntdllpipe_redirect.yml"
+  },
+  "tags": [
+    "attackdefense-evasion"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://web.archive.org/web/20220306121156/https://www.x86matthew.com/view_post?id=ntdll_pipe"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-03-05",
+  "modified": "2023-03-07",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|contains\": [\"type %windir%\\\\system32\\\\ntdll.dll\", \"type %systemroot%\\\\system32\\\\ntdll.dll\", \"type c:\\\\windows\\\\system32\\\\ntdll.dll\", \"\\\\\\\\ntdll.dll > \\\\\\\\\\\\\\\\.\\\\\\\\pipe\\\\\\\\\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "50d66fb0-03f8-4da0-8add-84e77d12a020",
+  "name": "Suspicious RunAs-Like Flag Combination",
+  "description": "Detects suspicious command line flags that let the user set a target user and command as e.g. seen in PsExec-like tools",
+  "source": {
+    "type": "sigma",
+    "id": "50d66fb0-03f8-4da0-8add-84e77d12a020",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_susp_privilege_escalation_cli_patterns.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_susp_privilege_escalation_cli_patterns.yml"
+  },
+  "tags": [
+    "attackprivilege-escalation"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://www.trendmicro.com/en_us/research/22/k/hack-the-real-box-apt41-new-subgroup-earth-longzhi.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-11-11",
+  "modified": "2022-11-11",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_user: {\"CommandLine|contains\": [\" -u system \", \" --user system \", \" -u NT\", \" -u \\\"NT\", \" -u 'NT\", \" --system \", \" -u administrator \"]}\nselection_command: {\"CommandLine|contains\": [\" -c cmd\", \" -c \\\"cmd\", \" -c powershell\", \" -c \\\"powershell\", \" --command cmd\", \" --command powershell\", \" -c whoami\", \" -c wscript\", \" -c cscript\"]}",
+    "condition": "all of selection*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

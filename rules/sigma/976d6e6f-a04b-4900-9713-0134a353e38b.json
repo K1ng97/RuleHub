@@ -1,0 +1,43 @@
+{
+  "id": "976d6e6f-a04b-4900-9713-0134a353e38b",
+  "name": "Veeam Backup Servers Credential Dumping Script Execution",
+  "description": "Detects execution of a PowerShell script that contains calls to the \"Veeam.Backup\" class, in order to dump stored credentials.",
+  "source": {
+    "type": "sigma",
+    "id": "976d6e6f-a04b-4900-9713-0134a353e38b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_veeam_credential_dumping_script.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_veeam_credential_dumping_script.yml"
+  },
+  "tags": [
+    "attackcredential-access"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://www.pwndefend.com/2021/02/15/retrieving-passwords-from-veeam-backup-servers/",
+    "https://labs.withsecure.com/publications/fin7-target-veeam-servers"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-05-04",
+  "modified": "2023-05-04",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"ScriptBlockText|contains|all\": [\"[Credentials]\", \"[Veeam.Backup.Common.ProtectedStorage]::GetLocalString\", \"Invoke-Sqlcmd\", \"Veeam Backup and Replication\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrators backup scripts (must be investigated)"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

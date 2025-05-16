@@ -1,0 +1,44 @@
+{
+  "id": "ec3a9362-92fe-11eb-99d0-acde48001122",
+  "name": "AWS IAM Delete Policy",
+  "description": "The following analytic detects the deletion of an IAM policy in AWS. It leverages AWS CloudTrail logs to identify `DeletePolicy` events, excluding those from AWS internal services. This activity is significant as unauthorized policy deletions can disrupt access controls and weaken security postures. If confirmed malicious, an attacker could remove critical security policies, potentially leading to privilege escalation, unauthorized access, or data exfiltration. Monitoring this behavior helps ensure that only authorized changes are made to IAM policies, maintaining the integrity and security of the AWS environment.",
+  "source": {
+    "type": "splunk",
+    "id": "ec3a9362-92fe-11eb-99d0-acde48001122",
+    "url": "https://github.com/splunk/security_content/blob/develop/aws_iam_delete_policy.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/aws_iam_delete_policy.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Michael Haag, Splunk",
+  "references": [
+    "https://docs.aws.amazon.com/IAM/latest/APIReference/API_DeletePolicy.html",
+    "https://docs.aws.amazon.com/cli/latest/reference/iam/delete-policy.html"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`cloudtrail` eventName=DeletePolicy (userAgent!=*.amazonaws.com) | rename user_name as user | stats count min(_time) as firstTime max(_time) as lastTime by signature dest user user_agent src vendor_account vendor_region vendor_product | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `aws_iam_delete_policy_filter`",
+    "condition": "The Splunk AWS Add-on and Splunk App for AWS is required to utilize this data. The search requires AWS CloudTrail logs.",
+    "fields": []
+  },
+  "falsepositives": [
+    "This detection will require tuning to provide high fidelity detection capabilties. Tune based on src addresses (corporate offices, VPN terminations) or by groups of users. Not every user with AWS access should have permission to delete policies (least privilege). In addition, this may be saved seperately and tuned for failed or success attempts only."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

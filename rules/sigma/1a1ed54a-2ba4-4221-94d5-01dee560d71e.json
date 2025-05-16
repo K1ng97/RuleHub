@@ -1,0 +1,51 @@
+{
+  "id": "1a1ed54a-2ba4-4221-94d5-01dee560d71e",
+  "name": "Renamed CreateDump Utility Execution",
+  "description": "Detects uses of a renamed legitimate createdump.exe LOLOBIN utility to dump process memory",
+  "source": {
+    "type": "sigma",
+    "id": "1a1ed54a-2ba4-4221-94d5-01dee560d71e",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_renamed_createdump.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_renamed_createdump.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackdefense-evasion",
+    "attackt1003001",
+    "attackt1036"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://www.crowdstrike.com/blog/overwatch-exposes-aquatic-panda-in-possession-of-log-4-shell-exploit-tools/",
+    "https://twitter.com/bopin2020/status/1366400799199272960"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-09-20",
+  "modified": "2023-02-14",
+  "mitre": {
+    "tactics": [
+      "TA1003",
+      "TA1036"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_pe: {\"OriginalFileName\": \"FX_VER_INTERNALNAME_STR\"}\nselection_cli: [{\"CommandLine|contains|all\": [\" -u \", \" -f \", \".dmp\"]}, {\"CommandLine|contains|all\": [\" --full \", \" --name \", \".dmp\"]}]\nfilter: {\"Image|endswith\": \"\\\\createdump.exe\"}",
+    "condition": "1 of selection_* and not filter",
+    "fields": []
+  },
+  "falsepositives": [
+    "Command lines that use the same flags"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

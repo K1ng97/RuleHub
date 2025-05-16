@@ -1,0 +1,48 @@
+{
+  "id": "c0d3734d-330f-4a03-aae2-65dacc6a8222",
+  "name": "Webshell Remote Command Execution",
+  "description": "Detects possible command execution by web application/web shell",
+  "source": {
+    "type": "sigma",
+    "id": "c0d3734d-330f-4a03-aae2-65dacc6a8222",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/lnx_auditd_web_rce.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/auditd/lnx_auditd_web_rce.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1505003"
+  ],
+  "author": "Ilyas Ochkov, Beyu Denis, oscd.community",
+  "references": [
+    "Personal Experience of the Author"
+  ],
+  "severity": "critical",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-10-12",
+  "modified": "2022-12-25",
+  "mitre": {
+    "tactics": [
+      "TA1505"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"type\": \"SYSCALL\", \"syscall\": \"execve\", \"key\": \"detect_execve_www\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Admin activity",
+    "Crazy web applications"
+  ],
+  "level": "critical",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "auditd"
+  ]
+}

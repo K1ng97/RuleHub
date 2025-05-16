@@ -1,0 +1,48 @@
+{
+  "id": "16a71777-0b2e-4db7-9888-9d59cb75200b",
+  "name": "Github Delete Action Invoked",
+  "description": "Detects delete action in the Github audit logs for codespaces, environment, project and repo.",
+  "source": {
+    "type": "sigma",
+    "id": "16a71777-0b2e-4db7-9888-9d59cb75200b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/github_delete_action_invoked.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/github/github_delete_action_invoked.yml"
+  },
+  "tags": [
+    "attackcollection",
+    "attackimpact",
+    "attackt1213003"
+  ],
+  "author": "Muhammad Faisal (@faisalusuf)",
+  "references": [
+    "https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/reviewing-the-audit-log-for-your-organization#audit-log-actions"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-01-19",
+  "modified": "2023-01-19",
+  "mitre": {
+    "tactics": [
+      "TA1213"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"action\": [\"codespaces.delete\", \"environment.delete\", \"project.delete\", \"repo.destroy\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Validate the deletion activity is permitted. The \"actor\" field need to be validated."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "github",
+    "audit"
+  ]
+}

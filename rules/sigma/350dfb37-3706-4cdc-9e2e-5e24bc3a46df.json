@@ -1,0 +1,44 @@
+{
+  "id": "350dfb37-3706-4cdc-9e2e-5e24bc3a46df",
+  "name": "MSSQL Disable Audit Settings",
+  "description": "Detects when an attacker calls the \"ALTER SERVER AUDIT\" or \"DROP SERVER AUDIT\" transaction in order to delete or disable audit logs on the server",
+  "source": {
+    "type": "sigma",
+    "id": "350dfb37-3706-4cdc-9e2e-5e24bc3a46df",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_mssql_disable_audit_settings.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/application/mssqlserver/win_mssql_disable_audit_settings.yml"
+  },
+  "tags": [
+    "attackdefense-evasion"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://www.netspi.com/blog/technical/network-penetration-testing/sql-server-persistence-part-1-startup-stored-procedures/",
+    "https://learn.microsoft.com/en-us/sql/t-sql/statements/drop-server-audit-transact-sql?view=sql-server-ver16",
+    "https://learn.microsoft.com/en-us/sql/t-sql/statements/alter-server-audit-transact-sql?view=sql-server-ver16"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-07-13",
+  "modified": "2024-06-26",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Provider_Name|contains\": \"MSSQL\", \"EventID\": 33205, \"Data|contains\": [\"statement:ALTER SERVER AUDIT\", \"statement:DROP SERVER AUDIT\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "This event should only fire when an administrator is modifying the audit policy. Which should be a rare occurrence once it's set up"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "application"
+  ]
+}

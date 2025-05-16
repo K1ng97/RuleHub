@@ -1,0 +1,47 @@
+{
+  "id": "a87cd633-076d-4ab2-9047-977751a3c1a0",
+  "name": "Azure AD New Federated Domain Added",
+  "description": "The following analytic detects the addition of a new federated domain within an Azure Active Directory tenant. It leverages Azure AD AuditLogs to identify successful \"Set domain authentication\" operations. This activity is significant as it may indicate the use of the Azure AD identity federation backdoor technique, allowing an adversary to establish persistence. If confirmed malicious, the attacker could impersonate any user, bypassing password and MFA requirements, potentially leading to unauthorized access and control over the Azure AD environment.",
+  "source": {
+    "type": "splunk",
+    "id": "a87cd633-076d-4ab2-9047-977751a3c1a0",
+    "url": "https://github.com/splunk/security_content/blob/develop/azure_ad_new_federated_domain_added.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/azure_ad_new_federated_domain_added.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Mauricio Velazco, Gowthamaraj Rajendran, Splunk",
+  "references": [
+    "https://www.mandiant.com/resources/remediation-and-hardening-strategies-microsoft-365-defend-against-apt29-v13",
+    "https://o365blog.com/post/federation-vulnerability/",
+    "https://www.inversecos.com/2021/11/how-to-detect-azure-active-directory.html",
+    "https://www.mandiant.com/resources/blog/detecting-microsoft-365-azure-active-directory-backdoors",
+    "https://attack.mitre.org/techniques/T1484/002/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`azure_monitor_aad` operationName=\"Set domain authentication\" \"properties.result\"=success | rename properties.* as * | rename targetResources{}.displayName as domain | rename userAgent as user_agent | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by dest user src vendor_account vendor_product user_agent domain signature | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `azure_ad_new_federated_domain_added_filter`",
+    "condition": "You must install the latest version of Splunk Add-on for Microsoft Cloud Services from Splunkbase (https://splunkbase.splunk.com/app/3110/#/details). You must be ingesting Azure Active Directory events into your Splunk environment. This analytic was written to be used with the azure:monitor:aad sourcetype leveraging the AuditLogs log category.",
+    "fields": []
+  },
+  "falsepositives": [
+    "In most organizations, domain federation settings will be updated infrequently. Filter as needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

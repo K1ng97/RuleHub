@@ -1,0 +1,52 @@
+{
+  "id": "a537cfc3-4297-4789-92b5-345bfd845ad0",
+  "name": "Service DACL Abuse To Hide Services Via Sc.EXE",
+  "description": "Detects usage of the \"sc.exe\" utility adding a new service with special permission seen used by threat actors which makes the service hidden and unremovable.",
+  "source": {
+    "type": "sigma",
+    "id": "a537cfc3-4297-4789-92b5-345bfd845ad0",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_sc_sdset_hide_sevices.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_sc_sdset_hide_sevices.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1574011"
+  ],
+  "author": "Andreas Hunkeler (@Karneades)",
+  "references": [
+    "https://blog.talosintelligence.com/2021/10/threat-hunting-in-large-datasets-by.html",
+    "https://www.sans.org/blog/red-team-tactics-hiding-windows-services/",
+    "https://twitter.com/Alh4zr3d/status/1580925761996828672",
+    "https://itconnect.uw.edu/tools-services-support/it-systems-infrastructure/msinf/other-help/understanding-sddl-syntax/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-12-20",
+  "modified": "2022-08-08",
+  "mitre": {
+    "tactics": [
+      "TA1574"
+    ],
+    "techniques": [
+      "T011"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\sc.exe\"}, {\"OriginalFileName\": \"sc.exe\"}]\nselection_cli: {\"CommandLine|contains|all\": [\"sdset\", \"DCLCWPDTSD\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

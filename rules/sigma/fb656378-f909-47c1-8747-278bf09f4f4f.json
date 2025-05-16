@@ -1,0 +1,47 @@
+{
+  "id": "fb656378-f909-47c1-8747-278bf09f4f4f",
+  "name": "Potential Credential Dumping Attempt Via PowerShell Remote Thread",
+  "description": "Detects remote thread creation by PowerShell processes into \"lsass.exe\"",
+  "source": {
+    "type": "sigma",
+    "id": "fb656378-f909-47c1-8747-278bf09f4f4f",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/create_remote_thread_win_powershell_lsass.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/create_remote_thread/create_remote_thread_win_powershell_lsass.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1003001"
+  ],
+  "author": "oscd.community, Natalia Shornikova",
+  "references": [
+    "https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-06",
+  "modified": "2022-12-18",
+  "mitre": {
+    "tactics": [
+      "TA1003"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"SourceImage|endswith\": [\"\\\\powershell.exe\", \"\\\\pwsh.exe\"], \"TargetImage|endswith\": \"\\\\lsass.exe\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "create_remote_thread"
+  ]
+}

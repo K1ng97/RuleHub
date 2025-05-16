@@ -1,0 +1,47 @@
+{
+  "id": "9e36ed87-4986-482e-8e3b-5c23ffff11bf",
+  "name": "RemCom Service Installation",
+  "description": "Detects RemCom service installation and execution events",
+  "source": {
+    "type": "sigma",
+    "id": "9e36ed87-4986-482e-8e3b-5c23ffff11bf",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_system_service_install_remcom.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/system/service_control_manager/win_system_service_install_remcom.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1569002"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://github.com/kavika13/RemCom/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-08-07",
+  "modified": "2023-08-07",
+  "mitre": {
+    "tactics": [
+      "TA1569"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection_eid: {\"Provider_Name\": \"Service Control Manager\", \"EventID\": 7045}\nselection_service: [{\"ServiceName\": \"RemComSvc\"}, {\"ImagePath|endswith\": \"\\\\RemComSvc.exe\"}]",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "system"
+  ]
+}

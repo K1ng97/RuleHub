@@ -1,0 +1,47 @@
+{
+  "id": "ee5e119b-1f75-4b34-add8-3be976961e39",
+  "name": "Conhost.exe CommandLine Path Traversal",
+  "description": "detects the usage of path traversal in conhost.exe indicating possible command/argument confusion/hijacking",
+  "source": {
+    "type": "sigma",
+    "id": "ee5e119b-1f75-4b34-add8-3be976961e39",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_conhost_path_traversal.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_conhost_path_traversal.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1059003"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://pentestlab.blog/2020/07/06/indirect-command-execution/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-06-14",
+  "modified": "2022-06-14",
+  "mitre": {
+    "tactics": [
+      "TA1059"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ParentCommandLine|contains\": \"conhost\", \"CommandLine|contains\": \"/../../\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "id": "52a85084-6989-40c3-8f32-091e12e13f09",
+  "name": "smbexec.py Service Installation",
+  "description": "Detects the use of smbexec.py tool by detecting a specific service installation",
+  "source": {
+    "type": "sigma",
+    "id": "52a85084-6989-40c3-8f32-091e12e13f09",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_system_hack_smbexec.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/system/service_control_manager/win_system_hack_smbexec.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attacklateral-movement",
+    "attackt1021002",
+    "attackt1569002"
+  ],
+  "author": "Omer Faruk Celik",
+  "references": [
+    "https://blog.ropnop.com/using-credentials-to-own-windows-boxes-part-2-psexec-and-services/",
+    "https://github.com/fortra/impacket/blob/33058eb2fde6976ea62e04bc7d6b629d64d44712/examples/smbexec.py#L286-L296",
+    "https://github.com/fortra/impacket/blob/edef71f17bc1240f9f8c957bbda98662951ac3ec/examples/smbexec.py#L60"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2018-03-20",
+  "modified": "2023-11-09",
+  "mitre": {
+    "tactics": [
+      "TA1021",
+      "TA1569"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection_eid: {\"Provider_Name\": \"Service Control Manager\", \"EventID\": 7045}\nselection_service_name: {\"ServiceName\": \"BTOBTO\"}\nselection_service_image: {\"ImagePath|contains\": [\".bat & del \", \"__output 2^>^&1 >\"]}",
+    "condition": "selection_eid and 1 of selection_service_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "system"
+  ]
+}

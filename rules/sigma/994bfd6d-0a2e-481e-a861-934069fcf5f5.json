@@ -1,0 +1,48 @@
+{
+  "id": "994bfd6d-0a2e-481e-a861-934069fcf5f5",
+  "name": "Active Directory Certificate Services Denied Certificate Enrollment Request",
+  "description": "Detects denied requests by Active Directory Certificate Services.\nExample of these requests denial include issues with permissions on the certificate template or invalid signatures.\n",
+  "source": {
+    "type": "sigma",
+    "id": "994bfd6d-0a2e-481e-a861-934069fcf5f5",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_system_adcs_enrollment_request_denied.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/system/microsoft_windows_certification_authority/win_system_adcs_enrollment_request_denied.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1553004"
+  ],
+  "author": "@SerkinValery",
+  "references": [
+    "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/dd299871(v=ws.10)",
+    "https://www.gradenegger.eu/en/details-of-the-event-with-id-53-of-the-source-microsoft-windows-certificationauthority/"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2024-03-07",
+  "modified": "2024-03-07",
+  "mitre": {
+    "tactics": [
+      "TA1553"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Provider_Name\": \"Microsoft-Windows-CertificationAuthority\", \"EventID\": 53}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "system"
+  ]
+}

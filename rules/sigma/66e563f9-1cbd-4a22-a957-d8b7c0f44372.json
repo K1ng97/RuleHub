@@ -1,0 +1,50 @@
+{
+  "id": "66e563f9-1cbd-4a22-a957-d8b7c0f44372",
+  "name": "HackTool - XORDump Execution",
+  "description": "Detects suspicious use of XORDump process memory dumping utility",
+  "source": {
+    "type": "sigma",
+    "id": "66e563f9-1cbd-4a22-a957-d8b7c0f44372",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_hktl_xordump.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_hktl_xordump.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackdefense-evasion",
+    "attackt1003001",
+    "attackt1036"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://github.com/audibleblink/xordump"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-01-28",
+  "modified": "2023-02-08",
+  "mitre": {
+    "tactics": [
+      "TA1003",
+      "TA1036"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: [{\"Image|endswith\": \"\\\\xordump.exe\"}, {\"CommandLine|contains\": [\" -process lsass.exe \", \" -m comsvcs \", \" -m dbghelp \", \" -m dbgcore \"]}]",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Another tool that uses the command line switches of XORdump"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

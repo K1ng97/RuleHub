@@ -1,0 +1,43 @@
+{
+  "id": "4c38c264-1f74-11ec-b5fa-acde48001122",
+  "name": "Logon Script Event Trigger Execution",
+  "description": "The following analytic detects the modification of the UserInitMprLogonScript registry entry, which is often used by attackers to establish persistence and gain privilege escalation upon system boot. It leverages data from the Endpoint.Registry data model, focusing on changes to the specified registry path. This activity is significant because it is a common technique used by APT groups and malware to ensure their payloads execute automatically when the system starts. If confirmed malicious, this could allow attackers to maintain persistent access and potentially escalate their privileges on the compromised host.",
+  "source": {
+    "type": "splunk",
+    "id": "4c38c264-1f74-11ec-b5fa-acde48001122",
+    "url": "https://github.com/splunk/security_content/blob/develop/logon_script_event_trigger_execution.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/logon_script_event_trigger_execution.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://attack.mitre.org/techniques/T1037/001/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats `security_content_summariesonly` count  min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Registry where Registry.registry_path IN (\"*\\\\Environment\\\\UserInitMprLogonScript\") by Registry.action Registry.dest Registry.process_guid Registry.process_id Registry.registry_hive Registry.registry_path Registry.registry_key_name Registry.registry_value_data Registry.registry_value_name Registry.registry_value_type Registry.status Registry.user Registry.vendor_product | `security_content_ctime(lastTime)` | `security_content_ctime(firstTime)` | `drop_dm_object_name(Registry)` | `logon_script_event_trigger_execution_filter`",
+    "condition": "To successfully implement this search, you must be ingesting data that records registry activity from your hosts to populate the endpoint data model in the registry node. This is typically populated via endpoint detection-and-response product, such as Carbon Black or endpoint data sources, such as Sysmon. The data used for this search is typically generated via logs that report reads and writes to the registry.",
+    "fields": []
+  },
+  "falsepositives": [
+    "unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

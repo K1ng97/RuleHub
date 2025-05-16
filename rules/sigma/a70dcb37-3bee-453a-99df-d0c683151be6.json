@@ -1,0 +1,43 @@
+{
+  "id": "a70dcb37-3bee-453a-99df-d0c683151be6",
+  "name": "Firewall Rule Update Via Netsh.EXE",
+  "description": "Detects execution of netsh with the \"advfirewall\" and the \"set\" option in order to set new values for properties of a existing rule",
+  "source": {
+    "type": "sigma",
+    "id": "a70dcb37-3bee-453a-99df-d0c683151be6",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_netsh_fw_set_rule.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_netsh_fw_set_rule.yml"
+  },
+  "tags": [
+    "attackdefense-evasion"
+  ],
+  "author": "X__Junior (Nextron Systems)",
+  "references": [
+    "https://ss64.com/nt/netsh.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-07-18",
+  "modified": "2023-07-18",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\netsh.exe\"}, {\"OriginalFileName\": \"netsh.exe\"}]\nselection_cli: {\"CommandLine|contains|all\": [\" firewall \", \" set \"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administration activity",
+    "Software installations and removal"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

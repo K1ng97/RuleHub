@@ -1,0 +1,45 @@
+{
+  "id": "11063ec2-de63-4153-935e-b1a8b9e616f1",
+  "name": "Linux Remote System Discovery",
+  "description": "Detects the enumeration of other remote systems.",
+  "source": {
+    "type": "sigma",
+    "id": "11063ec2-de63-4153-935e-b1a8b9e616f1",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_remote_system_discovery.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_remote_system_discovery.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1018"
+  ],
+  "author": "Alejandro Ortuno, oscd.community",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1018/T1018.md"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-22",
+  "modified": "2021-11-27",
+  "mitre": {
+    "tactics": [
+      "TA1018"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_1: {\"Image|endswith\": \"/arp\", \"CommandLine|contains\": \"-a\"}\nselection_2: {\"Image|endswith\": \"/ping\", \"CommandLine|contains\": [\" 10.\", \" 192.168.\", \" 172.16.\", \" 172.17.\", \" 172.18.\", \" 172.19.\", \" 172.20.\", \" 172.21.\", \" 172.22.\", \" 172.23.\", \" 172.24.\", \" 172.25.\", \" 172.26.\", \" 172.27.\", \" 172.28.\", \" 172.29.\", \" 172.30.\", \" 172.31.\", \" 127.\", \" 169.254.\"]}",
+    "condition": "1 of selection*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administration activities"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

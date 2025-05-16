@@ -1,0 +1,43 @@
+{
+  "id": "31810b7a-0abe-42be-a210-0dec8106afee",
+  "name": "Linux Auditd Kernel Module Using Rmmod Utility",
+  "description": "The following analytic detects suspicious use of the `rmmod` utility for kernel module removal, which may indicate an attacker attempt to unload critical or security-related kernel modules. The `rmmod` command is used to remove modules from the Linux kernel, and unauthorized use can be a tactic to disable security features, conceal malicious activities, or disrupt system operations. By monitoring for unusual or unauthorized `rmmod` activity, this analytic helps identify potential tampering with kernel modules, enabling security teams to take proactive measures to protect system integrity and security.",
+  "source": {
+    "type": "splunk",
+    "id": "31810b7a-0abe-42be-a210-0dec8106afee",
+    "url": "https://github.com/splunk/security_content/blob/develop/linux_auditd_kernel_module_using_rmmod_utility.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/linux_auditd_kernel_module_using_rmmod_utility.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://www.splunk.com/en_us/blog/security/deep-dive-on-persistence-privilege-escalation-technique-and-detection-in-linux-platform.html"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`linux_auditd` type=SYSCALL comm=rmmod | rename host as dest | stats count min(_time) as firstTime max(_time) as lastTime by comm exe  syscall uid ppid pid success dest | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `linux_auditd_kernel_module_using_rmmod_utility_filter`",
+    "condition": "To implement this detection, the process begins by ingesting auditd data, that consist SYSCALL, TYPE, EXECVE and PROCTITLE events, which captures command-line executions and process details on Unix/Linux systems. These logs should be ingested and processed using Splunk Add-on for Unix and Linux (https://splunkbase.splunk.com/app/833), which is essential for correctly parsing and categorizing the data. The next step involves normalizing the field names  to match the field names set by the Splunk Common Information Model (CIM) to ensure consistency across different data sources and enhance the efficiency of data modeling. This approach enables effective monitoring and detection of linux endpoints where auditd is deployed",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrator or network operator can use this application for automation purposes. Please update the filter macros to remove false positives."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

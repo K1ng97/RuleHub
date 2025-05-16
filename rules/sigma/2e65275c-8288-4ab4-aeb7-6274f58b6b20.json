@@ -1,0 +1,50 @@
+{
+  "id": "2e65275c-8288-4ab4-aeb7-6274f58b6b20",
+  "name": "Procdump Execution",
+  "description": "Detects usage of the SysInternals Procdump utility",
+  "source": {
+    "type": "sigma",
+    "id": "2e65275c-8288-4ab4-aeb7-6274f58b6b20",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_sysinternals_procdump.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_sysinternals_procdump.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackdefense-evasion",
+    "attackt1003001",
+    "attackt1036"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://learn.microsoft.com/en-us/sysinternals/downloads/procdump"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-08-16",
+  "modified": "2023-02-28",
+  "mitre": {
+    "tactics": [
+      "TA1003",
+      "TA1036"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": [\"\\\\procdump.exe\", \"\\\\procdump64.exe\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use of procdump by a developer or administrator"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

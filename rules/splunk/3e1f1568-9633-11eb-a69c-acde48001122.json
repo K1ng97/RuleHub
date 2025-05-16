@@ -1,0 +1,43 @@
+{
+  "id": "3e1f1568-9633-11eb-a69c-acde48001122",
+  "name": "AWS IAM AccessDenied Discovery Events",
+  "description": "The following analytic identifies excessive AccessDenied events within an hour timeframe for IAM users in AWS. It leverages AWS CloudTrail logs to detect multiple failed access attempts from the same source IP and user identity. This activity is significant as it may indicate that an access key has been compromised and is being misused for unauthorized discovery actions. If confirmed malicious, this could allow attackers to gather information about the AWS environment, potentially leading to further exploitation or privilege escalation.",
+  "source": {
+    "type": "splunk",
+    "id": "3e1f1568-9633-11eb-a69c-acde48001122",
+    "url": "https://github.com/splunk/security_content/blob/develop/aws_iam_accessdenied_discovery_events.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/aws_iam_accessdenied_discovery_events.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Michael Haag, Splunk",
+  "references": [
+    "https://aws.amazon.com/premiumsupport/knowledge-center/troubleshoot-iam-permission-errors/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`cloudtrail` (errorCode = \"AccessDenied\") user_type=IAMUser (userAgent!=*.amazonaws.com) | bucket _time span=1h | rename user_name as user | stats count as failures min(_time) as firstTime max(_time) as lastTime, dc(signature) as methods, dc(dest) as sources values(signature) as signature values(dest) as dest by src, user, vendor_account vendor_region, vendor_product | where failures >= 5 and methods >= 1 and sources >= 1 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `aws_iam_accessdenied_discovery_events_filter`",
+    "condition": "The Splunk AWS Add-on and Splunk App for AWS is required to utilize this data. The search requires AWS CloudTrail logs.",
+    "fields": []
+  },
+  "falsepositives": [
+    "It is possible to start this detection will need to be tuned by source IP or user. In addition, change the count values to an upper threshold to restrict false positives."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

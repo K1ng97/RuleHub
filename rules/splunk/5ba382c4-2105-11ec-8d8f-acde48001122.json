@@ -1,0 +1,44 @@
+{
+  "id": "5ba382c4-2105-11ec-8d8f-acde48001122",
+  "name": "Time Provider Persistence Registry",
+  "description": "The following analytic detects suspicious modifications to the time provider registry for persistence and autostart. It leverages data from the Endpoint.Registry data model, focusing on changes to the \"CurrentControlSet\\\\Services\\\\W32Time\\\\TimeProviders\" registry path. This activity is significant because such modifications are uncommon and can indicate an attempt to establish persistence on a compromised host. If confirmed malicious, this technique allows an attacker to maintain access and execute code automatically upon system boot, potentially leading to further exploitation and control over the affected system.",
+  "source": {
+    "type": "splunk",
+    "id": "5ba382c4-2105-11ec-8d8f-acde48001122",
+    "url": "https://github.com/splunk/security_content/blob/develop/time_provider_persistence_registry.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/time_provider_persistence_registry.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk, Steven Dick",
+  "references": [
+    "https://pentestlab.blog/2019/10/22/persistence-time-providers/",
+    "https://attack.mitre.org/techniques/T1547/003/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Registry WHERE (Registry.registry_path=\"*\\\\CurrentControlSet\\\\Services\\\\W32Time\\\\TimeProviders*\") by Registry.action Registry.dest Registry.process_guid Registry.process_id Registry.registry_hive Registry.registry_path Registry.registry_key_name Registry.registry_value_data Registry.registry_value_name Registry.registry_value_type Registry.status Registry.user Registry.vendor_product | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `time_provider_persistence_registry_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting logs with the registry value name, registry path, and registry value data from your endpoints. If you are using Sysmon, you must have at least version 2.0 of the official Sysmon TA. https://splunkbase.splunk.com/app/5709",
+    "fields": []
+  },
+  "falsepositives": [
+    "unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

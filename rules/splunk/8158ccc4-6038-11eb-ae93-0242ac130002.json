@@ -1,0 +1,43 @@
+{
+  "id": "8158ccc4-6038-11eb-ae93-0242ac130002",
+  "name": "O365 Excessive SSO logon errors",
+  "description": "The following analytic detects accounts experiencing a high number of Single Sign-On (SSO) logon errors. It leverages data from the `o365_management_activity` dataset, focusing on failed user login attempts with SSO errors. This activity is significant as it may indicate brute-force attempts or the hijacking/reuse of SSO tokens. If confirmed malicious, attackers could potentially gain unauthorized access to user accounts, leading to data breaches, privilege escalation, or further lateral movement within the organization.",
+  "source": {
+    "type": "splunk",
+    "id": "8158ccc4-6038-11eb-ae93-0242ac130002",
+    "url": "https://github.com/splunk/security_content/blob/develop/o365_excessive_sso_logon_errors.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/o365_excessive_sso_logon_errors.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Rod Soto, Splunk",
+  "references": [
+    "https://stealthbits.com/blog/bypassing-mfa-with-pass-the-cookie/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`o365_management_activity` Workload=AzureActiveDirectory LogonError=*Sso* Operation=UserLoginFailed | stats count min(_time) as firstTime max(_time) as lastTime values(user) as user by src vendor_account vendor_product dest signature user_agent | where count >= 5 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `o365_excessive_sso_logon_errors_filter`",
+    "condition": "You must install splunk Microsoft Office 365 add-on. This search works with o365:management:activity",
+    "fields": []
+  },
+  "falsepositives": [
+    "Logon errors may not be malicious in nature however it may indicate attempts to reuse a token or password obtained via credential access attack."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

@@ -1,0 +1,50 @@
+{
+  "id": "4edf51e1-cb83-4e1a-bc39-800e396068e3",
+  "name": "Invoke-Obfuscation CLIP+ Launcher - Security",
+  "description": "Detects Obfuscated use of Clip.exe to execute PowerShell",
+  "source": {
+    "type": "sigma",
+    "id": "4edf51e1-cb83-4e1a-bc39-800e396068e3",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_invoke_obfuscation_clip_services_security.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_invoke_obfuscation_clip_services_security.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1027",
+    "attackt1059001"
+  ],
+  "author": "Jonathan Cheong, oscd.community",
+  "references": [
+    "https://github.com/SigmaHQ/sigma/issues/1009"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-13",
+  "modified": "2022-11-27",
+  "mitre": {
+    "tactics": [
+      "TA1027",
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 4697, \"ServiceFileName|contains|all\": [\"cmd\", \"&&\", \"clipboard]::\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

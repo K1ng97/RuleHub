@@ -1,0 +1,45 @@
+{
+  "id": "411742ad-89b0-49cb-a7b0-3971b5c1e0a4",
+  "name": "Locked Workstation",
+  "description": "Detects locked workstation session events that occur automatically after a standard period of inactivity.",
+  "source": {
+    "type": "sigma",
+    "id": "411742ad-89b0-49cb-a7b0-3971b5c1e0a4",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_workstation_was_locked.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_workstation_was_locked.yml"
+  },
+  "tags": [
+    "attackimpact"
+  ],
+  "author": "Alexandr Yampolskyi, SOC Prime",
+  "references": [
+    "https://www.cisecurity.org/controls/cis-controls-list/",
+    "https://www.pcisecuritystandards.org/documents/PCI_DSS_v3-2-1.pdf",
+    "https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.04162018.pdf",
+    "https://www.ultimatewindowssecurity.com/securitylog/encyclopedia/event.aspx?eventID=4800"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "stable",
+  "created": "2019-03-26",
+  "modified": "2023-12-11",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 4800}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Likely"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

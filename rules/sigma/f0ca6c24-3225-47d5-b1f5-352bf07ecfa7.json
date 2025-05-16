@@ -1,0 +1,47 @@
+{
+  "id": "f0ca6c24-3225-47d5-b1f5-352bf07ecfa7",
+  "name": "PUA - DefenderCheck Execution",
+  "description": "Detects the use of DefenderCheck, a tool to evaluate the signatures used in Microsoft Defender. It can be used to figure out the strings / byte chains used in Microsoft Defender to detect a tool and thus used for AV evasion.",
+  "source": {
+    "type": "sigma",
+    "id": "f0ca6c24-3225-47d5-b1f5-352bf07ecfa7",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_pua_defendercheck.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_pua_defendercheck.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1027005"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://github.com/matterpreter/DefenderCheck"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-30",
+  "modified": "2023-02-04",
+  "mitre": {
+    "tactics": [
+      "TA1027"
+    ],
+    "techniques": [
+      "T005"
+    ]
+  },
+  "detection": {
+    "query": "selection: [{\"Image|endswith\": \"\\\\DefenderCheck.exe\"}, {\"Description\": \"DefenderCheck\"}]",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

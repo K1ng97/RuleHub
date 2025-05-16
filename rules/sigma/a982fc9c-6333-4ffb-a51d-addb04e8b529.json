@@ -1,0 +1,47 @@
+{
+  "id": "a982fc9c-6333-4ffb-a51d-addb04e8b529",
+  "name": "Windows Defender Exclusions Added - Registry",
+  "description": "Detects the Setting of Windows Defender Exclusions",
+  "source": {
+    "type": "sigma",
+    "id": "a982fc9c-6333-4ffb-a51d-addb04e8b529",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_set_defender_exclusions.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_set/registry_set_defender_exclusions.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1562001"
+  ],
+  "author": "Christian Burkard (Nextron Systems)",
+  "references": [
+    "https://twitter.com/_nullbind/status/1204923340810543109"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-07-06",
+  "modified": "2023-08-17",
+  "mitre": {
+    "tactics": [
+      "TA1562"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection2: {\"TargetObject|contains\": \"\\\\Microsoft\\\\Windows Defender\\\\Exclusions\"}",
+    "condition": "selection2",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrator actions"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_set"
+  ]
+}

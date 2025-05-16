@@ -1,0 +1,19 @@
+{
+  "version": "2.0.0",
+  "release_date": "2025-05-16T13:45:55.334161",
+  "release_notes": "V2.0 realse",
+  "changes": {
+    "added": [
+      "add new release"
+    ],
+    "changed": [
+      "test fun"
+    ],
+    "fixed": [
+      "fix vuln"
+    ],
+    "removed": [
+      "unknow"
+    ]
+  }
+}

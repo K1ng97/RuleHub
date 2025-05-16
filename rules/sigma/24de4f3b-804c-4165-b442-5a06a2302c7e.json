@@ -1,0 +1,54 @@
+{
+  "id": "24de4f3b-804c-4165-b442-5a06a2302c7e",
+  "name": "Arbitrary Shell Command Execution Via Settingcontent-Ms",
+  "description": "The .SettingContent-ms file type was introduced in Windows 10 and allows a user to create \"shortcuts\" to various Windows 10 setting pages. These files are simply XML and contain paths to various Windows 10 settings binaries.",
+  "source": {
+    "type": "sigma",
+    "id": "24de4f3b-804c-4165-b442-5a06a2302c7e",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_susp_arbitrary_shell_execution_via_settingcontent.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_susp_arbitrary_shell_execution_via_settingcontent.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackinitial-access",
+    "attackt1204",
+    "attackt1566001"
+  ],
+  "author": "Sreeman",
+  "references": [
+    "https://posts.specterops.io/the-tale-of-settingcontent-ms-files-f1ea253e4d39"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-03-13",
+  "modified": "2022-04-14",
+  "mitre": {
+    "tactics": [
+      "TA1204",
+      "TA1566"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|contains\": \".SettingContent-ms\"}\nfilter: {\"CommandLine|contains\": \"immersivecontrolpanel\"}",
+    "condition": "selection and not filter",
+    "fields": [
+      "ParentProcess",
+      "CommandLine",
+      "ParentCommandLine"
+    ]
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

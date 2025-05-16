@@ -1,0 +1,46 @@
+{
+  "id": "b686d0bd-cca7-44ca-ae07-87f6465131d9",
+  "name": "O365 Service Principal Privilege Escalation",
+  "description": "This detection identifies when an Azure Service Principal elevates privileges by adding themself to a new app role assignment.",
+  "source": {
+    "type": "splunk",
+    "id": "b686d0bd-cca7-44ca-ae07-87f6465131d9",
+    "url": "https://github.com/splunk/security_content/blob/develop/o365_service_principal_privilege_escalation.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/o365_service_principal_privilege_escalation.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Dean Luxton",
+  "references": [
+    "https://splunkbase.splunk.com/app/4055",
+    "https://github.com/mvelazc0/BadZure",
+    "https://www.splunk.com/en_us/blog/security/hunting-m365-invaders-navigating-the-shadows-of-midnight-blizzard.html",
+    "https://posts.specterops.io/microsoft-breach-what-happened-what-should-azure-admins-do-da2b7e674ebc"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`o365_management_activity` Operation=\"Add app role assignment to service principal.\" \"Actor{}.ID\"=ServicePrincipal ResultStatus=Success  | spath path=ModifiedProperties{} output=targetResources  | eval src=\"NA\"  | stats min(_time) as _time values(eval(mvfilter(match(targetResources, \"AppRole.Value\")))) as appRole, values(eval(mvfilter(match(targetResources, \"ServicePrincipal.DisplayName\")))) as targetServicePrincipal values(object) as targetAppContext values(user_agent) as user_agent values(user) as servicePrincipal values(UserId) as servicePrincipalId by Operation InterSystemsId tenant_id user dest src vendor_account vendor_product signature  | spath input=appRole path=NewValue output=appRole  | spath input=targetServicePrincipal path=NewValue output=targetServicePrincipal  | where servicePrincipal=targetServicePrincipal  | fillnull  | stats earliest(_time) as firstTime latest(_time) as lastTime by servicePrincipal servicePrincipalId appRole targetAppContext user_agent tenant_id InterSystemsId user dest src vendor_account vendor_product signature | `security_content_ctime(firstTime)`  | `security_content_ctime(lastTime)`  | `o365_service_principal_privilege_escalation_filter`",
+    "condition": "The Splunk Add-on for Microsoft Office 365 add-on is required to ingest EntraID audit logs via the 365 API. See references for links for further details on how to onboard this log source.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

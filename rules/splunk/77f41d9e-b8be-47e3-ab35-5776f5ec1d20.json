@@ -1,0 +1,43 @@
+{
+  "id": "77f41d9e-b8be-47e3-ab35-5776f5ec1d20",
+  "name": "User Discovery With Env Vars PowerShell Script Block",
+  "description": "The following analytic detects the use of PowerShell environment variables to identify the current logged user by leveraging PowerShell Script Block Logging (EventCode=4104). This method monitors script blocks containing `$env:UserName` or `[System.Environment]::UserName`. Identifying this activity is significant as adversaries and Red Teams may use it for situational awareness and Active Directory discovery on compromised endpoints. If confirmed malicious, this activity could allow attackers to gain insights into user context, aiding in further exploitation and lateral movement within the network.",
+  "source": {
+    "type": "splunk",
+    "id": "77f41d9e-b8be-47e3-ab35-5776f5ec1d20",
+    "url": "https://github.com/splunk/security_content/blob/develop/user_discovery_with_env_vars_powershell_script_block.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/user_discovery_with_env_vars_powershell_script_block.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Mauricio Velazco, Splunk",
+  "references": [
+    "https://attack.mitre.org/techniques/T1033/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`powershell` EventCode=4104 (ScriptBlockText = \"*$env:UserName*\" OR ScriptBlockText = \"*[System.Environment]::UserName*\") | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by dest signature signature_id user_id vendor_product EventID Guid Opcode Name Path ProcessID ScriptBlockId ScriptBlockText | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `user_discovery_with_env_vars_powershell_script_block_filter`",
+    "condition": "To successfully implement this analytic, you will need to enable PowerShell Script Block Logging on some or all endpoints. Additional setup here https://docs.splunk.com/Documentation/UBA/5.0.4.1/GetDataIn/AddPowerShell#Configure_module_logging_for_PowerShell.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrators or power users may use this PowerShell commandlet for troubleshooting."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

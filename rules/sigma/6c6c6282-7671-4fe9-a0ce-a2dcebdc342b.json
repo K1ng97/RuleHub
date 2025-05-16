@@ -1,0 +1,47 @@
+{
+  "id": "6c6c6282-7671-4fe9-a0ce-a2dcebdc342b",
+  "name": "Powershell XML Execute Command",
+  "description": "Adversaries may abuse PowerShell commands and scripts for execution.\nPowerShell is a powerful interactive command-line interface and scripting environment included in the Windows operating system. (Citation: TechNet PowerShell)\nAdversaries can use PowerShell to perform a number of actions, including discovery of information and execution of code\n",
+  "source": {
+    "type": "sigma",
+    "id": "6c6c6282-7671-4fe9-a0ce-a2dcebdc342b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_xml_iex.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_xml_iex.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1059001"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1059.001/T1059.001.md#atomic-test-8---powershell-xml-requests"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-01-19",
+  "modified": "2023-01-19",
+  "mitre": {
+    "tactics": [
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_xml: {\"ScriptBlockText|contains|all\": [\"New-Object\", \"System.Xml.XmlDocument\", \".Load\"]}\nselection_exec: {\"ScriptBlockText|contains\": [\"IEX \", \"Invoke-Expression \", \"Invoke-Command \", \"ICM -\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administrative script"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

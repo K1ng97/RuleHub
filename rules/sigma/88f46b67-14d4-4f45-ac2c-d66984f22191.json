@@ -1,0 +1,42 @@
+{
+  "id": "88f46b67-14d4-4f45-ac2c-d66984f22191",
+  "name": "Renamed Microsoft Teams Execution",
+  "description": "Detects the execution of a renamed Microsoft Teams binary.",
+  "source": {
+    "type": "sigma",
+    "id": "88f46b67-14d4-4f45-ac2c-d66984f22191",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_renamed_msteams.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_renamed_msteams.yml"
+  },
+  "tags": [
+    "attackdefense-evasion"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "Internal Research"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "experimental",
+  "created": "2024-07-12",
+  "modified": "2024-07-12",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"OriginalFileName\": [\"msteams.exe\", \"teams.exe\"]}\nfilter_main_legit_names: {\"Image|endswith\": [\"\\\\msteams.exe\", \"\\\\teams.exe\"]}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

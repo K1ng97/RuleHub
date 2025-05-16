@@ -1,0 +1,49 @@
+{
+  "id": "aa7a3fce-bef5-4311-9cc1-5f04bb8c308c",
+  "name": "Certificate Exported Via PowerShell - ScriptBlock",
+  "description": "Detects calls to cmdlets inside of PowerShell scripts that are used to export certificates from the local certificate store. Threat actors were seen abusing this to steal private keys from compromised machines.",
+  "source": {
+    "type": "sigma",
+    "id": "aa7a3fce-bef5-4311-9cc1-5f04bb8c308c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_export_certificate.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_export_certificate.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1552004"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://us-cert.cisa.gov/ncas/analysis-reports/ar21-112a",
+    "https://learn.microsoft.com/en-us/powershell/module/pki/export-pfxcertificate?view=windowsserver2022-ps",
+    "https://www.splunk.com/en_us/blog/security/breaking-the-chain-defending-against-certificate-services-abuse.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-04-23",
+  "modified": "2023-05-18",
+  "mitre": {
+    "tactics": [
+      "TA1552"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ScriptBlockText|contains\": [\"Export-PfxCertificate\", \"Export-Certificate\"]}\nfilter_optional_module_export: {\"ScriptBlockText|contains\": \"CmdletsToExport = @(\"}",
+    "condition": "selection and not 1 of filter_optional_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate certificate exports by administrators. Additional filters might be required."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

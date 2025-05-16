@@ -1,0 +1,49 @@
+{
+  "id": "38e7f511-3f74-41d4-836e-f57dfa18eead",
+  "name": "Potential Malicious Usage of CloudTrail System Manager",
+  "description": "Detect when System Manager successfully executes commands against an instance.\n",
+  "source": {
+    "type": "sigma",
+    "id": "38e7f511-3f74-41d4-836e-f57dfa18eead",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/aws_cloudtrail_ssm_malicious_usage.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/aws/cloudtrail/aws_cloudtrail_ssm_malicious_usage.yml"
+  },
+  "tags": [
+    "attackprivilege-escalation",
+    "attackt1566",
+    "attackt1566002"
+  ],
+  "author": "jamesc-grafana",
+  "references": [
+    "https://github.com/elastic/detection-rules/blob/main/rules/integrations/aws/initial_access_via_system_manager.toml"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "experimental",
+  "created": "2024-07-11",
+  "modified": "2024-07-11",
+  "mitre": {
+    "tactics": [
+      "TA1566"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"eventName\": \"SendCommand\", \"eventSource\": \"ssm.amazonaws.com\", \"responseElements.command.status\": \"Success\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "There are legitimate uses of SSM to send commands to EC2 instances",
+    "Legitimate users may have to use SSM to perform actions against machines in the Cloud to update or maintain them"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "aws",
+    "cloudtrail"
+  ]
+}

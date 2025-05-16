@@ -1,0 +1,45 @@
+{
+  "id": "6120ac2a-a34b-42c0-a9bd-1fb9f459f348",
+  "name": "AddinUtil.EXE Execution From Uncommon Directory",
+  "description": "Detects execution of the Add-In deployment cache updating utility (AddInutil.exe) from a non-standard directory.",
+  "source": {
+    "type": "sigma",
+    "id": "6120ac2a-a34b-42c0-a9bd-1fb9f459f348",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_addinutil_uncommon_dir_exec.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_addinutil_uncommon_dir_exec.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218"
+  ],
+  "author": "Michael McKinley (@McKinleyMike), Tony Latteri (@TheLatteri)",
+  "references": [
+    "https://www.blue-prints.blog/content/blog/posts/lolbin/addinutil-lolbas.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-09-18",
+  "modified": "2023-09-18",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: [{\"Image|endswith\": \"\\\\addinutil.exe\"}, {\"OriginalFileName\": \"AddInUtil.exe\"}]\nfilter_main_legit_location: {\"Image|contains\": [\":\\\\Windows\\\\Microsoft.NET\\\\Framework\\\\\", \":\\\\Windows\\\\Microsoft.NET\\\\Framework64\\\\\", \":\\\\Windows\\\\WinSxS\\\\\"]}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

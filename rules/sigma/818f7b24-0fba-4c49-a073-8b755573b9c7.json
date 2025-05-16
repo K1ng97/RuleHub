@@ -1,0 +1,48 @@
+{
+  "id": "818f7b24-0fba-4c49-a073-8b755573b9c7",
+  "name": "Linux Webshell Indicators",
+  "description": "Detects suspicious sub processes of web server processes",
+  "source": {
+    "type": "sigma",
+    "id": "818f7b24-0fba-4c49-a073-8b755573b9c7",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_webshell_detection.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_webshell_detection.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1505003"
+  ],
+  "author": "Florian Roth (Nextron Systems), Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://www.acunetix.com/blog/articles/web-shells-101-using-php-introduction-web-shells-part-2/",
+    "https://media.defense.gov/2020/Jun/09/2002313081/-1/-1/0/CSI-DETECT-AND-PREVENT-WEB-SHELL-MALWARE-20200422.PDF"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-10-15",
+  "modified": "2022-12-28",
+  "mitre": {
+    "tactics": [
+      "TA1505"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection_general: {\"ParentImage|endswith\": [\"/httpd\", \"/lighttpd\", \"/nginx\", \"/apache2\", \"/node\", \"/caddy\"]}\nselection_tomcat: {\"ParentCommandLine|contains|all\": [\"/bin/java\", \"tomcat\"]}\nselection_websphere: {\"ParentCommandLine|contains|all\": [\"/bin/java\", \"websphere\"]}\nsub_processes: {\"Image|endswith\": [\"/whoami\", \"/ifconfig\", \"/ip\", \"/bin/uname\", \"/bin/cat\", \"/bin/crontab\", \"/hostname\", \"/iptables\", \"/netstat\", \"/pwd\", \"/route\"]}",
+    "condition": "1 of selection_* and sub_processes",
+    "fields": []
+  },
+  "falsepositives": [
+    "Web applications that invoke Linux command line tools"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

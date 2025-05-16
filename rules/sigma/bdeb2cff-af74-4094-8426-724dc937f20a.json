@@ -1,0 +1,43 @@
+{
+  "id": "bdeb2cff-af74-4094-8426-724dc937f20a",
+  "name": "PowerShell Script Change Permission Via Set-Acl",
+  "description": "Detects PowerShell execution to set the ACL of a file or a folder",
+  "source": {
+    "type": "sigma",
+    "id": "bdeb2cff-af74-4094-8426-724dc937f20a",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_powershell_set_acl.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_powershell_set_acl.yml"
+  },
+  "tags": [
+    "attackdefense-evasion"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-acl?view=powershell-5.1",
+    "https://github.com/redcanaryco/atomic-red-team/blob/74438b0237d141ee9c99747976447dc884cb1a39/atomics/T1505.005/T1505.005.md"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-10-18",
+  "modified": "2022-10-18",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"OriginalFileName\": [\"PowerShell.EXE\", \"pwsh.dll\"]}, {\"Image|endswith\": [\"\\\\powershell.exe\", \"\\\\pwsh.exe\"]}]\nselection_cmdlet: {\"CommandLine|contains|all\": [\"Set-Acl \", \"-AclObject \", \"-Path \"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "rule_id": "e3c5bf7e-8225-4c8d-88f3-e7f93c6b7e3c",
+  "name": "PowerShell Base64 Encoded Command Execution",
+  "description": "Identifies PowerShell execution with Base64 encoded commands, which may indicate obfuscation attempts",
+  "author": ["RuleHub Test"],
+  "references": [
+    "https://attack.mitre.org/techniques/T1059/001/"
+  ],
+  "severity": "medium",
+  "risk_score": 50,
+  "rule_type": "query",
+  "type": "eql",
+  "created_at": "2025-05-16T00:00:00.000Z",
+  "updated_at": "2025-05-16T00:00:00.000Z",
+  "query": "process where process.name == \"powershell.exe\" and (process.args : \"*-enc*\" or process.args : \"*-encodedcommand*\")",
+  "tags": [
+    "Windows", "PowerShell", "Execution"
+  ],
+  "threat": [
+    {
+      "framework": "MITRE ATT&CK",
+      "tactic": {
+        "id": "TA0002",
+        "name": "Execution",
+        "reference": "https://attack.mitre.org/tactics/TA0002/"
+      },
+      "technique": [
+        {
+          "id": "T1059.001",
+          "name": "Command and Scripting Interpreter: PowerShell",
+          "reference": "https://attack.mitre.org/techniques/T1059/001/"
+        }
+      ]
+    }
+  ],
+  "false_positives": [
+    "Administrative scripts",
+    "Legitimate PowerShell usage"
+  ],
+  "os_types": ["windows"]
+}

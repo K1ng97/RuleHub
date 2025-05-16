@@ -1,0 +1,47 @@
+{
+  "id": "bd1c6866-65fc-44b2-be51-5588fcff82b9",
+  "name": "Renamed Msdt.EXE Execution",
+  "description": "Detects the execution of a renamed \"Msdt.exe\" binary",
+  "source": {
+    "type": "sigma",
+    "id": "bd1c6866-65fc-44b2-be51-5588fcff82b9",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_renamed_msdt.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_renamed_msdt.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1036003"
+  ],
+  "author": "pH-T (Nextron Systems)",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/Binaries/Msdt/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-06-03",
+  "modified": "2023-02-03",
+  "mitre": {
+    "tactics": [
+      "TA1036"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"OriginalFileName\": \"msdt.exe\"}\nfilter: {\"Image|endswith\": \"\\\\msdt.exe\"}",
+    "condition": "selection and not filter",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "id": "b3e6418f-7c7a-4fad-993a-93b65027a9f1",
+  "name": "DNS Query To Visual Studio Code Tunnels Domain",
+  "description": "Detects DNS query requests to Visual Studio Code tunnel domains. Attackers can abuse that feature to establish a reverse shell or persistence on a machine.\n",
+  "source": {
+    "type": "sigma",
+    "id": "b3e6418f-7c7a-4fad-993a-93b65027a9f1",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/dns_query_win_vscode_tunnel_communication.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/dns_query/dns_query_win_vscode_tunnel_communication.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1071001"
+  ],
+  "author": "citron_ninja",
+  "references": [
+    "https://ipfyx.fr/post/visual-studio-code-tunnel/",
+    "https://badoption.eu/blog/2023/01/31/code_c2.html",
+    "https://cydefops.com/vscode-data-exfiltration"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-10-25",
+  "modified": "2023-11-20",
+  "mitre": {
+    "tactics": [
+      "TA1071"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"QueryName|endswith\": \".tunnels.api.visualstudio.com\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use of Visual Studio Code tunnel will also trigger this."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "dns_query"
+  ]
+}

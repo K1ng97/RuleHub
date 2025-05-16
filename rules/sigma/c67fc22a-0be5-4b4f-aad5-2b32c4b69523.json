@@ -1,0 +1,46 @@
+{
+  "id": "c67fc22a-0be5-4b4f-aad5-2b32c4b69523",
+  "name": "Symlink Etc Passwd",
+  "description": "Detects suspicious command lines that look as if they would create symbolic links to /etc/passwd",
+  "source": {
+    "type": "sigma",
+    "id": "c67fc22a-0be5-4b4f-aad5-2b32c4b69523",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/lnx_symlink_etc_passwd.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/builtin/lnx_symlink_etc_passwd.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1204001"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://www.qualys.com/2021/05/04/21nails/21nails.txt"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-04-05",
+  "modified": "2021-11-27",
+  "mitre": {
+    "tactics": [
+      "TA1204"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "keywords: [\"ln -s -f /etc/passwd\", \"ln -s /etc/passwd\"]",
+    "condition": "keywords",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux"
+  ]
+}

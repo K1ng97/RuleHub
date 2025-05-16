@@ -1,0 +1,50 @@
+{
+  "id": "243de76f-4725-4f2e-8225-a8a69b15ad61",
+  "name": "PowerShell Create Local User",
+  "description": "Detects creation of a local user via PowerShell",
+  "source": {
+    "type": "sigma",
+    "id": "243de76f-4725-4f2e-8225-a8a69b15ad61",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_create_local_user.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_create_local_user.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackpersistence",
+    "attackt1059001",
+    "attackt1136001"
+  ],
+  "author": "@ROxPinTeddy",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1136.001/T1136.001.md"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-04-11",
+  "modified": "2022-12-25",
+  "mitre": {
+    "tactics": [
+      "TA1059",
+      "TA1136"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ScriptBlockText|contains\": \"New-LocalUser\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate user creation"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

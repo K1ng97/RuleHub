@@ -1,0 +1,46 @@
+{
+  "id": "5fdce3ac-e7f9-4ecd-a3aa-a4d78ebbf0af",
+  "name": "Mstsc.EXE Execution With Local RDP File",
+  "description": "Detects potential RDP connection via Mstsc using a local \".rdp\" file",
+  "source": {
+    "type": "sigma",
+    "id": "5fdce3ac-e7f9-4ecd-a3aa-a4d78ebbf0af",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_mstsc_run_local_rdp_file.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_mstsc_run_local_rdp_file.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1219"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems), Christopher Peacock @securepeacock",
+  "references": [
+    "https://www.blackhillsinfosec.com/rogue-rdp-revisiting-initial-access-methods/",
+    "https://web.archive.org/web/20230726144748/https://blog.thickmints.dev/mintsights/detecting-rogue-rdp/"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-04-18",
+  "modified": "2023-04-30",
+  "mitre": {
+    "tactics": [
+      "TA1219"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\mstsc.exe\"}, {\"OriginalFileName\": \"mstsc.exe\"}]\nselection_cli: {\"CommandLine|endswith\": [\".rdp\", \".rdp\\\"\"]}\nfilter_optional_wsl: {\"ParentImage\": \"C:\\\\Windows\\\\System32\\\\lxss\\\\wslhost.exe\", \"CommandLine|contains\": \"C:\\\\ProgramData\\\\Microsoft\\\\WSL\\\\wslg.rdp\"}",
+    "condition": "all of selection_* and not 1 of filter_optional_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Likely with legitimate usage of \".rdp\" files"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

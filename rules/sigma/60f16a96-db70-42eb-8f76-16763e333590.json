@@ -1,0 +1,46 @@
+{
+  "id": "60f16a96-db70-42eb-8f76-16763e333590",
+  "name": "New Capture Session Launched Via DXCap.EXE",
+  "description": "Detects the execution of \"DXCap.EXE\" with the \"-c\" flag, which allows a user to launch any arbitrary binary or windows package through DXCap itself. This can be abused to potentially bypass application whitelisting.\n",
+  "source": {
+    "type": "sigma",
+    "id": "60f16a96-db70-42eb-8f76-16763e333590",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_dxcap_arbitrary_binary_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_dxcap_arbitrary_binary_execution.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218"
+  ],
+  "author": "Beyu Denis, oscd.community, Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/OtherMSBinaries/Dxcap/",
+    "https://twitter.com/harr0ey/status/992008180904419328"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-10-26",
+  "modified": "2022-06-09",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\DXCap.exe\"}, {\"OriginalFileName\": \"DXCap.exe\"}]\nselection_cli: {\"CommandLine|contains\": \" -c \"}",
+    "condition": "all of selection*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate execution of dxcap.exe by legitimate user"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

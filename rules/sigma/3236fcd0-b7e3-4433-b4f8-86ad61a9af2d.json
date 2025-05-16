@@ -1,0 +1,47 @@
+{
+  "id": "3236fcd0-b7e3-4433-b4f8-86ad61a9af2d",
+  "name": "Suspicious PowerShell Download",
+  "description": "Detects suspicious PowerShell download command",
+  "source": {
+    "type": "sigma",
+    "id": "3236fcd0-b7e3-4433-b4f8-86ad61a9af2d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_pc_susp_download.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_classic/posh_pc_susp_download.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1059001"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://www.trendmicro.com/en_us/research/22/j/lv-ransomware-exploits-proxyshell-in-attack.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2017-03-05",
+  "modified": "2023-10-27",
+  "mitre": {
+    "tactics": [
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_webclient: {\"Data|contains\": \"Net.WebClient\"}\nselection_download: {\"Data|contains\": [\".DownloadFile(\", \".DownloadString(\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "PowerShell scripts that download content from the Internet"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_classic_start"
+  ]
+}

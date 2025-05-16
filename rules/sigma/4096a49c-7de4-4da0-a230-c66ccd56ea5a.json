@@ -1,0 +1,46 @@
+{
+  "id": "4096a49c-7de4-4da0-a230-c66ccd56ea5a",
+  "name": "Suspicious PowerShell Get Current User",
+  "description": "Detects the use of PowerShell to identify the current logged user.",
+  "source": {
+    "type": "sigma",
+    "id": "4096a49c-7de4-4da0-a230-c66ccd56ea5a",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_susp_get_current_user.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_susp_get_current_user.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1033"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1033/T1033.md#atomic-test-4---user-discovery-with-env-vars-powershell-script",
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1033/T1033.md#atomic-test-5---getcurrent-user-with-powershell-script"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-04-04",
+  "modified": "2022-04-04",
+  "mitre": {
+    "tactics": [
+      "TA1033"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"ScriptBlockText|contains\": [\"[System.Environment]::UserName\", \"$env:UserName\", \"[System.Security.Principal.WindowsIdentity]::GetCurrent()\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate PowerShell scripts"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

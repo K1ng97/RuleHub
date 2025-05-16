@@ -1,0 +1,45 @@
+{
+  "id": "ddcd88cb-7f62-4ce5-86f9-1704190feb0a",
+  "name": "Potential In-Memory Execution Using Reflection.Assembly",
+  "description": "Detects usage of \"Reflection.Assembly\" load functions to dynamically load assemblies in memory",
+  "source": {
+    "type": "sigma",
+    "id": "ddcd88cb-7f62-4ce5-86f9-1704190feb0a",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_dotnet_assembly_from_file.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_dotnet_assembly_from_file.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1620"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse?slide=50"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-12-25",
+  "modified": "2022-12-25",
+  "mitre": {
+    "tactics": [
+      "TA1620"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"ScriptBlockText|contains\": \"[Reflection.Assembly]::load\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use of the library"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

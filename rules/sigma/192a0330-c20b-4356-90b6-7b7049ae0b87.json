@@ -1,0 +1,48 @@
+{
+  "id": "192a0330-c20b-4356-90b6-7b7049ae0b87",
+  "name": "Successful Overpass the Hash Attempt",
+  "description": "Detects successful logon with logon type 9 (NewCredentials) which matches the Overpass the Hash behavior of e.g Mimikatz's sekurlsa::pth module.",
+  "source": {
+    "type": "sigma",
+    "id": "192a0330-c20b-4356-90b6-7b7049ae0b87",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_overpass_the_hash.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/account_management/win_security_overpass_the_hash.yml"
+  },
+  "tags": [
+    "attacklateral-movement",
+    "attacks0002",
+    "attackt1550002"
+  ],
+  "author": "Roberto Rodriguez (source), Dominik Schaudel (rule)",
+  "references": [
+    "https://web.archive.org/web/20220419045003/https://cyberwardog.blogspot.com/2017/04/chronicles-of-threat-hunter-hunting-for.html"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2018-02-12",
+  "modified": "2021-11-27",
+  "mitre": {
+    "tactics": [
+      "TA1550"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 4624, \"LogonType\": 9, \"LogonProcessName\": \"seclogo\", \"AuthenticationPackageName\": \"Negotiate\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Runas command-line tool using /netonly parameter"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "8ae51330-899c-4641-8125-e39f2e07da72",
+  "name": "DNS TXT Answer with Possible Execution Strings",
+  "description": "Detects strings used in command execution in DNS TXT Answer",
+  "source": {
+    "type": "sigma",
+    "id": "8ae51330-899c-4641-8125-e39f2e07da72",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/net_dns_susp_txt_exec_strings.yml",
+    "file_path": "tmp/repos/sigma/rules/network/dns/net_dns_susp_txt_exec_strings.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1071004"
+  ],
+  "author": "Markus Neis",
+  "references": [
+    "https://twitter.com/stvemillertime/status/1024707932447854592",
+    "https://github.com/samratashok/nishang/blob/414ee1104526d7057f9adaeee196d91ae447283e/Backdoors/DNS_TXT_Pwnage.ps1"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2018-08-08",
+  "modified": "2021-11-27",
+  "mitre": {
+    "tactics": [
+      "TA1071"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"record_type\": \"TXT\", \"answer|contains\": [\"IEX\", \"Invoke-Expression\", \"cmd.exe\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "dns"
+  ]
+}

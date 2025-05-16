@@ -1,0 +1,47 @@
+{
+  "id": "87911521-7098-470b-a459-9a57fc80bdfd",
+  "name": "Sysmon Configuration Update",
+  "description": "Detects updates to Sysmon's configuration. Attackers might update or replace the Sysmon configuration with a bare bone one to avoid monitoring without shutting down the service completely",
+  "source": {
+    "type": "sigma",
+    "id": "87911521-7098-470b-a459-9a57fc80bdfd",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_sysinternals_sysmon_config_update.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_sysinternals_sysmon_config_update.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1562001"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-03-09",
+  "modified": "2024-03-13",
+  "mitre": {
+    "tactics": [
+      "TA1562"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_pe: [{\"Image|endswith\": [\"\\\\Sysmon64.exe\", \"\\\\Sysmon.exe\"]}, {\"Description\": \"System activity monitor\"}]\nselection_cli: {\"CommandLine|contains|windash\": \"-c\"}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administrators might use this command to update Sysmon configuration."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

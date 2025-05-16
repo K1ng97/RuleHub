@@ -1,0 +1,43 @@
+{
+  "id": "aeff2bb5-3483-48d4-9be8-c8976194be1e",
+  "name": "Cisco Secure Firewall - Repeated Malware Downloads",
+  "description": "The following analytic detects repeated malware file downloads initiated by the same internal host (src_ip) within a short time window. It leverages Cisco Secure Firewall Threat Defense logs and identifies `FileEvent` events with a `SHA_Disposition` of \"Malware\" and `FileDirection` set to \"Download\". If ten or more such events occur from the same host within five minutes, this analytic will trigger. This activity may indicate the host is compromised and repeatedly retrieving malicious content—either due to command-and-control, malware staging, or automation. If confirmed malicious, this behavior may represent an infection in progress, persistence mechanism, or a malicious downloader.\n",
+  "source": {
+    "type": "splunk",
+    "id": "aeff2bb5-3483-48d4-9be8-c8976194be1e",
+    "url": "https://github.com/splunk/security_content/blob/develop/cisco_secure_firewall___repeated_malware_downloads.yml",
+    "file_path": "tmp/repos/splunk/detections/network/cisco_secure_firewall___repeated_malware_downloads.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Nasreddine Bencherchali, Splunk",
+  "references": [
+    "https://www.cisco.com/c/en/us/td/docs/security/firepower/741/api/FQE/secure_firewall_estreamer_fqe_guide_740.pdf"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`cisco_secure_firewall` EventType=FileEvent SHA_Disposition=\"Malware\" FileDirection=\"Download\"\n| lookup cisco_secure_firewall_filetype_lookup Name as FileType OUTPUT Description\n| bin _time span=5m \n| stats count min(_time) as firstTime max(_time) as lastTime\n        values(uri) as uri\n        values(ClientApplication) as ClientApplication\n        values(app) as app\n        values(file_hash) as file_hash\n        values(SHA_Disposition) as SHA_Disposition\n        values(file_name) as file_name\n        values(ThreatName) as ThreatName\n        values(dest) as dest\n        values(dest_port) as dest_port\n        by src_ip FileDirection FileType Description\n| where count >= 10\n| `security_content_ctime(firstTime)`\n| `security_content_ctime(lastTime)`\n| table firstTime lastTime src_ip dest dest_port FileDirection FileType Description uri file_name file_hash app ClientApplication ThreatName SHA_Disposition\n| `cisco_secure_firewall___repeated_malware_downloads_filter`\n",
+    "condition": "This search requires Cisco Secure Firewall Threat Defense Logs, which\nincludes the FileEvent EventType. This search uses an input macro named `cisco_secure_firewall`.\nWe strongly recommend that you specify your environment-specific configurations\n(index, source, sourcetype, etc.) for Cisco Secure Firewall Threat Defense logs. Replace the macro definition\nwith configurations for your Splunk environment. The search also uses a post-filter\nmacro designed to filter out known false positives.\nThe logs are to be ingested using the Splunk Add-on for Cisco Security Cloud (https://splunkbase.splunk.com/app/7404).\nThe malware & file access policy must also enable logging.\n",
+    "fields": []
+  },
+  "falsepositives": [
+    "False positives should be minimal here, tuning may be required to exclude known test machines or development hosts."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

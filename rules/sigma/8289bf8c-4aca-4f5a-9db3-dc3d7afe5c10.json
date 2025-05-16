@@ -1,0 +1,47 @@
+{
+  "id": "8289bf8c-4aca-4f5a-9db3-dc3d7afe5c10",
+  "name": "Unsigned Binary Loaded From Suspicious Location",
+  "description": "Detects Code Integrity (CI) engine blocking processes from loading unsigned DLLs residing in suspicious locations",
+  "source": {
+    "type": "sigma",
+    "id": "8289bf8c-4aca-4f5a-9db3-dc3d7afe5c10",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_mitigations_unsigned_dll_from_susp_location.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security_mitigations/win_security_mitigations_unsigned_dll_from_susp_location.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1574001"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://github.com/nasbench/EVTX-ETW-Resources/blob/45fd5be71a51aa518b1b36d4e1f36af498084e27/ETWEventsList/CSV/Windows11/21H2/W11_21H2_Pro_20220719_22000.795/Providers/Microsoft-Windows-Security-Mitigations.csv"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-03",
+  "modified": "2022-09-28",
+  "mitre": {
+    "tactics": [
+      "TA1574"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": [11, 12], \"ImageName|contains\": [\"\\\\Users\\\\Public\\\\\", \"\\\\PerfLogs\\\\\", \"\\\\Desktop\\\\\", \"\\\\Downloads\\\\\", \"\\\\AppData\\\\Local\\\\Temp\\\\\", \"C:\\\\Windows\\\\TEMP\\\\\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security-mitigations"
+  ]
+}

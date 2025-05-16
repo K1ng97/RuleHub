@@ -1,0 +1,46 @@
+{
+  "id": "8a7e90c5-fe6e-45dc-889e-057fe4378bd9",
+  "name": "HackTool - SysmonEOP Execution",
+  "description": "Detects the execution of the PoC that can be used to exploit Sysmon CVE-2022-41120",
+  "source": {
+    "type": "sigma",
+    "id": "8a7e90c5-fe6e-45dc-889e-057fe4378bd9",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_hktl_sysmoneop.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_hktl_sysmoneop.yml"
+  },
+  "tags": [
+    "attackprivilege-escalation",
+    "attackt1068",
+    "cve2022-41120"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://github.com/Wh04m1001/SysmonEoP"
+  ],
+  "severity": "critical",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-12-04",
+  "modified": "2024-11-23",
+  "mitre": {
+    "tactics": [
+      "TA1068"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: {\"Image|endswith\": \"\\\\SysmonEOP.exe\"}\nselection_hash: {\"Hashes|contains\": [\"IMPHASH=22F4089EB8ABA31E1BB162C6D9BF72E5\", \"IMPHASH=5123FA4C4384D431CD0D893EEB49BBEC\"]}",
+    "condition": "1 of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "critical",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "e62a9f0c-ca1e-46b2-85d5-a6da77f86d1a",
+  "name": "File Encoded To Base64 Via Certutil.EXE",
+  "description": "Detects the execution of certutil with the \"encode\" flag to encode a file to base64. This can be abused by threat actors and attackers for data exfiltration",
+  "source": {
+    "type": "sigma",
+    "id": "e62a9f0c-ca1e-46b2-85d5-a6da77f86d1a",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_certutil_encode.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_certutil_encode.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1027"
+  ],
+  "author": "Florian Roth (Nextron Systems), Jonhnathan Ribeiro, oscd.community, Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/certutil",
+    "https://unit42.paloaltonetworks.com/new-babyshark-malware-targets-u-s-national-security-think-tanks/",
+    "https://lolbas-project.github.io/lolbas/Binaries/Certutil/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-02-24",
+  "modified": "2024-03-05",
+  "mitre": {
+    "tactics": [
+      "TA1027"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\certutil.exe\"}, {\"OriginalFileName\": \"CertUtil.exe\"}]\nselection_cli: {\"CommandLine|contains|windash\": \"-encode\"}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "As this is a general purpose rule, legitimate usage of the encode functionality will trigger some false positives. Apply additional filters accordingly"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

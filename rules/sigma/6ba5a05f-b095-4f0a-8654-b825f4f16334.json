@@ -1,0 +1,48 @@
+{
+  "id": "6ba5a05f-b095-4f0a-8654-b825f4f16334",
+  "name": "Potential MSTSC Shadowing Activity",
+  "description": "Detects RDP session hijacking by using MSTSC shadowing",
+  "source": {
+    "type": "sigma",
+    "id": "6ba5a05f-b095-4f0a-8654-b825f4f16334",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_mstsc_rdp_hijack_shadowing.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_mstsc_rdp_hijack_shadowing.yml"
+  },
+  "tags": [
+    "attacklateral-movement",
+    "attackt1563002"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://twitter.com/kmkz_security/status/1220694202301976576",
+    "https://github.com/kmkz/Pentesting/blob/47592e5e160d3b86c2024f09ef04ceb87d204995/Post-Exploitation-Cheat-Sheet"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-01-24",
+  "modified": "2023-02-05",
+  "mitre": {
+    "tactics": [
+      "TA1563"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|contains|all\": [\"noconsentprompt\", \"shadow:\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

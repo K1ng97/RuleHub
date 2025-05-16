@@ -1,0 +1,47 @@
+{
+  "id": "ce446a9e-30b9-4483-8e38-d2c9ad0a2280",
+  "name": "Steganography Hide Files with Steghide",
+  "description": "Detects embedding of files with usage of steghide binary, the adversaries may use this technique to prevent the detection of hidden information.",
+  "source": {
+    "type": "sigma",
+    "id": "ce446a9e-30b9-4483-8e38-d2c9ad0a2280",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/lnx_auditd_steghide_embed_steganography.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/auditd/lnx_auditd_steghide_embed_steganography.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1027003"
+  ],
+  "author": "Pawel Mazur",
+  "references": [
+    "https://vitux.com/how-to-hide-confidential-files-in-images-on-debian-using-steganography/"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-09-11",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [
+      "TA1027"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"type\": \"EXECVE\", \"a0\": \"steghide\", \"a1\": \"embed\", \"a2\": [\"-cf\", \"-ef\"], \"a4\": [\"-cf\", \"-ef\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "auditd"
+  ]
+}

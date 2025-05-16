@@ -1,0 +1,44 @@
+{
+  "id": "4da5ce1a-f71b-4e71-bb73-c0a3c73f3c3c",
+  "name": "Linux Auditd Data Destruction Command",
+  "description": "The following analytic detects the execution of a Unix shell command designed to wipe root directories on a Linux host. It leverages data from Linux Auditd, focusing on the 'rm' command with force recursive deletion and the '--no-preserve-root' option. This activity is significant as it indicates potential data destruction attempts, often associated with malware like Awfulshred. If confirmed malicious, this behavior could lead to severe data loss, system instability, and compromised integrity of the affected Linux host. Immediate investigation and response are crucial to mitigate potential damage.",
+  "source": {
+    "type": "splunk",
+    "id": "4da5ce1a-f71b-4e71-bb73-c0a3c73f3c3c",
+    "url": "https://github.com/splunk/security_content/blob/develop/linux_auditd_data_destruction_command.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/linux_auditd_data_destruction_command.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://cert.gov.ua/article/3718487",
+    "https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/overview-of-the-cyber-weapons-used-in-the-ukraine-russia-war/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`linux_auditd`  (proctitle = \"*rm *\" AND proctitle = \"*-rf *\" AND proctitle = \"*--no-preserve-root*\") | rename host as dest | rename comm as process_name | rename exe as process | stats count min(_time) as firstTime max(_time) as lastTime by proctitle dest | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `linux_auditd_data_destruction_command_filter`",
+    "condition": "To implement this detection, the process begins by ingesting auditd data, that consists of SYSCALL, TYPE, EXECVE and PROCTITLE events, which captures command-line executions and process details on Unix/Linux systems. These logs should be ingested and processed using Splunk Add-on for Unix and Linux (https://splunkbase.splunk.com/app/833), which is essential for correctly parsing and categorizing the data. The next step involves normalizing the field names  to match the field names set by the Splunk Common Information Model (CIM) to ensure consistency across different data sources and enhance the efficiency of data modeling. This approach enables effective monitoring and detection of linux endpoints where auditd is deployed",
+    "fields": []
+  },
+  "falsepositives": [
+    "unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

@@ -1,0 +1,47 @@
+{
+  "id": "ee9ca27c-9bd7-4cee-9b01-6e906be7cae3",
+  "name": "New PDQDeploy Service - Server Side",
+  "description": "Detects a PDQDeploy service installation which indicates that PDQDeploy was installed on the machines.\nPDQDeploy can be abused by attackers to remotely install packages or execute commands on target machines\n",
+  "source": {
+    "type": "sigma",
+    "id": "ee9ca27c-9bd7-4cee-9b01-6e906be7cae3",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_system_service_install_pdqdeploy.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/system/service_control_manager/win_system_service_install_pdqdeploy.yml"
+  },
+  "tags": [
+    "attackprivilege-escalation",
+    "attackt1543003"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://documentation.pdq.com/PDQDeploy/13.0.3.0/index.html?windows-services.htm"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-07-22",
+  "modified": "2022-07-22",
+  "mitre": {
+    "tactics": [
+      "TA1543"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection_root: {\"Provider_Name\": \"Service Control Manager\", \"EventID\": 7045}\nselection_service: [{\"ImagePath|contains\": \"PDQDeployService.exe\"}, {\"ServiceName\": [\"PDQDeploy\", \"PDQ Deploy\"]}]",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use of the tool"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "system"
+  ]
+}

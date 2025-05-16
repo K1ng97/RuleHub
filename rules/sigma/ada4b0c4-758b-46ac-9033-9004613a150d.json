@@ -1,0 +1,48 @@
+{
+  "id": "ada4b0c4-758b-46ac-9033-9004613a150d",
+  "name": "Modify Group Policy Settings",
+  "description": "Detect malicious GPO modifications can be used to implement many other malicious behaviors.",
+  "source": {
+    "type": "sigma",
+    "id": "ada4b0c4-758b-46ac-9033-9004613a150d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_reg_modify_group_policy_settings.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_reg_modify_group_policy_settings.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackprivilege-escalation",
+    "attackt1484001"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/40b77d63808dd4f4eafb83949805636735a1fd15/atomics/T1484.001/T1484.001.md"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-19",
+  "modified": "2022-08-19",
+  "mitre": {
+    "tactics": [
+      "TA1484"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_reg: [{\"Image|endswith\": \"\\\\reg.exe\"}, {\"OriginalFileName\": \"reg.exe\"}]\nselection_path: {\"CommandLine|contains\": \"\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\System\"}\nselection_key: {\"CommandLine|contains\": [\"GroupPolicyRefreshTimeDC\", \"GroupPolicyRefreshTimeOffsetDC\", \"GroupPolicyRefreshTime\", \"GroupPolicyRefreshTimeOffset\", \"EnableSmartScreen\", \"ShellSmartScreenLevel\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

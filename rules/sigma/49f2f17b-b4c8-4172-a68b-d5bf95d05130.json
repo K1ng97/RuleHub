@@ -1,0 +1,48 @@
+{
+  "id": "49f2f17b-b4c8-4172-a68b-d5bf95d05130",
+  "name": "UAC Bypass via ICMLuaUtil",
+  "description": "Detects the pattern of UAC Bypass using ICMLuaUtil Elevated COM interface",
+  "source": {
+    "type": "sigma",
+    "id": "49f2f17b-b4c8-4172-a68b-d5bf95d05130",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_uac_bypass_icmluautil.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_uac_bypass_icmluautil.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackprivilege-escalation",
+    "attackt1548002"
+  ],
+  "author": "Florian Roth (Nextron Systems), Elastic (idea)",
+  "references": [
+    "https://www.elastic.co/guide/en/security/current/uac-bypass-via-icmluautil-elevated-com-interface.html"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-09-13",
+  "modified": "2022-09-27",
+  "mitre": {
+    "tactics": [
+      "TA1548"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ParentImage|endswith\": \"\\\\dllhost.exe\", \"ParentCommandLine|contains\": [\"/Processid:{3E5FC7F9-9A51-4367-9063-A120244FBEC7}\", \"/Processid:{D2E7041B-2927-42FB-8E9F-7CE93B6DC937}\"]}\nfilter: [{\"Image|endswith\": \"\\\\WerFault.exe\"}, {\"OriginalFileName\": \"WerFault.exe\"}]",
+    "condition": "selection and not filter",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

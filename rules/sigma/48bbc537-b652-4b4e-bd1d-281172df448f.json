@@ -1,0 +1,49 @@
+{
+  "id": "48bbc537-b652-4b4e-bd1d-281172df448f",
+  "name": "Sysinternals PsSuspend Execution",
+  "description": "Detects usage of Sysinternals PsSuspend which can be abused to suspend critical processes",
+  "source": {
+    "type": "sigma",
+    "id": "48bbc537-b652-4b4e-bd1d-281172df448f",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_sysinternals_pssuspend_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_sysinternals_pssuspend_execution.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackpersistence",
+    "attackt1543003"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://learn.microsoft.com/en-us/sysinternals/downloads/pssuspend",
+    "https://twitter.com/0gtweet/status/1638069413717975046"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-03-23",
+  "modified": "2023-03-23",
+  "mitre": {
+    "tactics": [
+      "TA1543"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: [{\"OriginalFileName\": \"pssuspend.exe\"}, {\"Image|endswith\": [\"\\\\pssuspend.exe\", \"\\\\pssuspend64.exe\"]}]",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

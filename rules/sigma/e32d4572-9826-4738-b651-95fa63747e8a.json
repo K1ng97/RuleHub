@@ -1,0 +1,51 @@
+{
+  "id": "e32d4572-9826-4738-b651-95fa63747e8a",
+  "name": "Base64 Encoded PowerShell Command Detected",
+  "description": "Detects usage of the \"FromBase64String\" function in the commandline which is used to decode a base64 encoded string",
+  "source": {
+    "type": "sigma",
+    "id": "e32d4572-9826-4738-b651-95fa63747e8a",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_powershell_frombase64string.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_powershell_frombase64string.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1027",
+    "attackt1059001",
+    "attackt1140"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://gist.github.com/Neo23x0/6af876ee72b51676c82a2db8d2cd3639"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-01-29",
+  "modified": "2023-01-26",
+  "mitre": {
+    "tactics": [
+      "TA1027",
+      "TA1059",
+      "TA1140"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|contains\": \"::FromBase64String(\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrative script libraries"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

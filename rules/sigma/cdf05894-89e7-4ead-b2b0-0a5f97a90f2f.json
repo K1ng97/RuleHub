@@ -1,0 +1,50 @@
+{
+  "id": "cdf05894-89e7-4ead-b2b0-0a5f97a90f2f",
+  "name": "Potential Encoded PowerShell Patterns In CommandLine",
+  "description": "Detects specific combinations of encoding methods in PowerShell via the commandline",
+  "source": {
+    "type": "sigma",
+    "id": "cdf05894-89e7-4ead-b2b0-0a5f97a90f2f",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_powershell_encoding_patterns.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_powershell_encoding_patterns.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1027",
+    "attackt1059001"
+  ],
+  "author": "Teymur Kheirkhabarov (idea), Vasiliy Burov (rule), oscd.community, Tim Shelton",
+  "references": [
+    "https://speakerdeck.com/heirhabarov/hunting-for-powershell-abuse?slide=65"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-11",
+  "modified": "2023-01-26",
+  "mitre": {
+    "tactics": [
+      "TA1027",
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": [\"\\\\powershell.exe\", \"\\\\pwsh.exe\"]}, {\"OriginalFileName\": [\"PowerShell.EXE\", \"pwsh.dll\"]}]\nselection_to_1: {\"CommandLine|contains\": [\"ToInt\", \"ToDecimal\", \"ToByte\", \"ToUint\", \"ToSingle\", \"ToSByte\"]}\nselection_to_2: {\"CommandLine|contains\": [\"ToChar\", \"ToString\", \"String\"]}\nselection_gen_1: {\"CommandLine|contains|all\": [\"char\", \"join\"]}\nselection_gen_2: {\"CommandLine|contains|all\": [\"split\", \"join\"]}",
+    "condition": "selection_img and (all of selection_to_* or 1 of selection_gen_*)",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

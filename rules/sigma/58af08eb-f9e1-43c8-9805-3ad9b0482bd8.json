@@ -1,0 +1,46 @@
+{
+  "id": "58af08eb-f9e1-43c8-9805-3ad9b0482bd8",
+  "name": "Invalid PIM License",
+  "description": "Identifies when an organization doesn't have the proper license for PIM and is out of compliance.",
+  "source": {
+    "type": "sigma",
+    "id": "58af08eb-f9e1-43c8-9805-3ad9b0482bd8",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_pim_invalid_license.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/privileged_identity_management/azure_pim_invalid_license.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1078"
+  ],
+  "author": "Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'",
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-how-to-configure-security-alerts#the-organization-doesnt-have-microsoft-entra-premium-p2-or-microsoft-entra-id-governance"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-09-14",
+  "modified": "2023-09-14",
+  "mitre": {
+    "tactics": [
+      "TA1078"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"riskEventType\": \"invalidLicenseAlertIncident\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Investigate if licenses have expired."
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "pim"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "258fc8ce-8352-443a-9120-8a11e4857fa5",
+  "name": "Potential Arbitrary Command Execution Using Msdt.EXE",
+  "description": "Detects processes leveraging the \"ms-msdt\" handler or the \"msdt.exe\" binary to execute arbitrary commands as seen in the follina (CVE-2022-30190) vulnerability",
+  "source": {
+    "type": "sigma",
+    "id": "258fc8ce-8352-443a-9120-8a11e4857fa5",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_msdt_arbitrary_command_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_msdt_arbitrary_command_execution.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1202"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://twitter.com/nao_sec/status/1530196847679401984",
+    "https://app.any.run/tasks/713f05d2-fe78-4b9d-a744-f7c133e3fafb/",
+    "https://twitter.com/_JohnHammond/status/1531672601067675648"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-05-29",
+  "modified": "2024-03-13",
+  "mitre": {
+    "tactics": [
+      "TA1202"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\msdt.exe\"}, {\"OriginalFileName\": \"msdt.exe\"}]\nselection_cmd_inline: {\"CommandLine|contains\": \"IT_BrowseForFile=\"}\nselection_cmd_answerfile_flag: {\"CommandLine|contains\": \" PCWDiagnostic\"}\nselection_cmd_answerfile_param: {\"CommandLine|contains|windash\": \" -af \"}",
+    "condition": "selection_img and (selection_cmd_inline or all of selection_cmd_answerfile_*)",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

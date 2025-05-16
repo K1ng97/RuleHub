@@ -1,0 +1,47 @@
+{
+  "id": "0cb8d736-995d-4ce7-a31e-1e8d452a1459",
+  "name": "Potential EventLog File Location Tampering",
+  "description": "Detects tampering with EventLog service \"file\" key. In order to change the default location of an Evtx file. This technique is used to tamper with log collection and alerting",
+  "source": {
+    "type": "sigma",
+    "id": "0cb8d736-995d-4ce7-a31e-1e8d452a1459",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_set_evtx_file_key_tamper.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_set/registry_set_evtx_file_key_tamper.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1562002"
+  ],
+  "author": "D3F7A5105",
+  "references": [
+    "https://learn.microsoft.com/en-us/windows/win32/eventlog/eventlog-key"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-01-02",
+  "modified": "2023-08-17",
+  "mitre": {
+    "tactics": [
+      "TA1562"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"TargetObject|contains\": \"\\\\SYSTEM\\\\CurrentControlSet\\\\Services\\\\EventLog\\\\\", \"TargetObject|endswith\": \"\\\\File\"}\nfilter: {\"Details|contains\": \"\\\\System32\\\\Winevt\\\\Logs\\\\\"}",
+    "condition": "selection and not filter",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_set"
+  ]
+}

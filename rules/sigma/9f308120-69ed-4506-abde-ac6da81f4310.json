@@ -1,0 +1,43 @@
+{
+  "id": "9f308120-69ed-4506-abde-ac6da81f4310",
+  "name": "Okta Network Zone Deactivated or Deleted",
+  "description": "Detects when an Network Zone is Deactivated or Deleted.",
+  "source": {
+    "type": "sigma",
+    "id": "9f308120-69ed-4506-abde-ac6da81f4310",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/okta_network_zone_deactivated_or_deleted.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/okta/okta_network_zone_deactivated_or_deleted.yml"
+  },
+  "tags": [
+    "attackimpact"
+  ],
+  "author": "Austin Songer @austinsonger",
+  "references": [
+    "https://developer.okta.com/docs/reference/api/system-log/",
+    "https://developer.okta.com/docs/reference/api/event-types/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-09-12",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"eventtype\": [\"zone.deactivate\", \"zone.delete\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "okta",
+    "okta"
+  ]
+}

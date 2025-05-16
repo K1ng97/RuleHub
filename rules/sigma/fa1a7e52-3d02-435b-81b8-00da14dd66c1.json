@@ -1,0 +1,51 @@
+{
+  "id": "fa1a7e52-3d02-435b-81b8-00da14dd66c1",
+  "name": "Diskshadow Script Mode - Execution From Potential Suspicious Location",
+  "description": "Detects execution of \"Diskshadow.exe\" in script mode using the \"/s\" flag where the script is located in a potentially suspicious location.",
+  "source": {
+    "type": "sigma",
+    "id": "fa1a7e52-3d02-435b-81b8-00da14dd66c1",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_diskshadow_script_mode_susp_location.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_diskshadow_script_mode_susp_location.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://bohops.com/2018/03/26/diskshadow-the-return-of-vss-evasion-persistence-and-active-directory-database-extraction/",
+    "https://www.ired.team/offensive-security/credential-access-and-credential-dumping/ntds.dit-enumeration",
+    "https://medium.com/@cyberjyot/lolbin-execution-via-diskshadow-f6ff681a27a4",
+    "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/diskshadow",
+    "https://www.lifars.com/wp-content/uploads/2022/01/GriefRansomware_Whitepaper-2.pdf",
+    "https://www.zscaler.com/blogs/security-research/technical-analysis-crytox-ransomware",
+    "https://research.checkpoint.com/2022/evilplayout-attack-against-irans-state-broadcaster/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-09-15",
+  "modified": "2024-03-05",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"OriginalFileName\": \"diskshadow.exe\"}, {\"Image|endswith\": \"\\\\diskshadow.exe\"}]\nselection_cli: {\"CommandLine|contains|windash\": \"-s \"}\nselection_paths: {\"CommandLine|contains\": [\":\\\\Temp\\\\\", \":\\\\Windows\\\\Temp\\\\\", \"\\\\AppData\\\\Local\\\\\", \"\\\\AppData\\\\Roaming\\\\\", \"\\\\ProgramData\\\\\", \"\\\\Users\\\\Public\\\\\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "False positives may occur if you execute the script from one of the paths mentioned in the rule. Apply additional filters that fits your org needs."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

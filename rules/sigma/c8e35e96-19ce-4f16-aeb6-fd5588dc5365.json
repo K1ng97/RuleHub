@@ -1,0 +1,45 @@
+{
+  "id": "c8e35e96-19ce-4f16-aeb6-fd5588dc5365",
+  "name": "Suspicious Named Error",
+  "description": "Detects suspicious DNS error messages that indicate a fatal or suspicious error that could be caused by exploiting attempts",
+  "source": {
+    "type": "sigma",
+    "id": "c8e35e96-19ce-4f16-aeb6-fd5588dc5365",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/lnx_syslog_susp_named.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/builtin/syslog/lnx_syslog_susp_named.yml"
+  },
+  "tags": [
+    "attackinitial-access",
+    "attackt1190"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://github.com/ossec/ossec-hids/blob/1ecffb1b884607cb12e619f9ab3c04f530801083/etc/rules/named_rules.xml"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2018-02-20",
+  "modified": "2022-10-05",
+  "mitre": {
+    "tactics": [
+      "TA1190"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "keywords: [\" dropping source port zero packet from \", \" denied AXFR from \", \" exiting (due to fatal error)\"]",
+    "condition": "keywords",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "syslog"
+  ]
+}

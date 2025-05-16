@@ -1,0 +1,48 @@
+{
+  "id": "54773c5f-f1cc-4703-9126-2f797d96a69d",
+  "name": "PUA - Advanced Port Scanner Execution",
+  "description": "Detects the use of Advanced Port Scanner.",
+  "source": {
+    "type": "sigma",
+    "id": "54773c5f-f1cc-4703-9126-2f797d96a69d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_pua_advanced_port_scanner.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_pua_advanced_port_scanner.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1046",
+    "attackt1135"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://github.com/3CORESec/MAL-CL/tree/master/Descriptors/Other/Advanced%20Port%20Scanner"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-12-18",
+  "modified": "2023-02-07",
+  "mitre": {
+    "tactics": [
+      "TA1046",
+      "TA1135"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|contains\": \"\\\\advanced_port_scanner\"}, {\"OriginalFileName|contains\": \"advanced_port_scanner\"}, {\"Description|contains\": \"Advanced Port Scanner\"}]\nselection_cli: {\"CommandLine|contains|all\": [\"/portable\", \"/lng\"]}",
+    "condition": "1 of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administrative use",
+    "Tools with similar commandline (very rare)"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

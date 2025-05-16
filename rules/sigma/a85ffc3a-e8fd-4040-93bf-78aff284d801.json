@@ -1,0 +1,46 @@
+{
+  "id": "a85ffc3a-e8fd-4040-93bf-78aff284d801",
+  "name": "Use Of The SFTP.EXE Binary As A LOLBIN",
+  "description": "Detects the usage of the \"sftp.exe\" binary as a LOLBIN by abusing the \"-D\" flag",
+  "source": {
+    "type": "sigma",
+    "id": "a85ffc3a-e8fd-4040-93bf-78aff284d801",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_lolbin_sftp.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_lolbin_sftp.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1218"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://github.com/LOLBAS-Project/LOLBAS/pull/264"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-11-10",
+  "modified": "2022-11-10",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"\\\\sftp.exe\", \"CommandLine|contains\": [\" -D ..\", \" -D C:\\\\\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,87 @@
+# RuleHub - 规则源配置文件
+# 配置各个开源规则仓库的信息，用于规则同步
+
+sources:
+  # Sigma规则源配置
+  sigma:
+    name: "Sigma Rules"
+    description: "通用的开源SIEM规则格式"
+    repo_url: "https://github.com/SigmaHQ/sigma.git"
+    branch: "master"
+    paths:
+      - "rules/windows"
+      - "rules/linux"
+      - "rules/cloud"
+      - "rules/network"
+    format: "yml"
+    converter: "sigma_converter"
+    update_interval: 86400  # 24小时，单位：秒
+    enabled: true
+    tags:
+      - "sigma"
+      - "open-source"
+    priority: 1
+
+  # Elastic规则源配置
+  elastic:
+    name: "Elastic Detection Rules"
+    description: "Elastic Security提供的检测规则"
+    repo_url: "https://github.com/elastic/detection-rules.git"
+    branch: "main"
+    paths:
+      - "rules/windows"
+      - "rules/linux"
+      - "rules/macos"
+      - "rules/cross-platform"
+    format: "ndjson"
+    converter: "elastic_converter"
+    update_interval: 86400  # 24小时，单位：秒
+    enabled: true
+    tags:
+      - "elastic"
+      - "eql"
+    priority: 2
+
+  # Splunk规则源配置
+  splunk:
+    name: "Splunk Security Content"
+    description: "Splunk提供的安全内容，包括检测规则、查询等"
+    repo_url: "https://github.com/splunk/security_content.git"
+    branch: "develop"
+    paths:
+      - "detections"
+    format: "yml"
+    converter: "splunk_converter"
+    update_interval: 86400  # 24小时，单位：秒
+    enabled: true
+    tags:
+      - "splunk"
+      - "spl"
+    priority: 3
+
+  # MITRE Detection Lab规则
+  mitre_detection:
+    name: "MITRE Detection Lab"
+    description: "MITRE ATT&CK相关的检测规则和测试案例"
+    repo_url: "https://github.com/mitre/detection-lab-rules.git"  # 示例仓库
+    branch: "main"
+    paths:
+      - "rules"
+    format: "json"
+    converter: "mitre_converter"
+    update_interval: 172800  # 48小时，单位：秒
+    enabled: false  # 默认禁用
+    tags:
+      - "mitre"
+      - "attack"
+    priority: 4
+
+# 全局配置选项
+global:
+  default_output_format: "json"  # 规则统一转换后的格式
+  clone_path: "./tmp/repos"      # 仓库克隆的临时目录
+  max_repo_size: 1000            # 单个仓库最大大小限制(MB)
+  timeout: 600                   # 操作超时时间(秒)
+  retries: 3                     # 失败重试次数
+  concurrency: 2                 # 同时处理的仓库数量
+  log_level: "info"              # 日志级别

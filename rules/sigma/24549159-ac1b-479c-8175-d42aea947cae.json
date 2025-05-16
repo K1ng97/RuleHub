@@ -1,0 +1,58 @@
+{
+  "id": "24549159-ac1b-479c-8175-d42aea947cae",
+  "name": "Hacktool Ruler",
+  "description": "This events that are generated when using the hacktool Ruler by Sensepost",
+  "source": {
+    "type": "sigma",
+    "id": "24549159-ac1b-479c-8175-d42aea947cae",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_alert_ruler.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_alert_ruler.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackexecution",
+    "attackt1059",
+    "attackt1087",
+    "attackt1114",
+    "attackt1550002"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://github.com/sensepost/ruler",
+    "https://github.com/sensepost/ruler/issues/47",
+    "https://github.com/staaldraad/go-ntlm/blob/cd032d41aa8ce5751c07cb7945400c0f5c81e2eb/ntlm/ntlmv1.go#L427",
+    "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4776",
+    "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4624"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2017-05-31",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [
+      "TA1059",
+      "TA1087",
+      "TA1114",
+      "TA1550"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection1: {\"EventID\": 4776, \"Workstation\": \"RULER\"}\nselection2: {\"EventID\": [4624, 4625], \"WorkstationName\": \"RULER\"}",
+    "condition": "(1 of selection*)",
+    "fields": []
+  },
+  "falsepositives": [
+    "Go utilities that use staaldraad awesome NTLM library"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

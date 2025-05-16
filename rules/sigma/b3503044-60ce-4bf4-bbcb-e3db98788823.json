@@ -1,0 +1,49 @@
+{
+  "id": "b3503044-60ce-4bf4-bbcb-e3db98788823",
+  "name": "DLL Load via LSASS",
+  "description": "Detects a method to load DLL via LSASS process using an undocumented Registry key",
+  "source": {
+    "type": "sigma",
+    "id": "b3503044-60ce-4bf4-bbcb-e3db98788823",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_event_susp_lsass_dll_load.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_event/registry_event_susp_lsass_dll_load.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackpersistence",
+    "attackt1547008"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://blog.xpnsec.com/exploring-mimikatz-part-1/",
+    "https://twitter.com/SBousseaden/status/1183745981189427200"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-10-16",
+  "modified": "2022-04-21",
+  "mitre": {
+    "tactics": [
+      "TA1547"
+    ],
+    "techniques": [
+      "T008"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"TargetObject|contains\": [\"\\\\CurrentControlSet\\\\Services\\\\NTDS\\\\DirectoryServiceExtPt\", \"\\\\CurrentControlSet\\\\Services\\\\NTDS\\\\LsaDbExtPt\"]}\nfilter_domain_controller: {\"Image\": \"C:\\\\Windows\\\\system32\\\\lsass.exe\", \"Details\": [\"%%systemroot%%\\\\system32\\\\ntdsa.dll\", \"%%systemroot%%\\\\system32\\\\lsadb.dll\"]}",
+    "condition": "selection and not 1 of filter_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_event"
+  ]
+}

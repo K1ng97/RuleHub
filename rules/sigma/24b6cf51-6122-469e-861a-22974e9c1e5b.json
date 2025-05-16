@@ -1,0 +1,49 @@
+{
+  "id": "24b6cf51-6122-469e-861a-22974e9c1e5b",
+  "name": "Potential SmadHook.DLL Sideloading",
+  "description": "Detects potential DLL sideloading of \"SmadHook.dll\", a DLL used by SmadAV antivirus",
+  "source": {
+    "type": "sigma",
+    "id": "24b6cf51-6122-469e-861a-22974e9c1e5b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/image_load_side_load_smadhook.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/image_load/image_load_side_load_smadhook.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackprivilege-escalation",
+    "attackt1574001"
+  ],
+  "author": "X__Junior (Nextron Systems)",
+  "references": [
+    "https://research.checkpoint.com/2023/malware-spotlight-camaro-dragons-tinynote-backdoor/",
+    "https://www.qurium.org/alerts/targeted-malware-against-crph/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-06-01",
+  "modified": "2023-06-01",
+  "mitre": {
+    "tactics": [
+      "TA1574"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ImageLoaded|endswith\": [\"\\\\SmadHook32c.dll\", \"\\\\SmadHook64c.dll\"]}\nfilter_main_legit_path: {\"Image\": [\"C:\\\\Program Files (x86)\\\\SMADAV\\\\SmadavProtect32.exe\", \"C:\\\\Program Files (x86)\\\\SMADAV\\\\SmadavProtect64.exe\", \"C:\\\\Program Files\\\\SMADAV\\\\SmadavProtect32.exe\", \"C:\\\\Program Files\\\\SMADAV\\\\SmadavProtect64.exe\"], \"ImageLoaded|startswith\": [\"C:\\\\Program Files (x86)\\\\SMADAV\\\\\", \"C:\\\\Program Files\\\\SMADAV\\\\\"]}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "image_load"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "id": "e3fdf743-f05b-4051-990a-b66919be1743",
+  "name": "Change User Account Associated with the FAX Service",
+  "description": "Detect change of the user account associated with the FAX service to avoid the escalation problem.",
+  "source": {
+    "type": "sigma",
+    "id": "e3fdf743-f05b-4051-990a-b66919be1743",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_set_fax_change_service_user.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_set/registry_set_fax_change_service_user.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1112"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://twitter.com/dottor_morte/status/1544652325570191361",
+    "https://raw.githubusercontent.com/RiccardoAncarani/talks/master/F-Secure/unorthodox-lateral-movement.pdf"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-07-17",
+  "modified": "2022-12-30",
+  "mitre": {
+    "tactics": [
+      "TA1112"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"TargetObject\": \"HKLM\\\\System\\\\CurrentControlSet\\\\Services\\\\Fax\\\\ObjectName\"}\nfilter: {\"Details|contains\": \"NetworkService\"}",
+    "condition": "selection and not filter",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_set"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "01d2e2a1-5f09-44f7-9fc1-24faa7479b6d",
+  "name": "Uncommon Svchost Parent Process",
+  "description": "Detects an uncommon svchost parent process",
+  "source": {
+    "type": "sigma",
+    "id": "01d2e2a1-5f09-44f7-9fc1-24faa7479b6d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_svchost_uncommon_parent_process.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_svchost_uncommon_parent_process.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1036005"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "Internal Research"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2017-08-15",
+  "modified": "2022-06-28",
+  "mitre": {
+    "tactics": [
+      "TA1036"
+    ],
+    "techniques": [
+      "T005"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"\\\\svchost.exe\"}\nfilter_main_generic: {\"ParentImage|endswith\": [\"\\\\Mrt.exe\", \"\\\\MsMpEng.exe\", \"\\\\ngen.exe\", \"\\\\rpcnet.exe\", \"\\\\services.exe\", \"\\\\TiWorker.exe\"]}\nfilter_main_parent_null: {\"ParentImage\": null}\nfilter_main_parent_empty: {\"ParentImage\": [\"-\", \"\"]}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

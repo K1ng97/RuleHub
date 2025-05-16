@@ -1,0 +1,51 @@
+{
+  "id": "42127bdd-9133-474f-a6f1-97b6c08a4339",
+  "name": "New Federated Domain Added - Exchange",
+  "description": "Detects the addition of a new Federated Domain.",
+  "source": {
+    "type": "sigma",
+    "id": "42127bdd-9133-474f-a6f1-97b6c08a4339",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/microsoft365_new_federated_domain_added_exchange.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/m365/exchange/microsoft365_new_federated_domain_added_exchange.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1136003"
+  ],
+  "author": "Splunk Threat Research Team (original rule), '@ionsor (rule)'",
+  "references": [
+    "https://www.fireeye.com/content/dam/fireeye-www/blog/pdfs/wp-m-unc2452-2021-000343-01.pdf",
+    "https://us-cert.cisa.gov/ncas/alerts/aa21-008a",
+    "https://www.splunk.com/en_us/blog/security/a-golden-saml-journey-solarwinds-continued.html",
+    "https://www.sygnia.co/golden-saml-advisory",
+    "https://o365blog.com/post/aadbackdoor/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-02-08",
+  "modified": "2022-02-08",
+  "mitre": {
+    "tactics": [
+      "TA1136"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"eventSource\": \"Exchange\", \"eventName\": \"Add-FederatedDomain\", \"status\": \"success\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "The creation of a new Federated domain is not necessarily malicious, however these events need to be followed closely, as it may indicate federated credential abuse or backdoor via federated identities at a similar or different cloud provider."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "m365",
+    "exchange"
+  ]
+}

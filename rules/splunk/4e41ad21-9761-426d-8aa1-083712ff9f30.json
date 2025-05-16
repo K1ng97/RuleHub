@@ -1,0 +1,44 @@
+{
+  "id": "4e41ad21-9761-426d-8aa1-083712ff9f30",
+  "name": "MacOS AMOS Stealer - Virtual Machine Check Activity",
+  "description": "The following analytic detects AMOS Stealer VM check activity on macOS. It leverages osquery to monitor process events and identifies the execution of the \"osascript\" command along with specific commandline strings. This activity is significant\nas AMOS stealer was seen using this pattern in order to check if the host is a Virtual Machine or not. If confirmed malicious, this behavior indicate that the host is already infected by the AMOS stealer, which could allow attackers to execute arbitrary code, escalate privileges, steal information, or persist within the environment, posing a significant security risk.\n",
+  "source": {
+    "type": "splunk",
+    "id": "4e41ad21-9761-426d-8aa1-083712ff9f30",
+    "url": "https://github.com/splunk/security_content/blob/develop/macos_amos_stealer___virtual_machine_check_activity.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/macos_amos_stealer___virtual_machine_check_activity.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Nasreddine Bencherchali, Splunk, Alex Karkins",
+  "references": [
+    "https://osquery.readthedocs.io/en/stable/deployment/process-auditing/",
+    "https://www.virustotal.com/gui/search/behaviour_processes%253A%2522osascript%2520-e%2520set%2522%2520AND%2520behaviour_processes%253A%2522system_profiler%2522%2520AND%2520(behaviour_processes%253A%2522VMware%2522%2520OR%2520behaviour_processes%253A%2522QEMU%2522)?type=files"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-04-25",
+  "modified": "2025-04-25",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`osquery_macro` name=es_process_events \ncolumns.cmdline=\"*osascript*\" AND columns.cmdline=\"* -e *\" AND columns.cmdline=\"*set*\" AND columns.cmdline=\"*system_profiler*\" AND columns.cmdline IN (\"*VMware*\", \"*QEMU*\") \n| rename columns.* as * \n| stats  min(_time) as firstTime max(_time) as lastTime \n  values(cmdline) as cmdline, \n  values(pid) as pid, \n  values(parent) as parent, \n  values(path) as path,\n  values(signing_id) as signing_id,  \n  by username host \n| rename \n  username as user, \n  cmdline as process, \n  parent as parent_process, \n  path as process_path, \n  host as dest \n| `security_content_ctime(firstTime)` \n| `security_content_ctime(lastTime)`\n| `macos_amos_stealer___virtual_machine_check_activity_filter`\n",
+    "condition": "This detection leverages osquery and endpoint security on MacOS. Follow the link in references, which describes how to setup process auditing in MacOS with endpoint security and osquery.\n",
+    "fields": []
+  },
+  "falsepositives": [
+    "None identified."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

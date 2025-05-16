@@ -1,0 +1,52 @@
+{
+  "id": "25676e10-2121-446e-80a4-71ff8506af47",
+  "name": "Exchange PowerShell Snap-Ins Usage",
+  "description": "Detects adding and using Exchange PowerShell snap-ins to export mailbox data. As seen used by HAFNIUM and APT27",
+  "source": {
+    "type": "sigma",
+    "id": "25676e10-2121-446e-80a4-71ff8506af47",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_powershell_snapins_hafnium.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_powershell_snapins_hafnium.yml"
+  },
+  "tags": [
+    "attackcollection",
+    "attackexecution",
+    "attackt1059001",
+    "attackt1114"
+  ],
+  "author": "FPT.EagleEye, Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://www.volexity.com/blog/2021/03/02/active-exploitation-of-microsoft-exchange-zero-day-vulnerabilities/",
+    "https://www.microsoft.com/security/blog/2021/03/02/hafnium-targeting-exchange-servers/",
+    "https://www.intrinsec.com/apt27-analysis/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-03-03",
+  "modified": "2023-03-24",
+  "mitre": {
+    "tactics": [
+      "TA1059",
+      "TA1114"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": [\"\\\\powershell.exe\", \"\\\\pwsh.exe\"]}, {\"OriginalFileName\": [\"PowerShell.EXE\", \"pwsh.dll\"]}]\nselection_cli: {\"CommandLine|contains\": \"Add-PSSnapin\"}\nselection_module: {\"CommandLine|contains\": [\"Microsoft.Exchange.Powershell.Snapin\", \"Microsoft.Exchange.Management.PowerShell.SnapIn\"]}\nfilter_msiexec: {\"ParentImage\": \"C:\\\\Windows\\\\System32\\\\msiexec.exe\", \"CommandLine|contains\": \"$exserver=Get-ExchangeServer ([Environment]::MachineName) -ErrorVariable exerr 2> $null\"}",
+    "condition": "all of selection_* and not 1 of filter_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

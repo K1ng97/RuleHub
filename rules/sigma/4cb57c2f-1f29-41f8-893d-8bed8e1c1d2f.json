@@ -1,0 +1,45 @@
+{
+  "id": "4cb57c2f-1f29-41f8-893d-8bed8e1c1d2f",
+  "name": "System Shutdown/Reboot - Linux",
+  "description": "Adversaries may shutdown/reboot systems to interrupt access to, or aid in the destruction of, those systems.",
+  "source": {
+    "type": "sigma",
+    "id": "4cb57c2f-1f29-41f8-893d-8bed8e1c1d2f",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/lnx_auditd_system_shutdown_reboot.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/auditd/lnx_auditd_system_shutdown_reboot.yml"
+  },
+  "tags": [
+    "attackimpact",
+    "attackt1529"
+  ],
+  "author": "Igor Fits, oscd.community",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1529/T1529.md"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-15",
+  "modified": "2022-11-26",
+  "mitre": {
+    "tactics": [
+      "TA1529"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "execve: {\"type\": \"EXECVE\"}\nshutdowncmd: [\"shutdown\", \"reboot\", \"halt\", \"poweroff\"]\ninit: [\"init\", \"telinit\"]\ninitselection: [0, 6]",
+    "condition": "execve and (shutdowncmd or (init and initselection))",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administrative activity"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "auditd"
+  ]
+}

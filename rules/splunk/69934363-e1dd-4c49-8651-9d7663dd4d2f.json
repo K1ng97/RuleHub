@@ -1,0 +1,43 @@
+{
+  "id": "69934363-e1dd-4c49-8651-9d7663dd4d2f",
+  "name": "Windows Account Discovery for Sam Account Name",
+  "description": "The following analytic detects the execution of the PowerView PowerShell cmdlet Get-NetUser, specifically querying for \"samaccountname\" and \"pwdlastset\" attributes. It leverages Event ID 4104 from PowerShell Script Block Logging to identify this activity. This behavior is significant as it may indicate an attempt to gather user account information from Active Directory, which is a common reconnaissance step in lateral movement or privilege escalation attacks. If confirmed malicious, this activity could allow an attacker to map out user accounts, potentially leading to further exploitation and unauthorized access within the network.",
+  "source": {
+    "type": "splunk",
+    "id": "69934363-e1dd-4c49-8651-9d7663dd4d2f",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_account_discovery_for_sam_account_name.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_account_discovery_for_sam_account_name.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-347a"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`powershell` EventCode=4104  ScriptBlockText = \"*Get-NetUser*\" ScriptBlockText IN (\"*samaccountname*\", \"*pwdlastset*\") | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by dest signature signature_id user_id vendor_product EventID Guid Opcode Name Path ProcessID ScriptBlockId ScriptBlockText | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_account_discovery_for_sam_account_name_filter`",
+    "condition": "To successfully implement this analytic, you will need to enable PowerShell Script Block Logging on some or all endpoints. Additional setup here https://docs.splunk.com/Documentation/UBA/5.0.4.1/GetDataIn/AddPowerShell#Configure_module_logging_for_PowerShell.=",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrators may leverage PowerView for legitimate purposes, filter as needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

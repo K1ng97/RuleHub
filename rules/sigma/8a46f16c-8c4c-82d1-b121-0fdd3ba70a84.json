@@ -1,0 +1,48 @@
+{
+  "id": "8a46f16c-8c4c-82d1-b121-0fdd3ba70a84",
+  "name": "Group Has Been Deleted Via Groupdel",
+  "description": "Detects execution of the \"groupdel\" binary. Which is used to delete a group. This is sometimes abused by threat actors in order to cover their tracks",
+  "source": {
+    "type": "sigma",
+    "id": "8a46f16c-8c4c-82d1-b121-0fdd3ba70a84",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_groupdel.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_groupdel.yml"
+  },
+  "tags": [
+    "attackimpact",
+    "attackt1531"
+  ],
+  "author": "Tuan Le (NCSGroup)",
+  "references": [
+    "https://linuxize.com/post/how-to-delete-group-in-linux/",
+    "https://www.cyberciti.biz/faq/linux-remove-user-command/",
+    "https://www.cybrary.it/blog/0p3n/linux-commands-used-attackers/",
+    "https://linux.die.net/man/8/groupdel"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-12-26",
+  "modified": "2022-12-26",
+  "mitre": {
+    "tactics": [
+      "TA1531"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"/groupdel\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administrator activities"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

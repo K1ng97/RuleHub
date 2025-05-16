@@ -1,0 +1,43 @@
+{
+  "id": "f7e5e792-d907-46c1-a58e-4ff974dc462a",
+  "name": "Cisco Secure Firewall - Connection to File Sharing Domain",
+  "description": "The following analytic detects outbound connections to commonly abused file sharing and pastebin-style hosting domains. It leverages Cisco Secure Firewall Threat Defense logs and focuses on allowed connections (action=Allow) where the url field matches a list of known data hosting or temporary storage services. While many of these platforms serve legitimate purposes, they are frequently leveraged by adversaries for malware delivery, data exfiltration, command and control (C2) beacons, or staging of encoded payloads. This analytic is valuable for identifying potential abuse of legitimate infrastructure as part of an attacker's kill chain. If confirmed malicious, this activity may indicate tool staging, credential dumping, or outbound data leaks over HTTP(S).\n",
+  "source": {
+    "type": "splunk",
+    "id": "f7e5e792-d907-46c1-a58e-4ff974dc462a",
+    "url": "https://github.com/splunk/security_content/blob/develop/cisco_secure_firewall___connection_to_file_sharing_domain.yml",
+    "file_path": "tmp/repos/splunk/detections/network/cisco_secure_firewall___connection_to_file_sharing_domain.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Nasreddine Bencherchali, Splunk",
+  "references": [
+    "https://www.cisco.com/c/en/us/td/docs/security/firepower/741/api/FQE/secure_firewall_estreamer_fqe_guide_740.pdf"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`cisco_secure_firewall` action=Allow EventType=ConnectionEvent url IN (\"*//objects.githubusercontent.com*\", \"*anonfiles.com*\", \"*cdn.discordapp.com*\", \"*ddns.net*\", \"*dl.dropboxusercontent.com*\", \"*ghostbin.co*\", \"*glitch.me*\", \"*gofile.io*\", \"*hastebin.com*\", \"*mediafire.com*\", \"*mega.nz*\", \"*onrender.com*\", \"*pages.dev*\", \"*paste.ee*\", \"*pastebin.com*\", \"*pastebin.pl*\", \"*pastetext.net*\", \"*privatlab.com*\", \"*privatlab.net*\", \"*send.exploit.in*\", \"*sendspace.com*\", \"*storage.googleapis.com*\", \"*storjshare.io*\", \"*supabase.co*\", \"*temp.sh*\", \"*transfer.sh*\", \"*trycloudflare.com*\", \"*ufile.io*\", \"*w3spaces.com*\", \"*workers.dev*\")\n| stats count min(_time) as firstTime max(_time) as lastTime \n  Values(src_port) as src_port\n  Values(dest) as dest\n  Values(dest_port) as dest_port\n  Values(rule) as rule\n  Values(url) as url\n  Values(EVE_Process) as EVE_Process\n  by src_ip, transport, action\n| `security_content_ctime(firstTime)` \n| `security_content_ctime(lastTime)` \n| `cisco_secure_firewall___connection_to_file_sharing_domain_filter`\n",
+    "condition": "This search requires Cisco Secure Firewall Threat Defense Logs, which\nincludes the ConnectionEvent EventType. This search uses an input macro named `cisco_secure_firewall`.\nWe strongly recommend that you specify your environment-specific configurations\n(index, source, sourcetype, etc.) for Cisco Secure Firewall Threat Defense logs. Replace the macro definition\nwith configurations for your Splunk environment. The search also uses a post-filter\nmacro designed to filter out known false positives.\nThe logs are to be ingested using the Splunk Add-on for Cisco Security Cloud (https://splunkbase.splunk.com/app/7404).\nThe access policy must also enable logging.\n",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate users and applications may use these domains for benign purposes such as file transfers, collaborative development, or storing public content.\nDeveloper tools, browser extensions, or open-source software may connect to githubusercontent.com or cdn.discordapp.com as part of normal operation.\nIt is recommended to review the associated process (`EVE_Process`), user behavior, and frequency of access before classifying the activity as suspicious.\n"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

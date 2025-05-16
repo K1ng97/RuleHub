@@ -1,0 +1,44 @@
+{
+  "id": "fcdfd69d-0ca3-4476-920e-9b633cb4593e",
+  "name": "Web Spring4Shell HTTP Request Class Module",
+  "description": "The following analytic detects HTTP requests containing payloads related to the Spring4Shell vulnerability (CVE-2022-22965). It leverages Splunk Stream HTTP data to inspect the HTTP request body and form data for specific fields such as \"class.module.classLoader.resources.context.parent.pipeline.first\". This activity is significant as it indicates an attempt to exploit a critical vulnerability in Spring Framework, potentially leading to remote code execution. If confirmed malicious, this could allow attackers to gain unauthorized access, execute arbitrary code, and compromise the affected system.",
+  "source": {
+    "type": "splunk",
+    "id": "fcdfd69d-0ca3-4476-920e-9b633cb4593e",
+    "url": "https://github.com/splunk/security_content/blob/develop/web_spring4shell_http_request_class_module.yml",
+    "file_path": "tmp/repos/splunk/detections/web/web_spring4shell_http_request_class_module.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "cve",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Michael Haag, Splunk",
+  "references": [
+    "https://github.com/DDuarte/springshell-rce-poc/blob/master/poc.py"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`stream_http` http_method IN (\"POST\") | stats values(form_data) as http_request_body min(_time) as firstTime max(_time) as lastTime count by src dest http_method http_user_agent uri_path url bytes_in bytes_out | search http_request_body IN (\"*class.module.classLoader.resources.context.parent.pipeline.first.fileDateFormat=_*\", \"*class.module.classLoader.resources.context.parent.pipeline.first.pattern*\",\"*suffix=.jsp*\") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `web_spring4shell_http_request_class_module_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting logs with the stream HTTP logs or network logs that catch network traffic. Make sure that the http-request-body, payload, or request field is enabled.",
+    "fields": []
+  },
+  "falsepositives": [
+    "False positives may occur and filtering may be required. Restrict analytic to asset type."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

@@ -1,0 +1,51 @@
+{
+  "id": "52182dfb-afb7-41db-b4bc-5336cb29b464",
+  "name": "Suspicious File Download From File Sharing Websites -  File Stream",
+  "description": "Detects the download of suspicious file type from a well-known file and paste sharing domain",
+  "source": {
+    "type": "sigma",
+    "id": "52182dfb-afb7-41db-b4bc-5336cb29b464",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/create_stream_hash_file_sharing_domains_download_susp_extension.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/create_stream_hash/create_stream_hash_file_sharing_domains_download_susp_extension.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attacks0139",
+    "attackt1564004"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://www.ultimatewindowssecurity.com/securitylog/encyclopedia/event.aspx?eventid=90015",
+    "https://www.cisa.gov/uscert/ncas/alerts/aa22-321a",
+    "https://fabian-voith.de/2020/06/25/sysmon-v11-1-reads-alternate-data-streams/",
+    "https://www.microsoft.com/en-us/security/blog/2024/01/17/new-ttps-observed-in-mint-sandstorm-campaign-targeting-high-profile-individuals-at-universities-and-research-orgs/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "experimental",
+  "created": "2022-08-24",
+  "modified": "2024-10-21",
+  "mitre": {
+    "tactics": [
+      "TA1564"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection_domain: {\"Contents|contains\": [\".githubusercontent.com\", \"anonfiles.com\", \"cdn.discordapp.com\", \"ddns.net\", \"dl.dropboxusercontent.com\", \"ghostbin.co\", \"glitch.me\", \"gofile.io\", \"hastebin.com\", \"mediafire.com\", \"mega.nz\", \"onrender.com\", \"pages.dev\", \"paste.ee\", \"pastebin.com\", \"pastebin.pl\", \"pastetext.net\", \"pixeldrain.com\", \"privatlab.com\", \"privatlab.net\", \"send.exploit.in\", \"sendspace.com\", \"storage.googleapis.com\", \"storjshare.io\", \"supabase.co\", \"temp.sh\", \"transfer.sh\", \"trycloudflare.com\", \"ufile.io\", \"w3spaces.com\", \"workers.dev\"]}\nselection_extension: {\"TargetFilename|contains\": [\".cpl:Zone\", \".dll:Zone\", \".exe:Zone\", \".hta:Zone\", \".lnk:Zone\", \".one:Zone\", \".vbe:Zone\", \".vbs:Zone\", \".xll:Zone\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Some false positives might occur with binaries download via Github"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "create_stream_hash"
+  ]
+}

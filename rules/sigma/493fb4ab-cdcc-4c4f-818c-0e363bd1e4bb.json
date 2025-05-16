@@ -1,0 +1,45 @@
+{
+  "id": "493fb4ab-cdcc-4c4f-818c-0e363bd1e4bb",
+  "name": "WMI Event Consumer Created Named Pipe",
+  "description": "Detects the WMI Event Consumer service scrcons.exe creating a named pipe",
+  "source": {
+    "type": "sigma",
+    "id": "493fb4ab-cdcc-4c4f-818c-0e363bd1e4bb",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/pipe_created_scrcons_wmi_consumer_namedpipe.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/pipe_created/pipe_created_scrcons_wmi_consumer_namedpipe.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1047"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://github.com/RiccardoAncarani/LiquidSnake"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-09-01",
+  "modified": "2023-11-30",
+  "mitre": {
+    "tactics": [
+      "TA1047"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"\\\\scrcons.exe\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "pipe_created"
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "id": "cdfa73b6-3c9d-4bb8-97f8-ddbd8921f5c5",
+  "name": "Potential Unconstrained Delegation Discovery Via Get-ADComputer - ScriptBlock",
+  "description": "Detects the use of the \"Get-ADComputer\" cmdlet in order to identify systems which are configured for unconstrained delegation.",
+  "source": {
+    "type": "sigma",
+    "id": "cdfa73b6-3c9d-4bb8-97f8-ddbd8921f5c5",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_potential_unconstrained_delegation_discovery.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_potential_unconstrained_delegation_discovery.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackdiscovery",
+    "attackreconnaissance",
+    "attackt1018",
+    "attackt1558",
+    "attackt1589002"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://pentestlab.blog/2022/03/21/unconstrained-delegation/",
+    "https://learn.microsoft.com/en-us/powershell/module/activedirectory/get-adcomputer?view=windowsserver2022-ps"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "experimental",
+  "created": "2025-03-05",
+  "modified": "2025-03-05",
+  "mitre": {
+    "tactics": [
+      "TA1018",
+      "TA1558",
+      "TA1589"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ScriptBlockText|contains\": [\"-Properties*TrustedForDelegation\", \"-Properties*TrustedToAuthForDelegation\", \"-Properties*msDS-AllowedToDelegateTo\", \"-Properties*PrincipalsAllowedToDelegateToAccount\", \"-LDAPFilter*(userAccountControl:1.2.840.113556.1.4.803:=524288)\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use of the library for administrative activity"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

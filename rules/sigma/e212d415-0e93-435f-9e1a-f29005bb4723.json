@@ -1,0 +1,49 @@
+{
+  "id": "e212d415-0e93-435f-9e1a-f29005bb4723",
+  "name": "Suspicious Remote Child Process From Outlook",
+  "description": "Detects a suspicious child process spawning from Outlook where the image is located in a remote location (SMB/WebDav shares).",
+  "source": {
+    "type": "sigma",
+    "id": "e212d415-0e93-435f-9e1a-f29005bb4723",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_office_outlook_susp_child_processes_remote.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_office_outlook_susp_child_processes_remote.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1059",
+    "attackt1202"
+  ],
+  "author": "Markus Neis, Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://github.com/sensepost/ruler",
+    "https://www.fireeye.com/blog/threat-research/2018/12/overruled-containing-a-potentially-destructive-adversary.html",
+    "https://speakerdeck.com/heirhabarov/hunting-for-persistence-via-microsoft-exchange-server-or-outlook?slide=49"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2018-12-27",
+  "modified": "2023-02-09",
+  "mitre": {
+    "tactics": [
+      "TA1059",
+      "TA1202"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"ParentImage|endswith\": \"\\\\outlook.exe\", \"Image|startswith\": \"\\\\\\\\\\\\\\\\\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

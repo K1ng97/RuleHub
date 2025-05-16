@@ -1,0 +1,52 @@
+{
+  "id": "138d3531-8793-4f50-a2cd-f291b2863d78",
+  "name": "Suspicious Service Path Modification",
+  "description": "Detects service path modification via the \"sc\" binary to a suspicious command or path",
+  "source": {
+    "type": "sigma",
+    "id": "138d3531-8793-4f50-a2cd-f291b2863d78",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_sc_service_path_modification.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_sc_service_path_modification.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1543003"
+  ],
+  "author": "Victor Sergeev, oscd.community, Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1543.003/T1543.003.md",
+    "https://web.archive.org/web/20180331144337/https://www.fireeye.com/blog/threat-research/2018/03/sanny-malware-delivery-method-updated-in-recently-observed-attacks.html"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-10-21",
+  "modified": "2022-11-18",
+  "mitre": {
+    "tactics": [
+      "TA1543"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"\\\\sc.exe\", \"CommandLine|contains|all\": [\"config\", \"binPath\"], \"CommandLine|contains\": [\"powershell\", \"cmd \", \"mshta\", \"wscript\", \"cscript\", \"rundll32\", \"svchost\", \"dllhost\", \"cmd.exe /c\", \"cmd.exe /k\", \"cmd.exe /r\", \"cmd /c\", \"cmd /k\", \"cmd /r\", \"C:\\\\Users\\\\Public\", \"\\\\Downloads\\\\\", \"\\\\Desktop\\\\\", \"\\\\Microsoft\\\\Windows\\\\Start Menu\\\\Programs\\\\Startup\\\\\", \"C:\\\\Windows\\\\TEMP\\\\\", \"\\\\AppData\\\\Local\\\\Temp\"]}",
+    "condition": "selection",
+    "fields": [
+      "CommandLine",
+      "ParentCommandLine"
+    ]
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

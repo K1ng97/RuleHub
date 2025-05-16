@@ -1,0 +1,46 @@
+{
+  "id": "9ef27c24-4903-4192-881a-3adde7ff92a5",
+  "name": "Renamed Remote Utilities RAT (RURAT) Execution",
+  "description": "Detects execution of renamed Remote Utilities (RURAT) via Product PE header field",
+  "source": {
+    "type": "sigma",
+    "id": "9ef27c24-4903-4192-881a-3adde7ff92a5",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_renamed_rurat.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_renamed_rurat.yml"
+  },
+  "tags": [
+    "attackcollection",
+    "attackcommand-and-control",
+    "attackdefense-evasion",
+    "attackdiscovery",
+    "attacks0592"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://redcanary.com/blog/misbehaving-rats/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-09-19",
+  "modified": "2023-02-03",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Product\": \"Remote Utilities\"}\nfilter: {\"Image|endswith\": [\"\\\\rutserv.exe\", \"\\\\rfusclient.exe\"]}",
+    "condition": "selection and not filter",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

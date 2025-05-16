@@ -1,0 +1,51 @@
+{
+  "id": "33339be3-148b-4e16-af56-ad16ec6c7e7b",
+  "name": "Findstr Launching .lnk File",
+  "description": "Detects usage of findstr to identify and execute a lnk file as seen within the HHS redirect attack",
+  "source": {
+    "type": "sigma",
+    "id": "33339be3-148b-4e16-af56-ad16ec6c7e7b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_findstr_lnk.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_findstr_lnk.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1027003",
+    "attackt1036",
+    "attackt1202"
+  ],
+  "author": "Trent Liffick",
+  "references": [
+    "https://www.bleepingcomputer.com/news/security/hhsgov-open-redirect-used-by-coronavirus-phishing-to-spread-malware/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-05-01",
+  "modified": "2024-01-15",
+  "mitre": {
+    "tactics": [
+      "TA1027",
+      "TA1036",
+      "TA1202"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": [\"\\\\find.exe\", \"\\\\findstr.exe\"]}, {\"OriginalFileName\": [\"FIND.EXE\", \"FINDSTR.EXE\"]}]\nselection_cli: {\"CommandLine|endswith\": [\".lnk\", \".lnk\\\"\", \".lnk'\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

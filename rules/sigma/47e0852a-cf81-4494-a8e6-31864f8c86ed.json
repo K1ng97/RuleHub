@@ -1,0 +1,46 @@
+{
+  "id": "47e0852a-cf81-4494-a8e6-31864f8c86ed",
+  "name": "Pandemic Registry Key",
+  "description": "Detects Pandemic Windows Implant",
+  "source": {
+    "type": "sigma",
+    "id": "47e0852a-cf81-4494-a8e6-31864f8c86ed",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_event_apt_pandemic.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_event/registry_event_apt_pandemic.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1105"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://wikileaks.org/vault7/#Pandemic",
+    "https://twitter.com/MalwareJake/status/870349480356454401"
+  ],
+  "severity": "critical",
+  "type": "sigma",
+  "status": "test",
+  "created": "2017-06-01",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [
+      "TA1105"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"TargetObject|contains\": \"\\\\SYSTEM\\\\CurrentControlSet\\\\services\\\\null\\\\Instance\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "critical",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_event"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "id": "49aae26c-450e-448b-911d-b3c13d178dfc",
+  "name": "Linux Keylogging with Pam.d",
+  "description": "Detect attempt to enable auditing of TTY input",
+  "source": {
+    "type": "sigma",
+    "id": "49aae26c-450e-448b-911d-b3c13d178dfc",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/lnx_auditd_keylogging_with_pam_d.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/auditd/lnx_auditd_keylogging_with_pam_d.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1003",
+    "attackt1056001"
+  ],
+  "author": "Pawel Mazur",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1056.001/T1056.001.md",
+    "https://linux.die.net/man/8/pam_tty_audit",
+    "https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/security_guide/sec-configuring_pam_for_auditing",
+    "https://access.redhat.com/articles/4409591#audit-record-types-2"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-05-24",
+  "modified": "2022-12-18",
+  "mitre": {
+    "tactics": [
+      "TA1003",
+      "TA1056"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_path_events: {\"type\": \"PATH\", \"name\": [\"/etc/pam.d/system-auth\", \"/etc/pam.d/password-auth\"]}\nselection_tty_events: {\"type\": [\"TTY\", \"USER_TTY\"]}",
+    "condition": "1 of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrative work"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "auditd"
+  ]
+}

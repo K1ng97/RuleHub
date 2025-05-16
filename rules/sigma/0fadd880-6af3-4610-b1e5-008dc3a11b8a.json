@@ -1,0 +1,43 @@
+{
+  "id": "0fadd880-6af3-4610-b1e5-008dc3a11b8a",
+  "name": "Potential Suspicious BPF Activity - Linux",
+  "description": "Detects the presence of \"bpf_probe_write_user\" BPF helper-generated warning messages. Which could be a sign of suspicious eBPF activity on the system.",
+  "source": {
+    "type": "sigma",
+    "id": "0fadd880-6af3-4610-b1e5-008dc3a11b8a",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/lnx_potential_susp_ebpf_activity.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/builtin/lnx_potential_susp_ebpf_activity.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackpersistence"
+  ],
+  "author": "Red Canary (idea), Nasreddine Bencherchali",
+  "references": [
+    "https://redcanary.com/blog/ebpf-malware/",
+    "https://man7.org/linux/man-pages/man7/bpf-helpers.7.html"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-01-25",
+  "modified": "2023-01-25",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: [\"bpf_probe_write_user\"]",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux"
+  ]
+}

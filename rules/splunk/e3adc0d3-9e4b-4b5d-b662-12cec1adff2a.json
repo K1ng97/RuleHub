@@ -1,0 +1,48 @@
+{
+  "id": "e3adc0d3-9e4b-4b5d-b662-12cec1adff2a",
+  "name": "Azure AD Service Principal New Client Credentials",
+  "description": "The following analytic detects the addition of new credentials to Service Principals and Applications in Azure AD. It leverages Azure AD AuditLogs, specifically monitoring the \"Update application*Certificates and secrets management\" operation. This activity is significant as it may indicate an adversary attempting to maintain persistent access or escalate privileges within the Azure environment. If confirmed malicious, attackers could use these new credentials to log in as the service principal, potentially compromising sensitive accounts and resources, leading to unauthorized access and control over the Azure environment.",
+  "source": {
+    "type": "splunk",
+    "id": "e3adc0d3-9e4b-4b5d-b662-12cec1adff2a",
+    "url": "https://github.com/splunk/security_content/blob/develop/azure_ad_service_principal_new_client_credentials.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/azure_ad_service_principal_new_client_credentials.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Mauricio Velazco, Gowthamaraj Rajendran, Splunk",
+  "references": [
+    "https://attack.mitre.org/techniques/T1098/001/",
+    "https://microsoft.github.io/Azure-Threat-Research-Matrix/Persistence/AZT501/AZT501-2/",
+    "https://hausec.com/2021/10/26/attacking-azure-azure-ad-part-ii/",
+    "https://www.inversecos.com/2021/10/how-to-backdoor-azure-applications-and.html",
+    "https://www.mandiant.com/resources/blog/apt29-continues-targeting-microsoft",
+    "https://microsoft.github.io/Azure-Threat-Research-Matrix/PrivilegeEscalation/AZT405/AZT405-3/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`azure_monitor_aad` category=AuditLogs operationName=\"Update application*Certificates and secrets management \" | rename properties.* as * | rename targetResources{}.* as * | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by dest user src vendor_account vendor_product modifiedProperties{}.newValue signature | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `azure_ad_service_principal_new_client_credentials_filter`",
+    "condition": "You must install the latest version of Splunk Add-on for Microsoft Cloud Services from Splunkbase (https://splunkbase.splunk.com/app/3110/#/details). You must be ingesting Azure Active Directory events into your Splunk environment. This analytic was written to be used with the azure:monitor:aad sourcetype leveraging the Signin log category.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Service Principal client credential modifications may be part of legitimate administrative operations. Filter as needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

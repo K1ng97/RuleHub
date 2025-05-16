@@ -1,0 +1,49 @@
+{
+  "id": "2cf29f11-e356-4f61-98c0-1bdb9393d6da",
+  "name": "Renamed Visual Studio Code Tunnel Execution",
+  "description": "Detects renamed Visual Studio Code tunnel execution. Attackers can abuse this functionality to establish a C2 channel",
+  "source": {
+    "type": "sigma",
+    "id": "2cf29f11-e356-4f61-98c0-1bdb9393d6da",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_vscode_tunnel_renamed_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_vscode_tunnel_renamed_execution.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1071001"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://ipfyx.fr/post/visual-studio-code-tunnel/",
+    "https://badoption.eu/blog/2023/01/31/code_c2.html",
+    "https://code.visualstudio.com/docs/remote/tunnels"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-09-28",
+  "modified": "2023-09-28",
+  "mitre": {
+    "tactics": [
+      "TA1071"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_image_only_tunnel: {\"OriginalFileName\": null, \"CommandLine|endswith\": \".exe tunnel\"}\nselection_image_tunnel_args: {\"CommandLine|contains|all\": [\".exe tunnel\", \"--name \", \"--accept-server-license-terms\"]}\nselection_image_tunnel_service: {\"CommandLine|contains|all\": [\"tunnel \", \"service\", \"internal-run\", \"tunnel-service.log\"]}\nselection_parent_tunnel: {\"ParentCommandLine|endswith\": \" tunnel\", \"Image|endswith\": \"\\\\cmd.exe\", \"CommandLine|contains|all\": [\"/d /c \", \"\\\\servers\\\\Stable-\", \"code-server.cmd\"]}\nfilter_main_parent_code: {\"ParentImage|endswith\": [\"\\\\code-tunnel.exe\", \"\\\\code.exe\"]}\nfilter_main_image_code: {\"Image|endswith\": [\"\\\\code-tunnel.exe\", \"\\\\code.exe\"]}",
+    "condition": "(1 of selection_image_* and not 1 of filter_main_image_*) or (selection_parent_tunnel and not 1 of filter_main_parent_*)",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

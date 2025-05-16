@@ -1,0 +1,48 @@
+{
+  "id": "41bb431f-56d8-4691-bb56-ed34e390906f",
+  "name": "UAC Bypass Using MSConfig Token Modification - File",
+  "description": "Detects the pattern of UAC Bypass using a msconfig GUI hack (UACMe 55)",
+  "source": {
+    "type": "sigma",
+    "id": "41bb431f-56d8-4691-bb56-ed34e390906f",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_uac_bypass_msconfig_gui.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_uac_bypass_msconfig_gui.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackprivilege-escalation",
+    "attackt1548002"
+  ],
+  "author": "Christian Burkard (Nextron Systems)",
+  "references": [
+    "https://github.com/hfiref0x/UACME"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-08-30",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [
+      "TA1548"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"TargetFilename|startswith\": \"C:\\\\Users\\\\\", \"TargetFilename|endswith\": \"\\\\AppData\\\\Local\\\\Temp\\\\pkgmgr.exe\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

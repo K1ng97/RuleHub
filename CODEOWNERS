@@ -1,0 +1,34 @@
+# 默认所有者
+*                       @K1ng97
+
+# 工具目录的所有者
+/tools/                 @K1ng97
+
+# 特定模块的所有者
+/tools/sync/            @K1ng97
+/tools/indexing/        @K1ng97
+/tools/validation/      @K1ng97
+/tools/cli/             @K1ng97
+/tools/utils/           @K1ng97
+
+# 配置文件的所有者
+/config/                @K1ng97
+
+# 文档的所有者
+/docs/                  @K1ng97
+
+# 测试的所有者
+/tests/                 @K1ng97
+
+# 示例的所有者
+/examples/              @K1ng97
+
+# 规则目录的所有者
+/rules/                 @K1ng97
+
+# Python文件的所有者
+*.py                    @K1ng97
+
+# Docker相关文件的所有者
+Dockerfile              @K1ng97
+docker-compose.yml      @K1ng97

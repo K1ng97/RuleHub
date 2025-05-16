@@ -1,0 +1,45 @@
+{
+  "id": "1cc50f3f-1fc8-4acf-b2e9-6f172e1fdebd",
+  "name": "Suspicious Rundll32 Invoking Inline VBScript",
+  "description": "Detects suspicious process related to rundll32 based on command line that invokes inline VBScript as seen being used by UNC2452",
+  "source": {
+    "type": "sigma",
+    "id": "1cc50f3f-1fc8-4acf-b2e9-6f172e1fdebd",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_rundll32_inline_vbs.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_rundll32_inline_vbs.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1055"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://www.microsoft.com/security/blog/2021/03/04/goldmax-goldfinder-sibot-analyzing-nobelium-malware/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-03-05",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [
+      "TA1055"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|contains|all\": [\"rundll32.exe\", \"Execute\", \"RegRead\", \"window.close\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

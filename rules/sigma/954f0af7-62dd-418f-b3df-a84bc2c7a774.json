@@ -1,0 +1,48 @@
+{
+  "id": "954f0af7-62dd-418f-b3df-a84bc2c7a774",
+  "name": "New Remote Desktop Connection Initiated Via Mstsc.EXE",
+  "description": "Detects the usage of \"mstsc.exe\" with the \"/v\" flag to initiate a connection to a remote server.\nAdversaries may use valid accounts to log into a computer using the Remote Desktop Protocol (RDP). The adversary may then perform actions as the logged-on user.\n",
+  "source": {
+    "type": "sigma",
+    "id": "954f0af7-62dd-418f-b3df-a84bc2c7a774",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_mstsc_remote_connection.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_mstsc_remote_connection.yml"
+  },
+  "tags": [
+    "attacklateral-movement",
+    "attackt1021001"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1021.001/T1021.001.md#t1021001---remote-desktop-protocol",
+    "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/mstsc"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-01-07",
+  "modified": "2024-06-04",
+  "mitre": {
+    "tactics": [
+      "TA1021"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\mstsc.exe\"}, {\"OriginalFileName\": \"mstsc.exe\"}]\nselection_cli: {\"CommandLine|contains|windash\": \" /v:\"}\nfilter_optional_wsl: {\"ParentImage\": \"C:\\\\Windows\\\\System32\\\\lxss\\\\wslhost.exe\", \"CommandLine|contains\": \"C:\\\\ProgramData\\\\Microsoft\\\\WSL\\\\wslg.rdp\"}",
+    "condition": "all of selection_* and not 1 of filter_optional_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "WSL (Windows Sub System For Linux)"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

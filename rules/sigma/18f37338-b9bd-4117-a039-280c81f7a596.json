@@ -1,0 +1,44 @@
+{
+  "id": "18f37338-b9bd-4117-a039-280c81f7a596",
+  "name": "Zerologon Exploitation Using Well-known Tools",
+  "description": "This rule is designed to detect attempts to exploit Zerologon (CVE-2020-1472) vulnerability using mimikatz zerologon module or other exploits from machine with \"kali\" hostname.",
+  "source": {
+    "type": "sigma",
+    "id": "18f37338-b9bd-4117-a039-280c81f7a596",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_system_possible_zerologon_exploitation_using_wellknown_tools.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/system/netlogon/win_system_possible_zerologon_exploitation_using_wellknown_tools.yml"
+  },
+  "tags": [
+    "attacklateral-movement",
+    "attackt1210"
+  ],
+  "author": "Demyan Sokolin @_drd0c, Teymur Kheirkhabarov @HeirhabarovT, oscd.community",
+  "references": [
+    "https://www.secura.com/blog/zero-logon",
+    "https://bi-zone.medium.com/hunting-for-zerologon-f65c61586382"
+  ],
+  "severity": "critical",
+  "type": "sigma",
+  "status": "stable",
+  "created": "2020-10-13",
+  "modified": "2021-05-30",
+  "mitre": {
+    "tactics": [
+      "TA1210"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": [5805, 5723]}\nkeywords: [\"kali\", \"mimikatz\"]",
+    "condition": "selection and keywords",
+    "fields": []
+  },
+  "falsepositives": [],
+  "level": "critical",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "system"
+  ]
+}

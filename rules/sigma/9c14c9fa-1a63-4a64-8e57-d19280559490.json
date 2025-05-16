@@ -1,0 +1,50 @@
+{
+  "id": "9c14c9fa-1a63-4a64-8e57-d19280559490",
+  "name": "Invoke-Obfuscation Via Stdin",
+  "description": "Detects Obfuscated Powershell via Stdin in Scripts",
+  "source": {
+    "type": "sigma",
+    "id": "9c14c9fa-1a63-4a64-8e57-d19280559490",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_hktl_invoke_obfuscation_via_stdin.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_hktl_invoke_obfuscation_via_stdin.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1027",
+    "attackt1059001"
+  ],
+  "author": "Nikita Nazarov, oscd.community",
+  "references": [
+    "https://github.com/SigmaHQ/sigma/issues/1009"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-12",
+  "modified": "2024-04-16",
+  "mitre": {
+    "tactics": [
+      "TA1027",
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|re\": \"(?i)(set).*&&\\\\s?set.*(environment|invoke|\\\\$\\\\{?input).*&&.*\\\"\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

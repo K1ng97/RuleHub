@@ -1,0 +1,45 @@
+{
+  "id": "0e0255bf-2548-47b8-9582-c0955c9283f5",
+  "name": "Suspicious Reg Add BitLocker",
+  "description": "Detects suspicious addition to BitLocker related registry keys via the reg.exe utility",
+  "source": {
+    "type": "sigma",
+    "id": "0e0255bf-2548-47b8-9582-c0955c9283f5",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_reg_bitlocker.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_reg_bitlocker.yml"
+  },
+  "tags": [
+    "attackimpact",
+    "attackt1486"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://thedfirreport.com/2021/11/15/exchange-exploit-leads-to-domain-wide-ransomware/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-11-15",
+  "modified": "2022-09-09",
+  "mitre": {
+    "tactics": [
+      "TA1486"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|contains|all\": [\"REG\", \"ADD\", \"\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\FVE\", \"/v\", \"/f\"], \"CommandLine|contains\": [\"EnableBDEWithNoTPM\", \"UseAdvancedStartup\", \"UseTPM\", \"UseTPMKey\", \"UseTPMKeyPIN\", \"RecoveryKeyMessageSource\", \"UseTPMPIN\", \"RecoveryKeyMessage\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

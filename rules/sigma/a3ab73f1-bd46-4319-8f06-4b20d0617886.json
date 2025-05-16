@@ -1,0 +1,47 @@
+{
+  "id": "a3ab73f1-bd46-4319-8f06-4b20d0617886",
+  "name": "Windows Defender Exploit Guard Tamper",
+  "description": "Detects when someone is adding or removing applications or folders from exploit guard \"ProtectedFolders\" or \"AllowedApplications\"\n",
+  "source": {
+    "type": "sigma",
+    "id": "a3ab73f1-bd46-4319-8f06-4b20d0617886",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_defender_config_change_exploit_guard_tamper.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/windefend/win_defender_config_change_exploit_guard_tamper.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1562001"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://techcommunity.microsoft.com/t5/core-infrastructure-and-security/windows-10-controlled-folder-access-event-search/ba-p/2326088"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-05",
+  "modified": "2022-12-06",
+  "mitre": {
+    "tactics": [
+      "TA1562"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "allowed_apps_key: {\"EventID\": 5007, \"NewValue|contains\": \"\\\\Windows Defender\\\\Windows Defender Exploit Guard\\\\Controlled Folder Access\\\\AllowedApplications\\\\\"}\nallowed_apps_path: {\"NewValue|contains\": [\"\\\\Users\\\\Public\\\\\", \"\\\\AppData\\\\Local\\\\Temp\\\\\", \"\\\\Desktop\\\\\", \"\\\\PerfLogs\\\\\", \"\\\\Windows\\\\Temp\\\\\"]}\nprotected_folders: {\"EventID\": 5007, \"OldValue|contains\": \"\\\\Windows Defender\\\\Windows Defender Exploit Guard\\\\Controlled Folder Access\\\\ProtectedFolders\\\\\"}",
+    "condition": "all of allowed_apps* or protected_folders",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "windefend"
+  ]
+}

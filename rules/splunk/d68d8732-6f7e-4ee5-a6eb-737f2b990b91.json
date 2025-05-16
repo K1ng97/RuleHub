@@ -1,0 +1,47 @@
+{
+  "id": "d68d8732-6f7e-4ee5-a6eb-737f2b990b91",
+  "name": "Azure AD Device Code Authentication",
+  "description": "The following analytic identifies Azure Device Code Phishing attacks, which can lead to Azure Account Take-Over (ATO). It leverages Azure AD SignInLogs to detect suspicious authentication requests using the device code authentication protocol. This activity is significant as it indicates potential bypassing of Multi-Factor Authentication (MFA) and Conditional Access Policies (CAPs) through phishing emails. If confirmed malicious, attackers could gain unauthorized access to Azure AD, Exchange mailboxes, and Outlook Web Application (OWA), leading to potential data breaches and unauthorized data access.",
+  "source": {
+    "type": "splunk",
+    "id": "d68d8732-6f7e-4ee5-a6eb-737f2b990b91",
+    "url": "https://github.com/splunk/security_content/blob/develop/azure_ad_device_code_authentication.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/azure_ad_device_code_authentication.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Mauricio Velazco, Gowthamaraj Rajendran,  Splunk",
+  "references": [
+    "https://attack.mitre.org/techniques/T1528",
+    "https://github.com/rvrsh3ll/TokenTactics",
+    "https://embracethered.com/blog/posts/2022/device-code-phishing/",
+    "https://0xboku.com/2021/07/12/ArtOfDeviceCodePhish.html",
+    "https://learn.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-device-code"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`azure_monitor_aad` category=SignInLogs \"properties.authenticationProtocol\"=deviceCode | rename properties.* as * | rename userAgent as user_agent | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by dest user src vendor_account vendor_product user_agent category | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `azure_ad_device_code_authentication_filter`",
+    "condition": "You must install the latest version of Splunk Add-on for Microsoft Cloud Services from Splunkbase (https://splunkbase.splunk.com/app/3110/#/details). You must be ingesting Azure Active Directory events into your Splunk environment through an EventHub. This analytic was written to be used with the azure:monitor:aad sourcetype leveraging the SignInLogs log category.",
+    "fields": []
+  },
+  "falsepositives": [
+    "In most organizations, device code authentication will be used to access common Microsoft service but it may be legitimate for others. Filter as needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

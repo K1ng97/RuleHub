@@ -1,0 +1,45 @@
+{
+  "id": "ff301988-c231-4bd0-834c-ac9d73b86586",
+  "name": "PowerShell Console History Logs Deleted",
+  "description": "Detects the deletion of the PowerShell console History logs which may indicate an attempt to destroy forensic evidence",
+  "source": {
+    "type": "sigma",
+    "id": "ff301988-c231-4bd0-834c-ac9d73b86586",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_delete_win_delete_powershell_command_history.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_delete/file_delete_win_delete_powershell_command_history.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1070"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "Internal Research"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-02-15",
+  "modified": "2023-02-15",
+  "mitre": {
+    "tactics": [
+      "TA1070"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"TargetFilename|endswith\": \"\\\\PSReadLine\\\\ConsoleHost_history.txt\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_delete"
+  ]
+}

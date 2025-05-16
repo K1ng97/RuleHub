@@ -1,0 +1,50 @@
+{
+  "id": "02f7c9c1-1ae8-4c6a-8add-04693807f92f",
+  "name": "Potential Access Token Abuse",
+  "description": "Detects potential token impersonation and theft. Example, when using \"DuplicateToken(Ex)\" and \"ImpersonateLoggedOnUser\" with the \"LOGON32_LOGON_NEW_CREDENTIALS flag\".",
+  "source": {
+    "type": "sigma",
+    "id": "02f7c9c1-1ae8-4c6a-8add-04693807f92f",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_access_token_abuse.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/account_management/win_security_access_token_abuse.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackprivilege-escalation",
+    "attackt1134001",
+    "stp4u"
+  ],
+  "author": "Michaela Adams, Zach Mathis",
+  "references": [
+    "https://www.elastic.co/fr/blog/how-attackers-abuse-access-token-manipulation",
+    "https://www.manageengine.com/log-management/cyber-security/access-token-manipulation.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-11-06",
+  "modified": "2023-04-26",
+  "mitre": {
+    "tactics": [
+      "TA1134"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 4624, \"LogonType\": 9, \"LogonProcessName\": \"Advapi\", \"AuthenticationPackageName\": \"Negotiate\", \"ImpersonationLevel\": \"%%1833\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Anti-Virus"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

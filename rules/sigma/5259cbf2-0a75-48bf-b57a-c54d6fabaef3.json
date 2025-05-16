@@ -1,0 +1,54 @@
+{
+  "id": "5259cbf2-0a75-48bf-b57a-c54d6fabaef3",
+  "name": "Bitbucket User Details Export Attempt Detected",
+  "description": "Detects user data export activity.",
+  "source": {
+    "type": "sigma",
+    "id": "5259cbf2-0a75-48bf-b57a-c54d6fabaef3",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/bitbucket_audit_user_details_export_attempt_detected.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/bitbucket/audit/bitbucket_audit_user_details_export_attempt_detected.yml"
+  },
+  "tags": [
+    "attackcollection",
+    "attackdiscovery",
+    "attackreconnaissance",
+    "attackt1082",
+    "attackt1213",
+    "attackt1591004"
+  ],
+  "author": "Muhammad Faisal (@faisalusuf)",
+  "references": [
+    "https://confluence.atlassian.com/bitbucketserver/audit-log-events-776640423.html",
+    "https://support.atlassian.com/security-and-access-policies/docs/export-user-accounts"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2024-02-25",
+  "modified": "2024-02-25",
+  "mitre": {
+    "tactics": [
+      "TA1082",
+      "TA1213",
+      "TA1591"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"auditType.category\": \"Users and groups\", \"auditType.action\": [\"User permissions export failed\", \"User permissions export started\", \"User permissions exported\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate user activity."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "bitbucket",
+    "audit"
+  ]
+}

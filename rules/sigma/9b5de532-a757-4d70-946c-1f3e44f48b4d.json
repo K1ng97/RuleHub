@@ -1,0 +1,48 @@
+{
+  "id": "9b5de532-a757-4d70-946c-1f3e44f48b4d",
+  "name": "Shell Execution GCC  - Linux",
+  "description": "Detects the use of the \"gcc\" utility to execute a shell. Such behavior may be associated with privilege escalation, unauthorized command execution, or to break out from restricted environments.\n",
+  "source": {
+    "type": "sigma",
+    "id": "9b5de532-a757-4d70-946c-1f3e44f48b4d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_gcc_shell_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_gcc_shell_execution.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1083"
+  ],
+  "author": "Li Ling, Andy Parkidomo, Robert Rakowski, Blake Hartstein (Bloomberg L.P.)",
+  "references": [
+    "https://gtfobins.github.io/gtfobins/gcc/#shell",
+    "https://gtfobins.github.io/gtfobins/c89/#shell",
+    "https://gtfobins.github.io/gtfobins/c99/#shell",
+    "https://www.elastic.co/guide/en/security/current/linux-restricted-shell-breakout-via-linux-binary-s.html"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "experimental",
+  "created": "2024-09-02",
+  "modified": "2024-09-02",
+  "mitre": {
+    "tactics": [
+      "TA1083"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: {\"Image|endswith\": [\"/c89\", \"/c99\", \"/gcc\"], \"CommandLine|contains\": \"-wrapper\"}\nselection_cli: {\"CommandLine|contains\": [\"/bin/bash,-s\", \"/bin/dash,-s\", \"/bin/fish,-s\", \"/bin/sh,-s\", \"/bin/zsh,-s\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

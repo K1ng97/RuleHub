@@ -1,0 +1,49 @@
+{
+  "id": "771d1eb5-9587-4568-95fb-9ec44153a012",
+  "name": "PUA - NSudo Execution",
+  "description": "Detects the use of NSudo tool for command execution",
+  "source": {
+    "type": "sigma",
+    "id": "771d1eb5-9587-4568-95fb-9ec44153a012",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_pua_nsudo.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_pua_nsudo.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attacks0029",
+    "attackt1569002"
+  ],
+  "author": "Florian Roth (Nextron Systems), Nasreddine Bencherchali",
+  "references": [
+    "https://web.archive.org/web/20221019044836/https://nsudo.m2team.org/en-us/",
+    "https://www.winhelponline.com/blog/run-program-as-system-localsystem-account-windows/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-01-24",
+  "modified": "2023-02-13",
+  "mitre": {
+    "tactics": [
+      "TA1569"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": [\"\\\\NSudo.exe\", \"\\\\NSudoLC.exe\", \"\\\\NSudoLG.exe\"]}, {\"OriginalFileName\": [\"NSudo.exe\", \"NSudoLC.exe\", \"NSudoLG.exe\"]}]\nselection_cli: {\"CommandLine|contains\": [\"-U:S \", \"-U:T \", \"-U:E \", \"-P:E \", \"-M:S \", \"-M:H \", \"-U=S \", \"-U=T \", \"-U=E \", \"-P=E \", \"-M=S \", \"-M=H \", \"-ShowWindowMode:Hide\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use by administrators"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

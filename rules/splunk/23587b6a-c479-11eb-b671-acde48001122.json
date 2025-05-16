@@ -1,0 +1,43 @@
+{
+  "id": "23587b6a-c479-11eb-b671-acde48001122",
+  "name": "Excessive distinct processes from Windows Temp",
+  "description": "The following analytic identifies an excessive number of distinct processes executing from the Windows\\Temp directory. It leverages data from Endpoint Detection and Response (EDR) agents, focusing on process paths and counts within a 20-minute window. This behavior is significant as it often indicates the presence of post-exploit frameworks like Koadic and Meterpreter, which use this technique to execute malicious actions. If confirmed malicious, this activity could allow attackers to execute arbitrary code, escalate privileges, and maintain persistence within the environment, posing a severe threat to system integrity and security.",
+  "source": {
+    "type": "splunk",
+    "id": "23587b6a-c479-11eb-b671-acde48001122",
+    "url": "https://github.com/splunk/security_content/blob/develop/excessive_distinct_processes_from_windows_temp.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/excessive_distinct_processes_from_windows_temp.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Michael Hart, Mauricio Velazco, Splunk",
+  "references": [
+    "https://www.offensive-security.com/metasploit-unleashed/about-meterpreter/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats `security_content_summariesonly` distinct_count(Processes.process) as distinct_process_count min(_time) as firstTime max(_time) as lastTime values(Processes.action) as action values(Processes.original_file_name) as original_file_name values(Processes.parent_process) as parent_process values(Processes.parent_process_exec) as parent_process_exec values(Processes.parent_process_guid) as parent_process_guid values(Processes.parent_process_id) as parent_process_id values(Processes.parent_process_name) as parent_process_name values(Processes.parent_process_path) as parent_process_path values(Processes.process) as process values(Processes.process_exec) as process_exec values(Processes.process_guid) as process_guid values(Processes.process_hash) as process_hash values(Processes.process_id) as process_id values(Processes.process_integrity_level) as process_integrity_level values(Processes.process_name) as process_name values(Processes.process_path) as process_path values(Processes.user_id) as user_id values(Processes.vendor_product) as vendor_product from datamodel=Endpoint.Processes where Processes.process_path = \"*\\\\Windows\\\\Temp\\\\*\" by Processes.dest Processes.user _time span=20m |  where distinct_process_count > 37 | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `excessive_distinct_processes_from_windows_temp_filter`",
+    "condition": "The detection is based on data that originates from Endpoint Detection and Response (EDR) agents. These agents are designed to provide security-related telemetry from the endpoints where the agent is installed. To implement this search, you must ingest logs that contain the process GUID, process name, and parent process. Additionally, you must ingest complete command-line executions. These logs must be processed using the appropriate Splunk Technology Add-ons that are specific to the EDR product. The logs must also be mapped to the `Processes` node of the `Endpoint` data model. Use the Splunk Common Information Model (CIM) to normalize the field names and speed up the data modeling process.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Many benign applications will create processes from executables in Windows\\Temp, although unlikely to exceed the given threshold.  Filter as needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

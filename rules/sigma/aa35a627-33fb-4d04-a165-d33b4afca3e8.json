@@ -1,0 +1,55 @@
+{
+  "id": "aa35a627-33fb-4d04-a165-d33b4afca3e8",
+  "name": "Remote LSASS Process Access Through Windows Remote Management",
+  "description": "Detects remote access to the LSASS process via WinRM. This could be a sign of credential dumping from tools like mimikatz.",
+  "source": {
+    "type": "sigma",
+    "id": "aa35a627-33fb-4d04-a165-d33b4afca3e8",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_access_win_lsass_remote_access_trough_winrm.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_access/proc_access_win_lsass_remote_access_trough_winrm.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackexecution",
+    "attacklateral-movement",
+    "attacks0002",
+    "attackt1003001",
+    "attackt1021006",
+    "attackt1059001"
+  ],
+  "author": "Patryk Prauze - ING Tech",
+  "references": [
+    "https://pentestlab.blog/2018/05/15/lateral-movement-winrm/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "stable",
+  "created": "2019-05-20",
+  "modified": "2023-11-29",
+  "mitre": {
+    "tactics": [
+      "TA1003",
+      "TA1021",
+      "TA1059"
+    ],
+    "techniques": [
+      "T001",
+      "T006"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"TargetImage|endswith\": \"\\\\lsass.exe\", \"SourceImage|endswith\": \":\\\\Windows\\\\system32\\\\wsmprovhost.exe\"}\nfilter_main_access: {\"GrantedAccess\": \"0x80000000\"}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_access"
+  ]
+}

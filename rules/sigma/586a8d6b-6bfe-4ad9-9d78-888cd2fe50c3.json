@@ -1,0 +1,48 @@
+{
+  "id": "586a8d6b-6bfe-4ad9-9d78-888cd2fe50c3",
+  "name": "Remote Service Activity via SVCCTL Named Pipe",
+  "description": "Detects remote service activity via remote access to the svcctl named pipe",
+  "source": {
+    "type": "sigma",
+    "id": "586a8d6b-6bfe-4ad9-9d78-888cd2fe50c3",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_svcctl_remote_service.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_svcctl_remote_service.yml"
+  },
+  "tags": [
+    "attacklateral-movement",
+    "attackpersistence",
+    "attackt1021002"
+  ],
+  "author": "Samir Bousseaden",
+  "references": [
+    "https://web.archive.org/web/20230329155141/https://blog.menasec.net/2019/03/threat-hunting-26-remote-windows.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-04-03",
+  "modified": "2024-08-01",
+  "mitre": {
+    "tactics": [
+      "TA1021"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 5145, \"ShareName\": \"\\\\\\\\\\\\\\\\\\\\*\\\\\\\\IPC$\", \"RelativeTargetName\": \"svcctl\", \"AccessList|contains\": \"WriteData\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "id": "30bf1789-379d-4fdc-900f-55cd0a90a801",
+  "name": "Visual Studio Code Tunnel Service Installation",
+  "description": "Detects the installation of VsCode tunnel (code-tunnel) as a service.",
+  "source": {
+    "type": "sigma",
+    "id": "30bf1789-379d-4fdc-900f-55cd0a90a801",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_vscode_tunnel_service_install.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_vscode_tunnel_service_install.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1071001"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://ipfyx.fr/post/visual-studio-code-tunnel/",
+    "https://badoption.eu/blog/2023/01/31/code_c2.html",
+    "https://code.visualstudio.com/docs/remote/tunnels"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-10-25",
+  "modified": "2023-10-25",
+  "mitre": {
+    "tactics": [
+      "TA1071"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|contains|all\": [\"tunnel \", \"service\", \"internal-run\", \"tunnel-service.log\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate installation of code-tunnel as a service"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "id": "2d2f44ff-4611-4778-a8fc-323a0e9850cc",
+  "name": "Inline Python Execution - Spawn Shell Via OS System Library",
+  "description": "Detects execution of inline Python code via the \"-c\" in order to call the \"system\" function from the \"os\" library, and spawn a shell.\n",
+  "source": {
+    "type": "sigma",
+    "id": "2d2f44ff-4611-4778-a8fc-323a0e9850cc",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_python_shell_os_system.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_python_shell_os_system.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1059"
+  ],
+  "author": "Li Ling, Andy Parkidomo, Robert Rakowski, Blake Hartstein (Bloomberg L.P.)",
+  "references": [
+    "https://gtfobins.github.io/gtfobins/python/#shell"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "experimental",
+  "created": "2024-09-02",
+  "modified": "2024-09-02",
+  "mitre": {
+    "tactics": [
+      "TA1059"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": [\"/python\", \"/python2\", \"/python3\"]}, {\"Image|contains\": [\"/python2.\", \"/python3.\"]}]\nselection_cli: {\"CommandLine|contains|all\": [\" -c \", \"os.system(\"], \"CommandLine|contains\": [\"/bin/bash\", \"/bin/dash\", \"/bin/fish\", \"/bin/sh\", \"/bin/zsh\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

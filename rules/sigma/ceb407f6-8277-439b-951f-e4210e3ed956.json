@@ -1,0 +1,48 @@
+{
+  "id": "ceb407f6-8277-439b-951f-e4210e3ed956",
+  "name": "Cisco Clear Logs",
+  "description": "Clear command history in network OS which is used for defense evasion",
+  "source": {
+    "type": "sigma",
+    "id": "ceb407f6-8277-439b-951f-e4210e3ed956",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/cisco_cli_clear_logs.yml",
+    "file_path": "tmp/repos/sigma/rules/network/cisco/aaa/cisco_cli_clear_logs.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1070003"
+  ],
+  "author": "Austin Clark",
+  "references": [
+    "https://www.cisco.com/c/en/us/td/docs/switches/datacenter/nexus5000/sw/command/reference/sysmgmt/n5k-sysmgmt-cr/n5k-sm_cmds_c.html",
+    "https://www.cisco.com/c/en/us/td/docs/ios/12_2sr/12_2sra/feature/guide/srmgtint.html#wp1127609"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-08-12",
+  "modified": "2023-05-26",
+  "mitre": {
+    "tactics": [
+      "TA1070"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "keywords: [\"clear logging\", \"clear archive\"]",
+    "condition": "keywords",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administrators may run these commands"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "cisco",
+    "aaa"
+  ]
+}

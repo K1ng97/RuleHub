@@ -1,0 +1,42 @@
+{
+  "id": "10f2bae0-bbe6-4984-808c-37dc1c67980d",
+  "name": "Detect Baron Samedit CVE-2021-3156 Segfault",
+  "description": "The following analytic identifies a heap-based buffer overflow in sudoedit by detecting Linux logs containing both \"sudoedit\" and \"segfault\" terms. This detection leverages Splunk to monitor for more than five occurrences of these terms on a single host within a specified timeframe. This activity is significant because exploiting this vulnerability (CVE-2021-3156) can allow attackers to gain root privileges, leading to potential system compromise, unauthorized access, and data breaches. If confirmed malicious, this could result in elevated privileges and full control over the affected system, posing a severe security risk.",
+  "source": {
+    "type": "splunk",
+    "id": "10f2bae0-bbe6-4984-808c-37dc1c67980d",
+    "url": "https://github.com/splunk/security_content/blob/develop/detect_baron_samedit_cve_2021_3156_segfault.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/detect_baron_samedit_cve_2021_3156_segfault.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "cve",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Shannon Davis, Splunk",
+  "references": [],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "experimental",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`linux_hosts` TERM(sudoedit) TERM(segfault) | stats count min(_time) as firstTime max(_time) as lastTime by host | where count > 5 | `detect_baron_samedit_cve_2021_3156_segfault_filter`",
+    "condition": "Splunk Universal Forwarder running on Linux systems (tested on Centos and Ubuntu), where segfaults are being logged.  This also captures instances where the exploit has been compiled into a binary. The detection looks for greater than 5 instances of sudoedit combined with segfault over your search time period on a single host",
+    "fields": []
+  },
+  "falsepositives": [
+    "If sudoedit is throwing segfaults for other reasons this will pick those up too."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

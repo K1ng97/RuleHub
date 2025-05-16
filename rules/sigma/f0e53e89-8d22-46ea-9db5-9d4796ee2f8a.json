@@ -1,0 +1,50 @@
+{
+  "id": "f0e53e89-8d22-46ea-9db5-9d4796ee2f8a",
+  "name": "Exports Registry Key To a File",
+  "description": "Detects the export of the target Registry key to a file.",
+  "source": {
+    "type": "sigma",
+    "id": "f0e53e89-8d22-46ea-9db5-9d4796ee2f8a",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_regedit_export_keys.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_regedit_export_keys.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackexfiltration",
+    "attackt1012"
+  ],
+  "author": "Oddvar Moe, Sander Wiebing, oscd.community",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/Binaries/Regedit/",
+    "https://gist.github.com/api0cradle/cdd2d0d0ec9abb686f0e89306e277b8f"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-07",
+  "modified": "2024-03-13",
+  "mitre": {
+    "tactics": [
+      "TA1012"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\regedit.exe\"}, {\"OriginalFileName\": \"REGEDIT.EXE\"}]\nselection_cli: {\"CommandLine|contains|windash\": \" -E \"}\nfilter_1: {\"CommandLine|contains\": [\"hklm\", \"hkey_local_machine\"]}\nfilter_2: {\"CommandLine|endswith\": [\"\\\\system\", \"\\\\sam\", \"\\\\security\"]}",
+    "condition": "all of selection_* and not all of filter_*",
+    "fields": [
+      "ParentImage",
+      "CommandLine"
+    ]
+  },
+  "falsepositives": [
+    "Legitimate export of keys"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

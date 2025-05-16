@@ -1,0 +1,50 @@
+{
+  "id": "4c54ba8f-73d2-4d40-8890-d9cf1dca3d30",
+  "name": "Invoke-Obfuscation VAR++ LAUNCHER OBFUSCATION - Security",
+  "description": "Detects Obfuscated Powershell via VAR++ LAUNCHER",
+  "source": {
+    "type": "sigma",
+    "id": "4c54ba8f-73d2-4d40-8890-d9cf1dca3d30",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_invoke_obfuscation_via_var_services_security.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_invoke_obfuscation_via_var_services_security.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1027",
+    "attackt1059001"
+  ],
+  "author": "Timur Zinniatullin, oscd.community",
+  "references": [
+    "https://github.com/SigmaHQ/sigma/issues/1009"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-13",
+  "modified": "2022-11-29",
+  "mitre": {
+    "tactics": [
+      "TA1027",
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 4697, \"ServiceFileName|contains|all\": [\"&&set\", \"cmd\", \"/c\", \"-f\"], \"ServiceFileName|contains\": [\"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\", \"{5}\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

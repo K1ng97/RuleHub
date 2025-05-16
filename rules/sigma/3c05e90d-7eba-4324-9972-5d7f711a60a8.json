@@ -1,0 +1,48 @@
+{
+  "id": "3c05e90d-7eba-4324-9972-5d7f711a60a8",
+  "name": "UAC Bypass Tools Using ComputerDefaults",
+  "description": "Detects tools such as UACMe used to bypass UAC with computerdefaults.exe (UACMe 59)",
+  "source": {
+    "type": "sigma",
+    "id": "3c05e90d-7eba-4324-9972-5d7f711a60a8",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_uac_bypass_computerdefaults.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_uac_bypass_computerdefaults.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackprivilege-escalation",
+    "attackt1548002"
+  ],
+  "author": "Christian Burkard (Nextron Systems)",
+  "references": [
+    "https://github.com/hfiref0x/UACME"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-08-31",
+  "modified": "2024-12-01",
+  "mitre": {
+    "tactics": [
+      "TA1548"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"IntegrityLevel\": [\"High\", \"System\", \"S-1-16-16384\", \"S-1-16-12288\"], \"Image\": \"C:\\\\Windows\\\\System32\\\\ComputerDefaults.exe\"}\nfilter: {\"ParentImage|contains\": [\":\\\\Windows\\\\System32\", \":\\\\Program Files\"]}",
+    "condition": "selection and not filter",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

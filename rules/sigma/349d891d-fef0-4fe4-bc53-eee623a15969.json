@@ -1,0 +1,49 @@
+{
+  "id": "349d891d-fef0-4fe4-bc53-eee623a15969",
+  "name": "Use Short Name Path in Command Line",
+  "description": "Detect use of the Windows 8.3 short name. Which could be used as a method to avoid command-line detection",
+  "source": {
+    "type": "sigma",
+    "id": "349d891d-fef0-4fe4-bc53-eee623a15969",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_susp_ntfs_short_name_path_use_cli.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_susp_ntfs_short_name_path_use_cli.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1564004"
+  ],
+  "author": "frack113, Nasreddine Bencherchali",
+  "references": [
+    "https://www.acunetix.com/blog/articles/windows-short-8-3-filenames-web-security-problem/",
+    "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-2000-server/cc959352(v=technet.10)",
+    "https://twitter.com/frack113/status/1555830623633375232"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-07",
+  "modified": "2022-10-26",
+  "mitre": {
+    "tactics": [
+      "TA1564"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|contains\": [\"~1\\\\\", \"~2\\\\\"]}\nfilter: [{\"ParentImage\": [\"C:\\\\Windows\\\\System32\\\\Dism.exe\", \"C:\\\\Windows\\\\System32\\\\cleanmgr.exe\", \"C:\\\\Program Files\\\\GPSoftware\\\\Directory Opus\\\\dopus.exe\"]}, {\"ParentImage|endswith\": [\"\\\\WebEx\\\\WebexHost.exe\", \"\\\\thor\\\\thor64.exe\", \"\\\\veam.backup.shell.exe\", \"\\\\winget.exe\", \"\\\\Everything\\\\Everything.exe\"]}, {\"ParentImage|contains\": \"\\\\AppData\\\\Local\\\\Temp\\\\WinGet\\\\\"}, {\"CommandLine|contains\": [\"\\\\appdata\\\\local\\\\webex\\\\webex64\\\\meetings\\\\wbxreport.exe\", \"C:\\\\Program Files\\\\Git\\\\post-install.bat\", \"C:\\\\Program Files\\\\Git\\\\cmd\\\\scalar.exe\"]}]",
+    "condition": "selection and not filter",
+    "fields": []
+  },
+  "falsepositives": [
+    "Applications could use this notation occasionally which might generate some false positives. In that case investigate the parent and child process."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

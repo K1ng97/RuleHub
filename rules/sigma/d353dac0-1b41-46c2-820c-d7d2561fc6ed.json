@@ -1,0 +1,45 @@
+{
+  "id": "d353dac0-1b41-46c2-820c-d7d2561fc6ed",
+  "name": "AWL Bypass with Winrm.vbs and Malicious WsmPty.xsl/WsmTxt.xsl - File",
+  "description": "Detects execution of attacker-controlled WsmPty.xsl or WsmTxt.xsl via winrm.vbs and copied cscript.exe (can be renamed)",
+  "source": {
+    "type": "sigma",
+    "id": "d353dac0-1b41-46c2-820c-d7d2561fc6ed",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_winrm_awl_bypass.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_winrm_awl_bypass.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1216"
+  ],
+  "author": "Julia Fomina, oscd.community",
+  "references": [
+    "https://posts.specterops.io/application-whitelisting-bypass-and-arbitrary-unsigned-code-execution-technique-in-winrm-vbs-c8c24fb40404"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-06",
+  "modified": "2022-11-28",
+  "mitre": {
+    "tactics": [
+      "TA1216"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "system_files: {\"TargetFilename|endswith\": [\"WsmPty.xsl\", \"WsmTxt.xsl\"]}\nin_system_folder: {\"TargetFilename|startswith\": [\"C:\\\\Windows\\\\System32\\\\\", \"C:\\\\Windows\\\\SysWOW64\\\\\"]}",
+    "condition": "system_files and not in_system_folder",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

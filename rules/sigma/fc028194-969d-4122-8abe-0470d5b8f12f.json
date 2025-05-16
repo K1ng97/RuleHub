@@ -1,0 +1,47 @@
+{
+  "id": "fc028194-969d-4122-8abe-0470d5b8f12f",
+  "name": "Access to Browser Login Data",
+  "description": "Adversaries may acquire credentials from web browsers by reading files specific to the target browser.\nWeb browsers commonly save credentials such as website usernames and passwords so that they do not need to be entered manually in the future.\nWeb browsers typically store the credentials in an encrypted format within a credential store.\n",
+  "source": {
+    "type": "sigma",
+    "id": "fc028194-969d-4122-8abe-0470d5b8f12f",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_access_to_browser_login_data.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_access_to_browser_login_data.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1555003"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1555.003/T1555.003.md"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-01-30",
+  "modified": "2022-01-30",
+  "mitre": {
+    "tactics": [
+      "TA1555"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection_cmd: {\"ScriptBlockText|contains|all\": [\"Copy-Item\", \"-Destination\"]}\nselection_path: {\"ScriptBlockText|contains\": [\"\\\\Opera Software\\\\Opera Stable\\\\Login Data\", \"\\\\Mozilla\\\\Firefox\\\\Profiles\", \"\\\\Microsoft\\\\Edge\\\\User Data\\\\Default\", \"\\\\Google\\\\Chrome\\\\User Data\\\\Default\\\\Login Data\", \"\\\\Google\\\\Chrome\\\\User Data\\\\Default\\\\Login Data For Account\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

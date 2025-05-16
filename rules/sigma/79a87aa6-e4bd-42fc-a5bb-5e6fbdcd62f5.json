@@ -1,0 +1,49 @@
+{
+  "id": "79a87aa6-e4bd-42fc-a5bb-5e6fbdcd62f5",
+  "name": "Msiexec Quiet Installation",
+  "description": "Adversaries may abuse msiexec.exe to proxy execution of malicious payloads.\nMsiexec.exe is the command-line utility for the Windows Installer and is thus commonly associated with executing installation packages (.msi)\n",
+  "source": {
+    "type": "sigma",
+    "id": "79a87aa6-e4bd-42fc-a5bb-5e6fbdcd62f5",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_msiexec_install_quiet.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_msiexec_install_quiet.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218007"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/msiexec",
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1218.007/T1218.007.md",
+    "https://twitter.com/_st0pp3r_/status/1583914244344799235"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-01-16",
+  "modified": "2024-12-01",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": [
+      "T007"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\msiexec.exe\"}, {\"OriginalFileName\": \"msiexec.exe\"}]\nselection_cli: {\"CommandLine|contains|windash\": [\"-i\", \"-package\", \"-a\", \"-j\"]}\nselection_quiet: {\"CommandLine|contains|windash\": \"-q\"}\nfilter_user_temp: {\"ParentImage|startswith\": \"C:\\\\Users\\\\\", \"ParentImage|contains\": \"\\\\AppData\\\\Local\\\\Temp\\\\\"}\nfilter_system_temp: {\"ParentImage|startswith\": \"C:\\\\Windows\\\\Temp\\\\\"}\nfilter_ccm: {\"ParentImage\": \"C:\\\\Windows\\\\CCM\\\\Ccm32BitLauncher.exe\", \"IntegrityLevel\": [\"System\", \"S-1-16-16384\"]}",
+    "condition": "all of selection_* and not 1 of filter_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "WindowsApps installing updates via the quiet flag"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

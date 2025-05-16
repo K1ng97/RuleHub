@@ -1,0 +1,46 @@
+{
+  "id": "b1377339-fda6-477a-b455-ac0923f9ec2c",
+  "name": "Remote Access Tool - AnyDesk Piped Password Via CLI",
+  "description": "Detects piping the password to an anydesk instance via CMD and the '--set-password' flag.",
+  "source": {
+    "type": "sigma",
+    "id": "b1377339-fda6-477a-b455-ac0923f9ec2c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_remote_access_tools_anydesk_piped_password_via_cli.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_remote_access_tools_anydesk_piped_password_via_cli.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1219"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://redcanary.com/blog/misbehaving-rats/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-09-28",
+  "modified": "2023-03-05",
+  "mitre": {
+    "tactics": [
+      "TA1219"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|contains|all\": [\"/c \", \"echo \", \".exe --set-password\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate piping of the password to anydesk",
+    "Some FP could occur with similar tools that uses the same command line '--set-password'"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "id": "0419cb7a-57ea-467b-974f-77c303dfe2a3",
+  "name": "Linux Auditd Possible Access To Credential Files",
+  "description": "The following analytic detects attempts to access or dump the contents of /etc/passwd and /etc/shadow files on Linux systems. It leverages data from Linux Auditd, focusing on processes like 'cat', 'nano', 'vim', and 'vi' accessing these files. This activity is significant as it may indicate credential dumping, a technique used by adversaries to gain persistence or escalate privileges. If confirmed malicious, privileges. If confirmed malicious, attackers could obtain hashed passwords for offline cracking, leading to unauthorized access and potential system compromise.",
+  "source": {
+    "type": "splunk",
+    "id": "0419cb7a-57ea-467b-974f-77c303dfe2a3",
+    "url": "https://github.com/splunk/security_content/blob/develop/linux_auditd_possible_access_to_credential_files.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/linux_auditd_possible_access_to_credential_files.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://askubuntu.com/questions/445361/what-is-difference-between-etc-shadow-and-etc-passwd",
+    "https://attack.mitre.org/techniques/T1003/008/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`linux_auditd`  proctitle IN (\"*shadow*\", \"*passwd*\") AND proctitle IN (\"*cat *\", \"*nano *\", \"*vim *\", \"*vi *\") | rename host as dest | stats count min(_time) as firstTime max(_time) as lastTime by proctitle  dest | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `linux_auditd_possible_access_to_credential_files_filter`",
+    "condition": "To implement this detection, the process begins by ingesting auditd data, that consist SYSCALL, TYPE, EXECVE and PROCTITLE events, which captures command-line executions and process details on Unix/Linux systems. These logs should be ingested and processed using Splunk Add-on for Unix and Linux (https://splunkbase.splunk.com/app/833), which is essential for correctly parsing and categorizing the data. The next step involves normalizing the field names  to match the field names set by the Splunk Common Information Model (CIM) to ensure consistency across different data sources and enhance the efficiency of data modeling. This approach enables effective monitoring and detection of linux endpoints where auditd is deployed",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrator or network operator can execute this command. Please update the filter macros to remove false positives."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

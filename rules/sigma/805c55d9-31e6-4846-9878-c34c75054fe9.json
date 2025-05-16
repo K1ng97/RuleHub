@@ -1,0 +1,47 @@
+{
+  "id": "805c55d9-31e6-4846-9878-c34c75054fe9",
+  "name": "Octopus Scanner Malware",
+  "description": "Detects Octopus Scanner Malware.",
+  "source": {
+    "type": "sigma",
+    "id": "805c55d9-31e6-4846-9878-c34c75054fe9",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_mal_octopus_scanner.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_mal_octopus_scanner.yml"
+  },
+  "tags": [
+    "attackt1195",
+    "attackt1195001"
+  ],
+  "author": "NVISO",
+  "references": [
+    "https://securitylab.github.com/research/octopus-scanner-malware-open-source-supply-chain"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-06-09",
+  "modified": "2021-11-27",
+  "mitre": {
+    "tactics": [
+      "TA1195"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"TargetFilename|endswith\": [\"\\\\AppData\\\\Local\\\\Microsoft\\\\Cache134.dat\", \"\\\\AppData\\\\Local\\\\Microsoft\\\\ExplorerSync.db\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

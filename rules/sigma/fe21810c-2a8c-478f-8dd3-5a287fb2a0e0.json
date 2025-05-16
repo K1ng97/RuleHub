@@ -1,0 +1,52 @@
+{
+  "id": "fe21810c-2a8c-478f-8dd3-5a287fb2a0e0",
+  "name": "Suspicious Scripting in a WMI Consumer",
+  "description": "Detects suspicious commands that are related to scripting/powershell in WMI Event Consumers",
+  "source": {
+    "type": "sigma",
+    "id": "fe21810c-2a8c-478f-8dd3-5a287fb2a0e0",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/sysmon_wmi_susp_scripting.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/wmi_event/sysmon_wmi_susp_scripting.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1059005"
+  ],
+  "author": "Florian Roth (Nextron Systems), Jonhnathan Ribeiro",
+  "references": [
+    "https://in.security/an-intro-into-abusing-and-identifying-wmi-event-subscriptions-for-persistence/",
+    "https://github.com/Neo23x0/signature-base/blob/615bf1f6bac3c1bdc417025c40c073e6c2771a76/yara/gen_susp_lnk_files.yar#L19",
+    "https://github.com/RiccardoAncarani/LiquidSnake"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-04-15",
+  "modified": "2023-09-09",
+  "mitre": {
+    "tactics": [
+      "TA1059"
+    ],
+    "techniques": [
+      "T005"
+    ]
+  },
+  "detection": {
+    "query": "selection_destination: [{\"Destination|contains|all\": [\"new-object\", \"net.webclient\", \".downloadstring\"]}, {\"Destination|contains|all\": [\"new-object\", \"net.webclient\", \".downloadfile\"]}, {\"Destination|contains\": [\" iex(\", \" -nop \", \" -noprofile \", \" -decode \", \" -enc \", \"WScript.Shell\", \"System.Security.Cryptography.FromBase64Transform\"]}]",
+    "condition": "selection_destination",
+    "fields": [
+      "User",
+      "Operation"
+    ]
+  },
+  "falsepositives": [
+    "Legitimate administrative scripts"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "wmi_event"
+  ]
+}

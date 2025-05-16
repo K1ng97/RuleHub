@@ -1,0 +1,45 @@
+{
+  "id": "631b22a4-70f4-4e2f-9ea8-42f84d9df6d8",
+  "name": "Suspicious AddinUtil.EXE CommandLine Execution",
+  "description": "Detects execution of the Add-In deployment cache updating utility (AddInutil.exe) with suspicious Addinroot or Pipelineroot paths. An adversary may execute AddinUtil.exe with uncommon Addinroot/Pipelineroot paths that point to the adversaries Addins.Store payload.\n",
+  "source": {
+    "type": "sigma",
+    "id": "631b22a4-70f4-4e2f-9ea8-42f84d9df6d8",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_addinutil_suspicious_cmdline.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_addinutil_suspicious_cmdline.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems), Michael McKinley (@McKinleyMike), Tony Latteri (@TheLatteri)",
+  "references": [
+    "https://www.blue-prints.blog/content/blog/posts/lolbin/addinutil-lolbas.html"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-09-18",
+  "modified": "2023-09-18",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\addinutil.exe\"}, {\"OriginalFileName\": \"AddInUtil.exe\"}]\nselection_susp_1_flags: {\"CommandLine|contains\": [\"-AddInRoot:\", \"-PipelineRoot:\"]}\nselection_susp_1_paths: {\"CommandLine|contains\": [\"\\\\AppData\\\\Local\\\\Temp\\\\\", \"\\\\Desktop\\\\\", \"\\\\Downloads\\\\\", \"\\\\Users\\\\Public\\\\\", \"\\\\Windows\\\\Temp\\\\\"]}\nselection_susp_2: {\"CommandLine|contains\": [\"-AddInRoot:.\", \"-AddInRoot:\\\".\\\"\", \"-PipelineRoot:.\", \"-PipelineRoot:\\\".\\\"\"], \"CurrentDirectory|contains\": [\"\\\\AppData\\\\Local\\\\Temp\\\\\", \"\\\\Desktop\\\\\", \"\\\\Downloads\\\\\", \"\\\\Users\\\\Public\\\\\", \"\\\\Windows\\\\Temp\\\\\"]}",
+    "condition": "selection_img and (all of selection_susp_1_* or selection_susp_2)",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

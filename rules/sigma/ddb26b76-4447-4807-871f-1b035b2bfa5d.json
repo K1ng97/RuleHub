@@ -1,0 +1,47 @@
+{
+  "id": "ddb26b76-4447-4807-871f-1b035b2bfa5d",
+  "name": "Persistence Via Sudoers Files",
+  "description": "Detects creation of sudoers file or files in \"sudoers.d\" directory which can be used a potential method to persiste privileges for a specific user.",
+  "source": {
+    "type": "sigma",
+    "id": "ddb26b76-4447-4807-871f-1b035b2bfa5d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_lnx_persistence_sudoers_files.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/file_event/file_event_lnx_persistence_sudoers_files.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1053003"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://github.com/h3xduck/TripleCross/blob/1f1c3e0958af8ad9f6ebe10ab442e75de33e91de/apps/deployer.sh"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-07-05",
+  "modified": "2022-12-31",
+  "mitre": {
+    "tactics": [
+      "TA1053"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"TargetFilename|startswith\": \"/etc/sudoers.d/\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Creation of legitimate files in sudoers.d folder part of administrator work"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "file_event"
+  ]
+}

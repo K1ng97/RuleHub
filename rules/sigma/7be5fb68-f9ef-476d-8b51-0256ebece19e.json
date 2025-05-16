@@ -1,0 +1,46 @@
+{
+  "id": "7be5fb68-f9ef-476d-8b51-0256ebece19e",
+  "name": "Suspicious Execution of Hostname",
+  "description": "Use of hostname to get information",
+  "source": {
+    "type": "sigma",
+    "id": "7be5fb68-f9ef-476d-8b51-0256ebece19e",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_hostname_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_hostname_execution.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1082"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1082/T1082.md#atomic-test-6---hostname-discovery-windows",
+    "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/hostname"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-01-01",
+  "modified": "2022-01-01",
+  "mitre": {
+    "tactics": [
+      "TA1082"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"\\\\HOSTNAME.EXE\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

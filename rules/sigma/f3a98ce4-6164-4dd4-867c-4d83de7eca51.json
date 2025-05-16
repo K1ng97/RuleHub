@@ -1,0 +1,47 @@
+{
+  "id": "f3a98ce4-6164-4dd4-867c-4d83de7eca51",
+  "name": "Powershell Token Obfuscation - Powershell",
+  "description": "Detects TOKEN OBFUSCATION technique from Invoke-Obfuscation",
+  "source": {
+    "type": "sigma",
+    "id": "f3a98ce4-6164-4dd4-867c-4d83de7eca51",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_token_obfuscation.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_token_obfuscation.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1027009"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/danielbohannon/Invoke-Obfuscation"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-12-27",
+  "modified": "2023-03-24",
+  "mitre": {
+    "tactics": [
+      "TA1027"
+    ],
+    "techniques": [
+      "T009"
+    ]
+  },
+  "detection": {
+    "query": "selection: [{\"ScriptBlockText|re\": \"\\\\w+`(\\\\w+|-|.)`[\\\\w+|\\\\s]\"}, {\"ScriptBlockText|re\": \"\\\"(\\\\{\\\\d\\\\}){2,}\\\"\\\\s*-f\"}, {\"ScriptBlockText|re\": \"(?i)\\\\$\\\\{`?e`?n`?v`?:`?p`?a`?t`?h`?\\\\}\"}]\nfilter_envpath: {\"ScriptBlockText|contains\": \"${env:path}\"}\nfilter_chocolatey: {\"ScriptBlockText|contains\": [\"it will return true or false instead\", \"The function also prevents `Get-ItemProperty` from failing\"]}\nfilter_exchange: {\"Path|startswith\": \"C:\\\\Program Files\\\\Microsoft\\\\Exchange Server\\\\\", \"Path|endswith\": \"\\\\bin\\\\servicecontrol.ps1\", \"ScriptBlockText|contains\": \"`r`n\"}",
+    "condition": "selection and not 1 of filter_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

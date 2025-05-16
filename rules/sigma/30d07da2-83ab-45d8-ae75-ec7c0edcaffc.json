@@ -1,0 +1,47 @@
+{
+  "id": "30d07da2-83ab-45d8-ae75-ec7c0edcaffc",
+  "name": "Renamed BOINC Client Execution",
+  "description": "Detects the execution of a renamed BOINC binary.",
+  "source": {
+    "type": "sigma",
+    "id": "30d07da2-83ab-45d8-ae75-ec7c0edcaffc",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_renamed_boinc.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_renamed_boinc.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1553"
+  ],
+  "author": "Matt Anderson (Huntress)",
+  "references": [
+    "https://boinc.berkeley.edu/",
+    "https://www.virustotal.com/gui/file/91e405e8a527023fb8696624e70498ae83660fe6757cef4871ce9bcc659264d3/details",
+    "https://www.huntress.com/blog/fake-browser-updates-lead-to-boinc-volunteer-computing-software"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "experimental",
+  "created": "2024-07-23",
+  "modified": "2024-07-23",
+  "mitre": {
+    "tactics": [
+      "TA1553"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"OriginalFileName\": \"BOINC.exe\"}\nfilter_main_legit_name: {\"Image|endswith\": \"\\\\BOINC.exe\"}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

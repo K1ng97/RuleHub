@@ -1,0 +1,50 @@
+{
+  "id": "73bba97f-a82d-42ce-b315-9182e76c57b1",
+  "name": "Imports Registry Key From a File",
+  "description": "Detects the import of the specified file to the registry with regedit.exe.",
+  "source": {
+    "type": "sigma",
+    "id": "73bba97f-a82d-42ce-b315-9182e76c57b1",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_regedit_import_keys.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_regedit_import_keys.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1112"
+  ],
+  "author": "Oddvar Moe, Sander Wiebing, oscd.community",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/Binaries/Regedit/",
+    "https://gist.github.com/api0cradle/cdd2d0d0ec9abb686f0e89306e277b8f"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-07",
+  "modified": "2024-03-13",
+  "mitre": {
+    "tactics": [
+      "TA1112"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\regedit.exe\"}, {\"OriginalFileName\": \"REGEDIT.EXE\"}]\nselection_cli: {\"CommandLine|contains\": [\" /i \", \" /s \", \".reg\"]}\nfilter_1: {\"CommandLine|contains|windash\": [\" -e \", \" -a \", \" -c \"]}\nfilter_2: {\"CommandLine|re\": \":[^ \\\\\\\\]\"}",
+    "condition": "all of selection_* and not all of filter_*",
+    "fields": [
+      "ParentImage",
+      "CommandLine"
+    ]
+  },
+  "falsepositives": [
+    "Legitimate import of keys",
+    "Evernote"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

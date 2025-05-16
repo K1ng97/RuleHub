@@ -1,0 +1,48 @@
+{
+  "id": "f6451de4-df0a-41fa-8d72-b39f54a08db5",
+  "name": "PUA - PAExec Default Named Pipe",
+  "description": "Detects PAExec default named pipe",
+  "source": {
+    "type": "sigma",
+    "id": "f6451de4-df0a-41fa-8d72-b39f54a08db5",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/pipe_created_pua_paexec_default_pipe.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/pipe_created/pipe_created_pua_paexec_default_pipe.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1569002"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://github.com/microsoft/Microsoft-365-Defender-Hunting-Queries/blob/efa17a600b43c897b4b7463cc8541daa1987eeb4/Command%20and%20Control/C2-NamedPipe.md",
+    "https://github.com/poweradminllc/PAExec"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-10-26",
+  "modified": "2022-10-26",
+  "mitre": {
+    "tactics": [
+      "TA1569"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"PipeName|startswith\": \"\\\\PAExec\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "pipe_created"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "id": "9a3e57e7-33f4-470e-b25d-165baa6e8357",
+  "name": "Windows Computer Account With SPN",
+  "description": "The following analytic detects the addition of Service Principal Names (SPNs) HOST and RestrictedKrbHost to a computer account, indicative of KrbRelayUp behavior. This detection leverages Windows Security Event Logs, specifically EventCode 4741, to identify changes in SPNs. This activity is significant as it is commonly associated with Kerberos-based attacks, which can be used to escalate privileges or perform lateral movement within a network. If confirmed malicious, this behavior could allow an attacker to impersonate services, potentially leading to unauthorized access to sensitive resources.",
+  "source": {
+    "type": "splunk",
+    "id": "9a3e57e7-33f4-470e-b25d-165baa6e8357",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_computer_account_with_spn.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_computer_account_with_spn.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Michael Haag, Splunk",
+  "references": [
+    "https://www.trustedsec.com/blog/an-attack-path-mapping-approach-to-cves-2021-42287-and-2021-42278",
+    "https://github.com/Dec0ne/KrbRelayUp"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`wineventlog_security` EventCode=4741 NewUacValue=\"0x80\" ServicePrincipalNames IN (\"*HOST/*\",\"*RestrictedKrbHost/*\") | stats count min(_time) as firstTime max(_time) as lastTime values(EventCode),values(TargetDomainName),values(PrimaryGroupId), values(OldUacValue), values(NewUacValue),values(SamAccountName),values(DnsHostName),values(ServicePrincipalNames) by dest Logon_ID subject | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_computer_account_with_spn_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting Windows Security Event Logs with 4741 EventCode enabled. The Windows TA is also required.",
+    "fields": []
+  },
+  "falsepositives": [
+    "It is possible third party applications may add these SPNs to Computer Accounts, filtering may be needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

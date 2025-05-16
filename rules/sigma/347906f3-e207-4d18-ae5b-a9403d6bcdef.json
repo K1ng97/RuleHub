@@ -1,0 +1,48 @@
+{
+  "id": "347906f3-e207-4d18-ae5b-a9403d6bcdef",
+  "name": "Netsh Allow Group Policy on Microsoft Defender Firewall",
+  "description": "Adversaries may modify system firewalls in order to bypass controls limiting network usage",
+  "source": {
+    "type": "sigma",
+    "id": "347906f3-e207-4d18-ae5b-a9403d6bcdef",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_netsh_fw_enable_group_rule.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_netsh_fw_enable_group_rule.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1562004"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.004/T1562.004.md#atomic-test-3---allow-smb-and-rdp-on-microsoft-defender-firewall",
+    "https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/netsh-advfirewall-firewall-control-firewall-behavior"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-01-09",
+  "modified": "2023-02-14",
+  "mitre": {
+    "tactics": [
+      "TA1562"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\netsh.exe\"}, {\"OriginalFileName\": \"netsh.exe\"}]\nselection_cli: {\"CommandLine|contains|all\": [\"advfirewall\", \"firewall\", \"set\", \"rule\", \"group=\", \"new\", \"enable=Yes\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administration activity"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

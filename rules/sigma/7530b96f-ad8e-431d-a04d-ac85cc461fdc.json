@@ -1,0 +1,45 @@
+{
+  "id": "7530b96f-ad8e-431d-a04d-ac85cc461fdc",
+  "name": "Custom File Open Handler Executes PowerShell",
+  "description": "Detects the abuse of custom file open handler, executing powershell",
+  "source": {
+    "type": "sigma",
+    "id": "7530b96f-ad8e-431d-a04d-ac85cc461fdc",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_set_custom_file_open_handler_powershell_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_set/registry_set_custom_file_open_handler_powershell_execution.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1202"
+  ],
+  "author": "CD_R0M_",
+  "references": [
+    "https://news.sophos.com/en-us/2022/02/01/solarmarker-campaign-used-novel-registry-changes-to-establish-persistence/?cmp=30728"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-06-11",
+  "modified": "2023-08-17",
+  "mitre": {
+    "tactics": [
+      "TA1202"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"TargetObject|contains\": \"shell\\\\open\\\\command\\\\\", \"Details|contains|all\": [\"powershell\", \"-command\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_set"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "id": "cc4e02ba-9c06-48e2-b09e-2500cace9ae0",
+  "name": "Tasks Folder Evasion",
+  "description": "The Tasks folder in system32 and syswow64 are globally writable paths.\nAdversaries can take advantage of this and load or influence any script hosts or ANY .NET Application\nin Tasks to load and execute a custom assembly into cscript, wscript, regsvr32, mshta, eventvwr\n",
+  "source": {
+    "type": "sigma",
+    "id": "cc4e02ba-9c06-48e2-b09e-2500cace9ae0",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_susp_task_folder_evasion.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_susp_task_folder_evasion.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackpersistence",
+    "attackt1574001"
+  ],
+  "author": "Sreeman",
+  "references": [
+    "https://twitter.com/subTee/status/1216465628946563073",
+    "https://gist.github.com/am0nsec/8378da08f848424e4ab0cc5b317fdd26"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-01-13",
+  "modified": "2022-12-25",
+  "mitre": {
+    "tactics": [
+      "TA1574"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection1: {\"CommandLine|contains\": [\"echo \", \"copy \", \"type \", \"file createnew\"]}\nselection2: {\"CommandLine|contains\": [\" C:\\\\Windows\\\\System32\\\\Tasks\\\\\", \" C:\\\\Windows\\\\SysWow64\\\\Tasks\\\\\"]}",
+    "condition": "all of selection*",
+    "fields": [
+      "CommandLine",
+      "ParentProcess"
+    ]
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

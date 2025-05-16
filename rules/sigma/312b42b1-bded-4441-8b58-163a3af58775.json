@@ -1,0 +1,48 @@
+{
+  "id": "312b42b1-bded-4441-8b58-163a3af58775",
+  "name": "Potentially Suspicious Execution From Tmp Folder",
+  "description": "Detects a potentially suspicious execution of a process located in the '/tmp/' folder",
+  "source": {
+    "type": "sigma",
+    "id": "312b42b1-bded-4441-8b58-163a3af58775",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_susp_execution_tmp_folder.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_susp_execution_tmp_folder.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1036"
+  ],
+  "author": "Joseliyo Sanchez, @Joseliyo_Jstnk",
+  "references": [
+    "https://blogs.jpcert.or.jp/en/2023/05/gobrat.html",
+    "https://jstnk9.github.io/jstnk9/research/GobRAT-Malware/",
+    "https://www.virustotal.com/gui/file/60bcd645450e4c846238cf0e7226dc40c84c96eba99f6b2cffcd0ab4a391c8b3/detection",
+    "https://www.virustotal.com/gui/file/3e44c807a25a56f4068b5b8186eee5002eed6f26d665a8b791c472ad154585d1/detection"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-06-02",
+  "modified": "2023-06-02",
+  "mitre": {
+    "tactics": [
+      "TA1036"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Image|startswith\": \"/tmp/\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

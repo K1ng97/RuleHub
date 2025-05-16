@@ -1,0 +1,44 @@
+{
+  "id": "69e2860c-0e4b-40ae-9dc4-bf9e3bf2a548",
+  "name": "Crowdstrike Privilege Escalation For Non-Admin User",
+  "description": "The following analytic detects CrowdStrike alerts for privilege escalation attempts by non-admin users. These alerts indicate unauthorized efforts by regular users to gain elevated permissions, posing a significant security risk. Detecting and addressing these attempts promptly helps prevent potential breaches and ensures that user privileges remain properly managed, maintaining the integrity of the organization's security protocols.",
+  "source": {
+    "type": "splunk",
+    "id": "69e2860c-0e4b-40ae-9dc4-bf9e3bf2a548",
+    "url": "https://github.com/splunk/security_content/blob/develop/crowdstrike_privilege_escalation_for_non_admin_user.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/crowdstrike_privilege_escalation_for_non_admin_user.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "manual_test",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://www.crowdstrike.com/wp-content/uploads/2022/12/CrowdStrike-Falcon-Event-Streams-Add-on-Guide-v3.pdf"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`crowdstrike_stream` tag=alert | rename event.EndpointIp as src_ip, event.EndpointName as src_host, event.UserName as user, event.IncidentDescription as description, event.IncidentType as type, event.NumbersOfAlerts as count_alerts, event.SeverityName as severity | stats count min(_time) as firstTime max(_time) as lastTime by src_ip, src_host, user, description, type, count_alerts, severity | where LIKE(type,\"%Privilege escalation%\") AND NOT LIKE(user, \"%adm%\") AND NOT LIKE(user, \"%svc%\") AND NOT LIKE(user, \"%admin%\") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `crowdstrike_privilege_escalation_for_non_admin_user_filter`",
+    "condition": "To implement CrowdStrike stream JSON logs, use the Falcon Streaming API. Set up an API client, authenticate with your CrowdStrike credentials, and subscribe to the \"CrowdStrike:Event:Streams:JSON\" event stream. Process and store the JSON logs as needed, integrating them into your logging or SIEM system for monitoring and analysis.",
+    "fields": []
+  },
+  "falsepositives": [
+    "unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

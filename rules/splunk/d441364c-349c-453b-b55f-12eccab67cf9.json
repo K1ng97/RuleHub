@@ -1,0 +1,43 @@
+{
+  "id": "d441364c-349c-453b-b55f-12eccab67cf9",
+  "name": "O365 Excessive Authentication Failures Alert",
+  "description": "The following analytic identifies an excessive number of authentication failures, including failed attempts against MFA prompt codes. It uses data from the `o365_management_activity` dataset, focusing on events where the authentication status is marked as failure. This behavior is significant as it may indicate a brute force attack or an attempt to compromise user accounts. If confirmed malicious, this activity could lead to unauthorized access, data breaches, or further exploitation within the environment.",
+  "source": {
+    "type": "splunk",
+    "id": "d441364c-349c-453b-b55f-12eccab67cf9",
+    "url": "https://github.com/splunk/security_content/blob/develop/o365_excessive_authentication_failures_alert.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/o365_excessive_authentication_failures_alert.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Rod Soto, Splunk",
+  "references": [
+    "https://attack.mitre.org/techniques/T1110/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`o365_management_activity` Workload=AzureActiveDirectory UserAuthenticationMethod=* status=failure | stats count earliest(_time) AS firstTime latest(_time) AS lastTime values(UserAuthenticationMethod) AS UserAuthenticationMethod values(UserAgent) AS user_agent values(status) AS status values(src_ip) AS src values(signature) as signature by user vendor_account vendor_product dest | where count > 10 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `o365_excessive_authentication_failures_alert_filter`",
+    "condition": "You must install splunk Microsoft Office 365 add-on. This search works with o365:management:activity",
+    "fields": []
+  },
+  "falsepositives": [
+    "The threshold for alert is above 10 attempts and this should reduce the number of false positives."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

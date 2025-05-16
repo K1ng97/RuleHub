@@ -1,0 +1,48 @@
+{
+  "id": "0718cd72-f316-4aa2-988f-838ea8533277",
+  "name": "Suspicious Start-Process PassThru",
+  "description": "Powershell use PassThru option to start in background",
+  "source": {
+    "type": "sigma",
+    "id": "0718cd72-f316-4aa2-988f-838ea8533277",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_susp_start_process.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_susp_start_process.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1036003"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1036.003/T1036.003.md",
+    "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/Start-Process?view=powershell-5.1&viewFallbackFrom=powershell-7"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-01-15",
+  "modified": "2022-01-15",
+  "mitre": {
+    "tactics": [
+      "TA1036"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ScriptBlockText|contains|all\": [\"Start-Process\", \"-PassThru \", \"-FilePath \"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate PowerShell scripts"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

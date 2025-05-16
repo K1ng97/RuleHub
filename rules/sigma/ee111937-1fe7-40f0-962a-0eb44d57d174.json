@@ -1,0 +1,43 @@
+{
+  "id": "ee111937-1fe7-40f0-962a-0eb44d57d174",
+  "name": "Suspicious OAuth App File Download Activities",
+  "description": "Detects when a Microsoft Cloud App Security reported when an app downloads multiple files from Microsoft SharePoint or Microsoft OneDrive in a manner that is unusual for the user.",
+  "source": {
+    "type": "sigma",
+    "id": "ee111937-1fe7-40f0-962a-0eb44d57d174",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/microsoft365_susp_oauth_app_file_download_activities.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/m365/threat_management/microsoft365_susp_oauth_app_file_download_activities.yml"
+  },
+  "tags": [
+    "attackexfiltration"
+  ],
+  "author": "Austin Songer @austinsonger",
+  "references": [
+    "https://learn.microsoft.com/en-us/defender-cloud-apps/anomaly-detection-policy",
+    "https://learn.microsoft.com/en-us/defender-cloud-apps/policy-template-reference"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-08-23",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"eventSource\": \"SecurityComplianceCenter\", \"eventName\": \"Suspicious OAuth app file download activities\", \"status\": \"success\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "m365",
+    "threat_management"
+  ]
+}

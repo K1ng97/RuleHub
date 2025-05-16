@@ -1,0 +1,47 @@
+{
+  "id": "45a594aa-1fbd-4972-a809-ff5a99dd81b8",
+  "name": "Run PowerShell Script from ADS",
+  "description": "Detects PowerShell script execution from Alternate Data Stream (ADS)",
+  "source": {
+    "type": "sigma",
+    "id": "45a594aa-1fbd-4972-a809-ff5a99dd81b8",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_powershell_run_script_from_ads.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_powershell_run_script_from_ads.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1564004"
+  ],
+  "author": "Sergey Soldatov, Kaspersky Lab, oscd.community",
+  "references": [
+    "https://github.com/p0shkatz/Get-ADS/blob/1c3a3562e713c254edce1995a7d9879c687c7473/Get-ADS.ps1"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-10-30",
+  "modified": "2022-07-14",
+  "mitre": {
+    "tactics": [
+      "TA1564"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ParentImage|endswith\": [\"\\\\powershell.exe\", \"\\\\pwsh.exe\"], \"Image|endswith\": [\"\\\\powershell.exe\", \"\\\\pwsh.exe\"], \"CommandLine|contains|all\": [\"Get-Content\", \"-Stream\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

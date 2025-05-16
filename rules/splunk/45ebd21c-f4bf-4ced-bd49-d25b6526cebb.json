@@ -1,0 +1,43 @@
+{
+  "id": "45ebd21c-f4bf-4ced-bd49-d25b6526cebb",
+  "name": "Windows Query Registry Browser List Application",
+  "description": "The following analytic detects a suspicious process accessing the registry entries for default internet browsers. It leverages Windows Security Event logs, specifically event code 4663, to identify access attempts to these registry paths. This activity is significant because adversaries can exploit this registry key to gather information about installed browsers and their settings, potentially leading to the theft of sensitive data such as login credentials and browsing history. If confirmed malicious, this behavior could enable attackers to exfiltrate sensitive information and compromise user accounts.",
+  "source": {
+    "type": "splunk",
+    "id": "45ebd21c-f4bf-4ced-bd49-d25b6526cebb",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_query_registry_browser_list_application.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_query_registry_browser_list_application.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://malpedia.caad.fkie.fraunhofer.de/details/win.redline_stealer"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`wineventlog_security` EventCode=4663 object_file_path IN (\"*\\\\SOFTWARE\\\\Clients\\\\StartMenuInternet\\\\*\", \"*\\\\SOFTWARE\\\\Clients\\\\StartMenuInternet\\\\*\") AND NOT process_path IN (\"*:\\\\Windows\\\\System32\\\\*\", \"*:\\\\Windows\\\\SysWow64\\\\*\", *:\\\\Windows\\\\WinSxS\\\\*, \"*:\\\\Program Files\\\\*\", \"*:\\\\Program Files (x86)\\\\*\") | stats count min(_time) as firstTime max(_time) as lastTime by object_file_name object_file_path process_name process_path  process_id EventCode dest | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_query_registry_browser_list_application_filter`",
+    "condition": "To successfully implement this search, you must ingest Windows Security Event logs and track event code 4663. For 4663, enable \"Audit Object Access\" in Group Policy. Then check the two boxes listed for both \"Success\" and \"Failure.\"",
+    "fields": []
+  },
+  "falsepositives": [
+    "uninstall application may access this registry to remove the entry of the target application. filter is needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

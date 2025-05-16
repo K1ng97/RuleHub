@@ -1,0 +1,44 @@
+{
+  "id": "dda126d7-1d99-4f0b-b72a-4c14031f9398",
+  "name": "Windows Access Token Manipulation Winlogon Duplicate Token Handle",
+  "description": "The following analytic detects a process attempting to access winlogon.exe to duplicate its handle. This is identified using Sysmon EventCode 10, focusing on processes targeting winlogon.exe with specific access rights. This activity is significant because it is a common technique used by adversaries to escalate privileges by leveraging the high privileges and security tokens associated with winlogon.exe. If confirmed malicious, this could allow an attacker to gain elevated privileges, potentially leading to full system compromise and unauthorized access to sensitive information.",
+  "source": {
+    "type": "splunk",
+    "id": "dda126d7-1d99-4f0b-b72a-4c14031f9398",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_access_token_manipulation_winlogon_duplicate_token_handle.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_access_token_manipulation_winlogon_duplicate_token_handle.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://docs.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-duplicatehandle",
+    "https://attack.mitre.org/techniques/T1134/001/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`sysmon` EventCode=10 TargetImage IN(\"*\\\\system32\\\\winlogon.exe*\", \"*\\\\SysWOW64\\\\winlogon.exe*\") GrantedAccess = 0x1040 | stats count min(_time) as firstTime max(_time) as lastTime by CallTrace EventID GrantedAccess Guid Opcode ProcessID SecurityID SourceImage SourceProcessGUID SourceProcessId TargetImage TargetProcessGUID TargetProcessId UserID dest granted_access parent_process_exec parent_process_guid parent_process_id parent_process_name parent_process_path process_exec process_guid process_id process_name process_path signature signature_id user_id vendor_product | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_access_token_manipulation_winlogon_duplicate_token_handle_filter`",
+    "condition": "To successfully implement this search, you must be ingesting data that records process activity from your hosts to populate the endpoint data model in the processes node. If you are using Sysmon, you must have at least version 6.0.4 of the Sysmon TA.",
+    "fields": []
+  },
+  "falsepositives": [
+    "It is possible legitimate applications will request access to winlogon, filter as needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

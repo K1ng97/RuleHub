@@ -1,0 +1,47 @@
+{
+  "id": "32d56ea1-417f-44ff-822b-882873f5f43b",
+  "name": "Impacket PsExec Execution",
+  "description": "Detects execution of Impacket's psexec.py.",
+  "source": {
+    "type": "sigma",
+    "id": "32d56ea1-417f-44ff-822b-882873f5f43b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_impacket_psexec.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_impacket_psexec.yml"
+  },
+  "tags": [
+    "attacklateral-movement",
+    "attackt1021002"
+  ],
+  "author": "Bhabesh Raj",
+  "references": [
+    "https://web.archive.org/web/20230329171218/https://blog.menasec.net/2019/02/threat-hunting-3-detecting-psexec.html"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-12-14",
+  "modified": "2022-09-22",
+  "mitre": {
+    "tactics": [
+      "TA1021"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection1: {\"EventID\": 5145, \"ShareName\": \"\\\\\\\\\\\\\\\\\\\\*\\\\\\\\IPC$\", \"RelativeTargetName|contains\": [\"RemCom_stdin\", \"RemCom_stdout\", \"RemCom_stderr\"]}",
+    "condition": "selection1",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "id": "512cf937-ea9b-4332-939c-4c2c94baadcd",
+  "name": "Azure Firewall Modified or Deleted",
+  "description": "Identifies when a firewall is created, modified, or deleted.",
+  "source": {
+    "type": "sigma",
+    "id": "512cf937-ea9b-4332-939c-4c2c94baadcd",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_firewall_modified_or_deleted.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/activity_logs/azure_firewall_modified_or_deleted.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackimpact",
+    "attackt1562004"
+  ],
+  "author": "Austin Songer @austinsonger",
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-08-08",
+  "modified": "2022-08-23",
+  "mitre": {
+    "tactics": [
+      "TA1562"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"operationName\": [\"MICROSOFT.NETWORK/AZUREFIREWALLS/WRITE\", \"MICROSOFT.NETWORK/AZUREFIREWALLS/DELETE\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Firewall being modified or deleted may be performed by a system administrator. Verify whether the user identity, user agent, and/or hostname should be making changes in your environment.",
+    "Firewall modified or deleted from unfamiliar users should be investigated. If known behavior is causing false positives, it can be exempted from the rule."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "activitylogs"
+  ]
+}

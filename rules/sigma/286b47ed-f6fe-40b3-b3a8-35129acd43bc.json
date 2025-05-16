@@ -1,0 +1,43 @@
+{
+  "id": "286b47ed-f6fe-40b3-b3a8-35129acd43bc",
+  "name": "Suspicious Access to Sensitive File Extensions - Zeek",
+  "description": "Detects known sensitive file extensions via Zeek",
+  "source": {
+    "type": "sigma",
+    "id": "286b47ed-f6fe-40b3-b3a8-35129acd43bc",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/zeek_smb_converted_win_susp_raccess_sensitive_fext.yml",
+    "file_path": "tmp/repos/sigma/rules/network/zeek/zeek_smb_converted_win_susp_raccess_sensitive_fext.yml"
+  },
+  "tags": [
+    "attackcollection"
+  ],
+  "author": "Samir Bousseaden, @neu5ron",
+  "references": [
+    "Internal Research"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-04-02",
+  "modified": "2021-11-27",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"name|endswith\": [\".pst\", \".ost\", \".msg\", \".nst\", \".oab\", \".edb\", \".nsf\", \".bak\", \".dmp\", \".kirbi\", \"\\\\groups.xml\", \".rdp\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Help Desk operator doing backup or re-imaging end user machine or backup software",
+    "Users working with these data types or exchanging message files"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "zeek",
+    "smb_files"
+  ]
+}

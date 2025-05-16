@@ -1,0 +1,51 @@
+{
+  "id": "fe10751f-1995-40a5-aaa2-c97ccb4123fe",
+  "name": "Linux Capabilities Discovery",
+  "description": "Detects attempts to discover the files with setuid/setgid capability on them. That would allow adversary to escalate their privileges.",
+  "source": {
+    "type": "sigma",
+    "id": "fe10751f-1995-40a5-aaa2-c97ccb4123fe",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/lnx_auditd_capabilities_discovery.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/auditd/lnx_auditd_capabilities_discovery.yml"
+  },
+  "tags": [
+    "attackcollection",
+    "attackprivilege-escalation",
+    "attackt1123",
+    "attackt1548"
+  ],
+  "author": "Pawel Mazur",
+  "references": [
+    "https://man7.org/linux/man-pages/man8/getcap.8.html",
+    "https://www.hackingarticles.in/linux-privilege-escalation-using-capabilities/",
+    "https://mn3m.info/posts/suid-vs-capabilities/",
+    "https://int0x33.medium.com/day-44-linux-capabilities-privilege-escalation-via-openssl-with-selinux-enabled-and-enforced-74d2bec02099"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-11-28",
+  "modified": "2022-12-25",
+  "mitre": {
+    "tactics": [
+      "TA1123",
+      "TA1548"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"type\": \"EXECVE\", \"a0\": \"getcap\", \"a1\": \"-r\", \"a2\": \"/\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "auditd"
+  ]
+}

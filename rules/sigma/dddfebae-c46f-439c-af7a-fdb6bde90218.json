@@ -1,0 +1,45 @@
+{
+  "id": "dddfebae-c46f-439c-af7a-fdb6bde90218",
+  "name": "SyncAppvPublishingServer Execution to Bypass Powershell Restriction",
+  "description": "Detects SyncAppvPublishingServer process execution which usually utilized by adversaries to bypass PowerShell execution restrictions.",
+  "source": {
+    "type": "sigma",
+    "id": "dddfebae-c46f-439c-af7a-fdb6bde90218",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_syncappvpublishingserver_exe.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_syncappvpublishingserver_exe.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218"
+  ],
+  "author": "Ensar Şamil, @sblmsrsn, OSCD Community",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/Binaries/Syncappvpublishingserver/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-05",
+  "modified": "2022-12-25",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"ScriptBlockText|contains\": \"SyncAppvPublishingServer.exe\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "App-V clients"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

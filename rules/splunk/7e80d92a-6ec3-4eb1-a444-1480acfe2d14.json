@@ -1,0 +1,44 @@
+{
+  "id": "7e80d92a-6ec3-4eb1-a444-1480acfe2d14",
+  "name": "Crowdstrike Medium Severity Alert",
+  "description": "The following analytic detects a CrowdStrike alert with MEDIUM severity indicates a potential threat that requires prompt attention. This alert level suggests suspicious activity that may compromise security but is not immediately critical. It typically involves detectable but non-imminent risks, such as unusual behavior or attempted policy violations, which should be investigated further and mitigated quickly to prevent escalation of attacks.",
+  "source": {
+    "type": "splunk",
+    "id": "7e80d92a-6ec3-4eb1-a444-1480acfe2d14",
+    "url": "https://github.com/splunk/security_content/blob/develop/crowdstrike_medium_severity_alert.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/crowdstrike_medium_severity_alert.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "manual_test",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://www.crowdstrike.com/wp-content/uploads/2022/12/CrowdStrike-Falcon-Event-Streams-Add-on-Guide-v3.pdf"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`crowdstrike_stream` | rename event.EndpointIp as src_ip, event.EndpointName as src_host, event.UserName as user, event.IncidentDescription as description, event.IncidentType as type, event.NumbersOfAlerts as count_alerts, event.SeverityName as severity | stats count min(_time) as firstTime max(_time) as lastTime by src_ip, src_host, user, description, type, count_alerts, severity | where LIKE (severity, \"%MEDIUM%\") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `crowdstrike_medium_severity_alert_filter`",
+    "condition": "To implement CrowdStrike stream JSON logs, use the Falcon Streaming API. Set up an API client, authenticate with your CrowdStrike credentials, and subscribe to the \"CrowdStrike:Event:Streams:JSON\" event stream. Process and store the JSON logs as needed, integrating them into your logging or SIEM system for monitoring and analysis.",
+    "fields": []
+  },
+  "falsepositives": [
+    "unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

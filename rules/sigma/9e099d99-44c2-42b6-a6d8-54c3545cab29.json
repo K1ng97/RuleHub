@@ -1,0 +1,46 @@
+{
+  "id": "9e099d99-44c2-42b6-a6d8-54c3545cab29",
+  "name": "HackTool - Mimikatz Kirbi File Creation",
+  "description": "Detects the creation of files created by mimikatz such as \".kirbi\", \"mimilsa.log\", etc.",
+  "source": {
+    "type": "sigma",
+    "id": "9e099d99-44c2-42b6-a6d8-54c3545cab29",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_hktl_mimikatz_files.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_hktl_mimikatz_files.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1558"
+  ],
+  "author": "Florian Roth (Nextron Systems), David ANDRE",
+  "references": [
+    "https://cobalt.io/blog/kerberoast-attack-techniques",
+    "https://pentestlab.blog/2019/10/21/persistence-security-support-provider/"
+  ],
+  "severity": "critical",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-11-08",
+  "modified": "2024-06-27",
+  "mitre": {
+    "tactics": [
+      "TA1558"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"TargetFilename|endswith\": [\".kirbi\", \"mimilsa.log\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "critical",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

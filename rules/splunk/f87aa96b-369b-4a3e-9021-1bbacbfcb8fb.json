@@ -1,0 +1,43 @@
+{
+  "id": "f87aa96b-369b-4a3e-9021-1bbacbfcb8fb",
+  "name": "Windows Driver Inventory",
+  "description": "The following analytic identifies drivers being loaded across the fleet. It leverages a PowerShell script input deployed to critical systems to capture driver data. This detection is significant as it helps monitor for unauthorized or malicious drivers that could compromise system integrity. If confirmed malicious, such drivers could allow attackers to execute arbitrary code, escalate privileges, or maintain persistence within the environment.",
+  "source": {
+    "type": "splunk",
+    "id": "f87aa96b-369b-4a3e-9021-1bbacbfcb8fb",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_driver_inventory.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_driver_inventory.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Michael Haag, Splunk",
+  "references": [
+    "https://gist.github.com/MHaggis/3e4dc85c69b3f7a4595a06c8a692f244"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "experimental",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`driverinventory` | stats values(Path) min(_time) as firstTime max(_time) as lastTime count by host DriverType | rename host as dest | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_driver_inventory_filter`",
+    "condition": "To capture the drivers by host, utilize the referenced Gist to create the inputs, props and transforms. Otherwise, this hunt query will not work.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Filter and modify the analytic as you'd like. Filter based on path. Remove the system32\\drivers and look for non-standard paths."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

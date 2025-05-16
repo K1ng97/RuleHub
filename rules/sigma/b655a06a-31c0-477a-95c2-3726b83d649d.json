@@ -1,0 +1,48 @@
+{
+  "id": "b655a06a-31c0-477a-95c2-3726b83d649d",
+  "name": "Suspicious Userinit Child Process",
+  "description": "Detects a suspicious child process of userinit",
+  "source": {
+    "type": "sigma",
+    "id": "b655a06a-31c0-477a-95c2-3726b83d649d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_susp_userinit_child.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_susp_userinit_child.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1055"
+  ],
+  "author": "Florian Roth (Nextron Systems), Samir Bousseaden (idea)",
+  "references": [
+    "https://twitter.com/SBousseaden/status/1139811587760562176"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-06-17",
+  "modified": "2022-12-09",
+  "mitre": {
+    "tactics": [
+      "TA1055"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"ParentImage|endswith\": \"\\\\userinit.exe\"}\nfilter1: {\"CommandLine|contains\": \"\\\\netlogon\\\\\"}\nfilter2: [{\"Image|endswith\": \"\\\\explorer.exe\"}, {\"OriginalFileName\": \"explorer.exe\"}]",
+    "condition": "selection and not 1 of filter*",
+    "fields": [
+      "CommandLine",
+      "ParentCommandLine"
+    ]
+  },
+  "falsepositives": [
+    "Administrative scripts"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

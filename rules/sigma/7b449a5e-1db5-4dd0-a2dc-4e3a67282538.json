@@ -1,0 +1,47 @@
+{
+  "id": "7b449a5e-1db5-4dd0-a2dc-4e3a67282538",
+  "name": "Hidden Local User Creation",
+  "description": "Detects the creation of a local hidden user account which should not happen for event ID 4720.",
+  "source": {
+    "type": "sigma",
+    "id": "7b449a5e-1db5-4dd0-a2dc-4e3a67282538",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_hidden_user_creation.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_hidden_user_creation.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1136001"
+  ],
+  "author": "Christian Burkard (Nextron Systems)",
+  "references": [
+    "https://twitter.com/SBousseaden/status/1387743867663958021"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-05-03",
+  "modified": "2024-01-16",
+  "mitre": {
+    "tactics": [
+      "TA1136"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 4720, \"TargetUserName|endswith\": \"$\"}\nfilter_main_homegroup: {\"TargetUserName\": \"HomeGroupUser$\"}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "id": "7d4cdc5a-0076-40ca-aac8-f7e714570e47",
+  "name": "CMSTP Execution Process Creation",
+  "description": "Detects various indicators of Microsoft Connection Manager Profile Installer execution",
+  "source": {
+    "type": "sigma",
+    "id": "7d4cdc5a-0076-40ca-aac8-f7e714570e47",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_cmstp_execution_by_creation.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_cmstp_execution_by_creation.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackg0069",
+    "attackt1218003",
+    "car2019-04-001"
+  ],
+  "author": "Nik Seetharaman",
+  "references": [
+    "https://web.archive.org/web/20190720093911/http://www.endurant.io/cmstp/detecting-cmstp-enabled-code-execution-and-uac-bypass-with-sysmon/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "stable",
+  "created": "2018-07-16",
+  "modified": "2020-12-23",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ParentImage|endswith\": \"\\\\cmstp.exe\"}",
+    "condition": "selection",
+    "fields": [
+      "CommandLine",
+      "ParentCommandLine",
+      "Details"
+    ]
+  },
+  "falsepositives": [
+    "Legitimate CMSTP use (unlikely in modern enterprise environments)"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

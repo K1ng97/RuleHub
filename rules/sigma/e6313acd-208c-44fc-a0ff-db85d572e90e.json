@@ -1,0 +1,48 @@
+{
+  "id": "e6313acd-208c-44fc-a0ff-db85d572e90e",
+  "name": "Network Reconnaissance Activity",
+  "description": "Detects a set of suspicious network related commands often used in recon stages",
+  "source": {
+    "type": "sigma",
+    "id": "e6313acd-208c-44fc-a0ff-db85d572e90e",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_nslookup_domain_discovery.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_nslookup_domain_discovery.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1082",
+    "attackt1087",
+    "car2016-03-001"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://thedfirreport.com/2022/02/07/qbot-likes-to-move-it-move-it/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-02-07",
+  "modified": "2022-02-07",
+  "mitre": {
+    "tactics": [
+      "TA1082",
+      "TA1087"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|contains|all\": [\"nslookup\", \"_ldap._tcp.dc._msdcs.\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "False positives depend on scripts and administrative tools used in the monitored environment"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

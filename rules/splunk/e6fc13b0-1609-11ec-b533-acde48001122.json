@@ -1,0 +1,41 @@
+{
+  "id": "e6fc13b0-1609-11ec-b533-acde48001122",
+  "name": "Non Firefox Process Access Firefox Profile Dir",
+  "description": "The following analytic detects non-Firefox processes accessing the Firefox profile directory, which contains sensitive user data such as login credentials, browsing history, and cookies. It leverages Windows Security Event logs, specifically event code 4663, to monitor access attempts. This activity is significant because it may indicate attempts by malware, such as RATs or trojans, to harvest user information. If confirmed malicious, this behavior could lead to data exfiltration, unauthorized access to user accounts, and further compromise of the affected system.",
+  "source": {
+    "type": "splunk",
+    "id": "e6fc13b0-1609-11ec-b533-acde48001122",
+    "url": "https://github.com/splunk/security_content/blob/develop/non_firefox_process_access_firefox_profile_dir.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/non_firefox_process_access_firefox_profile_dir.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`wineventlog_security` EventCode=4663 NOT (ProcessName IN (\"*\\\\firefox.exe\", \"*\\\\explorer.exe\", \"*sql*\")) ObjectName=\"*\\\\AppData\\\\Roaming\\\\Mozilla\\\\Firefox\\\\Profiles*\" | stats count min(_time) as firstTime max(_time) as lastTime by ObjectName ObjectType ProcessName AccessMask EventCode dest | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `non_firefox_process_access_firefox_profile_dir_filter`",
+    "condition": "To successfully implement this search, you must ingest Windows Security Event logs and track event code 4663. For 4663, enable \"Audit Object Access\" in Group Policy. Then check the two boxes listed for both \"Success\" and \"Failure.\"",
+    "fields": []
+  },
+  "falsepositives": [
+    "other browser not listed related to firefox may catch by this rule."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

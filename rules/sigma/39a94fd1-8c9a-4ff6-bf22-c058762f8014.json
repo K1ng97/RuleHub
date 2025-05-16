@@ -1,0 +1,51 @@
+{
+  "id": "39a94fd1-8c9a-4ff6-bf22-c058762f8014",
+  "name": "DPAPI Domain Master Key Backup Attempt",
+  "description": "Detects anyone attempting a backup for the DPAPI Master Key. This events gets generated at the source and not the Domain Controller.",
+  "source": {
+    "type": "sigma",
+    "id": "39a94fd1-8c9a-4ff6-bf22-c058762f8014",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_dpapi_domain_masterkey_backup_attempt.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_dpapi_domain_masterkey_backup_attempt.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1003004"
+  ],
+  "author": "Roberto Rodriguez @Cyb3rWard0g",
+  "references": [
+    "https://threathunterplaybook.com/hunts/windows/190620-DomainDPAPIBackupKeyExtraction/notebook.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-08-10",
+  "modified": "2023-03-15",
+  "mitre": {
+    "tactics": [
+      "TA1003"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 4692}",
+    "condition": "selection",
+    "fields": [
+      "ComputerName",
+      "SubjectDomainName",
+      "SubjectUserName"
+    ]
+  },
+  "falsepositives": [
+    "If a computer is a member of a domain, DPAPI has a backup mechanism to allow unprotection of the data. Which will trigger this event."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

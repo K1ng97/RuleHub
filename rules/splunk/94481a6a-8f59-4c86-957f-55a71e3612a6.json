@@ -1,0 +1,46 @@
+{
+  "id": "94481a6a-8f59-4c86-957f-55a71e3612a6",
+  "name": "Azure AD Multiple Users Failing To Authenticate From Ip",
+  "description": "The following analytic detects a single source IP failing to authenticate with 30 unique valid users within 5 minutes in Azure Active Directory. It leverages Azure AD SignInLogs with error code 50126, indicating invalid passwords. This behavior is significant as it may indicate a Password Spraying attack, where an adversary attempts to gain initial access or elevate privileges by trying common passwords across many accounts. If confirmed malicious, this activity could lead to unauthorized access, data breaches, or privilege escalation within the Azure AD environment.",
+  "source": {
+    "type": "splunk",
+    "id": "94481a6a-8f59-4c86-957f-55a71e3612a6",
+    "url": "https://github.com/splunk/security_content/blob/develop/azure_ad_multiple_users_failing_to_authenticate_from_ip.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/azure_ad_multiple_users_failing_to_authenticate_from_ip.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Mauricio Velazco, Gowthamaraj Rajendran, Splunk",
+  "references": [
+    "https://attack.mitre.org/techniques/T1110/003/",
+    "https://docs.microsoft.com/en-us/security/compass/incident-response-playbook-password-spray",
+    "https://www.cisa.gov/uscert/ncas/alerts/aa21-008a",
+    "https://docs.microsoft.com/azure/active-directory/reports-monitoring/reference-sign-ins-error-codes"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`azure_monitor_aad` category=SignInLogs properties.status.errorCode=50126 properties.authenticationDetails{}.succeeded=false | rename properties.* as * | bucket span=5m _time | rename userAgent as user_agent | fillnull | stats count min(_time) as firstTime max(_time) as lastTime dc(user) as unique_user values(dest) as dest values(user) as user values(user_agent) as user_agent values(vendor_account) as vendor_account values(vendor_product) as vendor_product by src signature | where unique_user > 30 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `azure_ad_multiple_users_failing_to_authenticate_from_ip_filter`",
+    "condition": "You must install the latest version of Splunk Add-on for Microsoft Cloud Services from Splunkbase (https://splunkbase.splunk.com/app/3110/#/details). You must be ingesting Azure Active Directory events into your Splunk environment through an EventHub. This analytic was written to be used with the azure:monitor:aad sourcetype leveraging the Signin log category.",
+    "fields": []
+  },
+  "falsepositives": [
+    "A source Ip failing to authenticate with multiple users is not a common for legitimate behavior."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

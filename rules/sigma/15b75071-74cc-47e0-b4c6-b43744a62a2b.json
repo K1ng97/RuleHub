@@ -1,0 +1,46 @@
+{
+  "id": "15b75071-74cc-47e0-b4c6-b43744a62a2b",
+  "name": "Suspicious Process Start Locations",
+  "description": "Detects suspicious process run from unusual locations",
+  "source": {
+    "type": "sigma",
+    "id": "15b75071-74cc-47e0-b4c6-b43744a62a2b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_rundll32_run_locations.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_rundll32_run_locations.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1036",
+    "car2013-05-002"
+  ],
+  "author": "juju4, Jonhnathan Ribeiro, oscd.community",
+  "references": [
+    "https://car.mitre.org/wiki/CAR-2013-05-002"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-01-16",
+  "modified": "2022-01-07",
+  "mitre": {
+    "tactics": [
+      "TA1036"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: [{\"Image|contains\": [\":\\\\RECYCLER\\\\\", \":\\\\SystemVolumeInformation\\\\\"]}, {\"Image|startswith\": [\"C:\\\\Windows\\\\Tasks\\\\\", \"C:\\\\Windows\\\\debug\\\\\", \"C:\\\\Windows\\\\fonts\\\\\", \"C:\\\\Windows\\\\help\\\\\", \"C:\\\\Windows\\\\drivers\\\\\", \"C:\\\\Windows\\\\addins\\\\\", \"C:\\\\Windows\\\\cursors\\\\\", \"C:\\\\Windows\\\\system32\\\\tasks\\\\\"]}]",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "False positives depend on scripts and administrative tools used in the monitored environment"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "34746e8c-5fb8-415a-b135-0abc167e912a",
+  "name": "WinSxS Executable File Creation By Non-System Process",
+  "description": "Detects the creation of binaries in the WinSxS folder by non-system processes",
+  "source": {
+    "type": "sigma",
+    "id": "34746e8c-5fb8-415a-b135-0abc167e912a",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_susp_winsxs_binary_creation.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_susp_winsxs_binary_creation.yml"
+  },
+  "tags": [
+    "attackexecution"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://media.defense.gov/2023/May/09/2003218554/-1/-1/0/JOINT_CSA_HUNTING_RU_INTEL_SNAKE_MALWARE_20230509.PDF"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-05-11",
+  "modified": "2023-05-11",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"TargetFilename|startswith\": \"C:\\\\Windows\\\\WinSxS\\\\\", \"TargetFilename|endswith\": \".exe\"}\nfilter_main_system_location: {\"Image|startswith\": [\"C:\\\\Windows\\\\Systems32\\\\\", \"C:\\\\Windows\\\\SysWOW64\\\\\", \"C:\\\\Windows\\\\WinSxS\\\\\"]}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

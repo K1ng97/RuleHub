@@ -1,0 +1,48 @@
+{
+  "id": "7530cd3d-7671-43e3-b209-976966f6ea48",
+  "name": "Renamed CURL.EXE Execution",
+  "description": "Detects the execution of a renamed \"CURL.exe\" binary based on the PE metadata fields",
+  "source": {
+    "type": "sigma",
+    "id": "7530cd3d-7671-43e3-b209-976966f6ea48",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_renamed_curl.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_renamed_curl.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1059",
+    "attackt1202"
+  ],
+  "author": "X__Junior (Nextron Systems)",
+  "references": [
+    "https://twitter.com/Kostastsale/status/1700965142828290260"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-09-11",
+  "modified": "2023-10-12",
+  "mitre": {
+    "tactics": [
+      "TA1059",
+      "TA1202"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: [{\"OriginalFileName\": \"curl.exe\"}, {\"Description\": \"The curl executable\"}]\nfilter_main_img: {\"Image|contains\": \"\\\\curl\"}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

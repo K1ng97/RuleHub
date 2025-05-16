@@ -1,0 +1,46 @@
+{
+  "id": "9292293b-8496-4715-9db6-37028dcda4b3",
+  "name": "Replace.exe Usage",
+  "description": "Detects the use of Replace.exe which can be used to replace file with another file",
+  "source": {
+    "type": "sigma",
+    "id": "9292293b-8496-4715-9db6-37028dcda4b3",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_lolbin_replace.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_lolbin_replace.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1105"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/Binaries/Replace/",
+    "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/replace"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-03-06",
+  "modified": "2024-03-13",
+  "mitre": {
+    "tactics": [
+      "TA1105"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"\\\\replace.exe\"}\nargument: {\"CommandLine|contains|windash\": \"-a\"}",
+    "condition": "selection and argument",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

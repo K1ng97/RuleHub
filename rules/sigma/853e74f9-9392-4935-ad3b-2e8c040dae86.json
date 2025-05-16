@@ -1,0 +1,48 @@
+{
+  "id": "853e74f9-9392-4935-ad3b-2e8c040dae86",
+  "name": "UAC Bypass Using DismHost",
+  "description": "Detects the pattern of UAC Bypass using DismHost DLL hijacking (UACMe 63)",
+  "source": {
+    "type": "sigma",
+    "id": "853e74f9-9392-4935-ad3b-2e8c040dae86",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_uac_bypass_dismhost.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_uac_bypass_dismhost.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackprivilege-escalation",
+    "attackt1548002"
+  ],
+  "author": "Christian Burkard (Nextron Systems)",
+  "references": [
+    "https://github.com/hfiref0x/UACME"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-08-30",
+  "modified": "2024-12-01",
+  "mitre": {
+    "tactics": [
+      "TA1548"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ParentImage|contains|all\": [\"C:\\\\Users\\\\\", \"\\\\AppData\\\\Local\\\\Temp\\\\\", \"\\\\DismHost.exe\"], \"IntegrityLevel\": [\"High\", \"System\", \"S-1-16-16384\", \"S-1-16-12288\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

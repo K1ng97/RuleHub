@@ -1,0 +1,47 @@
+{
+  "id": "8c3a6607-b7dc-4f0d-a646-ef38c00b76ee",
+  "name": "Active Directory Group Enumeration With Get-AdGroup",
+  "description": "Detects usage of the \"Get-AdGroup\" cmdlet to enumerate Groups within Active Directory",
+  "source": {
+    "type": "sigma",
+    "id": "8c3a6607-b7dc-4f0d-a646-ef38c00b76ee",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_get_adgroup.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_get_adgroup.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1069002"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1018/T1018.md"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-03-17",
+  "modified": "2022-11-17",
+  "mitre": {
+    "tactics": [
+      "TA1069"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ScriptBlockText|contains|all\": [\"Get-AdGroup \", \"-Filter\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

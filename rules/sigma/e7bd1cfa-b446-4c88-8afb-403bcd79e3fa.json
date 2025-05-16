@@ -1,0 +1,45 @@
+{
+  "id": "e7bd1cfa-b446-4c88-8afb-403bcd79e3fa",
+  "name": "System Network Discovery - Linux",
+  "description": "Detects enumeration of local network configuration",
+  "source": {
+    "type": "sigma",
+    "id": "e7bd1cfa-b446-4c88-8afb-403bcd79e3fa",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_system_network_discovery.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_system_network_discovery.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1016"
+  ],
+  "author": "Ömer Günal and remotephone, oscd.community",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1016/T1016.md"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-06",
+  "modified": "2022-09-15",
+  "mitre": {
+    "tactics": [
+      "TA1016"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: {\"Image|endswith\": [\"/firewall-cmd\", \"/ufw\", \"/iptables\", \"/netstat\", \"/ss\", \"/ip\", \"/ifconfig\", \"/systemd-resolve\", \"/route\"]}\nselection_cli: {\"CommandLine|contains\": \"/etc/resolv.conf\"}",
+    "condition": "1 of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administration activities"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "a4d86702-402b-4a4f-8d06-9d61e6c39cad",
+  "name": "Windows Unusual NTLM Authentication Destinations By User",
+  "description": "The following analytic detects when an unusual number of NTLM authentications is attempted by the same user account against multiple destinations. This activity generally results when an attacker attempts to brute force, password spray, or otherwise authenticate to numerous domain joined Windows devices using an NTLM based process/attack. This same activity may also generate a large number of EventID 4776 events as well.",
+  "source": {
+    "type": "splunk",
+    "id": "a4d86702-402b-4a4f-8d06-9d61e6c39cad",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_unusual_ntlm_authentication_destinations_by_user.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_unusual_ntlm_authentication_destinations_by_user.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Steven Dick",
+  "references": [
+    "https://attack.mitre.org/techniques/T1110/003/",
+    "https://techcommunity.microsoft.com/t5/ask-the-directory-services-team/ntlm-blocking-and-you-application-analysis-and-auditing/ba-p/397191",
+    "https://techcommunity.microsoft.com/t5/microsoft-defender-for-identity/enriched-ntlm-authentication-data-using-windows-event-8004/m-p/871827",
+    "https://www.varonis.com/blog/investigate-ntlm-brute-force",
+    "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-nrpc/4d1235e3-2c96-4e9f-a147-3cb338a0d09f"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`ntlm_audit` EventCode = 8004 SChannelName=* WorkstationName=* | eval src = replace(WorkstationName,\"\\\\\\\\\",\"\")  ```CIM alignment, remove leading \\\\ from some auth attempts ``` | eval dest = SChannelName, user = UserName ``` CIM alignment``` | where SChannelName!=src ``` Remove NTLM auths to self, improves accuracy for certain applications ``` | `windows_unusual_ntlm_authentication_destinations_by_user_filter` | stats count min(_time) as firstTime max(_time) as lastTime dc(eval(upper(dest))) as unique_count by user | eventstats avg(unique_count) as unique_avg , stdev(unique_count) as unique_std | eval upperBound_unique=(1+unique_avg+unique_std*3) ``` adjust formula for sensitivity``` | eval isOutlier=CASE(unique_count > upperBound_unique, 1, true(), 0) | where isOutlier==1 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+    "condition": "The following analytic requires that NTLM Operational logs to be imported from the environment Domain Controllers. This requires configuration of specific auditing settings, see Microsoft references for further guidance. This analytic is specific to EventID 8004~8006.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Vulnerability scanners, print servers, and applications that deal with non-domain joined authentications. Recommend adjusting the upperBound_unique eval for tailoring the correlation to your environment, running with a 24hr search window will smooth out some statistical noise."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

@@ -1,0 +1,48 @@
+{
+  "id": "9c226817-8dc9-46c2-a58d-66655aafd7dc",
+  "name": "Modify User Shell Folders Startup Value",
+  "description": "Detect modification of the startup key to a path where a payload could be stored to be launched during startup",
+  "source": {
+    "type": "sigma",
+    "id": "9c226817-8dc9-46c2-a58d-66655aafd7dc",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_set_susp_user_shell_folders.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_set/registry_set_susp_user_shell_folders.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1547001"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/9e5b12c4912c07562aec7500447b11fa3e17e254/atomics/T1547.001/T1547.001.md"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-10-01",
+  "modified": "2023-08-17",
+  "mitre": {
+    "tactics": [
+      "TA1547"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"TargetObject|contains\": \"SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\User Shell Folders\", \"TargetObject|endswith\": \"Startup\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_set"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "id": "13f81a90-a69c-4fab-8f07-b5bb55416a9f",
+  "name": "Google Cloud Service Account Disabled or Deleted",
+  "description": "Identifies when a service account is disabled or deleted in Google Cloud.",
+  "source": {
+    "type": "sigma",
+    "id": "13f81a90-a69c-4fab-8f07-b5bb55416a9f",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/gcp_service_account_disabled_or_deleted.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/gcp/audit/gcp_service_account_disabled_or_deleted.yml"
+  },
+  "tags": [
+    "attackimpact",
+    "attackt1531"
+  ],
+  "author": "Austin Songer @austinsonger",
+  "references": [
+    "https://cloud.google.com/iam/docs/reference/rest/v1/projects.serviceAccounts"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-08-14",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [
+      "TA1531"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"gcp.audit.method_name|endswith\": [\".serviceAccounts.disable\", \".serviceAccounts.delete\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Service Account being disabled or deleted may be performed by a system administrator. Verify whether the user identity, user agent, and/or hostname should be making changes in your environment.",
+    "Service Account disabled or deleted from unfamiliar users should be investigated. If known behavior is causing false positives, it can be exempted from the rule."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "gcp",
+    "gcp.audit"
+  ]
+}

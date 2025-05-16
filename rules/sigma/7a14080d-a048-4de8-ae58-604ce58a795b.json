@@ -1,0 +1,45 @@
+{
+  "id": "7a14080d-a048-4de8-ae58-604ce58a795b",
+  "name": "Remote File Copy",
+  "description": "Detects the use of tools that copy files from or to remote systems",
+  "source": {
+    "type": "sigma",
+    "id": "7a14080d-a048-4de8-ae58-604ce58a795b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/lnx_file_copy.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/builtin/lnx_file_copy.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attacklateral-movement",
+    "attackt1105"
+  ],
+  "author": "Ömer Günal",
+  "references": [
+    "https://attack.mitre.org/techniques/T1105/"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "stable",
+  "created": "2020-06-18",
+  "modified": "2020-06-18",
+  "mitre": {
+    "tactics": [
+      "TA1105"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "tools: [\"scp \", \"rsync \", \"sftp \"]\nfilter: [\"@\", \":\"]",
+    "condition": "tools and filter",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administration activities"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux"
+  ]
+}

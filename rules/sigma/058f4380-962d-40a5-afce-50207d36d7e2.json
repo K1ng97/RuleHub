@@ -1,0 +1,54 @@
+{
+  "id": "058f4380-962d-40a5-afce-50207d36d7e2",
+  "name": "HackTool - CrackMapExec Execution Patterns",
+  "description": "Detects various execution patterns of the CrackMapExec pentesting framework",
+  "source": {
+    "type": "sigma",
+    "id": "058f4380-962d-40a5-afce-50207d36d7e2",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_hktl_crackmapexec_execution_patterns.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_hktl_crackmapexec_execution_patterns.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attacks0106",
+    "attackt1047",
+    "attackt1053",
+    "attackt1059001",
+    "attackt1059003"
+  ],
+  "author": "Thomas Patzke",
+  "references": [
+    "https://github.com/byt3bl33d3r/CrackMapExec"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "stable",
+  "created": "2020-05-22",
+  "modified": "2023-11-06",
+  "mitre": {
+    "tactics": [
+      "TA1047",
+      "TA1053",
+      "TA1059"
+    ],
+    "techniques": [
+      "T001",
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|contains\": [\"cmd.exe /Q /c * 1> \\\\\\\\\\\\\\\\*\\\\\\\\*\\\\\\\\* 2>&1\", \"cmd.exe /C * > \\\\\\\\\\\\\\\\*\\\\\\\\*\\\\\\\\* 2>&1\", \"cmd.exe /C * > *\\\\\\\\Temp\\\\\\\\* 2>&1\", \"powershell.exe -exec bypass -noni -nop -w 1 -C \\\"\", \"powershell.exe -noni -nop -w 1 -enc \"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

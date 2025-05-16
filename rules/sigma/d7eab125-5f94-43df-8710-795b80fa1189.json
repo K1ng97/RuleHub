@@ -1,0 +1,46 @@
+{
+  "id": "d7eab125-5f94-43df-8710-795b80fa1189",
+  "name": "Microsoft 365 - Impossible Travel Activity",
+  "description": "Detects when a Microsoft Cloud App Security reported a risky sign-in attempt due to a login associated with an impossible travel.",
+  "source": {
+    "type": "sigma",
+    "id": "d7eab125-5f94-43df-8710-795b80fa1189",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/microsoft365_impossible_travel_activity.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/m365/threat_management/microsoft365_impossible_travel_activity.yml"
+  },
+  "tags": [
+    "attackinitial-access",
+    "attackt1078"
+  ],
+  "author": "Austin Songer @austinsonger",
+  "references": [
+    "https://learn.microsoft.com/en-us/defender-cloud-apps/anomaly-detection-policy",
+    "https://learn.microsoft.com/en-us/defender-cloud-apps/policy-template-reference"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-07-06",
+  "modified": "2021-11-27",
+  "mitre": {
+    "tactics": [
+      "TA1078"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"eventSource\": \"SecurityComplianceCenter\", \"eventName\": \"Impossible travel activity\", \"status\": \"success\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "m365",
+    "threat_management"
+  ]
+}

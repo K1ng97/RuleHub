@@ -1,0 +1,46 @@
+{
+  "id": "7c0fa490-12b0-4d0b-b9f5-e101d1e0e06f",
+  "name": "O365 Cross-Tenant Access Change",
+  "description": "The following analytic identifies when cross-tenant access/synchronization policies are changed in an Azure tenant. Adversaries have been observed altering victim cross-tenant policies as a method of lateral movement or maintaining persistent access to compromised environments. These policies should be considered sensitive and monitored for changes and/or loose configuration.",
+  "source": {
+    "type": "splunk",
+    "id": "7c0fa490-12b0-4d0b-b9f5-e101d1e0e06f",
+    "url": "https://github.com/splunk/security_content/blob/develop/o365_cross_tenant_access_change.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/o365_cross_tenant_access_change.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Steven Dick",
+  "references": [
+    "https://attack.mitre.org/techniques/T1484/002/",
+    "https://thehackernews.com/2023/08/emerging-attacker-exploit-microsoft.html",
+    "https://cyberaffairs.com/news/emerging-attacker-exploit-microsoft-cross-tenant-synchronization/",
+    "https://www.crowdstrike.com/blog/crowdstrike-defends-against-azure-cross-tenant-synchronization-attacks/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`o365_management_activity` Workload=AzureActiveDirectory Operation IN (\"Add a partner to cross-tenant access setting.\",\"Delete partner specific cross-tenant access setting.\") | eval user = case(match(mvindex('Actor{}.ID',-1),\"User\"),mvindex('Actor{}.ID',0),match(mvindex('Actor{}.ID',-1),\"ServicePrincipal\"),mvindex('Actor{}.ID',3),true(),mvindex('Actor{}.ID',0)) | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by dest user src vendor_account vendor_product signature signature_id | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `o365_cross_tenant_access_change_filter`",
+    "condition": "You must install the Splunk Microsoft Office 365 Add-on and ingest Office 365 management activity events.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Business approved changes by known administrators."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

@@ -1,0 +1,47 @@
+{
+  "id": "aa1697b7-d611-4f9a-9cb2-5125b4ccfd5c",
+  "name": "Password Dumper Activity on LSASS",
+  "description": "Detects process handle on LSASS process with certain access mask and object type SAM_DOMAIN",
+  "source": {
+    "type": "sigma",
+    "id": "aa1697b7-d611-4f9a-9cb2-5125b4ccfd5c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_susp_lsass_dump.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_susp_lsass_dump.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1003001"
+  ],
+  "author": "sigma",
+  "references": [
+    "https://twitter.com/jackcr/status/807385668833968128"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2017-02-12",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [
+      "TA1003"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 4656, \"ProcessName|endswith\": \"\\\\lsass.exe\", \"AccessMask\": \"0x705\", \"ObjectType\": \"SAM_DOMAIN\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

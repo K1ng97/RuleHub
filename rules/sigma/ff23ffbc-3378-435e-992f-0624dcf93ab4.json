@@ -1,0 +1,45 @@
+{
+  "id": "ff23ffbc-3378-435e-992f-0624dcf93ab4",
+  "name": "HackTool - PurpleSharp Execution",
+  "description": "Detects the execution of the PurpleSharp adversary simulation tool",
+  "source": {
+    "type": "sigma",
+    "id": "ff23ffbc-3378-435e-992f-0624dcf93ab4",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_hktl_purplesharp_indicators.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_hktl_purplesharp_indicators.yml"
+  },
+  "tags": [
+    "attackresource-development",
+    "attackt1587"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://github.com/mvelazc0/PurpleSharp"
+  ],
+  "severity": "critical",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-06-18",
+  "modified": "2023-02-05",
+  "mitre": {
+    "tactics": [
+      "TA1587"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|contains\": \"\\\\purplesharp\"}, {\"OriginalFileName\": \"PurpleSharp.exe\"}]\nselection_cli: {\"CommandLine|contains\": [\"xyz123456.exe\", \"PurpleSharp\"]}",
+    "condition": "1 of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "critical",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

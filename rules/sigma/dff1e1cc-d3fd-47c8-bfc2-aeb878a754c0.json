@@ -1,0 +1,45 @@
+{
+  "id": "dff1e1cc-d3fd-47c8-bfc2-aeb878a754c0",
+  "name": "Shell Process Spawned by Java.EXE",
+  "description": "Detects shell spawned from Java host process, which could be a sign of exploitation (e.g. log4j exploitation)",
+  "source": {
+    "type": "sigma",
+    "id": "dff1e1cc-d3fd-47c8-bfc2-aeb878a754c0",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_java_susp_child_process_2.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_java_susp_child_process_2.yml"
+  },
+  "tags": [
+    "attackinitial-access",
+    "attackpersistence",
+    "attackprivilege-escalation"
+  ],
+  "author": "Andreas Hunkeler (@Karneades), Nasreddine Bencherchali",
+  "references": [
+    "https://web.archive.org/web/20231230220738/https://www.lunasec.io/docs/blog/log4j-zero-day/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-12-17",
+  "modified": "2024-01-18",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"ParentImage|endswith\": \"\\\\java.exe\", \"Image|endswith\": [\"\\\\bash.exe\", \"\\\\cmd.exe\", \"\\\\powershell.exe\", \"\\\\pwsh.exe\"]}\nfilter_main_build: {\"ParentImage|contains\": \"build\", \"CommandLine|contains\": \"build\"}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate calls to system binaries",
+    "Company specific internal usage"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "id": "6419afd1-3742-47a5-a7e6-b50386cd15f8",
+  "name": "Chmod Suspicious Directory",
+  "description": "Detects chmod targeting files in abnormal directory paths.",
+  "source": {
+    "type": "sigma",
+    "id": "6419afd1-3742-47a5-a7e6-b50386cd15f8",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_susp_chmod_directories.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_susp_chmod_directories.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1222002"
+  ],
+  "author": "Christopher Peacock @SecurePeacock, SCYTHE @scythe_io",
+  "references": [
+    "https://www.intezer.com/blog/malware-analysis/new-backdoor-sysjoker/",
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1222.002/T1222.002.md"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-06-03",
+  "modified": "2022-06-03",
+  "mitre": {
+    "tactics": [
+      "TA1222"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"/chmod\", \"CommandLine|contains\": [\"/tmp/\", \"/.Library/\", \"/etc/\", \"/opt/\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Admin changing file permissions."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

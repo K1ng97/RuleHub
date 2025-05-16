@@ -1,0 +1,44 @@
+{
+  "id": "cd80a6ac-c9d9-11eb-8839-acde48001122",
+  "name": "Clear Unallocated Sector Using Cipher App",
+  "description": "The following analytic detects the execution of `cipher.exe` with the `/w` flag to clear unallocated sectors on a disk. It leverages data from Endpoint Detection and Response (EDR) agents, focusing on process names, command-line arguments, and parent processes. This activity is significant because it is a technique used by ransomware to prevent forensic recovery of deleted files. If confirmed malicious, this action could hinder incident response efforts by making it impossible to recover critical data, thereby complicating the investigation and remediation process.",
+  "source": {
+    "type": "splunk",
+    "id": "cd80a6ac-c9d9-11eb-8839-acde48001122",
+    "url": "https://github.com/splunk/security_content/blob/develop/clear_unallocated_sector_using_cipher_app.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/clear_unallocated_sector_using_cipher_app.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://unit42.paloaltonetworks.com/vatet-pyxie-defray777/3/",
+    "https://www.sophos.com/en-us/medialibrary/PDFs/technical-papers/sophoslabs-ransomware-behavior-report.pdf"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name = \"cipher.exe\" Processes.process = \"*/w:*\" by Processes.action Processes.dest Processes.original_file_name Processes.parent_process Processes.parent_process_exec Processes.parent_process_guid Processes.parent_process_id Processes.parent_process_name Processes.parent_process_path Processes.process Processes.process_exec Processes.process_guid Processes.process_hash Processes.process_id Processes.process_integrity_level Processes.process_name Processes.process_path Processes.user Processes.user_id Processes.vendor_product | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `clear_unallocated_sector_using_cipher_app_filter`",
+    "condition": "The detection is based on data that originates from Endpoint Detection and Response (EDR) agents. These agents are designed to provide security-related telemetry from the endpoints where the agent is installed. To implement this search, you must ingest logs that contain the process GUID, process name, and parent process. Additionally, you must ingest complete command-line executions. These logs must be processed using the appropriate Splunk Technology Add-ons that are specific to the EDR product. The logs must also be mapped to the `Processes` node of the `Endpoint` data model. Use the Splunk Common Information Model (CIM) to normalize the field names and speed up the data modeling process.",
+    "fields": []
+  },
+  "falsepositives": [
+    "administrator may execute this app to manage disk"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

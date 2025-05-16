@@ -1,0 +1,49 @@
+{
+  "id": "adf9f4d2-559e-4f5c-95be-c28dff0b1476",
+  "name": "New Country",
+  "description": "Detects sign-ins from new countries. The detection considers past activity locations to determine new and infrequent locations.",
+  "source": {
+    "type": "sigma",
+    "id": "adf9f4d2-559e-4f5c-95be-c28dff0b1476",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_identity_protection_new_coutry_region.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/identity_protection/azure_identity_protection_new_coutry_region.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackinitial-access",
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1078"
+  ],
+  "author": "Mark Morowczynski '@markmorow', Gloria Lee, '@gleeiamglo'",
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks#new-country",
+    "https://learn.microsoft.com/en-us/entra/architecture/security-operations-user-accounts#unusual-sign-ins"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-09-03",
+  "modified": "2023-09-03",
+  "mitre": {
+    "tactics": [
+      "TA1078"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"riskEventType\": \"newCountry\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "We recommend investigating the sessions flagged by this detection in the context of other sign-ins from the user."
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "riskdetection"
+  ]
+}

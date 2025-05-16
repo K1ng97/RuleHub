@@ -1,0 +1,47 @@
+{
+  "id": "cd3a808c-c7b7-4c50-a2f3-f4cfcd436435",
+  "name": "Google Cloud Kubernetes CronJob",
+  "description": "Identifies when a Google Cloud Kubernetes CronJob runs in Azure Cloud. Kubernetes Job is a controller that creates one or more pods and ensures that a specified number of them successfully terminate.\nKubernetes Job can be used to run containers that perform finite tasks for batch jobs. Kubernetes CronJob is used to schedule Jobs.\nAn Adversary may use Kubernetes CronJob for scheduling execution of malicious code that would run as a container in the cluster.\n",
+  "source": {
+    "type": "sigma",
+    "id": "cd3a808c-c7b7-4c50-a2f3-f4cfcd436435",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/gcp_kubernetes_cronjob.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/gcp/audit/gcp_kubernetes_cronjob.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackpersistence",
+    "attackprivilege-escalation"
+  ],
+  "author": "Austin Songer @austinsonger",
+  "references": [
+    "https://cloud.google.com/kubernetes-engine/docs",
+    "https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/",
+    "https://kubernetes.io/docs/concepts/workloads/controllers/job/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-11-22",
+  "modified": "2022-12-25",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"gcp.audit.method_name\": [\"io.k8s.api.batch.v*.Job\", \"io.k8s.api.batch.v*.CronJob\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Google Cloud Kubernetes CronJob/Job may be done by a system administrator.",
+    "If known behavior is causing false positives, it can be exempted from the rule."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "gcp",
+    "gcp.audit"
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "rule_metadata": {
+    "id": "custom-9a7c42f1-b8e6-4d2d-8c18-932a45cb7e8f",
+    "title": "PowerShell Encoded Command Detection",
+    "created_by": "RuleHub Test Team",
+    "created_date": "2025-05-16",
+    "last_modified": "2025-05-16",
+    "version": "1.0.0",
+    "classification": "TLP:GREEN",
+    "rule_type": "detection"
+  },
+  "description": {
+    "summary": "Detects PowerShell execution with encoded commands",
+    "details": "PowerShell's ability to execute encoded commands is often abused by attackers to obfuscate malicious code. This rule detects when PowerShell is executed with the -enc or -encodedcommand parameters.",
+    "rationale": "Base64 encoded PowerShell commands are commonly used to obfuscate malicious activities."
+  },
+  "mitre_mapping": {
+    "tactics": [
+      {
+        "id": "TA0002",
+        "name": "Execution"
+      }
+    ],
+    "techniques": [
+      {
+        "id": "T1059.001",
+        "name": "Command and Scripting Interpreter: PowerShell"
+      }
+    ]
+  },
+  "detection": {
+    "platform": "windows",
+    "data_sources": ["process_monitoring", "command_line_logging"],
+    "query_logic": {
+      "process_name": ["powershell.exe", "pwsh.exe"],
+      "command_line_contains": ["-enc", "-encodedcommand"]
+    },
+    "condition": "process_name AND command_line_contains"
+  },
+  "response_guidance": {
+    "severity": "medium",
+    "priority": 2,
+    "investigation_steps": [
+      "Examine the encoded command by decoding the Base64 content",
+      "Review process ancestry to determine execution chain",
+      "Check user account privileges and normal behavior patterns"
+    ],
+    "false_positives": [
+      "Administrative scripts may use encoded commands for legitimate purposes",
+      "DevOps automation tools"
+    ],
+    "remediation": [
+      "Restrict PowerShell execution using AppLocker or similar controls",
+      "Implement PowerShell logging and Script Block Logging"
+    ]
+  },
+  "references": [
+    "https://attack.mitre.org/techniques/T1059/001/",
+    "https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_pwsh"
+  ],
+  "tags": ["windows", "powershell", "defense_evasion", "execution", "enterprise"]
+}

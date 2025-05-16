@@ -1,0 +1,50 @@
+{
+  "id": "9212f354-7775-4e28-9c9f-8f0a4544e664",
+  "name": "Active Directory Database Snapshot Via ADExplorer",
+  "description": "Detects the execution of Sysinternals ADExplorer with the \"-snapshot\" flag in order to save a local copy of the active directory database.",
+  "source": {
+    "type": "sigma",
+    "id": "9212f354-7775-4e28-9c9f-8f0a4544e664",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_sysinternals_adexplorer_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_sysinternals_adexplorer_execution.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1003003",
+    "attackt1552001"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://www.documentcloud.org/documents/5743766-Global-Threat-Report-2019.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-03-14",
+  "modified": "2023-03-14",
+  "mitre": {
+    "tactics": [
+      "TA1003",
+      "TA1552"
+    ],
+    "techniques": [
+      "T001",
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\ADExplorer.exe\"}, {\"OriginalFileName\": \"AdExp\"}]\nselection_cli: {\"CommandLine|contains\": \"snapshot\"}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

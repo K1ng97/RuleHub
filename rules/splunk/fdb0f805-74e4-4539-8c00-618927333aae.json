@@ -1,0 +1,40 @@
+{
+  "id": "fdb0f805-74e4-4539-8c00-618927333aae",
+  "name": "Spike in File Writes",
+  "description": "The following analytic detects a sharp increase in the number of files written to a specific host. It leverages the Endpoint.Filesystem data model, focusing on 'created' actions and comparing current file write counts against historical averages and standard deviations. This activity is significant as a sudden spike in file writes can indicate malicious activities such as ransomware encryption or data exfiltration. If confirmed malicious, this behavior could lead to significant data loss, system compromise, or further propagation of malware within the network.",
+  "source": {
+    "type": "splunk",
+    "id": "fdb0f805-74e4-4539-8c00-618927333aae",
+    "url": "https://github.com/splunk/security_content/blob/develop/spike_in_file_writes.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/spike_in_file_writes.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "product",
+    "security_domain"
+  ],
+  "author": "David Dorsey, Splunk",
+  "references": [],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "experimental",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats `security_content_summariesonly` count FROM datamodel=Endpoint.Filesystem where Filesystem.action=created by _time span=1h, Filesystem.dest | `drop_dm_object_name(Filesystem)` | eventstats max(_time) as maxtime | stats count as num_data_samples max(eval(if(_time >= relative_time(maxtime, \"-1d@d\"), count, null))) as \"count\" avg(eval(if(_time<relative_time(maxtime, \"-1d@d\"), count,null))) as avg stdev(eval(if(_time<relative_time(maxtime, \"-1d@d\"), count, null))) as stdev by \"dest\" | eval upperBound=(avg+stdev*4), isOutlier=if((count > upperBound) AND num_data_samples >=20, 1, 0) | search isOutlier=1 | `spike_in_file_writes_filter`",
+    "condition": "In order to implement this search, you must populate the Endpoint file-system data model node. This is typically populated via endpoint detection and response product, such as Carbon Black or endpoint data sources such as Sysmon. The data used for this search is typically generated via logs that report reads and writes to the file system.",
+    "fields": []
+  },
+  "falsepositives": [
+    "It is important to understand that if you happen to install any new applications on your hosts or are copying a large number of files, you can expect to see a large increase of file modifications."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

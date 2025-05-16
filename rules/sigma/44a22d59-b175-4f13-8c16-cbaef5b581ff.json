@@ -1,0 +1,42 @@
+{
+  "id": "44a22d59-b175-4f13-8c16-cbaef5b581ff",
+  "name": "New File Association Using Exefile",
+  "description": "Detects the abuse of the exefile handler in new file association. Used for bypass of security products.",
+  "source": {
+    "type": "sigma",
+    "id": "44a22d59-b175-4f13-8c16-cbaef5b581ff",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_set_file_association_exefile.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_set/registry_set_file_association_exefile.yml"
+  },
+  "tags": [
+    "attackdefense-evasion"
+  ],
+  "author": "Andreas Hunkeler (@Karneades)",
+  "references": [
+    "https://twitter.com/mrd0x/status/1461041276514623491"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-11-19",
+  "modified": "2023-08-17",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"TargetObject|contains\": \"Classes\\\\.\", \"Details\": \"exefile\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_set"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "id": "2b669496-d215-47d8-bd9a-f4a45bf07cda",
+  "name": "Data Exfiltration to Unsanctioned Apps",
+  "description": "Detects when a Microsoft Cloud App Security reported when a user or IP address uses an app that is not sanctioned to perform an activity that resembles an attempt to exfiltrate information from your organization.",
+  "source": {
+    "type": "sigma",
+    "id": "2b669496-d215-47d8-bd9a-f4a45bf07cda",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/microsoft365_data_exfiltration_to_unsanctioned_app.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/m365/threat_management/microsoft365_data_exfiltration_to_unsanctioned_app.yml"
+  },
+  "tags": [
+    "attackexfiltration",
+    "attackt1537"
+  ],
+  "author": "Austin Songer @austinsonger",
+  "references": [
+    "https://learn.microsoft.com/en-us/defender-cloud-apps/anomaly-detection-policy",
+    "https://learn.microsoft.com/en-us/defender-cloud-apps/policy-template-reference"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-08-23",
+  "modified": "2022-10-09",
+  "mitre": {
+    "tactics": [
+      "TA1537"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"eventSource\": \"SecurityComplianceCenter\", \"eventName\": \"Data exfiltration to unsanctioned apps\", \"status\": \"success\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "m365",
+    "threat_management"
+  ]
+}

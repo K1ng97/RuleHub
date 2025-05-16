@@ -1,0 +1,47 @@
+{
+  "id": "a4694263-59a8-4608-a3a0-6f8d3a51664c",
+  "name": "Suspicious Key Manager Access",
+  "description": "Detects the invocation of the Stored User Names and Passwords dialogue (Key Manager)",
+  "source": {
+    "type": "sigma",
+    "id": "a4694263-59a8-4608-a3a0-6f8d3a51664c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_rundll32_keymgr.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_rundll32_keymgr.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1555004"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://twitter.com/NinjaParanoid/status/1516442028963659777"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-04-21",
+  "modified": "2023-02-09",
+  "mitre": {
+    "tactics": [
+      "TA1555"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\rundll32.exe\"}, {\"OriginalFileName\": \"RUNDLL32.EXE\"}]\nselection_cli: {\"CommandLine|contains|all\": [\"keymgr\", \"KRShowKeyMgr\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrative activity"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

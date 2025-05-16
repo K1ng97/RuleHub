@@ -1,0 +1,46 @@
+{
+  "id": "b3ad3c0f-c949-47a1-a30e-b0491ccae876",
+  "name": "Uncommon Connection to Active Directory Web Services",
+  "description": "Detects uncommon network connections to the Active Directory Web Services (ADWS) from processes not typically associated with ADWS management.\n",
+  "source": {
+    "type": "sigma",
+    "id": "b3ad3c0f-c949-47a1-a30e-b0491ccae876",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/net_connection_win_adws_unusual_connection.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/network_connection/net_connection_win_adws_unusual_connection.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1087"
+  ],
+  "author": "@kostastsale",
+  "references": [
+    "https://medium.com/falconforce/soaphound-tool-to-collect-active-directory-data-via-adws-165aca78288c",
+    "https://github.com/FalconForceTeam/FalconFriday/blob/master/Discovery/ADWS_Connection_from_Unexpected_Binary-Win.md"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2024-01-26",
+  "modified": "2024-01-26",
+  "mitre": {
+    "tactics": [
+      "TA1087"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Initiated\": true, \"DestinationPort\": 9389}\nfilter_main_dsac: {\"Image\": \"C:\\\\Windows\\\\system32\\\\dsac.exe\"}\nfilter_main_ms_monitoring_agent: {\"Image\": \"C:\\\\Program Files\\\\Microsoft Monitoring Agent\\\\\"}\nfilter_main_powershell: {\"Image|startswith\": [\"C:\\\\Program Files\\\\PowerShell\\\\7\\\\pwsh.exe\", \"C:\\\\Program Files\\\\PowerShell\\\\7-preview\\\\pwsh.ex\", \"C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\\", \"C:\\\\Windows\\\\SysWOW64\\\\WindowsPowerShell\\\\\"]}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "ADWS is used by a number of legitimate applications that need to interact with Active Directory. These applications should be added to the allow-listing to avoid false positives."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "network_connection"
+  ]
+}

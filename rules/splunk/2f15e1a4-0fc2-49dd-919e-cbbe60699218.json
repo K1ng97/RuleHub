@@ -1,0 +1,43 @@
+{
+  "id": "2f15e1a4-0fc2-49dd-919e-cbbe60699218",
+  "name": "Windows Scheduled Task with Highest Privileges",
+  "description": "The following analytic detects the creation of a new scheduled task with the highest execution privileges via Schtasks.exe. It leverages Endpoint Detection and Response (EDR) logs to monitor for specific command-line parameters ('/rl' and 'highest') in schtasks.exe executions. This activity is significant as it is commonly used in AsyncRAT attacks for persistence and privilege escalation. If confirmed malicious, this could allow an attacker to maintain persistent access and execute tasks with elevated privileges, potentially leading to unauthorized system access and data breaches.",
+  "source": {
+    "type": "splunk",
+    "id": "2f15e1a4-0fc2-49dd-919e-cbbe60699218",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_scheduled_task_with_highest_privileges.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_scheduled_task_with_highest_privileges.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://malpedia.caad.fkie.fraunhofer.de/details/win.asyncrat"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-06",
+  "modified": "2025-05-06",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime  from datamodel=Endpoint.Processes where Processes.process_name = \"schtasks.exe\" Processes.process = \"*/rl *\" Processes.process = \"* highest *\" by Processes.action Processes.dest Processes.original_file_name Processes.parent_process Processes.parent_process_exec Processes.parent_process_guid Processes.parent_process_id Processes.parent_process_name Processes.parent_process_path Processes.process Processes.process_exec Processes.process_guid Processes.process_hash Processes.process_id Processes.process_integrity_level Processes.process_name Processes.process_path Processes.user Processes.user_id Processes.vendor_product | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_scheduled_task_with_highest_privileges_filter`",
+    "condition": "The detection is based on data that originates from Endpoint Detection and Response (EDR) agents. These agents are designed to provide security-related telemetry from the endpoints where the agent is installed. To implement this search, you must ingest logs that contain the process GUID, process name, and parent process. Additionally, you must ingest complete command-line executions. These logs must be processed using the appropriate Splunk Technology Add-ons that are specific to the EDR product. The logs must also be mapped to the `Processes` node of the `Endpoint` data model. Use the Splunk Common Information Model (CIM) to normalize the field names and speed up the data modeling process.",
+    "fields": []
+  },
+  "falsepositives": [
+    "False positives may arise from legitimate applications that create tasks to run as SYSTEM. Therefore, it's recommended to adjust filters based on parent process or modify the query to include world writable paths for restriction."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

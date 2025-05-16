@@ -1,0 +1,48 @@
+{
+  "id": "29e1c216-6408-489d-8a06-ee9d151ef819",
+  "name": "Suspicious Mount-DiskImage",
+  "description": "Adversaries may abuse container files such as disk image (.iso, .vhd) file formats to deliver malicious payloads that may not be tagged with MOTW.",
+  "source": {
+    "type": "sigma",
+    "id": "29e1c216-6408-489d-8a06-ee9d151ef819",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_susp_mount_diskimage.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_susp_mount_diskimage.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1553005"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1553.005/T1553.005.md#atomic-test-1---mount-iso-image",
+    "https://learn.microsoft.com/en-us/powershell/module/storage/mount-diskimage?view=windowsserver2022-ps"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-02-01",
+  "modified": "2022-02-01",
+  "mitre": {
+    "tactics": [
+      "TA1553"
+    ],
+    "techniques": [
+      "T005"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ScriptBlockText|contains|all\": [\"Mount-DiskImage \", \"-ImagePath \"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate PowerShell scripts"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

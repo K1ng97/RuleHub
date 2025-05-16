@@ -1,0 +1,52 @@
+{
+  "id": "d95de845-b83c-4a9a-8a6a-4fc802ebf6c0",
+  "name": "Suspicious Group And Account Reconnaissance Activity Using Net.EXE",
+  "description": "Detects suspicious reconnaissance command line activity on Windows systems using Net.EXE\nCheck if the user that executed the commands is suspicious (e.g. service accounts, LOCAL_SYSTEM)\n",
+  "source": {
+    "type": "sigma",
+    "id": "d95de845-b83c-4a9a-8a6a-4fc802ebf6c0",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_net_groups_and_accounts_recon.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_net_groups_and_accounts_recon.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1087001",
+    "attackt1087002"
+  ],
+  "author": "Florian Roth (Nextron Systems), omkar72, @svch0st, Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://redcanary.com/blog/how-one-hospital-thwarted-a-ryuk-ransomware-outbreak/",
+    "https://thedfirreport.com/2020/10/18/ryuk-in-5-hours/",
+    "https://research.nccgroup.com/2022/08/19/back-in-black-unlocking-a-lockbit-3-0-ransomware-attack/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-01-16",
+  "modified": "2023-03-02",
+  "mitre": {
+    "tactics": [
+      "TA1087"
+    ],
+    "techniques": [
+      "T001",
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": [\"\\\\net.exe\", \"\\\\net1.exe\"]}, {\"OriginalFileName\": [\"net.exe\", \"net1.exe\"]}]\nselection_group_root: {\"CommandLine|contains\": [\" group \", \" localgroup \"]}\nselection_group_flags: {\"CommandLine|contains\": [\"domain admins\", \" administrator\", \" administrateur\", \"enterprise admins\", \"Exchange Trusted Subsystem\", \"Remote Desktop Users\", \"Utilisateurs du Bureau \\u00e0 distance\", \"Usuarios de escritorio remoto\", \" /do\"]}\nfilter_group_add: {\"CommandLine|contains\": \" /add\"}\nselection_accounts_root: {\"CommandLine|contains\": \" accounts \"}\nselection_accounts_flags: {\"CommandLine|contains\": \" /do\"}",
+    "condition": "selection_img and ((all of selection_group_* and not filter_group_add) or all of selection_accounts_*)",
+    "fields": []
+  },
+  "falsepositives": [
+    "Inventory tool runs",
+    "Administrative activity"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

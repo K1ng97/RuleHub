@@ -1,0 +1,46 @@
+{
+  "id": "162e69a7-7981-4344-84a9-0f1c9a217a52",
+  "name": "Powershell Directory Enumeration",
+  "description": "Detects technique used by MAZE ransomware to enumerate directories using Powershell",
+  "source": {
+    "type": "sigma",
+    "id": "162e69a7-7981-4344-84a9-0f1c9a217a52",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_susp_directory_enum.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_susp_directory_enum.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1083"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1083/T1083.md",
+    "https://www.mandiant.com/resources/tactics-techniques-procedures-associated-with-maze-ransomware-incidents"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-03-17",
+  "modified": "2022-03-17",
+  "mitre": {
+    "tactics": [
+      "TA1083"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"ScriptBlockText|contains|all\": [\"foreach\", \"Get-ChildItem\", \"-Path \", \"-ErrorAction \", \"SilentlyContinue\", \"Out-File \", \"-append\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate PowerShell scripts"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

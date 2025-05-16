@@ -1,0 +1,48 @@
+{
+  "id": "93d94efc-d7ad-4161-ad7d-1638c4f908d8",
+  "name": "HackTool - Dumpert Process Dumper Default File",
+  "description": "Detects the creation of the default dump file used by Outflank Dumpert tool. A process dumper, which dumps the lsass process memory",
+  "source": {
+    "type": "sigma",
+    "id": "93d94efc-d7ad-4161-ad7d-1638c4f908d8",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_hktl_dumpert.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_hktl_dumpert.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1003001"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://github.com/outflanknl/Dumpert",
+    "https://unit42.paloaltonetworks.com/actors-still-exploiting-sharepoint-vulnerability/"
+  ],
+  "severity": "critical",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-02-04",
+  "modified": "2023-05-09",
+  "mitre": {
+    "tactics": [
+      "TA1003"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"TargetFilename|endswith\": \"dumpert.dmp\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Very unlikely"
+  ],
+  "level": "critical",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "id": "72cb9de9-e98b-4ac9-80b2-5331bba6ea97",
+  "name": "Circle CI Disable Security Step",
+  "description": "The following analytic detects the disablement of security steps in a CircleCI pipeline. It leverages CircleCI logs, using field renaming, joining, and statistical analysis to identify instances where mandatory security steps are not executed. This activity is significant because disabling security steps can introduce vulnerabilities, unauthorized changes, or malicious code into the pipeline. If confirmed malicious, this could lead to potential attacks, data breaches, or compromised infrastructure. Investigate by reviewing job names, commit details, and user information associated with the disablement, and examine any relevant artifacts and concurrent processes.",
+  "source": {
+    "type": "splunk",
+    "id": "72cb9de9-e98b-4ac9-80b2-5331bba6ea97",
+    "url": "https://github.com/splunk/security_content/blob/develop/circle_ci_disable_security_step.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/circle_ci_disable_security_step.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Patrick Bareiss, Splunk",
+  "references": [],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "experimental",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`circleci` | rename workflows.job_id AS job_id | join job_id [ | search `circleci` | stats values(name) as step_names count by job_id job_name ] | stats count by step_names job_id job_name vcs.committer_name vcs.subject vcs.url owners{} | rename vcs.* as * , owners{} as user | lookup mandatory_step_for_job job_name OUTPUTNEW step_name AS mandatory_step | search mandatory_step=* | eval mandatory_step_executed=if(like(step_names, \"%\".mandatory_step.\"%\"), 1, 0) | where mandatory_step_executed=0 | rex field=url \"(?<repository>[^\\/]*\\/[^\\/]*)$\" | eval phase=\"build\"  | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `circle_ci_disable_security_step_filter`",
+    "condition": "You must index CircleCI logs.",
+    "fields": []
+  },
+  "falsepositives": [
+    "unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

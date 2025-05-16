@@ -1,0 +1,48 @@
+{
+  "id": "91174a41-dc8f-401b-be89-7bfc140612a0",
+  "name": "Office Macro File Creation",
+  "description": "Detects the creation of a new office macro files on the systems",
+  "source": {
+    "type": "sigma",
+    "id": "91174a41-dc8f-401b-be89-7bfc140612a0",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_office_macro_files_created.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_office_macro_files_created.yml"
+  },
+  "tags": [
+    "attackinitial-access",
+    "attackt1566001"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1566.001/T1566.001.md",
+    "https://learn.microsoft.com/en-us/deployoffice/compat/office-file-format-reference"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-01-23",
+  "modified": "2022-01-23",
+  "mitre": {
+    "tactics": [
+      "TA1566"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"TargetFilename|endswith\": [\".docm\", \".dotm\", \".xlsm\", \".xltm\", \".potm\", \".pptm\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Very common in environments that rely heavily on macro documents"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

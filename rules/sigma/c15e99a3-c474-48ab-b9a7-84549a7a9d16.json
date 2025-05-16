@@ -1,0 +1,45 @@
+{
+  "id": "c15e99a3-c474-48ab-b9a7-84549a7a9d16",
+  "name": "Remote Thread Creation Ttdinject.exe Proxy",
+  "description": "Detects a remote thread creation of Ttdinject.exe used as proxy",
+  "source": {
+    "type": "sigma",
+    "id": "c15e99a3-c474-48ab-b9a7-84549a7a9d16",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/create_remote_thread_win_ttdinjec.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/create_remote_thread/create_remote_thread_win_ttdinjec.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1127"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/Binaries/Ttdinject/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-05-16",
+  "modified": "2022-06-02",
+  "mitre": {
+    "tactics": [
+      "TA1127"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"SourceImage|endswith\": \"\\\\ttdinject.exe\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "create_remote_thread"
+  ]
+}

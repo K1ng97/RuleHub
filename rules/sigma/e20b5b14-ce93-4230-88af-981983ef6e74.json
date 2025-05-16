@@ -1,0 +1,48 @@
+{
+  "id": "e20b5b14-ce93-4230-88af-981983ef6e74",
+  "name": "QuickAssist Execution",
+  "description": "Detects the execution of Microsoft Quick Assist tool \"QuickAssist.exe\". This utility can be used by attackers to gain remote access.\n",
+  "source": {
+    "type": "sigma",
+    "id": "e20b5b14-ce93-4230-88af-981983ef6e74",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_quickassist_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_quickassist_execution.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1219"
+  ],
+  "author": "Muhammad Faisal (@faisalusuf)",
+  "references": [
+    "https://www.microsoft.com/en-us/security/blog/2024/05/15/threat-actors-misusing-quick-assist-in-social-engineering-attacks-leading-to-ransomware/",
+    "https://www.linkedin.com/posts/kevin-beaumont-security_ive-been-assisting-a-few-orgs-hit-with-successful-activity-7268055739116445701-xxjZ/",
+    "https://x.com/cyb3rops/status/1862406110365245506",
+    "https://learn.microsoft.com/en-us/windows/client-management/client-tools/quick-assist"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "experimental",
+  "created": "2024-12-19",
+  "modified": "2024-12-19",
+  "mitre": {
+    "tactics": [
+      "TA1219"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"\\\\QuickAssist.exe\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use of Quick Assist in the environment."
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

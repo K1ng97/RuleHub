@@ -1,0 +1,44 @@
+{
+  "id": "8d12f268-c567-4557-9813-f8389e235c06",
+  "name": "ASL AWS IAM Failure Group Deletion",
+  "description": "The following analytic detects failed attempts to delete AWS IAM groups, triggered by access denial, conflicts, or non-existent groups. It operates by monitoring CloudTrail logs for specific error codes related to deletion failures. This behavior is significant for a SOC as it may indicate unauthorized attempts to modify access controls or disrupt operations by removing groups. Such actions could be part of a larger attack aiming to escalate privileges or impair security protocols. Identifying these attempts allows for timely investigation and mitigation, preventing potential impact on the organizations security posture.",
+  "source": {
+    "type": "splunk",
+    "id": "8d12f268-c567-4557-9813-f8389e235c06",
+    "url": "https://github.com/splunk/security_content/blob/develop/asl_aws_iam_failure_group_deletion.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/asl_aws_iam_failure_group_deletion.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Patrick Bareiss, Splunk",
+  "references": [
+    "https://awscli.amazonaws.com/v2/documentation/api/latest/reference/iam/delete-group.html",
+    "https://docs.aws.amazon.com/IAM/latest/APIReference/API_DeleteGroup.html"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`amazon_security_lake` api.operation=DeleteGroup status=Failure http_request.user_agent!=*.amazonaws.com | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by actor.user.uid api.operation api.service.name http_request.user_agent src_endpoint.ip actor.user.account.uid cloud.provider cloud.region | rename actor.user.uid as user api.operation as action api.service.name as dest http_request.user_agent as user_agent src_endpoint.ip as src actor.user.account.uid as vendor_account cloud.provider as vendor_product cloud.region as vendor_region | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `asl_aws_iam_failure_group_deletion_filter`",
+    "condition": "The detection is based on Amazon Security Lake events from Amazon Web Services (AWS), which is a centralized data lake that provides security-related data from AWS services. To use this detection, you must ingest CloudTrail logs from Amazon Security Lake into Splunk. To run this search, ensure that you ingest events using the latest version of Splunk Add-on for Amazon Web Services (https://splunkbase.splunk.com/app/1876) or the Federated Analytics App.",
+    "fields": []
+  },
+  "falsepositives": [
+    "This detection will require tuning to provide high fidelity detection capabilties. Tune based on src addresses (corporate offices, VPN terminations) or by groups of users. Not every user with AWS access should have permission to delete groups (least privilege)."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

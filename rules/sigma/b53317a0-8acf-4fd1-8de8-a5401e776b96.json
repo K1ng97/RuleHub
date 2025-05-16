@@ -1,0 +1,45 @@
+{
+  "id": "b53317a0-8acf-4fd1-8de8-a5401e776b96",
+  "name": "Application Removed Via Wmic.EXE",
+  "description": "Detects the removal or uninstallation of an application via \"Wmic.EXE\".",
+  "source": {
+    "type": "sigma",
+    "id": "b53317a0-8acf-4fd1-8de8-a5401e776b96",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_wmic_uninstall_application.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_wmic_uninstall_application.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1047"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1047/T1047.md#atomic-test-10---application-uninstall-using-wmic"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-01-28",
+  "modified": "2024-07-02",
+  "mitre": {
+    "tactics": [
+      "TA1047"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\WMIC.exe\"}, {\"OriginalFileName\": \"wmic.exe\"}]\nselection_cli: {\"CommandLine|contains|all\": [\"call\", \"uninstall\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

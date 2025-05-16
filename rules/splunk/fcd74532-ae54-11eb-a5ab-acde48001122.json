@@ -1,0 +1,44 @@
+{
+  "id": "fcd74532-ae54-11eb-a5ab-acde48001122",
+  "name": "Enumerate Users Local Group Using Telegram",
+  "description": "The following analytic detects a Telegram process enumerating all network users in a local group. It leverages EventCode 4798, which is generated when a process enumerates a user's security-enabled local groups on a computer or device. This activity is significant as it may indicate an attempt to gather information on user accounts, a common precursor to further malicious actions. If confirmed malicious, this behavior could allow an attacker to map out user accounts, potentially leading to privilege escalation or lateral movement within the network.",
+  "source": {
+    "type": "splunk",
+    "id": "fcd74532-ae54-11eb-a5ab-acde48001122",
+    "url": "https://github.com/splunk/security_content/blob/develop/enumerate_users_local_group_using_telegram.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/enumerate_users_local_group_using_telegram.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://thedfirreport.com/2020/04/20/sqlserver-or-the-miner-in-the-basement/",
+    "https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4798"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`wineventlog_security` EventCode=4798  CallerProcessName = \"*\\\\telegram.exe\" | stats count min(_time) as firstTime max(_time) as lastTime by user Computer EventCode CallerProcessName  ProcessID SubjectUserSid SubjectDomainName  SubjectLogonId | rename Computer as dest | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `enumerate_users_local_group_using_telegram_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting logs with the Task Schedule (Exa. Security Log EventCode 4798) endpoints. Tune and filter known instances of process like logonUI used in your environment.",
+    "fields": []
+  },
+  "falsepositives": [
+    "unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

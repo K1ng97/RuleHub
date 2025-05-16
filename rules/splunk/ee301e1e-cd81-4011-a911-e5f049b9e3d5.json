@@ -1,0 +1,43 @@
+{
+  "id": "ee301e1e-cd81-4011-a911-e5f049b9e3d5",
+  "name": "Windows Anonymous Pipe Activity",
+  "description": "The following analytic detects the creation or connection of anonymous pipes for inter-process communication (IPC) within a Windows environment. Anonymous pipes are commonly used by legitimate system processes, services, and applications to transfer data between related processes. However, adversaries frequently abuse anonymous pipes to facilitate stealthy process injection, command-and-control (C2) communication, credential theft, or privilege escalation. This detection monitors for unusual anonymous pipe activity, particularly involving non-system processes, unsigned executables, or unexpected parent-child process relationships. While legitimate use cases exist—such as Windows services, software installers, or security tools—unusual or high-frequency anonymous pipe activity should be investigated for potential malware, persistence mechanisms, or lateral movement techniques.",
+  "source": {
+    "type": "splunk",
+    "id": "ee301e1e-cd81-4011-a911-e5f049b9e3d5",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_anonymous_pipe_activity.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_anonymous_pipe_activity.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://www.trendmicro.com/en_nl/research/24/k/earth-estries.html"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`sysmon` EventCode IN (17,18) EventType IN ( \"CreatePipe\", \"ConnectPipe\") PipeName=\"*Anonymous Pipe*\" NOT( Image IN (\"*\\\\Program Files\\\\*\")) | stats  min(_time) as firstTime max(_time) as lastTime count by dest EventCode PipeName ProcessGuid ProcessId Image EventType | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_anonymous_pipe_activity_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting logs with the process name and pipename from your endpoints. If you are using Sysmon, you must have at least version 6.0.4 of the Sysmon TA. .",
+    "fields": []
+  },
+  "falsepositives": [
+    "Automation tool might use anonymous pipe for task orchestration or process communication."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

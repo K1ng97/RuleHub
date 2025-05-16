@@ -1,0 +1,58 @@
+{
+  "id": "646ea171-dded-4578-8a4d-65e9822892e3",
+  "name": "Process Memory Dump Via Comsvcs.DLL",
+  "description": "Detects a process memory dump via \"comsvcs.dll\" using rundll32, covering multiple different techniques (ordinal, minidump function, etc.)",
+  "source": {
+    "type": "sigma",
+    "id": "646ea171-dded-4578-8a4d-65e9822892e3",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_rundll32_process_dump_via_comsvcs.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_rundll32_process_dump_via_comsvcs.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackdefense-evasion",
+    "attackt1003001",
+    "attackt1036",
+    "car2013-05-009"
+  ],
+  "author": "Florian Roth (Nextron Systems), Modexp, Nasreddine Bencherchali (Nextron Systems), Swachchhanda Shrawan Poudel (Nextron Systems)",
+  "references": [
+    "https://twitter.com/shantanukhande/status/1229348874298388484",
+    "https://twitter.com/pythonresponder/status/1385064506049630211?s=21",
+    "https://twitter.com/Hexacorn/status/1224848930795552769",
+    "https://modexp.wordpress.com/2019/08/30/minidumpwritedump-via-com-services-dll/",
+    "https://twitter.com/SBousseaden/status/1167417096374050817",
+    "https://twitter.com/Wietze/status/1542107456507203586",
+    "https://github.com/Hackndo/lsassy/blob/14d8f8ae596ecf22b449bfe919829173b8a07635/lsassy/dumpmethod/comsvcs.py",
+    "https://www.youtube.com/watch?v=52tAmVLg1KM&t=2070s"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-02-18",
+  "modified": "2025-02-23",
+  "mitre": {
+    "tactics": [
+      "TA1003",
+      "TA1036"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\rundll32.exe\"}, {\"OriginalFileName\": \"RUNDLL32.EXE\"}, {\"CommandLine|contains\": \"rundll32\"}]\nselection_cli_1: {\"CommandLine|contains|all\": [\"comsvcs\", \"full\"], \"CommandLine|contains\": [\"#-\", \"#+\", \"#24\", \"24 \", \"MiniDump\", \"#65560\"]}\nselection_generic: {\"CommandLine|contains|all\": [\"24\", \"comsvcs\", \"full\"], \"CommandLine|contains\": [\" #\", \",#\", \", #\", \"\\\"#\"]}",
+    "condition": "(selection_img and 1 of selection_cli_*) or selection_generic",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "1327381e-6ab0-4f38-b583-4c1b8346a56b",
+  "name": "Potential Command Line Path Traversal Evasion Attempt",
+  "description": "Detects potential evasion or obfuscation attempts using bogus path traversal via the commandline",
+  "source": {
+    "type": "sigma",
+    "id": "1327381e-6ab0-4f38-b583-4c1b8346a56b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_susp_commandline_path_traversal_evasion.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_susp_commandline_path_traversal_evasion.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1036"
+  ],
+  "author": "Christian Burkard (Nextron Systems)",
+  "references": [
+    "https://twitter.com/hexacorn/status/1448037865435320323",
+    "https://twitter.com/Gal_B1t/status/1062971006078345217"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-10-26",
+  "modified": "2023-03-29",
+  "mitre": {
+    "tactics": [
+      "TA1036"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_1: {\"Image|contains\": \"\\\\Windows\\\\\", \"CommandLine|contains\": [\"\\\\..\\\\Windows\\\\\", \"\\\\..\\\\System32\\\\\", \"\\\\..\\\\..\\\\\"]}\nselection_2: {\"CommandLine|contains\": \".exe\\\\..\\\\\"}\nfilter_optional_google_drive: {\"CommandLine|contains\": \"\\\\Google\\\\Drive\\\\googledrivesync.exe\\\\..\\\\\"}\nfilter_optional_citrix: {\"CommandLine|contains\": \"\\\\Citrix\\\\Virtual Smart Card\\\\Citrix.Authentication.VirtualSmartcard.Launcher.exe\\\\..\\\\\"}",
+    "condition": "1 of selection_* and not 1 of filter_optional_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Google Drive",
+    "Citrix"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "9db37458-4df2-46a5-95ab-307e7f29e675",
+  "name": "Exchange Set OabVirtualDirectory ExternalUrl Property",
+  "description": "Rule to detect an adversary setting OabVirtualDirectory External URL property to a script in Exchange Management log",
+  "source": {
+    "type": "sigma",
+    "id": "9db37458-4df2-46a5-95ab-307e7f29e675",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_exchange_set_oabvirtualdirectory_externalurl.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/msexchange/win_exchange_set_oabvirtualdirectory_externalurl.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1505003"
+  ],
+  "author": "Jose Rodriguez @Cyb3rPandaH",
+  "references": [
+    "https://twitter.com/OTR_Community/status/1371053369071132675"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-03-15",
+  "modified": "2023-01-23",
+  "mitre": {
+    "tactics": [
+      "TA1505"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "keywords: {\"|all\": [\"Set-OabVirtualDirectory\", \"ExternalUrl\", \"Page_Load\", \"script\"]}",
+    "condition": "keywords",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "msexchange-management"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "cd764533-2e07-40d6-a718-cfeec7f2da7f",
+  "name": "Renamed SysInternals DebugView Execution",
+  "description": "Detects suspicious renamed SysInternals DebugView execution",
+  "source": {
+    "type": "sigma",
+    "id": "cd764533-2e07-40d6-a718-cfeec7f2da7f",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_renamed_sysinternals_debugview.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_renamed_sysinternals_debugview.yml"
+  },
+  "tags": [
+    "attackresource-development",
+    "attackt1588002"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://www.epicturla.com/blog/sysinturla"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-05-28",
+  "modified": "2023-02-14",
+  "mitre": {
+    "tactics": [
+      "TA1588"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Product\": \"Sysinternals DebugView\"}\nfilter: {\"OriginalFileName\": \"Dbgview.exe\", \"Image|endswith\": \"\\\\Dbgview.exe\"}",
+    "condition": "selection and not filter",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

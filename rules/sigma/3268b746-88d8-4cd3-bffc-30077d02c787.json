@@ -1,0 +1,53 @@
+{
+  "id": "3268b746-88d8-4cd3-bffc-30077d02c787",
+  "name": "HackTool - Empire PowerShell UAC Bypass",
+  "description": "Detects some Empire PowerShell UAC bypass methods",
+  "source": {
+    "type": "sigma",
+    "id": "3268b746-88d8-4cd3-bffc-30077d02c787",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_hktl_empire_powershell_uac_bypass.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_hktl_empire_powershell_uac_bypass.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackprivilege-escalation",
+    "attackt1548002",
+    "car2019-04-001"
+  ],
+  "author": "Ecco",
+  "references": [
+    "https://github.com/EmpireProject/Empire/blob/e37fb2eef8ff8f5a0a689f1589f424906fe13055/data/module_source/privesc/Invoke-EventVwrBypass.ps1#L64",
+    "https://github.com/EmpireProject/Empire/blob/e37fb2eef8ff8f5a0a689f1589f424906fe13055/data/module_source/privesc/Invoke-FodHelperBypass.ps1#L64"
+  ],
+  "severity": "critical",
+  "type": "sigma",
+  "status": "stable",
+  "created": "2019-08-30",
+  "modified": "2023-02-21",
+  "mitre": {
+    "tactics": [
+      "TA1548"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|contains\": [\" -NoP -NonI -w Hidden -c $x=$((gp HKCU:Software\\\\Microsoft\\\\Windows Update).Update)\", \" -NoP -NonI -c $x=$((gp HKCU:Software\\\\Microsoft\\\\Windows Update).Update);\"]}",
+    "condition": "selection",
+    "fields": [
+      "CommandLine",
+      "ParentCommandLine"
+    ]
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "critical",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

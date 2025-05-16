@@ -1,0 +1,43 @@
+{
+  "id": "b7a045fc-f14a-11eb-8e79-acde48001122",
+  "name": "Drop IcedID License dat",
+  "description": "The following analytic detects the dropping of a suspicious file named \"license.dat\" in %appdata% or %programdata%. This behavior is associated with the IcedID malware, which uses this file to inject its core bot into other processes for banking credential theft. The detection leverages Sysmon EventCode 11 to monitor file creation events in these directories. This activity is significant as it indicates a potential malware infection aiming to steal sensitive banking information. If confirmed malicious, the attacker could gain unauthorized access to financial data, leading to significant financial loss and data breaches.",
+  "source": {
+    "type": "splunk",
+    "id": "b7a045fc-f14a-11eb-8e79-acde48001122",
+    "url": "https://github.com/splunk/security_content/blob/develop/drop_icedid_license_dat.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/drop_icedid_license_dat.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://www.cisecurity.org/insights/white-papers/security-primer-icedid"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`sysmon` EventCode= 11  TargetFilename = \"*\\\\license.dat\" AND (TargetFilename=\"*\\\\appdata\\\\*\" OR TargetFilename=\"*\\\\programdata\\\\*\") |stats count min(_time) as firstTime max(_time) as lastTime by TargetFilename EventCode process_id  process_name dest | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `drop_icedid_license_dat_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting logs with the process name, parent process, and command-line executions from your endpoints. If you are using Sysmon, you must have at least version 6.0.4 of the Sysmon TA.",
+    "fields": []
+  },
+  "falsepositives": [
+    "unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

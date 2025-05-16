@@ -1,0 +1,48 @@
+{
+  "id": "fa4aaed5-4fe0-498d-bbc0-08e3346387ba",
+  "name": "Copy Passwd Or Shadow From TMP Path",
+  "description": "Detects when the file \"passwd\" or \"shadow\" is copied from tmp path",
+  "source": {
+    "type": "sigma",
+    "id": "fa4aaed5-4fe0-498d-bbc0-08e3346387ba",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_cp_passwd_or_shadow_tmp.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_cp_passwd_or_shadow_tmp.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1552001"
+  ],
+  "author": "Joseliyo Sanchez, @Joseliyo_Jstnk",
+  "references": [
+    "https://blogs.blackberry.com/",
+    "https://twitter.com/Joseliyo_Jstnk/status/1620131033474822144"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-01-31",
+  "modified": "2023-01-31",
+  "mitre": {
+    "tactics": [
+      "TA1552"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: {\"Image|endswith\": \"/cp\"}\nselection_path: {\"CommandLine|contains\": \"/tmp/\"}\nselection_file: {\"CommandLine|contains\": [\"passwd\", \"shadow\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

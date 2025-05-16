@@ -1,0 +1,47 @@
+{
+  "id": "72124974-a68b-4366-b990-d30e0b2a190d",
+  "name": "Metasploit SMB Authentication",
+  "description": "Alerts on Metasploit host's authentications on the domain.",
+  "source": {
+    "type": "sigma",
+    "id": "72124974-a68b-4366-b990-d30e0b2a190d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_metasploit_authentication.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_metasploit_authentication.yml"
+  },
+  "tags": [
+    "attacklateral-movement",
+    "attackt1021002"
+  ],
+  "author": "Chakib Gzenayi (@Chak092), Hosni Mribah",
+  "references": [
+    "https://github.com/rapid7/metasploit-framework/blob/1416b5776d963f21b7b5b45d19f3e961201e0aed/lib/rex/proto/smb/client.rb"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-05-06",
+  "modified": "2024-01-25",
+  "mitre": {
+    "tactics": [
+      "TA1021"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection1: {\"EventID\": [4625, 4624], \"LogonType\": 3, \"AuthenticationPackageName\": \"NTLM\", \"WorkstationName|re\": \"^[A-Za-z0-9]{16}$\"}\nselection2: {\"EventID\": 4776, \"Workstation|re\": \"^[A-Za-z0-9]{16}$\"}",
+    "condition": "1 of selection*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Linux hostnames composed of 16 characters."
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

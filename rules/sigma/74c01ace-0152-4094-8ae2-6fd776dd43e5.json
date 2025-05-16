@@ -1,0 +1,47 @@
+{
+  "id": "74c01ace-0152-4094-8ae2-6fd776dd43e5",
+  "name": "File or Folder Permissions Change",
+  "description": "Detects file and folder permission changes.",
+  "source": {
+    "type": "sigma",
+    "id": "74c01ace-0152-4094-8ae2-6fd776dd43e5",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/lnx_auditd_file_or_folder_permissions.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/auditd/lnx_auditd_file_or_folder_permissions.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1222002"
+  ],
+  "author": "Jakob Weinzettl, oscd.community",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1222.002/T1222.002.md"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-09-23",
+  "modified": "2021-11-27",
+  "mitre": {
+    "tactics": [
+      "TA1222"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"type\": \"EXECVE\", \"a0|contains\": [\"chmod\", \"chown\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "User interacting with files permissions (normal/daily behaviour)."
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "auditd"
+  ]
+}

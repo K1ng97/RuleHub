@@ -1,0 +1,46 @@
+{
+  "id": "2628b087-4189-403f-9044-87403f777a1b",
+  "name": "Azure AD New MFA Method Registered For User",
+  "description": "The following analytic detects the registration of a new Multi-Factor Authentication (MFA) method for an Azure AD account. It leverages Azure AD AuditLogs to identify when a user registers new security information. This activity is significant because adversaries who gain unauthorized access to an account may add their own MFA method to maintain persistence. If confirmed malicious, this could allow attackers to bypass existing security controls, maintain long-term access, and potentially escalate their privileges within the environment.",
+  "source": {
+    "type": "splunk",
+    "id": "2628b087-4189-403f-9044-87403f777a1b",
+    "url": "https://github.com/splunk/security_content/blob/develop/azure_ad_new_mfa_method_registered_for_user.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/azure_ad_new_mfa_method_registered_for_user.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Mauricio Velazco, Splunk",
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/active-directory/authentication/concept-mfa-howitworks",
+    "https://attack.mitre.org/techniques/T1556/",
+    "https://attack.mitre.org/techniques/T1556/006/",
+    "https://twitter.com/jhencinski/status/1618660062352007174"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`azure_monitor_aad` category=AuditLogs operationName=\"User registered security info\" properties.operationType=Add | rename properties.* as * | rename targetResources{}.* as * | rename userAgent as user_agent | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by action dest user src vendor_account vendor_product user_agent result resultDescription signature | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `azure_ad_new_mfa_method_registered_for_user_filter`",
+    "condition": "You must install the latest version of Splunk Add-on for Microsoft Cloud Services from Splunkbase (https://splunkbase.splunk.com/app/3110/#/details). You must be ingesting Azure Active Directory events into your Splunk environment through an EventHub. This analytic was written to be used with the azure:monitor:aad sourcetype leveraging the AuditLogs log category.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Newly onboarded users who are registering an MFA method for the first time will also trigger this detection."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

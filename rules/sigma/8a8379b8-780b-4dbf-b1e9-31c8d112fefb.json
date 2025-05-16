@@ -1,0 +1,47 @@
+{
+  "id": "8a8379b8-780b-4dbf-b1e9-31c8d112fefb",
+  "name": "Schtasks From Suspicious Folders",
+  "description": "Detects scheduled task creations that have suspicious action command and folder combinations",
+  "source": {
+    "type": "sigma",
+    "id": "8a8379b8-780b-4dbf-b1e9-31c8d112fefb",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_schtasks_folder_combos.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_schtasks_folder_combos.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1053005"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/lazarus-dream-job-chemical"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-04-15",
+  "modified": "2022-11-18",
+  "mitre": {
+    "tactics": [
+      "TA1053"
+    ],
+    "techniques": [
+      "T005"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\schtasks.exe\"}, {\"OriginalFileName\": \"schtasks.exe\"}]\nselection_create: {\"CommandLine|contains\": \" /create \"}\nselection_command: {\"CommandLine|contains\": [\"powershell\", \"pwsh\", \"cmd /c \", \"cmd /k \", \"cmd /r \", \"cmd.exe /c \", \"cmd.exe /k \", \"cmd.exe /r \"]}\nselection_all_folders: {\"CommandLine|contains\": [\"C:\\\\ProgramData\\\\\", \"%ProgramData%\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

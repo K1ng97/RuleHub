@@ -1,0 +1,50 @@
+{
+  "id": "322ed9ec-fcab-4f67-9a34-e7c6aef43614",
+  "name": "New Port Forwarding Rule Added Via Netsh.EXE",
+  "description": "Detects the execution of netsh commands that configure a new port forwarding (PortProxy) rule",
+  "source": {
+    "type": "sigma",
+    "id": "322ed9ec-fcab-4f67-9a34-e7c6aef43614",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_netsh_port_forwarding.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_netsh_port_forwarding.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackdefense-evasion",
+    "attacklateral-movement",
+    "attackt1090"
+  ],
+  "author": "Florian Roth (Nextron Systems), omkar72, oscd.community, Swachchhanda Shrawan Poudel",
+  "references": [
+    "https://www.fireeye.com/blog/threat-research/2019/01/bypassing-network-restrictions-through-rdp-tunneling.html",
+    "https://adepts.of0x.cc/netsh-portproxy-code/",
+    "https://www.dfirnotes.net/portproxy_detection/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-01-29",
+  "modified": "2023-09-01",
+  "mitre": {
+    "tactics": [
+      "TA1090"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\netsh.exe\"}, {\"OriginalFileName\": \"netsh.exe\"}]\nselection_cli_1: {\"CommandLine|contains|all\": [\"interface\", \"portproxy\", \"add\", \"v4tov4\"]}\nselection_cli_2: {\"CommandLine|contains|all\": [\"i \", \"p \", \"a \", \"v \"]}\nselection_cli_3: {\"CommandLine|contains|all\": [\"connectp\", \"listena\", \"c=\"]}",
+    "condition": "selection_img and 1 of selection_cli_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administration activity",
+    "WSL2 network bridge PowerShell script used for WSL/Kubernetes/Docker (e.g. https://github.com/microsoft/WSL/issues/4150#issuecomment-504209723)"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

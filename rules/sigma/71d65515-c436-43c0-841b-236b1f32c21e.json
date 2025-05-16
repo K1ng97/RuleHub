@@ -1,0 +1,53 @@
+{
+  "id": "71d65515-c436-43c0-841b-236b1f32c21e",
+  "name": "Cisco File Deletion",
+  "description": "See what files are being deleted from flash file systems",
+  "source": {
+    "type": "sigma",
+    "id": "71d65515-c436-43c0-841b-236b1f32c21e",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/cisco_cli_file_deletion.yml",
+    "file_path": "tmp/repos/sigma/rules/network/cisco/aaa/cisco_cli_file_deletion.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackimpact",
+    "attackt1070004",
+    "attackt1561001",
+    "attackt1561002"
+  ],
+  "author": "Austin Clark",
+  "references": [],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-08-12",
+  "modified": "2023-01-04",
+  "mitre": {
+    "tactics": [
+      "TA1070",
+      "TA1561"
+    ],
+    "techniques": [
+      "T001",
+      "T002",
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "keywords: [\"erase\", \"delete\", \"format\"]",
+    "condition": "keywords",
+    "fields": [
+      "CmdSet"
+    ]
+  },
+  "falsepositives": [
+    "Will be used sometimes by admins to clean up local flash space"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "cisco",
+    "aaa"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "id": "d5601f8c-b26f-4ab0-9035-69e11a8d4ad2",
+  "name": "CobaltStrike Named Pipe",
+  "description": "Detects the creation of a named pipe as used by CobaltStrike",
+  "source": {
+    "type": "sigma",
+    "id": "d5601f8c-b26f-4ab0-9035-69e11a8d4ad2",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/pipe_created_hktl_cobaltstrike.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/pipe_created/pipe_created_hktl_cobaltstrike.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackprivilege-escalation",
+    "attackt1055"
+  ],
+  "author": "Florian Roth (Nextron Systems), Wojciech Lesicki",
+  "references": [
+    "https://twitter.com/d4rksystem/status/1357010969264873472",
+    "https://labs.f-secure.com/blog/detecting-cobalt-strike-default-modules-via-named-pipe-analysis/",
+    "https://github.com/SigmaHQ/sigma/issues/253",
+    "https://blog.cobaltstrike.com/2021/02/09/learn-pipe-fitting-for-all-of-your-offense-projects/",
+    "https://redcanary.com/threat-detection-report/threats/cobalt-strike/"
+  ],
+  "severity": "critical",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-05-25",
+  "modified": "2022-10-31",
+  "mitre": {
+    "tactics": [
+      "TA1055"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_MSSE: {\"PipeName|contains|all\": [\"\\\\MSSE-\", \"-server\"]}\nselection_postex: {\"PipeName|startswith\": \"\\\\postex_\"}\nselection_status: {\"PipeName|startswith\": \"\\\\status_\"}\nselection_msagent: {\"PipeName|startswith\": \"\\\\msagent_\"}\nselection_mojo: {\"PipeName|startswith\": \"\\\\mojo_\"}\nselection_interprocess: {\"PipeName|startswith\": \"\\\\interprocess_\"}\nselection_samr: {\"PipeName|startswith\": \"\\\\samr_\"}\nselection_netlogon: {\"PipeName|startswith\": \"\\\\netlogon_\"}\nselection_srvsvc: {\"PipeName|startswith\": \"\\\\srvsvc_\"}\nselection_lsarpc: {\"PipeName|startswith\": \"\\\\lsarpc_\"}\nselection_wkssvc: {\"PipeName|startswith\": \"\\\\wkssvc_\"}",
+    "condition": "1 of selection*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "critical",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "pipe_created"
+  ]
+}

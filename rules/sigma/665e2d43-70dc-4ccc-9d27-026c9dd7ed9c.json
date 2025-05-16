@@ -1,0 +1,48 @@
+{
+  "id": "665e2d43-70dc-4ccc-9d27-026c9dd7ed9c",
+  "name": "User Removed From Group With CA Policy Modification Access",
+  "description": "Monitor and alert on group membership removal of groups that have CA policy modification access",
+  "source": {
+    "type": "sigma",
+    "id": "665e2d43-70dc-4ccc-9d27-026c9dd7ed9c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_group_user_removal_ca_modification.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/audit_logs/azure_group_user_removal_ca_modification.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackpersistence",
+    "attackt1548",
+    "attackt1556"
+  ],
+  "author": "Mark Morowczynski '@markmorow', Thomas Detzner '@tdetzner'",
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/architecture/security-operations-infrastructure#conditional-access"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-04",
+  "modified": "2022-08-04",
+  "mitre": {
+    "tactics": [
+      "TA1548",
+      "TA1556"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"properties.message\": \"Remove member from group\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "User removed from the group is approved"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "auditlogs"
+  ]
+}

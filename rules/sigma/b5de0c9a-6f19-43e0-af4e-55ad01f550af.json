@@ -1,0 +1,51 @@
+{
+  "id": "b5de0c9a-6f19-43e0-af4e-55ad01f550af",
+  "name": "Unsigned DLL Loaded by Windows Utility",
+  "description": "Detects windows utilities loading an unsigned or untrusted DLL.\nAdversaries often abuse those programs to proxy execution of malicious code.\n",
+  "source": {
+    "type": "sigma",
+    "id": "b5de0c9a-6f19-43e0-af4e-55ad01f550af",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/image_load_susp_unsigned_dll.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/image_load/image_load_susp_unsigned_dll.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218010",
+    "attackt1218011"
+  ],
+  "author": "Swachchhanda Shrawan Poudel",
+  "references": [
+    "https://www.elastic.co/security-labs/Hunting-for-Suspicious-Windows-Libraries-for-Execution-and-Evasion",
+    "https://akhere.hashnode.dev/hunting-unsigned-dlls-using-kql",
+    "https://unit42.paloaltonetworks.com/unsigned-dlls/?web_view=true"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2024-02-28",
+  "modified": "2024-03-07",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": [
+      "T010",
+      "T011"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": [\"\\\\InstallUtil.exe\", \"\\\\RegAsm.exe\", \"\\\\RegSvcs.exe\", \"\\\\regsvr32.exe\", \"\\\\rundll32.exe\"]}\nfilter_main_signed: {\"Signed\": \"true\"}\nfilter_main_sig_status: {\"SignatureStatus\": [\"errorChaining\", \"errorCode_endpoint\", \"errorExpired\", \"trusted\"]}\nfilter_main_signed_null: {\"Signed\": null}\nfilter_main_signed_empty: {\"Signed\": [\"\", \"-\"]}\nfilter_main_sig_status_null: {\"SignatureStatus\": null}\nfilter_main_sig_status_empty: {\"SignatureStatus\": [\"\", \"-\"]}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "image_load"
+  ]
+}

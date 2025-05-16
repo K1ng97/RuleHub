@@ -1,0 +1,45 @@
+{
+  "id": "a46c93b7-55ed-4d27-a41b-c259456c4746",
+  "name": "Linux Crypto Mining Pool Connections",
+  "description": "Detects process connections to a Monero crypto mining pool",
+  "source": {
+    "type": "sigma",
+    "id": "a46c93b7-55ed-4d27-a41b-c259456c4746",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/net_connection_lnx_crypto_mining_indicators.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/network_connection/net_connection_lnx_crypto_mining_indicators.yml"
+  },
+  "tags": [
+    "attackimpact",
+    "attackt1496"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://www.poolwatch.io/coin/monero"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "stable",
+  "created": "2021-10-26",
+  "modified": "2021-10-26",
+  "mitre": {
+    "tactics": [
+      "TA1496"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"DestinationHostname\": [\"pool.minexmr.com\", \"fr.minexmr.com\", \"de.minexmr.com\", \"sg.minexmr.com\", \"ca.minexmr.com\", \"us-west.minexmr.com\", \"pool.supportxmr.com\", \"mine.c3pool.com\", \"xmr-eu1.nanopool.org\", \"xmr-eu2.nanopool.org\", \"xmr-us-east1.nanopool.org\", \"xmr-us-west1.nanopool.org\", \"xmr-asia1.nanopool.org\", \"xmr-jp1.nanopool.org\", \"xmr-au1.nanopool.org\", \"xmr.2miners.com\", \"xmr.hashcity.org\", \"xmr.f2pool.com\", \"xmrpool.eu\", \"pool.hashvault.pro\", \"moneroocean.stream\", \"monerocean.stream\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use of crypto miners"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "network_connection"
+  ]
+}

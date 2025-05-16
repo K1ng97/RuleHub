@@ -1,0 +1,44 @@
+{
+  "id": "ac520039-21f1-4567-b528-5b7133dba76f",
+  "name": "Windows SSH Proxy Command",
+  "description": "This detection identifies potential abuse of SSH ProxyCommand by monitoring for suspicious process execution patterns. Specifically, it looks for instances where ssh.exe (as a parent process) containing \"ProxyCommand\" in its arguments spawns potentially malicious child processes like mshta, powershell, wscript, or cscript, or processes containing \"http\" in their command line. This technique can be used by attackers to execute arbitrary commands through SSH proxy configurations, potentially enabling command & control activities or remote code execution. The detection focuses on commonly abused Windows scripting engines and web requests that may indicate malicious activity when spawned through SSH proxy commands.",
+  "source": {
+    "type": "splunk",
+    "id": "ac520039-21f1-4567-b528-5b7133dba76f",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_ssh_proxy_command.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_ssh_proxy_command.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Michael Haag, AJ King, Splunk, Jesse Hunter, Splunk Community Contributor",
+  "references": [
+    "https://www.virustotal.com/gui/file/c33f82868dbbfc3ab03918f430b1a348499f5baf047b136ff0a4fc3e8addaa9b/detection",
+    "https://attack.mitre.org/techniques/T1572/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_path=\"*\\\\ssh.exe\" Processes.parent_process IN (\"*ProxyCommand*\") Processes.process IN (\"*mshta*\",\"*powershell*\",\"*http*\",\"*wscript*\",\"*cscript*\") by Processes.action Processes.dest\nProcesses.original_file_name Processes.parent_process Processes.parent_process_exec\nProcesses.parent_process_guid Processes.parent_process_id Processes.parent_process_name\nProcesses.parent_process_path Processes.process Processes.process_exec Processes.process_guid\nProcesses.process_hash Processes.process_id Processes.process_integrity_level Processes.process_name\nProcesses.process_path Processes.user Processes.user_id Processes.vendor_product | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`| `security_content_ctime(lastTime)` | `windows_ssh_proxy_command_filter`",
+    "condition": "The detection is based on data that originates from Endpoint Detection and Response (EDR) agents. These agents are designed to provide security-related telemetry from the endpoints where the agent is installed. To implement this search, you must ingest logs that contain the process GUID, process name, and parent process. Additionally, you must ingest complete command-line executions. These logs must be processed using the appropriate Splunk Technology Add-ons that are specific to the EDR product. The logs must also be mapped to the `Processes` node of the `Endpoint` data model. Use the Splunk Common Information Model (CIM) to normalize the field names and speed up the data modeling process.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use of SSH ProxyCommand with scripting engines may trigger this detection. Filter as needed based on your environment's normal SSH usage patterns and authorized scripting activities."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

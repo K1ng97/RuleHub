@@ -1,0 +1,47 @@
+{
+  "id": "30e92f50-bb5a-4884-98b5-d20aa80f3d7a",
+  "name": "Hidden Powershell in Link File Pattern",
+  "description": "Detects events that appear when a user click on a link file with a powershell command in it",
+  "source": {
+    "type": "sigma",
+    "id": "30e92f50-bb5a-4884-98b5-d20aa80f3d7a",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_susp_embed_exe_lnk.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_susp_embed_exe_lnk.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1059001"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://www.x86matthew.com/view_post?id=embed_exe_lnk"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-02-06",
+  "modified": "2022-02-06",
+  "mitre": {
+    "tactics": [
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ParentImage\": \"C:\\\\Windows\\\\explorer.exe\", \"Image\": \"C:\\\\Windows\\\\System32\\\\cmd.exe\", \"CommandLine|contains|all\": [\"powershell\", \".lnk\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate commands in .lnk files"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

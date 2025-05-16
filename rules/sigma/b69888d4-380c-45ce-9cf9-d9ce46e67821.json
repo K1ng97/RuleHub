@@ -1,0 +1,48 @@
+{
+  "id": "b69888d4-380c-45ce-9cf9-d9ce46e67821",
+  "name": "Hidden Executable In NTFS Alternate Data Stream",
+  "description": "Detects the creation of an ADS (Alternate Data Stream) that contains an executable by looking at a non-empty Imphash",
+  "source": {
+    "type": "sigma",
+    "id": "b69888d4-380c-45ce-9cf9-d9ce46e67821",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/create_stream_hash_ads_executable.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/create_stream_hash/create_stream_hash_ads_executable.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attacks0139",
+    "attackt1564004"
+  ],
+  "author": "Florian Roth (Nextron Systems), @0xrawsec",
+  "references": [
+    "https://twitter.com/0xrawsec/status/1002478725605273600?s=21"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2018-06-03",
+  "modified": "2023-02-10",
+  "mitre": {
+    "tactics": [
+      "TA1564"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Hash|contains\": \"IMPHASH=\"}\nfilter_main_null: {\"Hash|contains\": \"IMPHASH=00000000000000000000000000000000\"}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "This rule isn't looking for any particular binary characteristics. As legitimate installers and programs were seen embedding hidden binaries in their ADS. Some false positives are expected from browser processes and similar."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "create_stream_hash"
+  ]
+}

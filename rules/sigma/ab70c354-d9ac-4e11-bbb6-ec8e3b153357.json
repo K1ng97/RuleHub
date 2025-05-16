@@ -1,0 +1,45 @@
+{
+  "id": "ab70c354-d9ac-4e11-bbb6-ec8e3b153357",
+  "name": "Remote Access Tool - Team Viewer Session Started On Windows Host",
+  "description": "Detects the command line executed when TeamViewer starts a session started by a remote host.\nOnce a connection has been started, an investigator can verify the connection details by viewing the \"incoming_connections.txt\" log file in the TeamViewer folder.\n",
+  "source": {
+    "type": "sigma",
+    "id": "ab70c354-d9ac-4e11-bbb6-ec8e3b153357",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_remote_access_tools_teamviewer_incoming_connection.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_remote_access_tools_teamviewer_incoming_connection.yml"
+  },
+  "tags": [
+    "attackinitial-access",
+    "attackt1133"
+  ],
+  "author": "Josh Nickels, Qi Nan",
+  "references": [
+    "Internal Research"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2024-03-11",
+  "modified": "2024-03-11",
+  "mitre": {
+    "tactics": [
+      "TA1133"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Image\": \"TeamViewer_Desktop.exe\", \"ParentImage\": \"TeamViewer_Service.exe\", \"CommandLine|endswith\": \"TeamViewer_Desktop.exe --IPCport 5939 --Module 1\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate usage of TeamViewer"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

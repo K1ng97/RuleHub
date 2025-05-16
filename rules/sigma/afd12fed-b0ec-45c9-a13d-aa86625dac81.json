@@ -1,0 +1,48 @@
+{
+  "id": "afd12fed-b0ec-45c9-a13d-aa86625dac81",
+  "name": "Create Volume Shadow Copy with Powershell",
+  "description": "Adversaries may attempt to access or create a copy of the Active Directory domain database in order to steal credential information",
+  "source": {
+    "type": "sigma",
+    "id": "afd12fed-b0ec-45c9-a13d-aa86625dac81",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_create_volume_shadow_copy.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_create_volume_shadow_copy.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1003003"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://attack.mitre.org/datasources/DS0005/",
+    "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-wmiobject?view=powershell-5.1&viewFallbackFrom=powershell-7"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-01-12",
+  "modified": "2022-01-12",
+  "mitre": {
+    "tactics": [
+      "TA1003"
+    ],
+    "techniques": [
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ScriptBlockText|contains|all\": [\"Win32_ShadowCopy\", \").Create(\", \"ClientAccessible\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate PowerShell scripts"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

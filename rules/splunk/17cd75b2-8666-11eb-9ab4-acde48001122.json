@@ -1,0 +1,44 @@
+{
+  "id": "17cd75b2-8666-11eb-9ab4-acde48001122",
+  "name": "High Process Termination Frequency",
+  "description": "The following analytic identifies a high frequency of process termination events on a computer within a short period. It leverages Sysmon EventCode 5 logs to detect instances where 15 or more processes are terminated within a 3-second window. This behavior is significant as it is commonly associated with ransomware attempting to avoid exceptions during file encryption. If confirmed malicious, this activity could indicate an active ransomware attack, potentially leading to widespread file encryption and significant data loss.",
+  "source": {
+    "type": "splunk",
+    "id": "17cd75b2-8666-11eb-9ab4-acde48001122",
+    "url": "https://github.com/splunk/security_content/blob/develop/high_process_termination_frequency.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/high_process_termination_frequency.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras",
+  "references": [
+    "https://www.mandiant.com/resources/fin11-email-campaigns-precursor-for-ransomware-data-theft",
+    "https://blog.virustotal.com/2020/11/keep-your-friends-close-keep-ransomware.html"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`sysmon` EventCode=5 | bin _time span=3s | stats values(process) as process values(process_exec) as process_exec values(process_guid) as process_guid values(process_id) as process_id values(process_name) as process_name values(process_path) as process_path values(user_id) as user_id min(_time) as firstTime max(_time) as lastTime count by _time dest EventCode ProcessID signature signature_id vendor_product | where count >= 15 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `high_process_termination_frequency_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting logs with the Image (process full path of terminated process) from your endpoints. If you are using Sysmon, you must have at least version 6.0.4 of the Sysmon TA.",
+    "fields": []
+  },
+  "falsepositives": [
+    "admin or user tool that can terminate multiple process."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

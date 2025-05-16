@@ -1,0 +1,48 @@
+{
+  "id": "a24e5861-c6ca-4fde-a93c-ba9256feddf0",
+  "name": "Uncommon Process Access Rights For Target Image",
+  "description": "Detects process access request to uncommon target images with a \"PROCESS_ALL_ACCESS\" access mask.\n",
+  "source": {
+    "type": "sigma",
+    "id": "a24e5861-c6ca-4fde-a93c-ba9256feddf0",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_access_win_susp_all_access_uncommon_target.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_access/proc_access_win_susp_all_access_uncommon_target.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackprivilege-escalation",
+    "attackt1055011"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems), frack113",
+  "references": [
+    "https://learn.microsoft.com/en-us/windows/win32/procthread/process-security-and-access-rights"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2024-05-27",
+  "modified": "2024-05-27",
+  "mitre": {
+    "tactics": [
+      "TA1055"
+    ],
+    "techniques": [
+      "T011"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"TargetImage|endswith\": [\"\\\\calc.exe\", \"\\\\calculator.exe\", \"\\\\mspaint.exe\", \"\\\\notepad.exe\", \"\\\\ping.exe\", \"\\\\wordpad.exe\", \"\\\\write.exe\"], \"GrantedAccess\": \"0x1FFFFF\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_access"
+  ]
+}

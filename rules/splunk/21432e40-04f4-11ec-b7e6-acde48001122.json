@@ -1,0 +1,45 @@
+{
+  "id": "21432e40-04f4-11ec-b7e6-acde48001122",
+  "name": "Get ADUser with PowerShell Script Block",
+  "description": "The following analytic detects the execution of the `Get-AdUser` PowerShell cmdlet, which is used to enumerate all domain users. It leverages PowerShell Script Block Logging (EventCode=4104) to identify instances where this command is executed with a filter. This activity is significant as it may indicate an attempt by adversaries or Red Teams to gather information about domain users for situational awareness and Active Directory discovery. If confirmed malicious, this behavior could lead to further reconnaissance and potential exploitation of user accounts within the domain.",
+  "source": {
+    "type": "splunk",
+    "id": "21432e40-04f4-11ec-b7e6-acde48001122",
+    "url": "https://github.com/splunk/security_content/blob/develop/get_aduser_with_powershell_script_block.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/get_aduser_with_powershell_script_block.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Mauricio Velazco, Splunk",
+  "references": [
+    "https://www.blackhillsinfosec.com/red-blue-purple/",
+    "https://attack.mitre.org/techniques/T1087/002/",
+    "https://docs.microsoft.com/en-us/powershell/module/activedirectory/get-aduser?view=windowsserver2019-ps"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`powershell` EventCode=4104 ScriptBlockText = \"*get-aduser*\" ScriptBlockText = \"*-filter*\" | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by dest signature signature_id user_id vendor_product EventID Guid Opcode Name Path ProcessID ScriptBlockId ScriptBlockText | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `get_aduser_with_powershell_script_block_filter`",
+    "condition": "The following Hunting analytic requires PowerShell operational logs to be imported. Modify the powershell macro as needed to match the sourcetype or add index. This analytic is specific to 4104, or PowerShell Script Block Logging.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrators or power users may use this command for troubleshooting."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

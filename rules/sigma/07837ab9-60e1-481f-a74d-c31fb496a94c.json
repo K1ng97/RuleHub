@@ -1,0 +1,52 @@
+{
+  "id": "07837ab9-60e1-481f-a74d-c31fb496a94c",
+  "name": "Network Communication Initiated To Portmap.IO Domain",
+  "description": "Detects an executable accessing the portmap.io domain, which could be a sign of forbidden C2 traffic or data exfiltration by malicious actors",
+  "source": {
+    "type": "sigma",
+    "id": "07837ab9-60e1-481f-a74d-c31fb496a94c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/net_connection_win_domain_portmap.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/network_connection/net_connection_win_domain_portmap.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackexfiltration",
+    "attackt1041",
+    "attackt1090002"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://portmap.io/",
+    "https://github.com/rapid7/metasploit-framework/issues/11337",
+    "https://pro.twitter.com/JaromirHorejsi/status/1795001037746761892/photo/2"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2024-05-31",
+  "modified": "2024-05-31",
+  "mitre": {
+    "tactics": [
+      "TA1041",
+      "TA1090"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Initiated\": \"true\", \"DestinationHostname|endswith\": \".portmap.io\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use of portmap.io domains"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "network_connection"
+  ]
+}

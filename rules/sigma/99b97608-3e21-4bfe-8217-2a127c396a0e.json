@@ -1,0 +1,51 @@
+{
+  "id": "99b97608-3e21-4bfe-8217-2a127c396a0e",
+  "name": "Remote Thread Creation Via PowerShell In Uncommon Target",
+  "description": "Detects the creation of a remote thread from a Powershell process in an uncommon target process",
+  "source": {
+    "type": "sigma",
+    "id": "99b97608-3e21-4bfe-8217-2a127c396a0e",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/create_remote_thread_win_powershell_susp_targets.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/create_remote_thread/create_remote_thread_win_powershell_susp_targets.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1059001",
+    "attackt1218011"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://www.fireeye.com/blog/threat-research/2018/06/bring-your-own-land-novel-red-teaming-technique.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2018-06-25",
+  "modified": "2023-11-10",
+  "mitre": {
+    "tactics": [
+      "TA1059",
+      "TA1218"
+    ],
+    "techniques": [
+      "T001",
+      "T011"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"SourceImage|endswith\": [\"\\\\powershell.exe\", \"\\\\pwsh.exe\"], \"TargetImage|endswith\": [\"\\\\rundll32.exe\", \"\\\\regsvr32.exe\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "create_remote_thread"
+  ]
+}

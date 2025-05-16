@@ -1,0 +1,51 @@
+{
+  "id": "92dae1ed-1c9d-4eff-a567-33acbd95b00e",
+  "name": "Possible Impacket SecretDump Remote Activity - Zeek",
+  "description": "Detect AD credential dumping using impacket secretdump HKTL. Based on the SIGMA rules/windows/builtin/win_impacket_secretdump.yml",
+  "source": {
+    "type": "sigma",
+    "id": "92dae1ed-1c9d-4eff-a567-33acbd95b00e",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/zeek_smb_converted_win_impacket_secretdump.yml",
+    "file_path": "tmp/repos/sigma/rules/network/zeek/zeek_smb_converted_win_impacket_secretdump.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1003002",
+    "attackt1003003",
+    "attackt1003004"
+  ],
+  "author": "Samir Bousseaden, @neu5ron",
+  "references": [
+    "https://web.archive.org/web/20230329153811/https://blog.menasec.net/2019/02/threat-huting-10-impacketsecretdump.html"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-03-19",
+  "modified": "2021-11-27",
+  "mitre": {
+    "tactics": [
+      "TA1003"
+    ],
+    "techniques": [
+      "T002",
+      "T003",
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"path|contains|all\": [\"\\\\\", \"ADMIN$\"], \"name|contains\": \"SYSTEM32\\\\\", \"name|endswith\": \".tmp\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "zeek",
+    "smb_files"
+  ]
+}

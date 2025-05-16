@@ -1,0 +1,50 @@
+{
+  "id": "e8314f79-564d-4f79-bc13-fbc0bf2660d8",
+  "name": "Potential PowerShell Obfuscation Using Character Join",
+  "description": "Detects specific techniques often seen used inside of PowerShell scripts to obfscuate Alias creation",
+  "source": {
+    "type": "sigma",
+    "id": "e8314f79-564d-4f79-bc13-fbc0bf2660d8",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_susp_alias_obfscuation.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_susp_alias_obfscuation.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1027",
+    "attackt1059001"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "Internal Research"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-01-09",
+  "modified": "2023-01-09",
+  "mitre": {
+    "tactics": [
+      "TA1027",
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ScriptBlockText|contains|all\": [\"-Alias\", \" -Value (-join(\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

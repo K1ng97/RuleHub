@@ -1,0 +1,49 @@
+{
+  "id": "a7ee1722-c3c5-aeff-3212-c777e4733217",
+  "name": "Disable Windows Defender AV Security Monitoring",
+  "description": "Detects attackers attempting to disable Windows Defender using Powershell",
+  "source": {
+    "type": "sigma",
+    "id": "a7ee1722-c3c5-aeff-3212-c777e4733217",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_powershell_disable_defender_av_security_monitoring.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_powershell_disable_defender_av_security_monitoring.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1562001"
+  ],
+  "author": "ok @securonix invrep-de, oscd.community, frack113",
+  "references": [
+    "https://research.nccgroup.com/2020/06/23/wastedlocker-a-new-ransomware-variant-developed-by-the-evil-corp-group/",
+    "https://rvsec0n.wordpress.com/2020/01/24/malwares-that-bypass-windows-defender/",
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1562.001/T1562.001.md"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-12",
+  "modified": "2022-11-18",
+  "mitre": {
+    "tactics": [
+      "TA1562"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_pwsh_binary: [{\"Image|endswith\": [\"\\\\powershell.exe\", \"\\\\pwsh.exe\"]}, {\"OriginalFileName\": [\"PowerShell.EXE\", \"pwsh.dll\"]}]\nselection_pwsh_cli: {\"CommandLine|contains\": [\"-DisableBehaviorMonitoring $true\", \"-DisableRuntimeMonitoring $true\"]}\nselection_sc_binary: [{\"Image|endswith\": \"\\\\sc.exe\"}, {\"OriginalFileName\": \"sc.exe\"}]\nselection_sc_tamper_cmd_stop: {\"CommandLine|contains|all\": [\"stop\", \"WinDefend\"]}\nselection_sc_tamper_cmd_delete: {\"CommandLine|contains|all\": [\"delete\", \"WinDefend\"]}\nselection_sc_tamper_cmd_disabled: {\"CommandLine|contains|all\": [\"config\", \"WinDefend\", \"start=disabled\"]}",
+    "condition": "all of selection_pwsh_* or (selection_sc_binary and 1 of selection_sc_tamper_*)",
+    "fields": []
+  },
+  "falsepositives": [
+    "Minimal, for some older versions of dev tools, such as pycharm, developers were known to sometimes disable Windows Defender to improve performance, but this generally is not considered a good security practice."
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

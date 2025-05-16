@@ -1,0 +1,49 @@
+{
+  "id": "99b7460d-c9f1-40d7-a316-1f36f61d52ee",
+  "name": "Cscript/Wscript Uncommon Script Extension Execution",
+  "description": "Detects Wscript/Cscript executing a file with an uncommon (i.e. non-script) extension",
+  "source": {
+    "type": "sigma",
+    "id": "99b7460d-c9f1-40d7-a316-1f36f61d52ee",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_wscript_cscript_uncommon_extension_exec.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_wscript_cscript_uncommon_extension_exec.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1059005",
+    "attackt1059007"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "Internal Research"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-05-15",
+  "modified": "2023-06-19",
+  "mitre": {
+    "tactics": [
+      "TA1059"
+    ],
+    "techniques": [
+      "T005",
+      "T007"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"OriginalFileName\": [\"wscript.exe\", \"cscript.exe\"]}, {\"Image|endswith\": [\"\\\\wscript.exe\", \"\\\\cscript.exe\"]}]\nselection_extension: {\"CommandLine|contains\": [\".csv\", \".dat\", \".doc\", \".gif\", \".jpeg\", \".jpg\", \".png\", \".ppt\", \".txt\", \".xls\", \".xml\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

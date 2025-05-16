@@ -1,0 +1,49 @@
+{
+  "id": "0b80ade5-6997-4b1d-99a1-71701778ea61",
+  "name": "Imports Registry Key From an ADS",
+  "description": "Detects the import of a alternate datastream to the registry with regedit.exe.",
+  "source": {
+    "type": "sigma",
+    "id": "0b80ade5-6997-4b1d-99a1-71701778ea61",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_regedit_import_keys_ads.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_regedit_import_keys_ads.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1112"
+  ],
+  "author": "Oddvar Moe, Sander Wiebing, oscd.community",
+  "references": [
+    "https://lolbas-project.github.io/lolbas/Binaries/Regedit/",
+    "https://gist.github.com/api0cradle/cdd2d0d0ec9abb686f0e89306e277b8f"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-12",
+  "modified": "2024-03-13",
+  "mitre": {
+    "tactics": [
+      "TA1112"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\regedit.exe\"}, {\"OriginalFileName\": \"REGEDIT.EXE\"}]\nselection_cli: {\"CommandLine|contains\": [\" /i \", \".reg\"], \"CommandLine|re\": \":[^ \\\\\\\\]\"}\nfilter: {\"CommandLine|contains|windash\": [\" -e \", \" -a \", \" -c \"]}",
+    "condition": "all of selection_* and not filter",
+    "fields": [
+      "ParentImage",
+      "CommandLine"
+    ]
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

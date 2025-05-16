@@ -1,0 +1,46 @@
+{
+  "id": "4c461f5a-c2cc-4e86-b132-c262fc9edca7",
+  "name": "Windows Special Privileged Logon On Multiple Hosts",
+  "description": "The following analytic detects a user authenticating with special privileges on 30 or more remote endpoints within a 5-minute window. It leverages Event ID 4672 from Windows Security logs to identify this behavior. This activity is significant as it may indicate lateral movement or remote code execution by an adversary. If confirmed malicious, the attacker could gain extensive control over the network, potentially leading to privilege escalation, data exfiltration, or further compromise of the environment. Security teams should adjust detection thresholds based on their specific environment.",
+  "source": {
+    "type": "splunk",
+    "id": "4c461f5a-c2cc-4e86-b132-c262fc9edca7",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_special_privileged_logon_on_multiple_hosts.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_special_privileged_logon_on_multiple_hosts.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Mauricio Velazco, Splunk",
+  "references": [
+    "https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4672",
+    "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/dn319113(v=ws.11)",
+    "https://thedfirreport.com/2023/01/23/sharefinder-how-threat-actors-discover-file-shares/",
+    "https://attack.mitre.org/tactics/TA0008/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`wineventlog_security` EventCode=4672 AND NOT(Caller_User_Name IN (\"DWM-1\",\"DWM-2\",\"DWM-3\",\"LOCAL SERVICE\",\"NETWORK SERVICE\",\"SYSTEM\",\"*$\")) | bucket span=5m _time | stats dc(Computer) AS unique_targets values(Computer) as dest values(PrivilegeList) as privileges by _time, Caller_User_Name | rename Caller_User_Name as user| where unique_targets > 30 | `windows_special_privileged_logon_on_multiple_hosts_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting special logon events. The Advanced Security Audit policy setting `Audit Special Logon` within `Logon/Logoff` need to be enabled.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Vulnerability scanners or system administration tools may also trigger this detection. Filter as needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

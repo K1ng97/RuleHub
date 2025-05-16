@@ -1,0 +1,42 @@
+{
+  "id": "ce7066a6-508a-42d3-995b-2952c65dc2ce",
+  "name": "Drop Binaries Into Spool Drivers Color Folder",
+  "description": "Detects the creation of suspcious binary files inside the \"\\windows\\system32\\spool\\drivers\\color\\\" as seen in the blog referenced below",
+  "source": {
+    "type": "sigma",
+    "id": "ce7066a6-508a-42d3-995b-2952c65dc2ce",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_susp_spool_drivers_color_drop.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_susp_spool_drivers_color_drop.yml"
+  },
+  "tags": [
+    "attackdefense-evasion"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://www.microsoft.com/security/blog/2022/07/27/untangling-knotweed-european-private-sector-offensive-actor-using-0-day-exploits/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-07-28",
+  "modified": "2022-07-28",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"TargetFilename|startswith\": \"C:\\\\Windows\\\\System32\\\\spool\\\\drivers\\\\color\\\\\", \"TargetFilename|endswith\": [\".dll\", \".exe\", \".sys\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

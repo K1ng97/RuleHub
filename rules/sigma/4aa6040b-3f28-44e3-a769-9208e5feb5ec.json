@@ -1,0 +1,47 @@
+{
+  "id": "4aa6040b-3f28-44e3-a769-9208e5feb5ec",
+  "name": "Suspicious Rundll32 Execution With Image Extension",
+  "description": "Detects the execution of Rundll32.exe with DLL files masquerading as image files",
+  "source": {
+    "type": "sigma",
+    "id": "4aa6040b-3f28-44e3-a769-9208e5feb5ec",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_rundll32_susp_execution_with_image_extension.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_rundll32_susp_execution_with_image_extension.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218011"
+  ],
+  "author": "Hieu Tran",
+  "references": [
+    "https://www.zscaler.com/blogs/security-research/onenote-growing-threat-malware-distribution"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-03-13",
+  "modified": "2023-03-13",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": [
+      "T011"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\rundll32.exe\"}, {\"OriginalFileName\": \"RUNDLL32.exe\"}]\nselection_cli: {\"CommandLine|contains\": [\".bmp\", \".cr2\", \".eps\", \".gif\", \".ico\", \".jpeg\", \".jpg\", \".nef\", \".orf\", \".png\", \".raw\", \".sr2\", \".tif\", \".tiff\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

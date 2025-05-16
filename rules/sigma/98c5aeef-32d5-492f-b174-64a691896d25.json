@@ -1,0 +1,53 @@
+{
+  "id": "98c5aeef-32d5-492f-b174-64a691896d25",
+  "name": "Service Security Descriptor Tampering Via Sc.EXE",
+  "description": "Detection of sc.exe utility adding a new service with special permission which hides that service.",
+  "source": {
+    "type": "sigma",
+    "id": "98c5aeef-32d5-492f-b174-64a691896d25",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_sc_sdset_modification.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_sc_sdset_modification.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1574011"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://blog.talosintelligence.com/2021/10/threat-hunting-in-large-datasets-by.html",
+    "https://www.sans.org/blog/red-team-tactics-hiding-windows-services/",
+    "https://twitter.com/Alh4zr3d/status/1580925761996828672",
+    "https://twitter.com/0gtweet/status/1628720819537936386",
+    "https://itconnect.uw.edu/tools-services-support/it-systems-infrastructure/msinf/other-help/understanding-sddl-syntax/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-02-28",
+  "modified": "2023-02-28",
+  "mitre": {
+    "tactics": [
+      "TA1574"
+    ],
+    "techniques": [
+      "T011"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\sc.exe\"}, {\"OriginalFileName\": \"sc.exe\"}]\nselection_cli: {\"CommandLine|contains\": \"sdset\"}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

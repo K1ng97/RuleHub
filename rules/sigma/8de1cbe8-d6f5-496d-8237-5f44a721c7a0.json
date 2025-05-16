@@ -1,0 +1,50 @@
+{
+  "id": "8de1cbe8-d6f5-496d-8237-5f44a721c7a0",
+  "name": "Whoami.EXE Execution Anomaly",
+  "description": "Detects the execution of whoami.exe with suspicious parent processes.",
+  "source": {
+    "type": "sigma",
+    "id": "8de1cbe8-d6f5-496d-8237-5f44a721c7a0",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_whoami_parent_anomaly.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_whoami_parent_anomaly.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1033",
+    "car2016-03-001"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://brica.de/alerts/alert/public/1247926/agent-tesla-keylogger-delivered-inside-a-power-iso-daa-archive/",
+    "https://app.any.run/tasks/7eaba74e-c1ea-400f-9c17-5e30eee89906/",
+    "https://www.youtube.com/watch?v=DsJ9ByX84o4&t=6s"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-08-12",
+  "modified": "2025-03-06",
+  "mitre": {
+    "tactics": [
+      "TA1033"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: [{\"Image|endswith\": \"\\\\whoami.exe\"}, {\"OriginalFileName\": \"whoami.exe\"}]\nfilter_main_known_parents: {\"ParentImage|endswith\": [\"\\\\cmd.exe\", \"\\\\powershell_ise.exe\", \"\\\\powershell.exe\", \"\\\\pwsh.exe\"]}\nfilter_optional_ms_monitoring_agent: {\"ParentImage|endswith\": \":\\\\Program Files\\\\Microsoft Monitoring Agent\\\\Agent\\\\MonitoringHost.exe\"}\nfilter_main_parent_null: {\"ParentImage\": null}\nfilter_main_parent_empty: {\"ParentImage\": [\"\", \"-\"]}",
+    "condition": "selection and not 1 of filter_main_* and not 1 of filter_optional_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Admin activity",
+    "Scripts and administrative tools used in the monitored environment",
+    "Monitoring activity"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

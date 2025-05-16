@@ -1,0 +1,125 @@
+name: 版本发布
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: '版本号 (格式: x.y.z)'
+        required: true
+        type: string
+      prerelease:
+        description: '是否为预发布版本'
+        required: false
+        default: 'false'
+        type: boolean
+
+jobs:
+  release:
+    name: 创建发布版本
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # 获取完整历史以生成CHANGELOG
+      
+      - name: 设置Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+      
+      - name: 安装依赖
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install gitchangelog pystache
+      
+      - name: 验证版本号格式
+        run: |
+          if ! [[ "${{ github.event.inputs.version }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "错误: 版本号格式不正确，应为 x.y.z"
+            exit 1
+          fi
+      
+      - name: 更新版本号
+        run: |
+          # 更新 rulehub.py 中的版本号
+          sed -i "s/RuleHub 版本 .*\"/RuleHub 版本 ${{ github.event.inputs.version }}\"/g" rulehub.py
+          
+          # 创建版本文件
+          echo "${{ github.event.inputs.version }}" > VERSION
+          
+          # 提交更改
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add rulehub.py VERSION
+          git commit -m "发布版本 ${{ github.event.inputs.version }}"
+      
+      - name: 生成CHANGELOG
+        id: changelog
+        run: |
+          # 获取上一个版本tag
+          PREV_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          
+          if [ -z "$PREV_TAG" ]; then
+            # 如果没有之前的tag，获取所有提交
+            gitchangelog > CHANGELOG.md
+          else
+            # 获取自上一个tag以来的更改
+            gitchangelog $PREV_TAG..HEAD > CHANGELOG.md
+          fi
+          
+          # 提取最近的变更作为release notes
+          cat CHANGELOG.md | head -30 > RELEASE_NOTES.md
+          
+          # 提交CHANGELOG
+          git add CHANGELOG.md
+          git commit -m "更新CHANGELOG ${{ github.event.inputs.version }}"
+      
+      - name: 创建Tag
+        run: |
+          git tag -a v${{ github.event.inputs.version }} -m "版本 ${{ github.event.inputs.version }}"
+      
+      - name: 推送更改
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+          tags: true
+      
+      - name: 打包规则文件
+        run: |
+          # 创建发布包目录
+          mkdir -p release
+          
+          # 打包规则文件
+          tar -czf release/rulehub-rules-${{ github.event.inputs.version }}.tar.gz rules/
+          zip -r release/rulehub-rules-${{ github.event.inputs.version }}.zip rules/
+          
+          # 打包索引文件
+          tar -czf release/rulehub-index-${{ github.event.inputs.version }}.tar.gz index/
+          zip -r release/rulehub-index-${{ github.event.inputs.version }}.zip index/
+          
+          # 打包完整项目
+          tar -czf release/rulehub-${{ github.event.inputs.version }}.tar.gz --exclude=".git" --exclude="release" .
+          zip -r release/rulehub-${{ github.event.inputs.version }}.zip . -x "*.git*" -x "release/*"
+      
+      - name: 创建Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: RuleHub v${{ github.event.inputs.version }}
+          tag_name: v${{ github.event.inputs.version }}
+          body_path: RELEASE_NOTES.md
+          draft: false
+          prerelease: ${{ github.event.inputs.prerelease }}
+          files: |
+            release/rulehub-rules-${{ github.event.inputs.version }}.tar.gz
+            release/rulehub-rules-${{ github.event.inputs.version }}.zip
+            release/rulehub-index-${{ github.event.inputs.version }}.tar.gz
+            release/rulehub-index-${{ github.event.inputs.version }}.zip
+            release/rulehub-${{ github.event.inputs.version }}.tar.gz
+            release/rulehub-${{ github.event.inputs.version }}.zip
+            CHANGELOG.md
+            VERSION

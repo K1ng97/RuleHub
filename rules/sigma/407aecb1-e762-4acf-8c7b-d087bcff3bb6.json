@@ -1,0 +1,46 @@
+{
+  "id": "407aecb1-e762-4acf-8c7b-d087bcff3bb6",
+  "name": "Credential Manager Access By Uncommon Applications",
+  "description": "Detects suspicious processes based on name and location that access the windows credential manager and vault.\nWhich can be a sign of credential stealing. Example case would be usage of mimikatz \"dpapi::cred\" function\n",
+  "source": {
+    "type": "sigma",
+    "id": "407aecb1-e762-4acf-8c7b-d087bcff3bb6",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_access_win_susp_credential_manager_access.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_access/file_access_win_susp_credential_manager_access.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1003"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://hunter2.gitbook.io/darthsidious/privilege-escalation/mimikatz",
+    "https://www.absolomb.com/2018-01-26-Windows-Privilege-Escalation-Guide/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "experimental",
+  "created": "2022-10-11",
+  "modified": "2024-07-29",
+  "mitre": {
+    "tactics": [
+      "TA1003"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"FileName|contains\": [\"\\\\AppData\\\\Local\\\\Microsoft\\\\Credentials\\\\\", \"\\\\AppData\\\\Roaming\\\\Microsoft\\\\Credentials\\\\\", \"\\\\AppData\\\\Local\\\\Microsoft\\\\Vault\\\\\", \"\\\\ProgramData\\\\Microsoft\\\\Vault\\\\\"]}\nfilter_system_folders: {\"Image|startswith\": [\"C:\\\\Program Files\\\\\", \"C:\\\\Program Files (x86)\\\\\", \"C:\\\\Windows\\\\system32\\\\\", \"C:\\\\Windows\\\\SysWOW64\\\\\"]}",
+    "condition": "selection and not 1 of filter_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate software installed by the users for example in the \"AppData\" directory may access these files (for any reason)."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_access"
+  ]
+}

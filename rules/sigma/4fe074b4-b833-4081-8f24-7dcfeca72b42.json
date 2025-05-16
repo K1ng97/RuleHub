@@ -1,0 +1,49 @@
+{
+  "id": "4fe074b4-b833-4081-8f24-7dcfeca72b42",
+  "name": "Security Tools Keyword Lookup Via Findstr.EXE",
+  "description": "Detects execution of \"findstr\" to search for common names of security tools. Attackers often pipe the results of recon commands such as \"tasklist\" or \"whoami\" to \"findstr\" in order to filter out the results.\nThis detection focuses on the keywords that the attacker might use as a filter.\n",
+  "source": {
+    "type": "sigma",
+    "id": "4fe074b4-b833-4081-8f24-7dcfeca72b42",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_findstr_security_keyword_lookup.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_findstr_security_keyword_lookup.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1518001"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems), frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/987e3ca988ae3cff4b9f6e388c139c05bf44bbb8/atomics/T1518.001/T1518.001.md#atomic-test-1---security-software-discovery",
+    "https://www.microsoft.com/en-us/security/blog/2023/10/18/multiple-north-korean-threat-actors-exploiting-the-teamcity-cve-2023-42793-vulnerability/",
+    "https://www.hhs.gov/sites/default/files/manage-engine-vulnerability-sector-alert-tlpclear.pdf"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-10-20",
+  "modified": "2023-11-14",
+  "mitre": {
+    "tactics": [
+      "TA1518"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": [\"\\\\find.exe\", \"\\\\findstr.exe\"]}, {\"OriginalFileName\": [\"FIND.EXE\", \"FINDSTR.EXE\"]}]\nselection_cli: {\"CommandLine|endswith\": [\" avira\", \" avira\\\"\", \" cb\", \" cb\\\"\", \" cylance\", \" cylance\\\"\", \" defender\", \" defender\\\"\", \" kaspersky\", \" kaspersky\\\"\", \" kes\", \" kes\\\"\", \" mc\", \" mc\\\"\", \" sec\", \" sec\\\"\", \" sentinel\", \" sentinel\\\"\", \" symantec\", \" symantec\\\"\", \" virus\", \" virus\\\"\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

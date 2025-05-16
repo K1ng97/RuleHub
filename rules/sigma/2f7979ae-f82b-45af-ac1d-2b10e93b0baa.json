@@ -1,0 +1,49 @@
+{
+  "id": "2f7979ae-f82b-45af-ac1d-2b10e93b0baa",
+  "name": "Potential DCOM InternetExplorer.Application DLL Hijack",
+  "description": "Detects potential DLL hijack of \"iertutil.dll\" found in the DCOM InternetExplorer.Application Class over the network",
+  "source": {
+    "type": "sigma",
+    "id": "2f7979ae-f82b-45af-ac1d-2b10e93b0baa",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_dcom_iertutil_dll_hijack.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_dcom_iertutil_dll_hijack.yml"
+  },
+  "tags": [
+    "attacklateral-movement",
+    "attackt1021002",
+    "attackt1021003"
+  ],
+  "author": "Roberto Rodriguez @Cyb3rWard0g, Open Threat Research (OTR), wagga",
+  "references": [
+    "https://threathunterplaybook.com/hunts/windows/201009-RemoteDCOMIErtUtilDLLHijack/notebook.html"
+  ],
+  "severity": "critical",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-12",
+  "modified": "2022-12-18",
+  "mitre": {
+    "tactics": [
+      "TA1021"
+    ],
+    "techniques": [
+      "T002",
+      "T003"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Image\": \"System\", \"TargetFilename|endswith\": \"\\\\Internet Explorer\\\\iertutil.dll\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "critical",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

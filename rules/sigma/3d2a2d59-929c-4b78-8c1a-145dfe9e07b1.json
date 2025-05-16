@@ -1,0 +1,42 @@
+{
+  "id": "3d2a2d59-929c-4b78-8c1a-145dfe9e07b1",
+  "name": "Publisher Attachment File Dropped In Suspicious Location",
+  "description": "Detects creation of files with the \".pub\" extension in suspicious or uncommon locations. This could be a sign of attackers abusing Publisher documents",
+  "source": {
+    "type": "sigma",
+    "id": "3d2a2d59-929c-4b78-8c1a-145dfe9e07b1",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_office_publisher_files_in_susp_locations.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_office_publisher_files_in_susp_locations.yml"
+  },
+  "tags": [
+    "attackdefense-evasion"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://twitter.com/EmericNasi/status/1623224526220804098"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-02-08",
+  "modified": "2023-02-08",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"TargetFilename|contains\": [\"\\\\AppData\\\\Local\\\\Temp\\\\\", \"\\\\Users\\\\Public\\\\\", \"\\\\Windows\\\\Temp\\\\\", \"C:\\\\Temp\\\\\"], \"TargetFilename|endswith\": \".pub\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate usage of \".pub\" files from those locations"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

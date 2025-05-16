@@ -1,0 +1,47 @@
+{
+  "id": "32e19d25-4aed-4860-a55a-be99cb0bf7ed",
+  "name": "Possible DC Shadow Attack",
+  "description": "Detects DCShadow via create new SPN",
+  "source": {
+    "type": "sigma",
+    "id": "32e19d25-4aed-4860-a55a-be99cb0bf7ed",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_possible_dc_shadow.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_possible_dc_shadow.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1207"
+  ],
+  "author": "Ilyas Ochkov, oscd.community, Chakib Gzenayi (@Chak092), Hosni Mribah",
+  "references": [
+    "https://twitter.com/gentilkiwi/status/1003236624925413376",
+    "https://gist.github.com/gentilkiwi/dcc132457408cf11ad2061340dcb53c2",
+    "https://web.archive.org/web/20180203014709/https://blog.alsid.eu/dcshadow-explained-4510f52fc19d?gi=c426ac876c48"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-10-25",
+  "modified": "2022-10-17",
+  "mitre": {
+    "tactics": [
+      "TA1207"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection1: {\"EventID\": 4742, \"ServicePrincipalNames|contains\": \"GC/\"}\nselection2: {\"EventID\": 5136, \"AttributeLDAPDisplayName\": \"servicePrincipalName\", \"AttributeValue|startswith\": \"GC/\"}",
+    "condition": "1 of selection*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Valid on domain controllers; exclude known DCs"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "id": "0adc67e0-a68f-4ffd-9c43-28905aad5d6a",
+  "name": "HackTool - Koh Default Named Pipe",
+  "description": "Detects creation of default named pipes used by the Koh tool",
+  "source": {
+    "type": "sigma",
+    "id": "0adc67e0-a68f-4ffd-9c43-28905aad5d6a",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/pipe_created_hktl_koh_default_pipe.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/pipe_created/pipe_created_hktl_koh_default_pipe.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackprivilege-escalation",
+    "attackt1134001",
+    "attackt1528"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://github.com/GhostPack/Koh/blob/0283d9f3f91cf74732ad377821986cfcb088e20a/Clients/BOF/KohClient.c#L12"
+  ],
+  "severity": "critical",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-07-08",
+  "modified": "2023-08-07",
+  "mitre": {
+    "tactics": [
+      "TA1134",
+      "TA1528"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"PipeName|contains\": [\"\\\\imposecost\", \"\\\\imposingcost\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "critical",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "pipe_created"
+  ]
+}

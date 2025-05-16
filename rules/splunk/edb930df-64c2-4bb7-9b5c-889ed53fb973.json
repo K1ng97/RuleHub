@@ -1,0 +1,43 @@
+{
+  "id": "edb930df-64c2-4bb7-9b5c-889ed53fb973",
+  "name": "Windows Post Exploitation Risk Behavior",
+  "description": "The following analytic identifies four or more distinct post-exploitation behaviors on a Windows system. It leverages data from the Risk data model in Splunk Enterprise Security, focusing on multiple risk events and their associated MITRE ATT&CK tactics and techniques. This activity is significant as it indicates potential malicious actions following an initial compromise, such as persistence, privilege escalation, or data exfiltration. If confirmed malicious, this behavior could allow attackers to maintain control, escalate privileges, and further exploit the compromised environment, leading to significant security breaches and data loss.",
+  "source": {
+    "type": "splunk",
+    "id": "edb930df-64c2-4bb7-9b5c-889ed53fb973",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_post_exploitation_risk_behavior.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_post_exploitation_risk_behavior.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://github.com/carlospolop/PEASS-ng/tree/master/winPEAS/winPEASbat"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats `security_content_summariesonly` min(_time) as firstTime max(_time) as lastTime sum(All_Risk.calculated_risk_score) as risk_score, count(All_Risk.calculated_risk_score) as risk_event_count, values(All_Risk.annotations.mitre_attack.mitre_tactic_id) as annotations.mitre_attack.mitre_tactic_id, dc(All_Risk.annotations.mitre_attack.mitre_tactic_id) as mitre_tactic_id_count, values(All_Risk.annotations.mitre_attack.mitre_technique_id) as annotations.mitre_attack.mitre_technique_id, dc(All_Risk.annotations.mitre_attack.mitre_technique_id) as mitre_technique_id_count, values(All_Risk.tag) as tag, values(source) as source, dc(source) as source_count from datamodel=Risk.All_Risk where All_Risk.analyticstories IN (\"*Windows Post-Exploitation*\") by All_Risk.risk_object All_Risk.risk_object_type All_Risk.annotations.mitre_attack.mitre_tactic | `drop_dm_object_name(All_Risk)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | where source_count >= 4 | `windows_post_exploitation_risk_behavior_filter`",
+    "condition": "Splunk Enterprise Security is required to utilize this correlation. In addition, modify the source_count value to your environment. In our testing, a count of 4 or 5 was decent in a lab, but the number may need to be increased base on internal testing. In addition, based on false positives, modify any analytics to be anomaly and lower or increase risk based on organization importance.",
+    "fields": []
+  },
+  "falsepositives": [
+    "False positives will be present based on many factors. Tune the correlation as needed to reduce too many triggers."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

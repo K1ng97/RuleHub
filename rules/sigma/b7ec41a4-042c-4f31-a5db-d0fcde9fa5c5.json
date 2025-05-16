@@ -1,0 +1,47 @@
+{
+  "id": "b7ec41a4-042c-4f31-a5db-d0fcde9fa5c5",
+  "name": "PowerShell PSAttack",
+  "description": "Detects the use of PSAttack PowerShell hack tool",
+  "source": {
+    "type": "sigma",
+    "id": "b7ec41a4-042c-4f31-a5db-d0fcde9fa5c5",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_psattack.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_psattack.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1059001"
+  ],
+  "author": "Sean Metcalf (source), Florian Roth (Nextron Systems)",
+  "references": [
+    "https://adsecurity.org/?p=2921"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2017-03-05",
+  "modified": "2022-12-25",
+  "mitre": {
+    "tactics": [
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ScriptBlockText|contains\": \"PS ATTACK!!!\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

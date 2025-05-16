@@ -1,0 +1,49 @@
+{
+  "id": "0ea52357-cd59-4340-9981-c46c7e900428",
+  "name": "Potentially Suspicious Rundll32.EXE Execution of UDL File",
+  "description": "Detects the execution of rundll32.exe with the oledb32.dll library to open a UDL file.\nThreat actors can abuse this technique as a phishing vector to capture authentication credentials or other sensitive data.\n",
+  "source": {
+    "type": "sigma",
+    "id": "0ea52357-cd59-4340-9981-c46c7e900428",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_rundll32_udl_exec.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_rundll32_udl_exec.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1071",
+    "attackt1218011"
+  ],
+  "author": "@kostastsale",
+  "references": [
+    "https://trustedsec.com/blog/oops-i-udld-it-again"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "experimental",
+  "created": "2024-08-16",
+  "modified": "2024-08-16",
+  "mitre": {
+    "tactics": [
+      "TA1071",
+      "TA1218"
+    ],
+    "techniques": [
+      "T011"
+    ]
+  },
+  "detection": {
+    "query": "selection_parent: {\"ParentImage|endswith\": \"\\\\explorer.exe\"}\nselection_img: [{\"Image|endswith\": \"\\\\rundll32.exe\"}, {\"OriginalFileName\": \"RUNDLL32.EXE\"}]\nselection_cli: {\"CommandLine|contains|all\": [\"oledb32.dll\", \",OpenDSLFile \", \"\\\\\\\\Users\\\\\\\\*\\\\\\\\Downloads\\\\\\\\\"], \"CommandLine|endswith\": \".udl\"}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "UDL files serve as a convenient and flexible tool for managing and testing database connections in various development and administrative scenarios."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

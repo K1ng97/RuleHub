@@ -1,0 +1,47 @@
+{
+  "id": "749c9f5e-b353-4b90-a9c1-05243357ca4b",
+  "name": "Potential Privilege Escalation via Local Kerberos Relay over LDAP",
+  "description": "Detects a suspicious local successful logon event where the Logon Package is Kerberos, the remote address is set to localhost, and the target user SID is the built-in local Administrator account.\nThis may indicate an attempt to leverage a Kerberos relay attack variant that can be used to elevate privilege locally from a domain joined limited user to local System privileges.\n",
+  "source": {
+    "type": "sigma",
+    "id": "749c9f5e-b353-4b90-a9c1-05243357ca4b",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_susp_privesc_kerberos_relay_over_ldap.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/account_management/win_security_susp_privesc_kerberos_relay_over_ldap.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackprivilege-escalation",
+    "attackt1548"
+  ],
+  "author": "Elastic, @SBousseaden",
+  "references": [
+    "https://twitter.com/sbousseaden/status/1518976397364056071?s=12&t=qKO5eKHvWhAP19a50FTZ7g",
+    "https://github.com/elastic/detection-rules/blob/5fe7833312031a4787e07893e27e4ea7a7665745/rules/_deprecated/privilege_escalation_krbrelayup_suspicious_logon.toml#L38"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-04-27",
+  "modified": "2024-08-13",
+  "mitre": {
+    "tactics": [
+      "TA1548"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 4624, \"LogonType\": 3, \"AuthenticationPackageName\": \"Kerberos\", \"IpAddress\": \"127.0.0.1\", \"TargetUserSid|startswith\": \"S-1-5-21-\", \"TargetUserSid|endswith\": \"-500\"}\nfilter_main_ip_null: {\"IpPort\": \"0\"}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

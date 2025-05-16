@@ -1,0 +1,45 @@
+{
+  "id": "7692f583-bd30-4008-8615-75dab3f08a99",
+  "name": "Enable BPF Kprobes Tracing",
+  "description": "Detects common command used to enable bpf kprobes tracing",
+  "source": {
+    "type": "sigma",
+    "id": "7692f583-bd30-4008-8615-75dab3f08a99",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_bpf_kprob_tracing_enabled.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_bpf_kprob_tracing_enabled.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://embracethered.com/blog/posts/2021/offensive-bpf-bpftrace/",
+    "https://bpftrace.org/",
+    "https://www.kernel.org/doc/html/v5.0/trace/kprobetrace.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-01-25",
+  "modified": "2023-01-25",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|contains|all\": [\"echo 1 >\", \"/sys/kernel/debug/tracing/events/kprobes/\"], \"CommandLine|contains\": [\"/myprobe/enable\", \"/myretprobe/enable\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

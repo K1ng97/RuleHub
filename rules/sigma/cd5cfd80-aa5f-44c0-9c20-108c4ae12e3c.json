@@ -1,0 +1,49 @@
+{
+  "id": "cd5cfd80-aa5f-44c0-9c20-108c4ae12e3c",
+  "name": "New Firewall Rule Added Via Netsh.EXE",
+  "description": "Detects the addition of a new rule to the Windows firewall via netsh",
+  "source": {
+    "type": "sigma",
+    "id": "cd5cfd80-aa5f-44c0-9c20-108c4ae12e3c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_netsh_fw_add_rule.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_netsh_fw_add_rule.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attacks0246",
+    "attackt1562004"
+  ],
+  "author": "Markus Neis, Sander Wiebing",
+  "references": [
+    "https://web.archive.org/web/20190508165435/https://www.operationblockbuster.com/wp-content/uploads/2016/02/Operation-Blockbuster-RAT-and-Staging-Report.pdf"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-01-29",
+  "modified": "2023-02-10",
+  "mitre": {
+    "tactics": [
+      "TA1562"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\netsh.exe\"}, {\"OriginalFileName\": \"netsh.exe\"}]\nselection_cli: {\"CommandLine|contains|all\": [\" firewall \", \" add \"]}\nfilter_optional_dropbox: {\"CommandLine|contains\": [\"advfirewall firewall add rule name=Dropbox dir=in action=allow \\\"program=?:\\\\Program Files (x86)\\\\Dropbox\\\\Client\\\\Dropbox.exe\\\" enable=yes profile=Any\", \"advfirewall firewall add rule name=Dropbox dir=in action=allow \\\"program=?:\\\\Program Files\\\\Dropbox\\\\Client\\\\Dropbox.exe\\\" enable=yes profile=Any\"]}",
+    "condition": "all of selection_* and not 1 of filter_optional_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administration activity",
+    "Software installations"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

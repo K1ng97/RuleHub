@@ -1,0 +1,43 @@
+{
+  "id": "f1483f5e-ee29-11eb-9d23-acde48001122",
+  "name": "Rundll32 DNSQuery",
+  "description": "The following analytic detects a suspicious `rundll32.exe` process making HTTP connections and performing DNS queries to web domains. It leverages Sysmon EventCode 22 logs to identify these activities. This behavior is significant as it is commonly associated with IcedID malware, where `rundll32.exe` checks internet connectivity and communicates with C&C servers to download configurations and other components. If confirmed malicious, this activity could allow attackers to establish persistence, download additional payloads, and exfiltrate sensitive data, posing a severe threat to the network.",
+  "source": {
+    "type": "splunk",
+    "id": "f1483f5e-ee29-11eb-9d23-acde48001122",
+    "url": "https://github.com/splunk/security_content/blob/develop/rundll32_dnsquery.yml",
+    "file_path": "tmp/repos/splunk/detections/network/rundll32_dnsquery.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://any.run/malware-trends/icedid"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`sysmon` EventCode=22 process_name=\"rundll32.exe\" | stats count min(_time) as firstTime max(_time) as lastTime by answer answer_count dvc process_exec process_guid process_name query query_count reply_code_id signature signature_id src user_id vendor_product QueryName QueryResults QueryStatus | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `rundll32_dnsquery_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting logs with the process name and eventcode = 22 dnsquery executions from your endpoints. If you are using Sysmon, you must have at least version 6.0.4 of the Sysmon TA. Tune and filter known instances where renamed rundll32.exe may be used.",
+    "fields": []
+  },
+  "falsepositives": [
+    "unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

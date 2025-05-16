@@ -1,0 +1,40 @@
+{
+  "id": "c8bff7a4-11ea-4416-a27d-c5bca472913d",
+  "name": "Detect malicious requests to exploit JBoss servers",
+  "description": "The following analytic identifies malicious HTTP requests targeting the jmx-console in JBoss servers. It detects unusually long URLs, indicative of embedded payloads, by analyzing web server logs for GET or HEAD requests with specific URL patterns and lengths. This activity is significant as it may indicate an attempt to exploit JBoss vulnerabilities, potentially leading to unauthorized remote code execution. If confirmed malicious, attackers could gain control over the server, escalate privileges, and compromise sensitive data, posing a severe threat to the organization's security.",
+  "source": {
+    "type": "splunk",
+    "id": "c8bff7a4-11ea-4416-a27d-c5bca472913d",
+    "url": "https://github.com/splunk/security_content/blob/develop/detect_malicious_requests_to_exploit_jboss_servers.yml",
+    "file_path": "tmp/repos/splunk/detections/web/detect_malicious_requests_to_exploit_jboss_servers.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "product",
+    "security_domain"
+  ],
+  "author": "Bhavin Patel, Splunk",
+  "references": [],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "experimental",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.http_method=\"GET\" OR Web.http_method=\"HEAD\") by Web.http_method, Web.url,Web.url_length Web.src, Web.dest | search Web.url=\"*jmx-console/HtmlAdaptor?action=invokeOpByName&name=jboss.admin*import*\" AND Web.url_length > 200 | `drop_dm_object_name(\"Web\")` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | table src, dest_ip, http_method, url, firstTime, lastTime | `detect_malicious_requests_to_exploit_jboss_servers_filter`",
+    "condition": "You must ingest data from the web server or capture network data that contains web specific information with solutions such as Bro or Splunk Stream, and populating the Web data model",
+    "fields": []
+  },
+  "falsepositives": [
+    "No known false positives for this detection."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

@@ -1,0 +1,47 @@
+{
+  "id": "cd8c163e-a19b-402e-bdd5-419ff5859f12",
+  "name": "HackTool - ADCSPwn Execution",
+  "description": "Detects command line parameters used by ADCSPwn, a tool to escalate privileges in an active directory network by coercing authenticate from machine accounts and relaying to the certificate service",
+  "source": {
+    "type": "sigma",
+    "id": "cd8c163e-a19b-402e-bdd5-419ff5859f12",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_hktl_adcspwn.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_hktl_adcspwn.yml"
+  },
+  "tags": [
+    "attackcredential-access",
+    "attackt1557001"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://github.com/bats3c/ADCSPwn"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-07-31",
+  "modified": "2023-02-04",
+  "mitre": {
+    "tactics": [
+      "TA1557"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"CommandLine|contains|all\": [\" --adcs \", \" --port \"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

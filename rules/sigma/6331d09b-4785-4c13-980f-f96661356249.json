@@ -1,0 +1,48 @@
+{
+  "id": "6331d09b-4785-4c13-980f-f96661356249",
+  "name": "PowerShell Downgrade Attack - PowerShell",
+  "description": "Detects PowerShell downgrade attack by comparing the host versions with the actually used engine version 2.0",
+  "source": {
+    "type": "sigma",
+    "id": "6331d09b-4785-4c13-980f-f96661356249",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_pc_downgrade_attack.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_classic/posh_pc_downgrade_attack.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1059001"
+  ],
+  "author": "Florian Roth (Nextron Systems), Lee Holmes (idea), Harish Segar (improvements)",
+  "references": [
+    "http://www.leeholmes.com/blog/2017/03/17/detecting-and-preventing-powershell-downgrade-attacks/"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2017-03-22",
+  "modified": "2023-10-27",
+  "mitre": {
+    "tactics": [
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Data|contains\": \"EngineVersion=2.\"}\nfilter_main: {\"Data|contains\": \"HostVersion=2.\"}",
+    "condition": "selection and not filter_main",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_classic_start"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "id": "f7d7ebd5-a016-46e2-9c54-f9932f2d386d",
+  "name": "Potential RDP Tunneling Via SSH",
+  "description": "Execution of ssh.exe to perform data exfiltration and tunneling through RDP",
+  "source": {
+    "type": "sigma",
+    "id": "f7d7ebd5-a016-46e2-9c54-f9932f2d386d",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_ssh_rdp_tunneling.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_ssh_rdp_tunneling.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1572"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://www.absolomb.com/2018-01-26-Windows-Privilege-Escalation-Guide/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-10-12",
+  "modified": "2023-01-25",
+  "mitre": {
+    "tactics": [
+      "TA1572"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": \"\\\\ssh.exe\", \"CommandLine|contains\": \":3389\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

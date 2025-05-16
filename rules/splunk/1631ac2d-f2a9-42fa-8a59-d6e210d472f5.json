@@ -1,0 +1,47 @@
+{
+  "id": "1631ac2d-f2a9-42fa-8a59-d6e210d472f5",
+  "name": "Windows Findstr GPP Discovery",
+  "description": "The following analytic detects the use of the findstr command to search for unsecured credentials in Group Policy Preferences (GPP). It leverages data from Endpoint Detection and Response (EDR) agents, focusing on command-line executions involving findstr.exe with references to SYSVOL and cpassword. This activity is significant because it indicates an attempt to locate and potentially decrypt embedded credentials in GPP, which could lead to unauthorized access. If confirmed malicious, this could allow an attacker to escalate privileges or gain access to sensitive systems and data within the domain.",
+  "source": {
+    "type": "splunk",
+    "id": "1631ac2d-f2a9-42fa-8a59-d6e210d472f5",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_findstr_gpp_discovery.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_findstr_gpp_discovery.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Mauricio Velazco, Splunk",
+  "references": [
+    "https://attack.mitre.org/techniques/T1552/006/",
+    "https://pentestlab.blog/2017/03/20/group-policy-preferences/",
+    "https://adsecurity.org/?p=2288",
+    "https://www.hackingarticles.in/credential-dumping-group-policy-preferences-gpp/",
+    "https://support.microsoft.com/en-us/topic/ms14-025-vulnerability-in-group-policy-preferences-could-allow-elevation-of-privilege-may-13-2014-60734e15-af79-26ca-ea53-8cd617073c30"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=findstr.exe AND Processes.process=*sysvol* AND Processes.process=*cpassword*) by Processes.action Processes.dest Processes.original_file_name Processes.parent_process Processes.parent_process_exec Processes.parent_process_guid Processes.parent_process_id Processes.parent_process_name Processes.parent_process_path Processes.process Processes.process_exec Processes.process_guid Processes.process_hash Processes.process_id Processes.process_integrity_level Processes.process_name Processes.process_path Processes.user Processes.user_id Processes.vendor_product | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_findstr_gpp_discovery_filter`",
+    "condition": "The detection is based on data that originates from Endpoint Detection and Response (EDR) agents. These agents are designed to provide security-related telemetry from the endpoints where the agent is installed. To implement this search, you must ingest logs that contain the process GUID, process name, and parent process. Additionally, you must ingest complete command-line executions. These logs must be processed using the appropriate Splunk Technology Add-ons that are specific to the EDR product. The logs must also be mapped to the `Processes` node of the `Endpoint` data model. Use the Splunk Common Information Model (CIM) to normalize the field names and speed up the data modeling process.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrators may leverage findstr to find passwords in GPO to validate exposure. Filter as needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

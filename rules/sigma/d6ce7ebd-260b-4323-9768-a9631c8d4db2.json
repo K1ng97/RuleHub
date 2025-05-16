@@ -1,0 +1,46 @@
+{
+  "id": "d6ce7ebd-260b-4323-9768-a9631c8d4db2",
+  "name": "RestrictedAdminMode Registry Value Tampering",
+  "description": "Detects changes to the \"DisableRestrictedAdmin\" registry value in order to disable or enable RestrictedAdmin mode.\nRestrictedAdmin mode prevents the transmission of reusable credentials to the remote system to which you connect using Remote Desktop.\nThis prevents your credentials from being harvested during the initial connection process if the remote server has been compromise\n",
+  "source": {
+    "type": "sigma",
+    "id": "d6ce7ebd-260b-4323-9768-a9631c8d4db2",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/registry_set_lsa_disablerestrictedadmin.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/registry/registry_set/registry_set_lsa_disablerestrictedadmin.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1112"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/a8e3cf63e97b973a25903d3df9fd55da6252e564/atomics/T1112/T1112.md",
+    "https://social.technet.microsoft.com/wiki/contents/articles/32905.remote-desktop-services-enable-restricted-admin-mode.aspx"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-01-13",
+  "modified": "2024-08-23",
+  "mitre": {
+    "tactics": [
+      "TA1112"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"TargetObject|endswith\": \"System\\\\CurrentControlSet\\\\Control\\\\Lsa\\\\DisableRestrictedAdmin\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "registry_set"
+  ]
+}

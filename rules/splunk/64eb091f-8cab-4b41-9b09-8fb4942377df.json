@@ -1,0 +1,44 @@
+{
+  "id": "64eb091f-8cab-4b41-9b09-8fb4942377df",
+  "name": "Windows Snake Malware Service Create",
+  "description": "The following analytic detects the creation of a new service named WerFaultSvc with a binary path in the Windows WinSxS directory. It leverages Windows System logs, specifically EventCode 7045, to identify this activity. This behavior is significant because it indicates the presence of Snake malware, which uses this service to maintain persistence by blending in with legitimate Windows services. If confirmed malicious, this activity could allow an attacker to execute Snake malware components, leading to potential data exfiltration, system compromise, and long-term persistence within the environment.",
+  "source": {
+    "type": "splunk",
+    "id": "64eb091f-8cab-4b41-9b09-8fb4942377df",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_snake_malware_service_create.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_snake_malware_service_create.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "atomic_guid",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Michael Haag, Splunk",
+  "references": [
+    "https://media.defense.gov/2023/May/09/2003218554/-1/-1/0/JOINT_CSA_HUNTING_RU_INTEL_SNAKE_MALWARE_20230509.PDF"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`wineventlog_system` EventCode=7045  ImagePath=\"*\\\\windows\\\\winSxS\\\\*\" ImagePath=\"*\\Werfault.exe\" | stats count min(_time) as firstTime max(_time) as lastTime by Computer EventCode ImagePath ServiceName ServiceType | rename Computer as dest | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_snake_malware_service_create_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting Windows System logs with the Service name, Service File Name Service Start type, and Service Type from your endpoints.",
+    "fields": []
+  },
+  "falsepositives": [
+    "False positives should be limited as this is a strict primary indicator used by Snake Malware."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

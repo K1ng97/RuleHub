@@ -1,0 +1,45 @@
+{
+  "id": "311b6ce2-7890-4383-a8c2-663a9f6b43cd",
+  "name": "Enabled User Right in AD to Control User Objects",
+  "description": "Detects scenario where if a user is assigned the SeEnableDelegationPrivilege right in Active Directory it would allow control of other AD user objects.",
+  "source": {
+    "type": "sigma",
+    "id": "311b6ce2-7890-4383-a8c2-663a9f6b43cd",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_alert_active_directory_user_control.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_alert_active_directory_user_control.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1098"
+  ],
+  "author": "@neu5ron",
+  "references": [
+    "https://blog.harmj0y.net/activedirectory/the-most-dangerous-user-right-you-probably-have-never-heard-of/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2017-07-30",
+  "modified": "2021-12-02",
+  "mitre": {
+    "tactics": [
+      "TA1098"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_base: {\"EventID\": 4704}\nselection_keywords: {\"PrivilegeList|contains\": \"SeEnableDelegationPrivilege\"}",
+    "condition": "all of selection*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

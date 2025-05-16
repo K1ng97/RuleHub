@@ -1,0 +1,44 @@
+{
+  "id": "70fac80e-0bf1-11ec-9ba0-acde48001122",
+  "name": "Get-ForestTrust with PowerShell Script Block",
+  "description": "The following analytic detects the execution of the Get-ForestTrust command from PowerSploit using PowerShell Script Block Logging (EventCode=4104). This method captures the full command sent to PowerShell, providing detailed visibility into potentially suspicious activities. Monitoring this behavior is crucial as it can indicate an attempt to gather domain trust information, which is often a precursor to lateral movement or privilege escalation. If confirmed malicious, this activity could allow an attacker to map trust relationships within the domain, facilitating further exploitation and access to sensitive resources.",
+  "source": {
+    "type": "splunk",
+    "id": "70fac80e-0bf1-11ec-9ba0-acde48001122",
+    "url": "https://github.com/splunk/security_content/blob/develop/get_foresttrust_with_powershell_script_block.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/get_foresttrust_with_powershell_script_block.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Michael Haag, Splunk",
+  "references": [
+    "https://powersploit.readthedocs.io/en/latest/Recon/Get-ForestTrust/",
+    "https://www.splunk.com/en_us/blog/security/hunting-for-malicious-powershell-using-script-block-logging.html"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`powershell` EventCode=4104 ScriptBlockText = \"*get-foresttrust*\" | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by dest signature signature_id user_id vendor_product EventID Guid Opcode Name Path ProcessID ScriptBlockId ScriptBlockText | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `get_foresttrust_with_powershell_script_block_filter`",
+    "condition": "To successfully implement this analytic, you will need to enable PowerShell Script Block Logging on some or all endpoints. Additional setup here https://docs.splunk.com/Documentation/UBA/5.0.4.1/GetDataIn/AddPowerShell#Configure_module_logging_for_PowerShell.",
+    "fields": []
+  },
+  "falsepositives": [
+    "False positives may be present. Tune as needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

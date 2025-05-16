@@ -1,0 +1,50 @@
+{
+  "id": "1412aa78-a24c-4abd-83df-767dfb2c5bbe",
+  "name": "Potentially Suspicious WebDAV LNK Execution",
+  "description": "Detects possible execution via LNK file accessed on a WebDAV server.",
+  "source": {
+    "type": "sigma",
+    "id": "1412aa78-a24c-4abd-83df-767dfb2c5bbe",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_webdav_lnk_execution.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_webdav_lnk_execution.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1059001",
+    "attackt1204"
+  ],
+  "author": "Micah Babinski",
+  "references": [
+    "https://www.trellix.com/en-us/about/newsroom/stories/research/beyond-file-search-a-novel-method.html",
+    "https://micahbabinski.medium.com/search-ms-webdav-and-chill-99c5b23ac462"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-08-21",
+  "modified": "2023-08-21",
+  "mitre": {
+    "tactics": [
+      "TA1059",
+      "TA1204"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ParentImage|endswith\": \"\\\\explorer.exe\", \"Image|endswith\": [\"\\\\cmd.exe\", \"\\\\cscript.exe\", \"\\\\mshta.exe\", \"\\\\powershell.exe\", \"\\\\pwsh.exe\", \"\\\\wscript.exe\"], \"CommandLine|contains\": \"\\\\DavWWWRoot\\\\\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

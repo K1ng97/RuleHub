@@ -1,0 +1,47 @@
+{
+  "id": "bbb80e91-5746-4fbe-8898-122e2cafdbf4",
+  "name": "Suspicious PowerShell Invocations - Generic - PowerShell Module",
+  "description": "Detects suspicious PowerShell invocation command parameters",
+  "source": {
+    "type": "sigma",
+    "id": "bbb80e91-5746-4fbe-8898-122e2cafdbf4",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_pm_susp_invocation_generic.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_module/posh_pm_susp_invocation_generic.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1059001"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "Internal Research"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2017-03-12",
+  "modified": "2023-01-03",
+  "mitre": {
+    "tactics": [
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_encoded: {\"ContextInfo|contains\": [\" -enc \", \" -EncodedCommand \", \" -ec \"]}\nselection_hidden: {\"ContextInfo|contains\": [\" -w hidden \", \" -window hidden \", \" -windowstyle hidden \", \" -w 1 \"]}\nselection_noninteractive: {\"ContextInfo|contains\": [\" -noni \", \" -noninteractive \"]}",
+    "condition": "all of selection*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Very special / sneaky PowerShell scripts"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_module"
+  ]
+}

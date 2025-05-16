@@ -1,0 +1,50 @@
+{
+  "id": "c4568f5d-131f-4e78-83d4-45b2da0ec4f1",
+  "name": "Communication To LocaltoNet Tunneling Service Initiated - Linux",
+  "description": "Detects an executable initiating a network connection to \"LocaltoNet\" tunneling sub-domains.\nLocaltoNet is a reverse proxy that enables localhost services to be exposed to the Internet.\nAttackers have been seen to use this service for command-and-control activities to bypass MFA and perimeter controls.\n",
+  "source": {
+    "type": "sigma",
+    "id": "c4568f5d-131f-4e78-83d4-45b2da0ec4f1",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/net_connection_lnx_domain_localtonet_tunnel.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/network_connection/net_connection_lnx_domain_localtonet_tunnel.yml"
+  },
+  "tags": [
+    "attackcommand-and-control",
+    "attackt1090",
+    "attackt1102",
+    "attackt1572"
+  ],
+  "author": "Andreas Braathen (mnemonic.io)",
+  "references": [
+    "https://localtonet.com/documents/supported-tunnels",
+    "https://cloud.google.com/blog/topics/threat-intelligence/unc3944-targets-saas-applications"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "experimental",
+  "created": "2024-06-17",
+  "modified": "2024-06-17",
+  "mitre": {
+    "tactics": [
+      "TA1090",
+      "TA1102",
+      "TA1572"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"DestinationHostname|endswith\": [\".localto.net\", \".localtonet.com\"], \"Initiated\": \"true\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate use of the LocaltoNet service."
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "network_connection"
+  ]
+}

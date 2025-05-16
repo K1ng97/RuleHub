@@ -1,0 +1,44 @@
+{
+  "id": "dc1457d0-1d9b-422e-b5a7-db46c184d9aa",
+  "name": "Network Share Discovery Via Dir Command",
+  "description": "The following analytic detects access to Windows administrative SMB shares (Admin$, IPC$, C$) using the 'dir' command. It leverages Windows Security Event Logs with EventCode 5140 to identify this activity. This behavior is significant as it is commonly used by tools like PsExec/PaExec for staging binaries before creating and starting services on remote endpoints, a technique often employed by adversaries for lateral movement and remote code execution. If confirmed malicious, this activity could allow attackers to propagate malware, such as IcedID, across the network, leading to widespread infection and potential data breaches.",
+  "source": {
+    "type": "splunk",
+    "id": "dc1457d0-1d9b-422e-b5a7-db46c184d9aa",
+    "url": "https://github.com/splunk/security_content/blob/develop/network_share_discovery_via_dir_command.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/network_share_discovery_via_dir_command.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "atomic_guid",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://thedfirreport.com/2023/05/22/icedid-macro-ends-in-nokoyawa-ransomware/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`wineventlog_security` EventCode=5140 ShareName IN(\"\\\\\\\\*\\\\ADMIN$\",\"\\\\\\\\*\\\\C$\",\"*\\\\\\\\*\\\\IPC$\") AccessMask= 0x1 | stats min(_time) as firstTime max(_time) as lastTime count by ShareName IpAddress ObjectType SubjectUserName SubjectDomainName IpPort AccessMask Computer | rename Computer as dest | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `network_share_discovery_via_dir_command_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting Windows Security Event Logs with 5140 EventCode enabled. The Windows TA is also required. Also enable the object Audit access success/failure in your group policy.",
+    "fields": []
+  },
+  "falsepositives": [
+    "System Administrators may use looks like net.exe or \"dir commandline\" for troubleshooting or administrations tasks. However, this will typically come only from certain users and certain systems that can be added to an allow list."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

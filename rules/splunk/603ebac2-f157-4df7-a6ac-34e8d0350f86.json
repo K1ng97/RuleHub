@@ -1,0 +1,43 @@
+{
+  "id": "603ebac2-f157-4df7-a6ac-34e8d0350f86",
+  "name": "O365 BEC Email Hiding Rule Created",
+  "description": "This analytic detects mailbox rule creation, a common technique used in Business Email Compromise. It uses a scoring mechanism to identify a combination of attributes often featured in mailbox rules created by attackers. This may indicate that an attacker has gained access to the account.",
+  "source": {
+    "type": "splunk",
+    "id": "603ebac2-f157-4df7-a6ac-34e8d0350f86",
+    "url": "https://github.com/splunk/security_content/blob/develop/o365_bec_email_hiding_rule_created.yml",
+    "file_path": "tmp/repos/splunk/detections/cloud/o365_bec_email_hiding_rule_created.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "0xC0FFEEEE, Github Community",
+  "references": [
+    "https://attack.mitre.org/techniques/T1564/008/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`o365_management_activity` Workload=Exchange Operation=\"New-InboxRule\" | stats values(Name) as Name, values(MarkAsRead) as MarkAsRead, values(MoveToFolder) as MoveToFolder by _time Id user | lookup ut_shannon_lookup word as Name | eval entropy_score=if(ut_shannon<=2, 1, 0) | eval len_score=if(len(Name)<=3, 1,0) | eval read_score=if(MarkAsRead=\"True\", 1, 0) | eval folder_score=if(match(MoveToFolder, \"^(RSS|Conversation History|Archive)\"), 1, 0) | eval suspicious_score=entropy_score+len_score+read_score+folder_score | where suspicious_score>2 | `o365_bec_email_hiding_rule_created_filter`",
+    "condition": "You must install the Splunk Microsoft Office 365 Add-on and ingest Office 365 management activity events. You also need to have the Splunk TA URL Toolbox (https://splunkbase.splunk.com/app/2734/) installed.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Short rule names may trigger false positives. Adjust the entropy and length thresholds as needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

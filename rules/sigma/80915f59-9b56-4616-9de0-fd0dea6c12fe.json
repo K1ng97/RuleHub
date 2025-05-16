@@ -1,0 +1,47 @@
+{
+  "id": "80915f59-9b56-4616-9de0-fd0dea6c12fe",
+  "name": "Clear Linux Logs",
+  "description": "Detects attempts to clear logs on the system. Adversaries may clear system logs to hide evidence of an intrusion",
+  "source": {
+    "type": "sigma",
+    "id": "80915f59-9b56-4616-9de0-fd0dea6c12fe",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_lnx_clear_logs.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/process_creation/proc_creation_lnx_clear_logs.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1070002"
+  ],
+  "author": "Ömer Günal, oscd.community",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1070.002/T1070.002.md"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "stable",
+  "created": "2020-10-07",
+  "modified": "2022-09-15",
+  "mitre": {
+    "tactics": [
+      "TA1070"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"Image|endswith\": [\"/rm\", \"/shred\", \"/unlink\"], \"CommandLine|contains\": [\"/var/log\", \"/var/spool/mail\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administration activities"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "process_creation"
+  ]
+}

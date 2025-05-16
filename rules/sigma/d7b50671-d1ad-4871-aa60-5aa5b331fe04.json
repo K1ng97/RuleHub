@@ -1,0 +1,43 @@
+{
+  "id": "d7b50671-d1ad-4871-aa60-5aa5b331fe04",
+  "name": "Suspicious File Creation In Uncommon AppData Folder",
+  "description": "Detects the creation of suspicious files and folders inside the user's AppData folder but not inside any of the common and well known directories (Local, Romaing, LocalLow). This method could be used as a method to bypass detection who exclude the AppData folder in fear of FPs",
+  "source": {
+    "type": "sigma",
+    "id": "d7b50671-d1ad-4871-aa60-5aa5b331fe04",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_new_files_in_uncommon_appdata_folder.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_new_files_in_uncommon_appdata_folder.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution"
+  ],
+  "author": "Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "Internal Research"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-08-05",
+  "modified": "2023-02-23",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"TargetFilename|startswith\": \"C:\\\\Users\\\\\", \"TargetFilename|contains\": \"\\\\AppData\\\\\", \"TargetFilename|endswith\": [\".bat\", \".cmd\", \".cpl\", \".dll\", \".exe\", \".hta\", \".iso\", \".lnk\", \".msi\", \".ps1\", \".psm1\", \".scr\", \".vbe\", \".vbs\"]}\nfilter_main: {\"TargetFilename|startswith\": \"C:\\\\Users\\\\\", \"TargetFilename|contains\": [\"\\\\AppData\\\\Local\\\\\", \"\\\\AppData\\\\LocalLow\\\\\", \"\\\\AppData\\\\Roaming\\\\\"]}",
+    "condition": "selection and not filter_main",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unlikely"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

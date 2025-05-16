@@ -1,0 +1,48 @@
+{
+  "id": "f0507c0f-a3a2-40f5-acc6-7f543c334993",
+  "name": "Suspicious File Execution From Internet Hosted WebDav Share",
+  "description": "Detects the execution of the \"net use\" command to mount a WebDAV server and then immediately execute some content in it. As seen being used in malicious LNK files",
+  "source": {
+    "type": "sigma",
+    "id": "f0507c0f-a3a2-40f5-acc6-7f543c334993",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_cmd_net_use_and_exec_combo.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_cmd_net_use_and_exec_combo.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1059001"
+  ],
+  "author": "pH-T (Nextron Systems)",
+  "references": [
+    "https://twitter.com/ShadowChasing1/status/1552595370961944576",
+    "https://www.virustotal.com/gui/file/a63376ee1dba76361df73338928e528ca5b20171ea74c24581605366dcaa0104/behavior"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-09-01",
+  "modified": "2023-02-21",
+  "mitre": {
+    "tactics": [
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|contains\": \"\\\\cmd.exe\"}, {\"OriginalFileName\": \"Cmd.EXE\"}]\nselection_base: {\"CommandLine|contains|all\": [\" net use http\", \"& start /b \", \"\\\\DavWWWRoot\\\\\"]}\nselection_ext: {\"CommandLine|contains\": [\".exe \", \".dll \", \".bat \", \".vbs \", \".ps1 \"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "id": "b5746143-59d6-4603-8d06-acbd60e166ee",
+  "name": "Uncommon Child Process Of AddinUtil.EXE",
+  "description": "Detects uncommon child processes of the Add-In deployment cache updating utility (AddInutil.exe) which could be a sign of potential abuse of the binary to proxy execution via a custom Addins.Store payload.\n",
+  "source": {
+    "type": "sigma",
+    "id": "b5746143-59d6-4603-8d06-acbd60e166ee",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_addinutil_uncommon_child_process.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_addinutil_uncommon_child_process.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1218"
+  ],
+  "author": "Michael McKinley (@McKinleyMike), Tony Latteri (@TheLatteri)",
+  "references": [
+    "https://www.blue-prints.blog/content/blog/posts/lolbin/addinutil-lolbas.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2023-09-18",
+  "modified": "2023-09-18",
+  "mitre": {
+    "tactics": [
+      "TA1218"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"ParentImage|endswith\": \"\\\\addinutil.exe\"}\nfilter_main_werfault: {\"Image|endswith\": [\":\\\\Windows\\\\System32\\\\conhost.exe\", \":\\\\Windows\\\\System32\\\\werfault.exe\", \":\\\\Windows\\\\SysWOW64\\\\werfault.exe\"]}",
+    "condition": "selection and not 1 of filter_main_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

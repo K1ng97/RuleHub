@@ -1,0 +1,41 @@
+{
+  "id": "065f2701-b7ea-42f5-9ec4-fbc2261165f9",
+  "name": "Windows AD add Self to Group",
+  "description": "This analytic detects instances where a user adds themselves to an Active Directory (AD) group. This activity is a common indicator of privilege escalation, where a user attempts to gain unauthorized access to higher privileges or sensitive resources. By monitoring AD logs, this detection identifies such suspicious behavior, which could be part of a larger attack strategy aimed at compromising critical systems and data.",
+  "source": {
+    "type": "splunk",
+    "id": "065f2701-b7ea-42f5-9ec4-fbc2261165f9",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_ad_add_self_to_group.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_ad_add_self_to_group.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Dean Luxton",
+  "references": [],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`wineventlog_security` EventCode IN (4728) | where user=src_user | stats min(_time) as _time dc(user) as usercount, values(user) as user values(user_category) as user_category values(src_user_category) as src_user_category values(dvc) as dvc by signature, Group_Name, src_user, dest | `windows_ad_add_self_to_group_filter`",
+    "condition": "This analytic requires eventCode 4728 to be ingested.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

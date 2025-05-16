@@ -1,0 +1,43 @@
+{
+  "id": "989019b4-b7aa-418a-9a17-2293e91288b6",
+  "name": "Windows Modify Registry DisableSecuritySettings",
+  "description": "The following analytic detects modifications to the Windows registry that disable security settings for Terminal Services. It leverages the Endpoint data model, specifically monitoring changes to the registry path associated with Terminal Services security settings. This activity is significant because altering these settings can weaken the security posture of Remote Desktop Services, potentially allowing unauthorized remote access. If confirmed malicious, such modifications could enable attackers to gain persistent remote access to the system, facilitating further exploitation and data exfiltration.",
+  "source": {
+    "type": "splunk",
+    "id": "989019b4-b7aa-418a-9a17-2293e91288b6",
+    "url": "https://github.com/splunk/security_content/blob/develop/windows_modify_registry_disablesecuritysettings.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/windows_modify_registry_disablesecuritysettings.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://malpedia.caad.fkie.fraunhofer.de/details/win.darkgate"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path = \"*\\\\Terminal Services\\\\DisableSecuritySettings\"  Registry.registry_value_data = 0x00000001 by Registry.action Registry.dest Registry.process_guid Registry.process_id Registry.registry_hive Registry.registry_path Registry.registry_key_name Registry.registry_value_data Registry.registry_value_name Registry.registry_value_type Registry.status Registry.user Registry.vendor_product | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `windows_modify_registry_disablesecuritysettings_filter`",
+    "condition": "To successfully implement this search you need to be ingesting information on process that include the name of the process responsible for the changes from your endpoints into the `Endpoint` datamodel in the `Registry` node. Also make sure that this registry was included in your config files ex. sysmon config to be monitored.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrators may enable or disable this feature that may cause some false positive, however is not common. Filter as needed."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

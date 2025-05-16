@@ -1,0 +1,45 @@
+{
+  "id": "3761e026-f259-44e6-8826-719ed8079408",
+  "name": "Linux Network Service Scanning - Auditd",
+  "description": "Detects enumeration of local or remote network services.",
+  "source": {
+    "type": "sigma",
+    "id": "3761e026-f259-44e6-8826-719ed8079408",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/lnx_auditd_network_service_scanning.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/auditd/lnx_auditd_network_service_scanning.yml"
+  },
+  "tags": [
+    "attackdiscovery",
+    "attackt1046"
+  ],
+  "author": "Alejandro Ortuno, oscd.community",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1046/T1046.md"
+  ],
+  "severity": "low",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-21",
+  "modified": "2023-09-26",
+  "mitre": {
+    "tactics": [
+      "TA1046"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"type\": \"SYSCALL\", \"exe|endswith\": [\"/telnet\", \"/nmap\", \"/netcat\", \"/nc\", \"/ncat\", \"/nc.openbsd\"], \"key\": \"network_connect_4\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Legitimate administration activities"
+  ],
+  "level": "low",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "auditd"
+  ]
+}

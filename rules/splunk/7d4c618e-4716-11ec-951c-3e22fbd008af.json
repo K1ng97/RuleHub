@@ -1,0 +1,44 @@
+{
+  "id": "7d4c618e-4716-11ec-951c-3e22fbd008af",
+  "name": "Remote Process Instantiation via WinRM and PowerShell Script Block",
+  "description": "The following analytic detects the execution of PowerShell commands that use the `Invoke-Command` cmdlet to start a process on a remote endpoint via the WinRM protocol. It leverages PowerShell Script Block Logging (EventCode=4104) to identify such activities. This behavior is significant as it may indicate lateral movement or remote code execution attempts by adversaries. If confirmed malicious, this activity could allow attackers to execute arbitrary code on remote systems, potentially leading to further compromise and persistence within the network.",
+  "source": {
+    "type": "splunk",
+    "id": "7d4c618e-4716-11ec-951c-3e22fbd008af",
+    "url": "https://github.com/splunk/security_content/blob/develop/remote_process_instantiation_via_winrm_and_powershell_script_block.yml",
+    "file_path": "tmp/repos/splunk/detections/endpoint/remote_process_instantiation_via_winrm_and_powershell_script_block.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Mauricio Velazco, Splunk",
+  "references": [
+    "https://attack.mitre.org/techniques/T1021/006/",
+    "https://pentestlab.blog/2018/05/15/lateral-movement-winrm/"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`powershell` EventCode=4104 (ScriptBlockText=\"*Invoke-Command*\" AND ScriptBlockText=\"*-ComputerName*\") | fillnull | stats count min(_time) as firstTime max(_time) as lastTime by dest signature signature_id user_id vendor_product EventID Guid Opcode Name Path ProcessID ScriptBlockId ScriptBlockText | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `remote_process_instantiation_via_winrm_and_powershell_script_block_filter`",
+    "condition": "To successfully implement this analytic, you will need to enable PowerShell Script Block Logging on some or all endpoints. Additional setup instructions can be found https://docs.splunk.com/Documentation/UBA/5.0.4.1/GetDataIn/AddPowerShell#Configure_module_logging_for_PowerShell.",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrators may leverage WinRM and `Invoke-Command` to start a process on remote systems for system administration or automation use cases. This activity is usually limited to a small set of hosts or users. In certain environments, tuning may not be possible."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

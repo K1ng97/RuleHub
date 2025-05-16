@@ -1,0 +1,47 @@
+{
+  "id": "09438caa-07b1-4870-8405-1dbafe3dad95",
+  "name": "Azure Subscription Permission Elevation Via ActivityLogs",
+  "description": "Detects when a user has been elevated to manage all Azure Subscriptions.\nThis change should be investigated immediately if it isn't planned.\nThis setting could allow an attacker access to Azure subscriptions in your environment.\n",
+  "source": {
+    "type": "sigma",
+    "id": "09438caa-07b1-4870-8405-1dbafe3dad95",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/azure_subscription_permissions_elevation_via_activitylogs.yml",
+    "file_path": "tmp/repos/sigma/rules/cloud/azure/activity_logs/azure_subscription_permissions_elevation_via_activitylogs.yml"
+  },
+  "tags": [
+    "attackinitial-access",
+    "attackt1078004"
+  ],
+  "author": "Austin Songer @austinsonger",
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations#microsoftauthorization"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-11-26",
+  "modified": "2022-08-23",
+  "mitre": {
+    "tactics": [
+      "TA1078"
+    ],
+    "techniques": [
+      "T004"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"operationName\": \"MICROSOFT.AUTHORIZATION/ELEVATEACCESS/ACTION\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "If this was approved by System Administrator."
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "azure",
+    "activitylogs"
+  ]
+}

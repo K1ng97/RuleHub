@@ -1,0 +1,48 @@
+{
+  "id": "de41232e-12e8-49fa-86bc-c05c7e722df9",
+  "name": "Suspicious PowerShell Download - PoshModule",
+  "description": "Detects suspicious PowerShell download command",
+  "source": {
+    "type": "sigma",
+    "id": "de41232e-12e8-49fa-86bc-c05c7e722df9",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_pm_susp_download.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_module/posh_pm_susp_download.yml"
+  },
+  "tags": [
+    "attackexecution",
+    "attackt1059001"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://learn.microsoft.com/en-us/dotnet/api/system.net.webclient.downloadfile?view=net-8.0",
+    "https://learn.microsoft.com/en-us/dotnet/api/system.net.webclient.downloadstring?view=net-8.0"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2017-03-05",
+  "modified": "2023-01-20",
+  "mitre": {
+    "tactics": [
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection_webclient_: {\"ContextInfo|contains\": \"System.Net.WebClient\"}\nselection_function: {\"ContextInfo|contains\": [\".DownloadFile(\", \".DownloadString(\"]}",
+    "condition": "all of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "PowerShell scripts that download content from the Internet"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_module"
+  ]
+}

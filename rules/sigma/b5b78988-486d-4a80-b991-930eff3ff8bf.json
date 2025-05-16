@@ -1,0 +1,49 @@
+{
+  "id": "b5b78988-486d-4a80-b991-930eff3ff8bf",
+  "name": "PowerShell Profile Modification",
+  "description": "Detects the creation or modification of a powershell profile which could indicate suspicious activity as the profile can be used as a mean of persistence",
+  "source": {
+    "type": "sigma",
+    "id": "b5b78988-486d-4a80-b991-930eff3ff8bf",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_susp_powershell_profile.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_susp_powershell_profile.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackprivilege-escalation",
+    "attackt1546013"
+  ],
+  "author": "HieuTT35, Nasreddine Bencherchali (Nextron Systems)",
+  "references": [
+    "https://www.welivesecurity.com/2019/05/29/turla-powershell-usage/",
+    "https://persistence-info.github.io/Data/powershellprofile.html"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-10-24",
+  "modified": "2023-10-23",
+  "mitre": {
+    "tactics": [
+      "TA1546"
+    ],
+    "techniques": [
+      "T013"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"TargetFilename|endswith\": [\"\\\\Microsoft.PowerShell_profile.ps1\", \"\\\\PowerShell\\\\profile.ps1\", \"\\\\Program Files\\\\PowerShell\\\\7-preview\\\\profile.ps1\", \"\\\\Program Files\\\\PowerShell\\\\7\\\\profile.ps1\", \"\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\profile.ps1\", \"\\\\WindowsPowerShell\\\\profile.ps1\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "System administrator creating Powershell profile manually"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

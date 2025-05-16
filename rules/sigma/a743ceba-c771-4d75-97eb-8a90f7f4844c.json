@@ -1,0 +1,48 @@
+{
+  "id": "a743ceba-c771-4d75-97eb-8a90f7f4844c",
+  "name": "UAC Bypass Using PkgMgr and DISM",
+  "description": "Detects the pattern of UAC Bypass using pkgmgr.exe and dism.exe (UACMe 23)",
+  "source": {
+    "type": "sigma",
+    "id": "a743ceba-c771-4d75-97eb-8a90f7f4844c",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_uac_bypass_pkgmgr_dism.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_uac_bypass_pkgmgr_dism.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackprivilege-escalation",
+    "attackt1548002"
+  ],
+  "author": "Christian Burkard (Nextron Systems)",
+  "references": [
+    "https://github.com/hfiref0x/UACME"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2021-08-23",
+  "modified": "2024-12-01",
+  "mitre": {
+    "tactics": [
+      "TA1548"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ParentImage|endswith\": \"\\\\pkgmgr.exe\", \"Image|endswith\": \"\\\\dism.exe\", \"IntegrityLevel\": [\"High\", \"System\", \"S-1-16-16384\", \"S-1-16-12288\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

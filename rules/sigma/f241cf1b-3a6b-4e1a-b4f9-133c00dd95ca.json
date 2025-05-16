@@ -1,0 +1,50 @@
+{
+  "id": "f241cf1b-3a6b-4e1a-b4f9-133c00dd95ca",
+  "name": "Invoke-Obfuscation RUNDLL LAUNCHER - Security",
+  "description": "Detects Obfuscated Powershell via RUNDLL LAUNCHER",
+  "source": {
+    "type": "sigma",
+    "id": "f241cf1b-3a6b-4e1a-b4f9-133c00dd95ca",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/win_security_invoke_obfuscation_via_rundll_services_security.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/builtin/security/win_security_invoke_obfuscation_via_rundll_services_security.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackt1027",
+    "attackt1059001"
+  ],
+  "author": "Timur Zinniatullin, oscd.community",
+  "references": [
+    "https://github.com/SigmaHQ/sigma/issues/1009"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2020-10-18",
+  "modified": "2022-11-29",
+  "mitre": {
+    "tactics": [
+      "TA1027",
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"EventID\": 4697, \"ServiceFileName|contains|all\": [\"rundll32.exe\", \"shell32.dll\", \"shellexec_rundll\", \"powershell\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "security"
+  ]
+}

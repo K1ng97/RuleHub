@@ -1,0 +1,46 @@
+{
+  "id": "74babdd6-a758-4549-9632-26535279e654",
+  "name": "Suspicious Executable File Creation",
+  "description": "Detect creation of suspicious executable file names.\nSome strings look for suspicious file extensions, others look for filenames that exploit unquoted service paths.\n",
+  "source": {
+    "type": "sigma",
+    "id": "74babdd6-a758-4549-9632-26535279e654",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/file_event_win_susp_executable_creation.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/file/file_event/file_event_win_susp_executable_creation.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1564"
+  ],
+  "author": "frack113",
+  "references": [
+    "https://medium.com/@SumitVerma101/windows-privilege-escalation-part-1-unquoted-service-path-c7a011a8d8ae",
+    "https://app.any.run/tasks/76c69e2d-01e8-49d9-9aea-fb7cc0c4d3ad/"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-09-05",
+  "modified": "2023-12-11",
+  "mitre": {
+    "tactics": [
+      "TA1564"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection: {\"TargetFilename|endswith\": [\":\\\\$Recycle.Bin.exe\", \":\\\\Documents and Settings.exe\", \":\\\\MSOCache.exe\", \":\\\\PerfLogs.exe\", \":\\\\Recovery.exe\", \".bat.exe\", \".sys.exe\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "file_event"
+  ]
+}

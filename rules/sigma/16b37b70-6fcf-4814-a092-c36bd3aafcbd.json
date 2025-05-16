@@ -1,0 +1,51 @@
+{
+  "id": "16b37b70-6fcf-4814-a092-c36bd3aafcbd",
+  "name": "PowerShell ShellCode",
+  "description": "Detects Base64 encoded Shellcode",
+  "source": {
+    "type": "sigma",
+    "id": "16b37b70-6fcf-4814-a092-c36bd3aafcbd",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/posh_ps_shellcode_b64.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/powershell/powershell_script/posh_ps_shellcode_b64.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackexecution",
+    "attackprivilege-escalation",
+    "attackt1055",
+    "attackt1059001"
+  ],
+  "author": "David Ledbetter (shellcode), Florian Roth (Nextron Systems)",
+  "references": [
+    "https://twitter.com/cyb3rops/status/1063072865992523776"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2018-11-17",
+  "modified": "2024-01-25",
+  "mitre": {
+    "tactics": [
+      "TA1055",
+      "TA1059"
+    ],
+    "techniques": [
+      "T001"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"ScriptBlockText|contains\": [\"OiCAAAAYInlM\", \"OiJAAAAYInlM\"]}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "ps_script"
+  ]
+}

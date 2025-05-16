@@ -1,0 +1,43 @@
+{
+  "id": "e2b36208-a364-11eb-8909-acde48001122",
+  "name": "Plain HTTP POST Exfiltrated Data",
+  "description": "The following analytic detects potential data exfiltration using plain HTTP POST requests. It leverages network traffic logs, specifically monitoring the `stream_http` data source for POST methods containing suspicious form data such as \"wermgr.exe\" or \"svchost.exe\". This activity is significant because it is commonly associated with malware like Trickbot, trojans, keyloggers, or APT adversaries, which use plain text HTTP POST requests to communicate with remote C2 servers. If confirmed malicious, this activity could lead to unauthorized data exfiltration, compromising sensitive information and potentially leading to further network infiltration.",
+  "source": {
+    "type": "splunk",
+    "id": "e2b36208-a364-11eb-8909-acde48001122",
+    "url": "https://github.com/splunk/security_content/blob/develop/plain_http_post_exfiltrated_data.yml",
+    "file_path": "tmp/repos/splunk/detections/web/plain_http_post_exfiltrated_data.yml"
+  },
+  "tags": [
+    "analytic_story",
+    "asset_type",
+    "mitre_attack_id",
+    "product",
+    "security_domain"
+  ],
+  "author": "Teoderick Contreras, Splunk",
+  "references": [
+    "https://blog.talosintelligence.com/2020/03/trickbot-primer.html"
+  ],
+  "severity": "medium",
+  "type": "splunk",
+  "status": "production",
+  "created": "2025-05-02",
+  "modified": "2025-05-02",
+  "mitre": {
+    "tactics": [],
+    "techniques": []
+  },
+  "detection": {
+    "query": "`stream_http` http_method=POST form_data IN (\"*wermgr.exe*\",\"*svchost.exe*\", \"*name=\\\"proclist\\\"*\",\"*ipconfig*\", \"*name=\\\"sysinfo\\\"*\", \"*net view*\") |stats values(form_data) as http_request_body min(_time) as firstTime max(_time) as lastTime count by src_ip dest_ip http_method http_user_agent uri_path url bytes_in bytes_out | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | `plain_http_post_exfiltrated_data_filter`",
+    "condition": "To successfully implement this search, you need to be ingesting logs with the stream HTTP logs or network logs that catch network traffic. Make sure that the http-request-body, payload, or request field is enabled.",
+    "fields": []
+  },
+  "falsepositives": [
+    "unknown"
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": []
+}

@@ -1,0 +1,46 @@
+{
+  "id": "26488ad0-f9fd-4536-876f-52fea846a2e4",
+  "name": "HackTool - SharPersist Execution",
+  "description": "Detects the execution of the hacktool SharPersist - used to deploy various different kinds of persistence mechanisms",
+  "source": {
+    "type": "sigma",
+    "id": "26488ad0-f9fd-4536-876f-52fea846a2e4",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/proc_creation_win_hktl_sharpersist.yml",
+    "file_path": "tmp/repos/sigma/rules/windows/process_creation/proc_creation_win_hktl_sharpersist.yml"
+  },
+  "tags": [
+    "attackpersistence",
+    "attackt1053"
+  ],
+  "author": "Florian Roth (Nextron Systems)",
+  "references": [
+    "https://www.mandiant.com/resources/blog/sharpersist-windows-persistence-toolkit",
+    "https://github.com/mandiant/SharPersist"
+  ],
+  "severity": "high",
+  "type": "sigma",
+  "status": "test",
+  "created": "2022-09-15",
+  "modified": "2023-02-04",
+  "mitre": {
+    "tactics": [
+      "TA1053"
+    ],
+    "techniques": []
+  },
+  "detection": {
+    "query": "selection_img: [{\"Image|endswith\": \"\\\\SharPersist.exe\"}, {\"Product\": \"SharPersist\"}]\nselection_cli_1: {\"CommandLine|contains\": [\" -t schtask -c \", \" -t startupfolder -c \"]}\nselection_cli_2: {\"CommandLine|contains|all\": [\" -t reg -c \", \" -m add\"]}\nselection_cli_3: {\"CommandLine|contains|all\": [\" -t service -c \", \" -m add\"]}\nselection_cli_4: {\"CommandLine|contains|all\": [\" -t schtask -c \", \" -m add\"]}",
+    "condition": "1 of selection_*",
+    "fields": []
+  },
+  "falsepositives": [
+    "Unknown"
+  ],
+  "level": "high",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "windows",
+    "process_creation"
+  ]
+}

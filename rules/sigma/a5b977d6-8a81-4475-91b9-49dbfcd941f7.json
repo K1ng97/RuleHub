@@ -1,0 +1,47 @@
+{
+  "id": "a5b977d6-8a81-4475-91b9-49dbfcd941f7",
+  "name": "Remove Immutable File Attribute - Auditd",
+  "description": "Detects removing immutable file attribute.",
+  "source": {
+    "type": "sigma",
+    "id": "a5b977d6-8a81-4475-91b9-49dbfcd941f7",
+    "url": "https://github.com/SigmaHQ/sigma/blob/master/lnx_auditd_chattr_immutable_removal.yml",
+    "file_path": "tmp/repos/sigma/rules/linux/auditd/lnx_auditd_chattr_immutable_removal.yml"
+  },
+  "tags": [
+    "attackdefense-evasion",
+    "attackt1222002"
+  ],
+  "author": "Jakob Weinzettl, oscd.community",
+  "references": [
+    "https://github.com/redcanaryco/atomic-red-team/blob/f339e7da7d05f6057fdfcdd3742bfcf365fee2a9/atomics/T1222.002/T1222.002.md"
+  ],
+  "severity": "medium",
+  "type": "sigma",
+  "status": "test",
+  "created": "2019-09-23",
+  "modified": "2022-11-26",
+  "mitre": {
+    "tactics": [
+      "TA1222"
+    ],
+    "techniques": [
+      "T002"
+    ]
+  },
+  "detection": {
+    "query": "selection: {\"type\": \"EXECVE\", \"a0|contains\": \"chattr\", \"a1|contains\": \"-i\"}",
+    "condition": "selection",
+    "fields": []
+  },
+  "falsepositives": [
+    "Administrator interacting with immutable files (e.g. for instance backups)."
+  ],
+  "level": "medium",
+  "rule_format": "standard",
+  "platforms": [],
+  "data_sources": [
+    "linux",
+    "auditd"
+  ]
+}
