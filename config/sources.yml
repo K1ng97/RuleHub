@@ -8,14 +8,8 @@ sources:
     description: "通用的开源SIEM规则格式"
     repo_url: "https://github.com/SigmaHQ/sigma.git"
     branch: "master"
-    paths:
-      - "rules/windows"
-      - "rules/linux"
-      - "rules/cloud"
-      - "rules/network"
-    format: "yml"
+    rule_path: "rules"
     converter: "sigma_converter"
-    update_interval: 86400  # 24小时，单位：秒
     enabled: true
     tags:
       - "sigma"
@@ -28,12 +22,7 @@ sources:
     description: "Elastic Security提供的检测规则"
     repo_url: "https://github.com/elastic/detection-rules.git"
     branch: "main"
-    paths:
-      - "rules/windows"
-      - "rules/linux"
-      - "rules/macos"
-      - "rules/cross-platform"
-    format: "ndjson"
+    rule_path: "rules"
     converter: "elastic_converter"
     update_interval: 86400  # 24小时，单位：秒
     enabled: true
@@ -48,11 +37,8 @@ sources:
     description: "Splunk提供的安全内容，包括检测规则、查询等"
     repo_url: "https://github.com/splunk/security_content.git"
     branch: "develop"
-    paths:
-      - "detections"
-    format: "yml"
+    rule_path: "detections"
     converter: "splunk_converter"
-    update_interval: 86400  # 24小时，单位：秒
     enabled: true
     tags:
       - "splunk"
@@ -65,12 +51,9 @@ sources:
     description: "MITRE ATT&CK相关的检测规则和测试案例"
     repo_url: "https://github.com/mitre/detection-lab-rules.git"  # 示例仓库
     branch: "main"
-    paths:
-      - "rules"
-    format: "json"
+    rule_path: "rules"
     converter: "mitre_converter"
-    update_interval: 172800  # 48小时，单位：秒
-    enabled: false  # 默认禁用
+    enabled: true  # 默认禁用
     tags:
       - "mitre"
       - "attack"

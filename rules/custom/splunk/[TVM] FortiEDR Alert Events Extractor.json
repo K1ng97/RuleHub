@@ -1,0 +1,43 @@
+{
+    "id": "Trw3u90AmCXQaR7",
+    "permission": {
+        "owner": "phantom-local-user",
+        "read_group": "*",
+        "sharing": "app"
+    },
+    "alert": {
+        "name": "[TVM] FortiEDR Alert Events Extractor",
+        "enabled": true,
+        "digest_mode": true,
+        "expires": "1h",
+        "severity": "3",
+        "schedule_priority": "default",
+        "alert_comparator": "greater than",
+        "alert_threshold": "0",
+        "suppress": {
+            "enabled": false,
+            "fields": "dest_ip",
+            "period": "15m"
+        },
+        "alert_type": "number of events",
+        "cron_schedule": "3-59/5 * * * *",
+        "schedule_window": "0",
+        "dispatch": {
+            "earliest_time": "-9m@m",
+            "latest_time": "-4m@m"
+        },
+        "description": "This rule is managed by Omma, rule ID: Trw3u90AmCXQaR7.",
+        "is_visible": true,
+        "is_scheduled": true,
+        "search": "```\n    Despriction: Forward FortiEDR alert event to the index of aipo_phantom_summary\n    Author: Rick Lee\n    version: 4.0\n    date: 2025.03.05\n    ```\n    index=edr_logs subtype=\"Security Event\"\n    ```\n    1. Define alert event priority.\n    ``` \n| lookup edr_alert_priority.csv severity AS severity classification AS classification OUTPUT priority\n    ```\n    2. Optimize the original event fields to make it more readable.\n    ``` \n| eval process_path=replace(process_path,\"\\\\\\\\Device\\\\\\\\HarddiskVolume.\",\"C:\") \n| eval target=replace(target,\"\\\\\\\\Device\\\\\\\\HarddiskVolume.\",\"C:\") \n    ```\n    3.Format the output fields.\n    ``` \n| eval event_time=last_seen \n| eval alert_name=rules_list \n| eval host_name=device_name\n| eval investigation_link=\"https://tvm-edr.services.silu.net/investigation?&eventId=\".event_id\n| makemv delim=\", \" allowempty=true target \n| makemv delim=\",\" command_line \n| eval process_chain=case(\n    target==\"Value too long\" And command_line==\"Value too long\",\"\u3010\u26a0\ufe0f The process chain is missing. Please login FortiEDR to check!\u3011\",\n    target!=\"Value too long\" And command_line==\"Value too long\", mvappend(target,\"\u3010\u26a0\ufe0f The commandline is missing. Please login FortiEDR to check.!\u3011\"),\n    target==\"Value too long\" And command_line!=\"Value too long\", mvappend(command_line,\"\u3010\u26a0\ufe0f The process info is missing. Please login FortiEDR to check.!\u3011\"),\n    target!=\"Value too long\" And isnull(command_line),target,\n    target!=\"Value too long\" And mvcount(command_line)==0,target,\n    true(), mvjoin(mvzip(target,command_line,\"\"),\" \u27a1\ufe0f \"))\n    ```\n    4.Format the original event as json.\n    ``` \n| eval alert_context=json_object(\n    \"event\",json_object(\n    \"event_id\", event_id,\n    \"event_type\",\"FortiEDR Alert\",\n    \"event_time\", last_seen,\n    \"event_first_seen\", first_seen,\n    \"event_last_seen\", last_seen,\n    \"event_count\", event_count,\n    \"event_raw_data_id\", raw_data_id,\n    \"investigation_link\", investigation_link),\n    \"alert\",json_object(\n    \"alert_name\",rules_list,\n    \"alert_ttp\",mitre_techniques,\n    \"alert_priority\",priority),\n    \"host\",json_object(\n    \"host_name\", device_name,\n    \"host_ip\",source_ip,\n    \"host_mac\",mac_address,\n    \"host_group\",collector_group,\n    \"host_state\",device_state,\n    \"host_system\",operating_system,\n    \"host_login_users\",users),\n    \"process\",json_object(\n    \"process_name\", process_name,\n    \"process_hash\", process_hash,\n    \"process_path\", process_path,\n    \"process_chain\", process_chain,\n    \"process_type\", process_type,\n    \"process_file_certificate\", certificate,\n    \"process_stack_hashes\", stack_hashes,\n    \"process_stack_certificates\",stack_certificates),\n    \"destination\",json_object(\n    \"script\", script,\n    \"script_path\", script_path,\n    \"destination\", destination,\n    \"country\", country,\n    \"autonomous_system\", autonomous_system))\n    ```\n    5.Forward event to index of aipo_phantom_summary\n    ``` \n| table _time,event_time,alert_name,priority,host_name,process_name,alert_context\n| collect index=aipo_alert_summary source=AIPO_EDR addinfo=false"
+    },
+    "action": {
+        "email": {
+            "enabled": false,
+            "to": "",
+            "subject": "",
+            "message": "",
+            "send_results": true
+        }
+    }
+}

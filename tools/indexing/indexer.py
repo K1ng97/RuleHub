@@ -173,16 +173,61 @@ class RuleIndexer:
                 # 处理每个规则文件
                 for rule_file in rule_files:
                     try:
-                        # 读取规则文件
-                        rule = read_json(rule_file)
-                        
-                        # 创建索引条目
-                        rule_entry = self._create_rule_entry(rule, rule_file)
-                        
+                        # 读取原始规则文件（假设已存储为原始格式）
+                        if source_name == 'sigma':
+                            from tools.parsers.sigma_parser import SigmaParser
+                            parser = SigmaParser()
+                        elif source_name == 'splunk':
+                            from tools.parsers.splunk_parser import SplunkParser
+                            parser = SplunkParser()
+                        else:
+                            logger.warning(f"未找到{source_name}对应的解析器，跳过解析")
+                            continue
+
+                        # 解析规则metadata
+                        metadata = parser.parse(rule_file)
+                        if not metadata:
+                            logger.warning(f"解析{rule_file}失败，跳过")
+                            continue
+
+                        # 读取原始规则内容（根据实际存储格式调整读取方式）
+                        if rule_file.suffix == '.yml':
+                            import yaml
+                            with open(rule_file, 'r', encoding='utf-8') as f:
+                                rule_content = yaml.safe_load(f)
+                        elif rule_file.suffix == '.json':
+                            rule_content = read_json(rule_file)
+                        else:
+                            logger.warning(f"不支持的规则格式: {rule_file.suffix}")
+                            continue
+
+                        # 合并metadata和规则内容
+                        full_rule_info = {
+                            "metadata": metadata,
+                            "content": rule_content,
+                            "source": source_name,
+                            "file_path": str(rule_file)
+                        }
+
+                        # 输出到仓库规则信息JSON文件
+                        repo_rules_dir = self.index_dir / "repo_rules"
+                        ensure_dir(repo_rules_dir)
+                        output_path = repo_rules_dir / f"{source_name}_rules.json"
+                        if output_path.exists():
+                            existing_rules = read_json(output_path)
+                            existing_rules.append(full_rule_info)
+                        else:
+                            existing_rules = [full_rule_info]
+                        write_json(existing_rules, output_path)
+
+                        # 创建索引条目（基于metadata）
+                        rule_entry = self._create_rule_entry(full_rule_info["metadata"], rule_file)
+                        rule_entry["source"] = source_name
+
                         # 添加到主索引和源索引
                         index["rules"].append(rule_entry)
                         source_index["rules"].append(rule_entry)
-                        
+
                         # 更新统计信息
                         source_stats["rules_count"] += 1
                         stats["total_rules"] += 1

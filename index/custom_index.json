@@ -2,37 +2,8 @@
   "meta": {
     "source": "custom",
     "version": "1.0.0",
-    "generated_at": "2025-05-16T15:16:41.111838",
-    "total_rules": 1
+    "generated_at": "2025-05-16T20:52:26.416973",
+    "total_rules": 0
   },
-  "rules": [
-    {
-      "id": "rule_219509de",
-      "name": "ceshirule",
-      "description": "This my first test rulke",
-      "source": {
-        "type": "custom",
-        "id": "rule_219509de"
-      },
-      "severity": "critical",
-      "tags": [
-        "hids",
-        "windows"
-      ],
-      "platforms": [
-        "windows"
-      ],
-      "mitre": {
-        "tactics": [
-          "initial_access",
-          "execution",
-          "persistence"
-        ],
-        "techniques": []
-      },
-      "created": "2025-05-16T13:43:43.787311",
-      "modified": "2025-05-16T13:43:43.787345",
-      "rule_path": "rules/custom/rule_219509de.json"
-    }
-  ]
+  "rules": []
 }

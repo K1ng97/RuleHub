@@ -1,0 +1,2 @@
+rules_dir: rules/sigma
+output_path: index/sigma_metadata.json

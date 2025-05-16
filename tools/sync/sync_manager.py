@@ -12,6 +12,7 @@ import yaml
 import json
 import logging
 import argparse
+import shutil
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Union, Tuple
@@ -217,12 +218,14 @@ class SyncManager:
                 raise RuntimeError(f"克隆规则源 {source_name} 仓库失败")
             
             # 获取规则路径和转换器
-            rule_paths = source_config.get("paths", [])
+            rule_paths = [source_config.get("rule_path")]  # 适配新字段rule_path
             converter_type = source_config.get("converter", source_name)
-            rule_format = source_config.get("format", "yaml")
             
-            # 确保目标目录存在
+            # 确保目标目录存在（同步前清空旧文件）
             output_dir = self.rules_dir / source_name
+            # 清空目标目录
+            if output_dir.exists():
+                shutil.rmtree(output_dir)
             ensure_dir(output_dir)
             
             # 处理所有规则
@@ -237,39 +240,25 @@ class SyncManager:
                     logger.warning(f"规则路径不存在: {full_path}")
                     continue
                 
-                # 获取匹配模式
-                pattern = f"*.{rule_format}"
-                if rule_format == "yml":
-                    pattern = "*.{yml,yaml}"
+                # 获取规则文件格式（从配置或转换器推断）
+                # 直接匹配所有规则文件
+                pattern = "**/*"
                 
-                # 获取所有规则文件
-                rule_files = list_files(full_path, pattern)
+                # 获取所有规则文件（过滤目录）
+                rule_files = [f for f in list_files(full_path, pattern) if f.is_file()]
                 total_rules += len(rule_files)
                 
                 # 转换每个规则
                 for rule_file in rule_files:
                     try:
-                        # 加载并转换规则
-                        standard_rule = ConverterFactory.load_and_convert_rule(
-                            rule_file, converter_type
-                        )
-                        
-                        if not standard_rule:
-                            logger.warning(f"规则转换失败: {rule_file}")
-                            failed_rules += 1
-                            continue
-                        
-                        # 生成输出文件名
-                        rule_id = standard_rule.get("id", "")
-                        if not rule_id:
-                            logger.warning(f"规则没有ID: {rule_file}")
-                            rule_id = get_file_hash(rule_file)[:8]
-                            
-                        output_file = output_dir / f"{rule_id}.json"
-                        
-                        # 保存转换后的规则
-                        write_json(standard_rule, output_file)
+                        # 保留原始分类目录结构：获取规则文件相对路径并构造目标路径
+                        relative_path = rule_file.relative_to(full_path)  # 基于rule_path路径计算相对路径
+                        adjusted_relative = relative_path
+                        output_path = output_dir / adjusted_relative
+                        ensure_dir(output_path.parent)
+                        shutil.copy2(rule_file, output_path)
                         converted_rules += 1
+                        self.stats["total_rules"] += 1
                         
                     except Exception as e:
                         logger.error(f"处理规则 {rule_file} 时发生错误: {e}")

@@ -1,30 +1,26 @@
 {
-  "total_sources": 5,
-  "total_rules": 4569,
+  "total_sources": 4,
+  "total_rules": 0,
   "source_stats": {
     "elastic": {
       "name": "elastic",
       "rules_count": 0
     },
-    "other": {
-      "name": "other",
-      "rules_count": 0
-    },
     "sigma": {
       "name": "sigma",
-      "rules_count": 2804
+      "rules_count": 0
     },
     "splunk": {
       "name": "splunk",
-      "rules_count": 1764
+      "rules_count": 0
     },
     "custom": {
       "name": "custom",
-      "rules_count": 1
+      "rules_count": 0
     }
   },
-  "start_time": "2025-05-16T15:16:41.111838",
-  "end_time": "2025-05-16T15:16:42.046202",
+  "start_time": "2025-05-16T20:52:26.416973",
+  "end_time": "2025-05-16T20:52:26.490916",
   "success": true,
-  "duration": 0.934364
+  "duration": 0.073943
 }

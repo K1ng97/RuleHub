@@ -1,0 +1,43 @@
+{
+    "id": "AE6PwtIMNhZUOmR",
+    "permission": {
+        "owner": "phantom-local-user",
+        "read_group": "*",
+        "sharing": "app"
+    },
+    "alert": {
+        "name": "[TVM] Linux Capture Desktop using Import Tool-T1113",
+        "enabled": true,
+        "digest_mode": true,
+        "expires": "1h",
+        "severity": "3",
+        "schedule_priority": "default",
+        "alert_comparator": "greater than",
+        "alert_threshold": "0",
+        "suppress": {
+            "enabled": false,
+            "fields": "dest_ip",
+            "period": "15m"
+        },
+        "alert_type": "number of events",
+        "cron_schedule": "0 * * * *",
+        "schedule_window": "0",
+        "dispatch": {
+            "earliest_time": "-1h",
+            "latest_time": "now"
+        },
+        "description": "This rule is managed by Omma, rule ID: AE6PwtIMNhZUOmR.",
+        "is_visible": true,
+        "is_scheduled": true,
+        "search": "index=osquery_logs name=ais_process_events columns.cmdline IN (\"* xwd *\", \"*import -window *\") earliest=-15m@m\n| rename columns.* as * \n| eval risk_id=\"d7819b08-0a40-420f-a22e-bc6e7a0edb64\"\n| lookup aipo_risk_table.csv risk_id as risk_id \n| eval risk_impact=spath(risk_meta_data, \"risk_impact\"), risk_confidence=spath(risk_meta_data, \"risk_confidence\"), risk_object_type=spath(risk_meta_data, \"risk_object_type\"), risk_ttp=spath(risk_meta_data, \"mitre_attack_id\")\n| eval risk_score=risk_impact*(risk_confidence/100)\n| eval risk_validity_period=2592000, risk_expired=0, risk_triggered=0, risk_object_importance=1.2, risk_vm_factor=1\n| eval risk_object=json_object(\n\"dest\",hostIdentifier,\n\"user\",uname\n)\n| eval risk_context=json_object(\n\"dest\",hostIdentifier,\n\"user_id\",uid,\n\"user\",uname,\n\"process_id\",pid,\n\"process_name\",name,\n\"process_ts\",pid_ts,\n\"process_current_directory\",cwd,\n\"process_exec\",procexe,\n\"cmdline\",cmdline,\n\"process_group_id\",pgid,\n\"session_id\",ses,\n\"process_path\",path,\n\"parent_process_id\",ppid,\n\"parent_process_ts\",ppid_ts,\n\"parent_process_exec\",pprocexe\n)\n| eval _key=md5(risk_context+risk_object+risk_object_type)\n| table _key _time risk_name risk_id risk_ttp risk_impact risk_confidence risk_score risk_object risk_object_type risk_stage risk_context risk_expired risk_triggered risk_validity_period risk_object_importance risk_vm_factor\n| collect index=aipo_phantom_summary source=AIPO_HIDS"
+    },
+    "action": {
+        "email": {
+            "enabled": false,
+            "to": "aipo_tvm@aipocloud.com",
+            "subject": "$name$",
+            "message": "$name$ has been triggered.",
+            "send_results": true
+        }
+    }
+}
