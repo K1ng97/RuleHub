@@ -26,17 +26,17 @@ graph TD
 
 ### 同步规则
 ```bash
-python3 -m tools.sync.sync_manager --repo sigma --branch main
+python3 rulehub.py repo sync --source sigma
 ```
 
 ### 搜索规则
 ```bash
-python3 -m tools.cli.search --query "suspicious process"
+python3 rulehub.py index search --query "suspicious process"
 ```
 
 ### 验证规则
 ```bash
-python3 -m tools.validation.validator --rule rules/sigma/00b90cc1-17ec-402c-96ad-3a8117d7a582.json
+python3 rulehub.py rule validate --id 00b90cc1-17ec-402c-96ad-3a8117d7a582
 ```
 
 ## 功能特点
