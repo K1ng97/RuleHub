@@ -101,7 +101,7 @@ global:
 2. 使用命令行工具：
 
 ```bash
-python rulehub.py repo add --name mysource --url https://github.com/example/rules.git --branch main --type custom --converter custom_converter --paths rules/detection --format json
+python3 rulehub.py repo add --name mysource --url https://github.com/example/rules.git --branch main --type custom --converter custom_converter --paths rules/detection --format json
 ```
 
 ## 基本使用
@@ -110,13 +110,13 @@ python rulehub.py repo add --name mysource --url https://github.com/example/rule
 
 ```bash
 # 同步所有规则源
-python rulehub.py repo sync
+python3 rulehub.py repo sync
 
 # 同步特定规则源
-python rulehub.py repo sync --source sigma
+python3 rulehub.py repo sync --source sigma
 
 # 同步后清理临时文件
-python rulehub.py repo sync --clean
+python3 rulehub.py repo sync --clean
 ```
 
 ### 生成索引
@@ -124,7 +124,7 @@ python rulehub.py repo sync --clean
 同步完成后，系统会自动生成索引。如果需要手动生成，可以使用：
 
 ```bash
-python rulehub.py index generate
+python3 rulehub.py index generate
 ```
 
 ### 搜索规则
@@ -133,74 +133,74 @@ RuleHub提供了强大的搜索功能：
 
 ```bash
 # 按标签搜索
-python rulehub.py index search --tags windows,lateral_movement
+python3 rulehub.py index search --tags windows,lateral_movement
 
 # 按平台搜索
-python rulehub.py index search --platforms windows,linux
+python3 rulehub.py index search --platforms windows,linux
 
 # 按MITRE ATT&CK搜索
-python rulehub.py index search --mitre-tactics TA0008 --mitre-techniques T1059
+python3 rulehub.py index search --mitre-tactics TA0008 --mitre-techniques T1059
 
 # 按严重程度搜索
-python rulehub.py index search --severity high
+python3 rulehub.py index search --severity high
 
 # 按名称或描述搜索
-python rulehub.py index search --name "PowerShell"
-python rulehub.py index search --description "credential"
+python3 rulehub.py index search --name "PowerShell"
+python3 rulehub.py index search --description "credential"
 
 # 保存搜索结果
-python rulehub.py index search --tags ransomware --output results.json
+python3 rulehub.py index search --tags ransomware --output results.json
 ```
 
 ### 查看统计信息
 
 ```bash
 # 查看系统的统计信息
-python rulehub.py index stats
+python3 rulehub.py index stats
 
 # 查看详细统计
-python rulehub.py index stats --detailed
+python3 rulehub.py index stats --detailed
 ```
 
 ### 管理规则
 
 ```bash
 # 列出规则
-python rulehub.py rule list
+python3 rulehub.py rule list
 
 # 查看规则详情
-python rulehub.py rule show --id rule_12345678
+python3 rulehub.py rule show --id rule_12345678
 
 # 创建新规则
-python rulehub.py rule create
+python3 rulehub.py rule create
 
 # 验证规则
-python rulehub.py rule validate --id rule_12345678
+python3 rulehub.py rule validate --id rule_12345678
 
 # 测试规则
-python rulehub.py rule test --id rule_12345678 --sample samples/test_data.json
+python3 rulehub.py rule test --id rule_12345678 --sample samples/test_data.json
 
 # 更新规则
-python rulehub.py rule update --id rule_12345678 --name "新名称" --severity high
+python3 rulehub.py rule update --id rule_12345678 --name "新名称" --severity high
 
 # 删除规则
-python rulehub.py rule delete --id rule_12345678
+python3 rulehub.py rule delete --id rule_12345678
 ```
 
 ### 版本管理
 
 ```bash
 # 列出版本
-python rulehub.py version list
+python3 rulehub.py version list
 
 # 创建新版本
-python rulehub.py version create
+python3 rulehub.py version create
 
 # 生成变更日志
-python rulehub.py version changelog
+python3 rulehub.py version changelog
 
 # 查看版本详情
-python rulehub.py version show --version 1.0.0
+python3 rulehub.py version show --version 1.0.0
 ```
 
 ## 目录结构

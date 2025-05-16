@@ -34,7 +34,7 @@ RuleHub的CLI以`rulehub.py`为入口，使用命令组和子命令的结构。
 #### 列出规则
 
 ```
-python rulehub.py rule list [选项]
+python3 rulehub.py rule list [选项]
 ```
 
 **选项：**
@@ -52,13 +52,13 @@ python rulehub.py rule list [选项]
 **示例：**
 
 ```bash
-python rulehub.py rule list --tags windows,lateral_movement --severity high
+python3 rulehub.py rule list --tags windows,lateral_movement --severity high
 ```
 
 #### 显示规则详情
 
 ```
-python rulehub.py rule show --id RULE_ID [选项]
+python3 rulehub.py rule show --id RULE_ID [选项]
 ```
 
 **选项：**
@@ -71,13 +71,13 @@ python rulehub.py rule show --id RULE_ID [选项]
 **示例：**
 
 ```bash
-python rulehub.py rule show --id rule_12345678
+python3 rulehub.py rule show --id rule_12345678
 ```
 
 #### 创建规则
 
 ```
-python rulehub.py rule create [选项]
+python3 rulehub.py rule create [选项]
 ```
 
 **选项：**
@@ -89,11 +89,11 @@ python rulehub.py rule create [选项]
 **示例：**
 
 ```bash
-python rulehub.py rule create
+python3 rulehub.py rule create
 #### 验证规则
 
 ```
-python rulehub.py rule validate [选项]
+python3 rulehub.py rule validate [选项]
 ```
 
 **选项：**
@@ -108,13 +108,13 @@ python rulehub.py rule validate [选项]
 **示例：**
 
 ```bash
-python rulehub.py rule validate --dir rules/custom
+python3 rulehub.py rule validate --dir rules/custom
 ```
 
 #### 测试规则
 
 ```
-python rulehub.py rule test --id RULE_ID [选项]
+python3 rulehub.py rule test --id RULE_ID [选项]
 ```
 
 **选项：**
@@ -127,13 +127,13 @@ python rulehub.py rule test --id RULE_ID [选项]
 **示例：**
 
 ```bash
-python rulehub.py rule test --id rule_12345678 --sample samples/test_data.json
+python3 rulehub.py rule test --id rule_12345678 --sample samples/test_data.json
 ```
 
 #### 更新规则
 
 ```
-python rulehub.py rule update --id RULE_ID [选项]
+python3 rulehub.py rule update --id RULE_ID [选项]
 ```
 
 **选项：**
@@ -153,13 +153,13 @@ python rulehub.py rule update --id RULE_ID [选项]
 **示例：**
 
 ```bash
-python rulehub.py rule update --id rule_12345678 --name "新名称" --severity high
+python3 rulehub.py rule update --id rule_12345678 --name "新名称" --severity high
 ```
 
 #### 删除规则
 
 ```
-python rulehub.py rule delete --id RULE_ID [选项]
+python3 rulehub.py rule delete --id RULE_ID [选项]
 ```
 
 **选项：**
@@ -173,7 +173,7 @@ python rulehub.py rule delete --id RULE_ID [选项]
 **示例：**
 
 ```bash
-python rulehub.py rule delete --id rule_12345678 --force
+python3 rulehub.py rule delete --id rule_12345678 --force
 ```
 
 ### 仓库管理
@@ -181,7 +181,7 @@ python rulehub.py rule delete --id rule_12345678 --force
 #### 列出规则仓库
 
 ```
-python rulehub.py repo list [选项]
+python3 rulehub.py repo list [选项]
 ```
 
 **选项：**
@@ -195,13 +195,13 @@ python rulehub.py repo list [选项]
 **示例：**
 
 ```bash
-python rulehub.py repo list --sort name
+python3 rulehub.py repo list --sort name
 ```
 
 #### 同步规则仓库
 
 ```
-python rulehub.py repo sync [选项]
+python3 rulehub.py repo sync [选项]
 ```
 
 **选项：**
@@ -211,7 +211,7 @@ python rulehub.py repo sync [选项]
 #### 添加规则源
 
 ```
-python rulehub.py repo add --name NAME --url URL [选项]
+python3 rulehub.py repo add --name NAME --url URL [选项]
 ```
 
 **选项：**
@@ -232,13 +232,13 @@ python rulehub.py repo add --name NAME --url URL [选项]
 **示例：**
 
 ```bash
-python rulehub.py repo add --name mysource --url https://github.com/example/rules.git --branch main --type custom --paths rules/detection --sync
+python3 rulehub.py repo add --name mysource --url https://github.com/example/rules.git --branch main --type custom --paths rules/detection --sync
 ```
 
 #### 更新规则源
 
 ```
-python rulehub.py repo update --name NAME [选项]
+python3 rulehub.py repo update --name NAME [选项]
 ```
 
 **选项：**
@@ -259,13 +259,13 @@ python rulehub.py repo update --name NAME [选项]
 **示例：**
 
 ```bash
-python rulehub.py repo update --name mysource --branch develop --enable true
+python3 rulehub.py repo update --name mysource --branch develop --enable true
 ```
 
 #### 移除规则源
 
 ```
-python rulehub.py repo remove --name NAME [选项]
+python3 rulehub.py repo remove --name NAME [选项]
 ```
 
 **选项：**
@@ -280,7 +280,7 @@ python rulehub.py repo remove --name NAME [选项]
 **示例：**
 
 ```bash
-python rulehub.py repo remove --name mysource --delete-rules
+python3 rulehub.py repo remove --name mysource --delete-rules
 ```
 
 ### 索引管理
@@ -288,7 +288,7 @@ python rulehub.py repo remove --name mysource --delete-rules
 #### 生成索引
 
 ```
-python rulehub.py index generate [选项]
+python3 rulehub.py index generate [选项]
 ```
 
 **选项：**
@@ -303,13 +303,13 @@ python rulehub.py index generate [选项]
 **示例：**
 
 ```bash
-python rulehub.py index generate --force --verbose
+python3 rulehub.py index generate --force --verbose
 ```
 
 #### 搜索规则
 
 ```
-python rulehub.py index search [选项]
+python3 rulehub.py index search [选项]
 ```
 
 **选项：**
@@ -332,11 +332,11 @@ python rulehub.py index search [选项]
 **示例：**
 
 ```bash
-python rulehub.py index search --tags windows,mimikatz --severity high --limit 10 --format json
+python3 rulehub.py index search --tags windows,mimikatz --severity high --limit 10 --format json
 #### 显示统计信息
 
 ```
-python rulehub.py index stats [选项]
+python3 rulehub.py index stats [选项]
 ```
 
 **选项：**
@@ -349,7 +349,7 @@ python rulehub.py index stats [选项]
 **示例：**
 
 ```bash
-python rulehub.py index stats --detailed
+python3 rulehub.py index stats --detailed
 ```
 
 ### 版本管理
@@ -357,7 +357,7 @@ python rulehub.py index stats --detailed
 #### 列出版本历史
 
 ```
-python rulehub.py version list [选项]
+python3 rulehub.py version list [选项]
 ```
 
 **选项：**
@@ -371,13 +371,13 @@ python rulehub.py version list [选项]
 **示例：**
 
 ```bash
-python rulehub.py version list --format full
+python3 rulehub.py version list --format full
 ```
 
 #### 创建新版本
 
 ```
-python rulehub.py version create [选项]
+python3 rulehub.py version create [选项]
 ```
 
 **选项：**
@@ -390,13 +390,13 @@ python rulehub.py version create [选项]
 **示例：**
 
 ```bash
-python rulehub.py version create --changelog docs/CHANGELOG.md
+python3 rulehub.py version create --changelog docs/CHANGELOG.md
 ```
 
 #### 生成变更日志
 
 ```
-python rulehub.py version changelog [选项]
+python3 rulehub.py version changelog [选项]
 ```
 
 **选项：**
@@ -409,13 +409,13 @@ python rulehub.py version changelog [选项]
 **示例：**
 
 ```bash
-python rulehub.py version changelog --output docs/CHANGELOG.md
+python3 rulehub.py version changelog --output docs/CHANGELOG.md
 ```
 
 #### 显示版本详情
 
 ```
-python rulehub.py version show --version VERSION [选项]
+python3 rulehub.py version show --version VERSION [选项]
 ```
 
 **选项：**
@@ -429,7 +429,7 @@ python rulehub.py version show --version VERSION [选项]
 **示例：**
 
 ```bash
-python rulehub.py version show --version 1.0.0
+python3 rulehub.py version show --version 1.0.0
 ```
 
 ### 全局选项
@@ -835,5 +835,5 @@ sync_manager.clean_temp_files()
 **示例：**
 
 ```bash
-python rulehub.py repo sync --source sigma --clean
+python3 rulehub.py repo sync --source sigma --clean
 ```

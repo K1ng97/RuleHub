@@ -15,7 +15,7 @@ pip install -r requirements.txt
 RuleHub 提供了一个名为 `rulehub.py` 的主要入口脚本，通过该脚本可以执行各种操作。使用方法如下：
 
 ```bash
-python rulehub.py <命令> [选项]
+python3 rulehub.py <命令> [选项]
 ```
 
 ## 同步规则
@@ -25,7 +25,7 @@ python rulehub.py <命令> [选项]
 以下命令将同步 `config/sources.yml` 中配置的所有启用的规则源：
 
 ```bash
-python rulehub.py sync
+python3 rulehub.py sync
 ```
 
 ### 同步特定规则源
@@ -33,7 +33,7 @@ python rulehub.py sync
 如果只需要同步特定的规则源，可以使用 `--source` 参数：
 
 ```bash
-python rulehub.py sync --source sigma
+python3 rulehub.py sync --source sigma
 ```
 
 ### 同步并清理临时文件
@@ -41,7 +41,7 @@ python rulehub.py sync --source sigma
 同步完成后清理临时文件（如仓库克隆目录），可以添加 `--clean` 参数：
 
 ```bash
-python rulehub.py sync --clean
+python3 rulehub.py sync --clean
 ```
 
 ## 生成索引
@@ -49,7 +49,7 @@ python rulehub.py sync --clean
 同步完成后，可以手动生成规则索引：
 
 ```bash
-python rulehub.py index
+python3 rulehub.py index
 ```
 
 注意：执行 `sync` 命令时已自动生成索引，此步骤一般不需要单独执行。
@@ -61,32 +61,32 @@ RuleHub 提供了强大的规则搜索功能，可以根据各种条件进行搜
 ### 按标签搜索
 
 ```bash
-python rulehub.py search --tags windows,lateral_movement
+python3 rulehub.py search --tags windows,lateral_movement
 ```
 
 ### 按平台搜索
 
 ```bash
-python rulehub.py search --platforms windows,linux
+python3 rulehub.py search --platforms windows,linux
 ```
 
 ### 按 MITRE ATT&CK 搜索
 
 ```bash
-python rulehub.py search --mitre-tactics TA0008 --mitre-techniques T1059
+python3 rulehub.py search --mitre-tactics TA0008 --mitre-techniques T1059
 ```
 
 ### 按严重程度搜索
 
 ```bash
-python rulehub.py search --severity high
+python3 rulehub.py search --severity high
 ```
 
 ### 按名称或描述搜索
 
 ```bash
-python rulehub.py search --name "PowerShell"
-python rulehub.py search --description "credential"
+python3 rulehub.py search --name "PowerShell"
+python3 rulehub.py search --description "credential"
 ```
 
 ### 保存搜索结果
@@ -94,7 +94,7 @@ python rulehub.py search --description "credential"
 将搜索结果保存到文件：
 
 ```bash
-python rulehub.py search --tags ransomware --output results.json
+python3 rulehub.py search --tags ransomware --output results.json
 ```
 
 ## 查看统计信息
@@ -102,17 +102,17 @@ python rulehub.py search --tags ransomware --output results.json
 查看系统的统计信息：
 
 ```bash
-python rulehub.py stats
+python3 rulehub.py stats
 ```
 
 查看特定统计：
 
 ```bash
 # 查看同步统计
-python rulehub.py stats --sync
+python3 rulehub.py stats --sync
 
 # 查看索引统计
-python rulehub.py stats --index
+python3 rulehub.py stats --index
 ```
 
 ## 配置文件

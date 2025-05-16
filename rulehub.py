@@ -5,11 +5,11 @@ RuleHub - 网络安全检测规则仓库系统
 入口脚本，提供命令行接口
 
 使用示例:
-- 规则管理:        python rulehub.py rule [list|show|create|validate|test|update|delete]
-- 仓库管理:        python rulehub.py repo [list|sync|add|update|remove]
-- 索引管理:        python rulehub.py index [generate|search|stats]
-- 版本管理:        python rulehub.py version [list|create|changelog]
-- 显示帮助信息:    python rulehub.py --help
+- 规则管理:        python3 rulehub.py rule [list|show|create|validate|test|update|delete]
+- 仓库管理:        python3 rulehub.py repo [list|sync|add|update|remove]
+- 索引管理:        python3 rulehub.py index [generate|search|stats]
+- 版本管理:        python3 rulehub.py version [list|create|changelog]
+- 显示帮助信息:    python3 rulehub.py --help
 """
 
 import os
@@ -59,28 +59,28 @@ def setup_argparser() -> argparse.ArgumentParser:
         epilog="""
 示例:
     # 列出所有规则
-    python rulehub.py rule list
+    python3 rulehub.py rule list
     
     # 显示特定规则详情
-    python rulehub.py rule show --id RULE_ID
+    python3 rulehub.py rule show --id RULE_ID
     
     # 创建新规则
-    python rulehub.py rule create
+    python3 rulehub.py rule create
     
     # 同步规则源
-    python rulehub.py repo sync [--source SOURCE_NAME]
+    python3 rulehub.py repo sync [--source SOURCE_NAME]
     
     # 生成规则索引
-    python rulehub.py index generate
+    python3 rulehub.py index generate
     
     # 搜索规则
-    python rulehub.py index search --tags windows,lateral_movement
+    python3 rulehub.py index search --tags windows,lateral_movement
     
     # 显示规则统计
-    python rulehub.py index stats
+    python3 rulehub.py index stats
     
     # 创建新版本
-    python rulehub.py version create
+    python3 rulehub.py version create
     """
     )
     
