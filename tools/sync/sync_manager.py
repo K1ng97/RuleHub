@@ -25,6 +25,9 @@ from ..utils.file_utils import (
     get_file_hash, save_ndjson
 )
 from ..indexing.indexer import RuleIndexer
+from ..parsers.elastic_parser import ElasticParser, ElasticParserConfig
+from ..parsers.sigma_parser import SigmaParser, SigmaParserConfig
+from ..parsers.splunk_parser import SplunkParser, SplunkParserConfig
 
 # 设置日志
 logging.basicConfig(
@@ -149,6 +152,22 @@ class SyncManager:
                         "failed_rules": 0
                     }
         
+        # 解析每个规则库并生成索引文件
+        elastic_config = ElasticParserConfig()
+        elastic_parser = ElasticParser(elastic_config)
+        elastic_metadata, _ = elastic_parser.parse_directory()
+        elastic_parser.save_to_json(elastic_metadata)
+    
+        sigma_config = SigmaParserConfig()
+        sigma_parser = SigmaParser(sigma_config)
+        sigma_metadata = sigma_parser.parse_directory()
+        sigma_parser.save_to_json(sigma_metadata)
+    
+        splunk_config = SplunkParserConfig()
+        splunk_parser = SplunkParser(splunk_config)
+        splunk_metadata = splunk_parser.parse_directory()
+        splunk_parser.save_to_json(splunk_metadata)
+    
         # 生成索引
         try:
             logger.info("生成规则索引")

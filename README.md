@@ -1,239 +1,151 @@
 # RuleHub
 
-RuleHub是一个网络安全检测规则仓库系统，用于统一管理、转换和索引来自多个开源社区的安全检测规则。
+这是一个规则同步和解析的项目，主要功能包括从多个源同步规则，解析不同格式的规则文件并生成索引。
 
-## 项目架构图
-
-```mermaid
-graph TD
-    A[规则源] --> B[同步模块]
-    B --> C[规则存储]
-    C --> D[规则转换]
-    D --> E[规则索引]
-    E --> F[规则管理接口]
-    F --> G[用户界面]
+## 项目结构
+```
+.github/
+  workflows/
+    daily-sync.yml
+    python-checks.yml
+    release.yml
+    rule-validation.yml
+.gitignore
+.trae/
+  rules/
+    project_rules.md
+CHANGELOG.md
+CODEOWNERS
+Dockerfile
+README.md
+config/
+  sigma_parser_config.yaml
+  sources.yml
+debug_sync.py
+docker-compose.yml
+docs/
+  api_reference.md
+  cli_usage.md
+  contributing.md
+  developer_guide.md
+  rule_format.md
+  usage.md
+  user_guide.md
+examples/
+  custom/
+    network_scanning_detection.json
+  elastic/
+    windows_registry_persistence_run_keys.json
+  sigma/
+    windows_powershell_suspicious_parameter_variation.yml
+index/
+  custom_index.json
+  elastic_index.json
+  index_stats.json
+  mitre_index.json
+  other_index.json
+  rules_index.json
+  rules_index_compact.json
+  sigma_index.json
+  sigma_metadata.json
+  splunk_index.json
+  tags_index.json
+requirements.txt
+rulehub.py
+rules/
+  custom/
+    splunk/
+  elastic/
+    README.md
+    _deprecated/
+    apm/
+    cross-platform/
+    integrations/
+    linux/
+    macos/
+    ml/
+    network/
+    promotions/
+    threat_intel/
+    windows/
+  sigma/
+    README.md
+    application/
+    category/
+    cloud/
+    compliance/
+    linux/
+    macos/
+    network/
+    web/
+    windows/
+  splunk/
+    application/
+    cloud/
+    deprecated/
+    endpoint/
+    network/
+    web/
+stats/
+  sync_stats.json
+tests/
+  fixtures/
+    test_custom_rule.json
+    test_elastic_rule.json
+    test_sigma_rule.yml
+    test_splunk_rule.yml
+  test_cli.py
+  test_indexing.py
+  test_sigma_parser.py
+  test_sync.py
+  test_validation.py
+tmp/
+  repos/
+    elastic/
+    sigma/
+    splunk/
+tools/
+  cli/
+    __init__.py
+    commands/
+    utils/
+    wizard.py
+  indexing/
+    indexer.py
+  parsers/
+    __init__.py
+    elastic_parser.py
+    sigma_parser.py
+    splunk_parser.py
+  sync/
+    repo_handler.py
+    rule_converter.py
+    sync_manager.py
+  utils/
+    file_utils.py
+  validation/
+    duplicate_detector.py
+    mitre_mapper.py
+    performance_analyzer.py
+    validator.py
+versions/
+  latest.json
+  v2.0.0.json
 ```
 
-## 快速入门指南
-
-1. 安装依赖：`pip install -r requirements.txt`
-2. 配置规则源：编辑`config/sources.yml`
-3. 同步规则：`python3 rulehub.py repo sync`
-4. 生成索引：`python3 rulehub.py index generate`
-5. 启动服务：`python3 rulehub.py`
-
-## 主要功能示例
-
-### 同步规则
-```bash
-python3 rulehub.py repo sync --source sigma
-```
-
-### 搜索规则
-```bash
-python3 rulehub.py index search --query "suspicious process"
-```
-
-### 验证规则
-```bash
-python3 rulehub.py rule validate --id 00b90cc1-17ec-402c-96ad-3a8117d7a582
-```
-
-## 功能特点
-
-- 自动同步多个开源规则仓库
-- 规则格式转换和标准化
-- 规则索引和搜索
-- 统一的规则管理接口
-
-## 关键模块说明
-
-### 同步模块 (tools/sync/sync_manager.py)
-```python
-def sync_repository(repo_config):
-    """
-    同步指定规则仓库
-    
-    参数:
-        repo_config (dict): 仓库配置信息
-        
-    返回值:
-        dict: 同步结果统计信息
-        
-    异常:
-        SyncError: 同步过程中发生的错误
-    """
-    ...
-```
-
-### 索引模块 (tools/indexing/indexer.py)
-```python
-def build_index(rule_dir, index_file):
-    """
-    构建规则索引
-    
-    参数:
-        rule_dir (str): 规则目录路径
-        index_file (str): 索引文件输出路径
-        
-    返回值:
-        int: 索引的规则数量
-    """
-    ...
-```
-
-## 目录结构
-
-```
-RuleHub/
-├── .github/            # GitHub工作流配置
-│   └── workflows/      # CI/CD工作流
-├── config/             # 配置文件目录
-│   └── sources.yml     # 规则源配置
-├── docs/               # 文档目录
-│   ├── api_reference.md
-│   ├── cli_usage.md
-│   ├── contributing.md
-│   ├── developer_guide.md
-│   ├── rule_format.md
-│   ├── usage.md
-│   └── user_guide.md
-├── examples/           # 示例规则
-│   ├── custom/
-│   ├── elastic/
-│   ├── sigma/
-│   └── splunk/
-├── index/              # 索引文件
-│   ├── custom_index.json      # 自定义规则的索引
-│   ├── elastic_index.json     # Elastic规则的索引
-│   ├── index_stats.json      # 索引统计信息
-│   ├── mitre_index.json      # MITRE ATT&CK框架映射索引
-│   ├── other_index.json      # 其他来源规则的索引
-│   ├── rules_index.json      # 所有规则的全局索引
-│   ├── rules_index_compact.json  # 压缩版全局索引
-│   ├── sigma_index.json      # Sigma规则的索引
-│   ├── splunk_index.json     # Splunk规则的索引
-│   └── tags_index.json       # 规则标签索引
-├── rules/              # 规则存储目录
-│   ├── custom/         # 自定义规则
-│   ├── elastic/        # Elastic规则
-│   ├── other/          # 其他来源规则
-│   └── sigma/          # Sigma规则
-├── stats/              # 统计信息
-│   └── sync_stats.json
-├── tests/              # 测试目录
-│   ├── fixtures/       # 测试数据
-│   ├── test_cli.py     # CLI测试
-│   ├── test_indexing.py # 索引测试
-│   ├── test_sync.py    # 同步测试
-│   └── test_validation.py # 验证测试
-├── tools/              # 工具脚本目录
-│   ├── cli/            # 命令行接口
-│   ├── indexing/       # 索引工具
-│   ├── sync/           # 同步工具
-│   ├── utils/          # 通用工具类
-│   └── validation/     # 验证工具
-├── versions/          # 版本信息
-│   ├── latest.json
-│   └── v2.0.0.json
-├── CHANGELOG.md       # 变更日志
-├── CODEOWNERS         # 代码所有者
-├── Dockerfile         # Docker配置
-├── README.md          # 项目说明
-├── debug_sync.py      # 调试脚本
-├── docker-compose.yml # Docker Compose配置
-├── requirements.txt   # Python依赖
-└── rulehub.py         # 主入口脚本
-```
-
-## 安装依赖
-
-```bash
-pip install -r requirements.txt
-```
+## 功能说明
+- **规则同步**：从多个源同步规则到本地。
+- **规则解析**：解析 Elastic、Sigma 和 Splunk 格式的规则文件，提取元数据并保存为 JSON 文件。
+- **索引生成**：根据解析后的规则生成索引文件。
 
 ## 使用方法
+1. 安装依赖：`pip install -r requirements.txt`
+2. 配置规则源：编辑 `config/sources.yml` 文件。
+3. 同步规则：`python3 rulehub.py repo sync`
+4. 解析规则并生成索引：同步完成后自动执行。
 
-RuleHub 提供了统一的命令行接口 `rulehub.py`，支持以下主要功能：
+## 开发指南
+详见 `docs/developer_guide.md` 文件。
 
-### 规则管理
-```bash
-# 列出所有规则
-python3 rulehub.py rule list
-
-# 显示特定规则详情
-python3 rulehub.py rule show --id RULE_ID
-
-# 创建新规则
-python3 rulehub.py rule create
-
-# 验证规则
-python3 rulehub.py rule validate --id RULE_ID
-
-# 测试规则
-python3 rulehub.py rule test --id RULE_ID --sample sample_data.json
-
-# 更新规则
-python3 rulehub.py rule update --id RULE_ID --name "新规则名称"
-
-# 删除规则
-python3 rulehub.py rule delete --id RULE_ID
-```
-
-### 仓库管理
-```bash
-# 列出所有规则源
-python3 rulehub.py repo list
-
-# 同步规则源
-python3 rulehub.py repo sync --source SOURCE_NAME
-
-# 添加新规则源
-python3 rulehub.py repo add --name "新规则源" --url REPO_URL
-
-# 更新规则源配置
-python3 rulehub.py repo update --name SOURCE_NAME --branch new_branch
-
-# 删除规则源
-python3 rulehub.py repo remove --name SOURCE_NAME
-```
-
-### 索引管理
-```bash
-# 生成规则索引
-python3 rulehub.py index generate
-
-# 搜索规则
-python3 rulehub.py index search --tags windows,lateral_movement
-
-# 显示规则统计
-python3 rulehub.py index stats
-```
-
-### 版本管理
-```bash
-# 列出所有版本
-python3 rulehub.py version list
-
-# 创建新版本
-python3 rulehub.py version create
-
-# 查看版本变更
-python3 rulehub.py version changelog
-```
-
-获取完整帮助信息：
-```bash
-python3 rulehub.py --help
-```
-
-## 配置说明
-
-在`config/sources.yml`中配置规则源信息，包括仓库URL、分支、规则目录路径等。
-
-## 开发环境
-
-- Python 3.8+
-- PyYAML
-- GitPython
-- JSON Schema
+## 贡献指南
+详见 `docs/contributing.md` 文件。

@@ -11,13 +11,15 @@ import logging
 import hashlib
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Any, Optional, Union, Set
+from typing import Dict, List, Any, Optional, Union
 import jsonschema
 
 from ..utils.file_utils import (
     ensure_dir, read_json, write_json, 
     list_files, get_file_hash
 )
+
+import collections
 
 logger = logging.getLogger(__name__)
 
@@ -52,26 +54,9 @@ INDEX_SCHEMA = {
                         "required": ["type"]
                     },
                     "severity": {"type": "string"},
-                    "tags": {
-                        "type": "array",
-                        "items": {"type": "string"}
-                    },
                     "platforms": {
                         "type": "array",
                         "items": {"type": "string"}
-                    },
-                    "mitre": {
-                        "type": "object",
-                        "properties": {
-                            "tactics": {
-                                "type": "array",
-                                "items": {"type": "string"}
-                            },
-                            "techniques": {
-                                "type": "array",
-                                "items": {"type": "string"}
-                            }
-                        }
                     },
                     "created": {"type": "string"},
                     "modified": {"type": "string"},
@@ -87,38 +72,119 @@ INDEX_SCHEMA = {
 
 class RuleIndexer:
     """规则索引生成器类"""
-    
+
     def __init__(self, rules_dir: Union[str, Path] = "rules", index_dir: Union[str, Path] = "index"):
-        """
-        初始化索引生成器
-        
-        Args:
-            rules_dir: 规则目录
-            index_dir: 索引目录
-        """
         self.rules_dir = Path(rules_dir)
         self.index_dir = Path(index_dir)
         ensure_dir(self.index_dir)
-        
-        # 索引文件路径
         self.main_index_path = self.index_dir / "rules_index.json"
         self.compact_index_path = self.index_dir / "rules_index_compact.json"
-        self.source_indices = {}  # 每个源的索引
-        
-        # 索引版本
+        self.source_indices = {}
         self.version = "1.0.0"
-    
+
+    def generate_indexes(self):
+        metadata_files = list(self._find_metadata_files())
+        all_rules = self._load_all_rules(metadata_files)
+
+        # 生成主索引
+        main_index = self._generate_main_index(all_rules)
+        write_json(self.index_dir / "main_index.json", main_index)
+
+        # 生成源索引
+        source_index = self._generate_source_index(all_rules)
+        write_json(self.index_dir / "source_index.json", source_index)
+
+        # 生成精简索引
+        compact_index = self._generate_compact_index(all_rules)
+        write_json(self.index_dir / "compact_index.json", compact_index)
+
+        # 生成统计信息
+        stats = self._generate_stats(all_rules)
+        write_json(self.index_dir / "stats.json", stats)
+
+    def _find_metadata_files(self):
+        for root, dirs, files in os.walk(self.rules_dir):
+            for file in files:
+                if file.endswith("_metadata.json"):
+                    yield Path(root) / file
+
+    def _load_all_rules(self, metadata_files):
+        all_rules = []
+        for file in metadata_files:
+            try:
+                rules = read_json(file)
+                for rule in rules:
+                    if 'tags' in rule and not isinstance(rule['tags'], list):
+                        # 处理非列表类型的 tags（转换为字符串数组）
+                        new_tags = []
+                        if isinstance(rule['tags'], dict):
+                            # 将字典键值对转换为"key:value"格式的字符串
+                            for key, values in rule['tags'].items():
+                                if isinstance(values, list):
+                                    for value in values:
+                                        new_tags.append(f"{key}:{value}")
+                                else:
+                                    new_tags.append(f"{key}:{values}")
+                        else:
+                            # 其他类型直接转为字符串
+                            new_tags.append(str(rule['tags']))
+                        rule['tags'] = new_tags
+                all_rules.extend(rules)
+            except Exception as e:
+                logger.error(f"Failed to load {file}: {e}")
+        return all_rules
+
+    def _generate_main_index(self, rules):
+        main_index = {
+            "meta": {
+                "version": "1.0",
+                "generated_at": datetime.utcnow().isoformat(),
+                "total_rules": len(rules)
+            },
+            "rules": rules
+        }
+        return main_index
+
+    def _generate_source_index(self, rules):
+        source_index = collections.defaultdict(list)
+        for rule in rules:
+            if "source" in rule:
+                source_type = rule["source"].get("type", "unknown")
+                source_index[source_type].append(rule["id"])
+        return dict(source_index)
+
+    def _generate_compact_index(self, rules):
+        compact_index = []
+        for rule in rules:
+            compact_rule = {
+                "id": rule["id"],
+                "name": rule["name"],
+                "tags": rule.get("tags", []),
+                "severity": rule.get("severity", "unknown")
+            }
+            compact_index.append(compact_rule)
+        return compact_index
+
+    def _generate_stats(self, rules):
+        stats = {
+            "total_rules": len(rules),
+            "by_source": collections.Counter(rule["source"].get("type", "unknown") for rule in rules if "source" in rule),
+            "by_severity": collections.Counter(rule.get("severity", "unknown") for rule in rules),
+            "by_status": collections.Counter(rule.get("status", "unknown") for rule in rules)
+        }
+        return stats
+
     def generate_index(self) -> Dict:
         """
         生成规则索引
-        
+
         Returns:
             Dict: 索引生成统计信息
         """
         logger.info("开始生成规则索引")
-        
+
         start_time = datetime.now()
-        
+
         # 创建索引元数据
         index = {
             "meta": {
@@ -129,7 +195,7 @@ class RuleIndexer:
             },
             "rules": []
         }
-        
+
         # 统计信息
         stats = {
             "total_sources": 0,
@@ -139,90 +205,41 @@ class RuleIndexer:
             "end_time": None,
             "success": False
         }
-        
-        try:
-            # 获取所有规则源目录
-            source_dirs = [d for d in self.rules_dir.iterdir() if d.is_dir()]
-            stats["total_sources"] = len(source_dirs)
-            
-            # 处理每个规则源
-            for source_dir in source_dirs:
-                source_name = source_dir.name
-                logger.info(f"处理规则源: {source_name}")
-                
-                # 初始化源统计
-                source_stats = {
-                    "name": source_name,
-                    "rules_count": 0
-                }
-                
-                # 获取所有规则文件
-                rule_files = list_files(source_dir, "*.json")
-                
-                # 创建源索引
+
+        metadata_files = [
+            Path('rules/sigma/sigma_metadata.json'),
+            Path('rules/splunk/splunk_metadata.json'),
+            Path('rules/elastic/elastic_metadata.json')
+        ]
+
+        stats["total_sources"] = len(metadata_files)
+
+        for metadata_file in metadata_files:
+            source_name = metadata_file.parent.name
+            logger.info(f"处理规则源: {source_name}")
+
+            # 初始化源统计
+            source_stats = {
+                "name": source_name,
+                "rules_count": 0
+            }
+
+            try:
+                rules = read_json(metadata_file)
                 source_index = {
                     "meta": {
                         "source": source_name,
                         "version": self.version,
                         "generated_at": start_time.isoformat(),
-                        "total_rules": len(rule_files)
+                        "total_rules": len(rules)
                     },
                     "rules": []
                 }
-                
-                # 处理每个规则文件
-                for rule_file in rule_files:
+
+                for rule in rules:
                     try:
-                        # 读取原始规则文件（假设已存储为原始格式）
-                        if source_name == 'sigma':
-                            from tools.parsers.sigma_parser import SigmaParser
-                            parser = SigmaParser()
-                        elif source_name == 'splunk':
-                            from tools.parsers.splunk_parser import SplunkParser
-                            parser = SplunkParser()
-                        else:
-                            logger.warning(f"未找到{source_name}对应的解析器，跳过解析")
-                            continue
-
-                        # 解析规则metadata
-                        metadata = parser.parse(rule_file)
-                        if not metadata:
-                            logger.warning(f"解析{rule_file}失败，跳过")
-                            continue
-
-                        # 读取原始规则内容（根据实际存储格式调整读取方式）
-                        if rule_file.suffix == '.yml':
-                            import yaml
-                            with open(rule_file, 'r', encoding='utf-8') as f:
-                                rule_content = yaml.safe_load(f)
-                        elif rule_file.suffix == '.json':
-                            rule_content = read_json(rule_file)
-                        else:
-                            logger.warning(f"不支持的规则格式: {rule_file.suffix}")
-                            continue
-
-                        # 合并metadata和规则内容
-                        full_rule_info = {
-                            "metadata": metadata,
-                            "content": rule_content,
-                            "source": source_name,
-                            "file_path": str(rule_file)
-                        }
-
-                        # 输出到仓库规则信息JSON文件
-                        repo_rules_dir = self.index_dir / "repo_rules"
-                        ensure_dir(repo_rules_dir)
-                        output_path = repo_rules_dir / f"{source_name}_rules.json"
-                        if output_path.exists():
-                            existing_rules = read_json(output_path)
-                            existing_rules.append(full_rule_info)
-                        else:
-                            existing_rules = [full_rule_info]
-                        write_json(existing_rules, output_path)
-
-                        # 创建索引条目（基于metadata）
-                        rule_entry = self._create_rule_entry(full_rule_info["metadata"], rule_file)
-                        rule_entry["source"] = source_name
+                        rule_entry = self._create_rule_entry(rule, metadata_file)
+                        rule_entry["source"] = {"type": source_name}
 
                         # 添加到主索引和源索引
                         index["rules"].append(rule_entry)
@@ -231,79 +248,66 @@ class RuleIndexer:
                         # 更新统计信息
                         source_stats["rules_count"] += 1
                         stats["total_rules"] += 1
-                        
+
                     except Exception as e:
-                        logger.error(f"处理规则文件 {rule_file} 时发生错误: {e}")
-                
+                        logger.error(f"处理规则 {rule.get('id')} 时发生错误: {e}")
+
                 # 更新源元数据
                 source_index["meta"]["total_rules"] = source_stats["rules_count"]
-                
+
                 # 保存源索引
                 source_index_path = self.index_dir / f"{source_name}_index.json"
                 write_json(source_index, source_index_path)
                 self.source_indices[source_name] = source_index_path
-                
+
                 # 更新主索引源信息
                 index["meta"]["sources"][source_name] = {
                     "count": source_stats["rules_count"],
                     "index_path": str(source_index_path.relative_to(self.index_dir))
                 }
-                
+
                 # 更新统计信息
                 stats["source_stats"][source_name] = source_stats
-            
-            # 更新总规则数
-            index["meta"]["total_rules"] = stats["total_rules"]
-            
-            # 验证索引格式
-            self._validate_index(index)
-            
-            # 保存主索引
-            write_json(index, self.main_index_path)
-            logger.info(f"主索引已保存到: {self.main_index_path}")
-            
-            # 生成精简索引
-            compact_index = self._generate_compact_index(index)
-            write_json(compact_index, self.compact_index_path)
-            logger.info(f"精简索引已保存到: {self.compact_index_path}")
-            
-            # 生成标签索引
-            self._generate_tag_index(index)
-            
-            # 生成MITRE索引
-            self._generate_mitre_index(index)
-            
-            # 更新统计信息
-            end_time = datetime.now()
-            stats["end_time"] = end_time.isoformat()
-            stats["duration"] = (end_time - start_time).total_seconds()
-            stats["success"] = True
-            
-            logger.info(f"规则索引生成完成，共 {stats['total_rules']} 条规则，{stats['total_sources']} 个规则源")
-            
-        except Exception as e:
-            logger.error(f"生成规则索引时发生错误: {e}")
-            # 更新统计信息
-            end_time = datetime.now()
-            stats["end_time"] = end_time.isoformat()
-            stats["duration"] = (end_time - start_time).total_seconds()
-            stats["error"] = str(e)
-            stats["success"] = False
-        
+
+            except Exception as e:
+                logger.error(f"处理元数据文件 {metadata_file} 时发生错误: {e}")
+
+        # 更新总规则数
+        index["meta"]["total_rules"] = stats["total_rules"]
+
+        # 验证索引格式
+        self._validate_index(index)
+
+        # 保存主索引
+        write_json(index, self.main_index_path)
+        logger.info(f"主索引已保存到: {self.main_index_path}")
+
+        # 生成精简索引
+        compact_index = self._generate_compact_index(index)
+        write_json(compact_index, self.compact_index_path)
+        logger.info(f"精简索引已保存到: {self.compact_index_path}")
+        # 更新统计信息
+        end_time = datetime.now()
+        stats["end_time"] = end_time.isoformat()
+        stats["duration"] = (end_time - start_time).total_seconds()
+        stats["success"] = True
+
+        logger.info(f"规则索引生成完成，共 {stats['total_rules']} 条规则，{stats['total_sources']} 个规则源")
+
         # 保存统计信息
         stats_path = self.index_dir / "index_stats.json"
         write_json(stats, stats_path)
-        
+
         return stats
-    
+
     def _create_rule_entry(self, rule: Dict, rule_file: Path) -> Dict:
         """
         创建规则索引条目
-        
+
         Args:
             rule: 规则内容
             rule_file: 规则文件路径
-            
+
         Returns:
             Dict: 规则索引条目
         """
@@ -312,31 +316,24 @@ class RuleIndexer:
             "id": rule.get("id", ""),
             "name": rule.get("name", ""),
             "description": rule.get("description", ""),
-            "source": {
-                "type": rule.get("source", {}).get("type", "unknown"),
-                "id": rule.get("source", {}).get("id", "")
-            },
+            "source": rule.get("source", {}),
             "severity": rule.get("severity", "medium"),
             "tags": rule.get("tags", []),
             "platforms": rule.get("platforms", []),
-            "mitre": {
-                "tactics": rule.get("mitre", {}).get("tactics", []),
-                "techniques": rule.get("mitre", {}).get("techniques", [])
-            },
             "created": rule.get("created", ""),
             "modified": rule.get("modified", ""),
-            "rule_path": str(rule_file.relative_to(self.rules_dir.parent))
+            "rule_path": str(rule_file.relative_to(self.rules_dir))
         }
-        
+
         return entry
-    
+
     def _validate_index(self, index: Dict) -> None:
         """
         验证索引是否符合模式
-        
+
         Args:
             index: 索引数据
-            
+
         Raises:
             jsonschema.exceptions.ValidationError: 验证失败
         """
@@ -346,15 +343,15 @@ class RuleIndexer:
         except jsonschema.exceptions.ValidationError as e:
             logger.error(f"索引验证失败: {e}")
             raise
-    
+
     def _generate_compact_index(self, index: Dict) -> Dict:
         """
         生成精简索引
         仅包含ID、名称、严重程度和规则路径
-        
+
         Args:
             index: 完整索引
-            
+
         Returns:
             Dict: 精简索引
         """
@@ -362,7 +359,7 @@ class RuleIndexer:
             "meta": index["meta"].copy(),
             "rules": []
         }
-        
+
         for rule in index["rules"]:
             compact_rule = {
                 "id": rule["id"],
@@ -371,121 +368,10 @@ class RuleIndexer:
                 "rule_path": rule["rule_path"]
             }
             compact_index["rules"].append(compact_rule)
-        
+
         return compact_index
-    
-    def _generate_tag_index(self, index: Dict) -> None:
-        """
-        生成标签索引
-        
-        Args:
-            index: 完整索引
-        """
-        # 收集所有标签
-        tags_dict = {}
-        
-        for rule in index["rules"]:
-            for tag in rule.get("tags", []):
-                if tag not in tags_dict:
-                    tags_dict[tag] = []
-                
-                # 添加规则ID到标签索引
-                tags_dict[tag].append({
-                    "id": rule["id"],
-                    "name": rule["name"],
-                    "rule_path": rule["rule_path"]
-                })
-        
-        # 生成标签索引
-        tag_index = {
-            "meta": {
-                "version": self.version,
-                "generated_at": index["meta"]["generated_at"],
-                "total_tags": len(tags_dict)
-            },
-            "tags": {}
-        }
-        
-        # 添加标签
-        for tag, rules in tags_dict.items():
-            tag_index["tags"][tag] = {
-                "count": len(rules),
-                "rules": rules
-            }
-        
-        # 保存标签索引
-        tag_index_path = self.index_dir / "tags_index.json"
-        write_json(tag_index, tag_index_path)
-        logger.info(f"标签索引已保存到: {tag_index_path}")
-    
-    def _generate_mitre_index(self, index: Dict) -> None:
-        """
-        生成MITRE索引
-        
-        Args:
-            index: 完整索引
-        """
-        # 收集所有战术和技术
-        tactics_dict = {}
-        techniques_dict = {}
-        
-        for rule in index["rules"]:
-            mitre = rule.get("mitre", {})
-            
-            # 处理战术
-            for tactic in mitre.get("tactics", []):
-                if tactic not in tactics_dict:
-                    tactics_dict[tactic] = []
-                
-                # 添加规则ID到战术索引
-                tactics_dict[tactic].append({
-                    "id": rule["id"],
-                    "name": rule["name"],
-                    "rule_path": rule["rule_path"]
-                })
-            
-            # 处理技术
-            for technique in mitre.get("techniques", []):
-                if technique not in techniques_dict:
-                    techniques_dict[technique] = []
-                
-                # 添加规则ID到技术索引
-                techniques_dict[technique].append({
-                    "id": rule["id"],
-                    "name": rule["name"],
-                    "rule_path": rule["rule_path"]
-                })
-        
-        # 生成MITRE索引
-        mitre_index = {
-            "meta": {
-                "version": self.version,
-                "generated_at": index["meta"]["generated_at"],
-                "total_tactics": len(tactics_dict),
-                "total_techniques": len(techniques_dict)
-            },
-            "tactics": {},
-            "techniques": {}
-        }
-        
-        # 添加战术
-        for tactic, rules in tactics_dict.items():
-            mitre_index["tactics"][tactic] = {
-                "count": len(rules),
-                "rules": rules
-            }
-        
-        # 添加技术
-        for technique, rules in techniques_dict.items():
-            mitre_index["techniques"][technique] = {
-                "count": len(rules),
-                "rules": rules
-            }
-        
-        # 保存MITRE索引
-        mitre_index_path = self.index_dir / "mitre_index.json"
-        write_json(mitre_index, mitre_index_path)
-        logger.info(f"MITRE索引已保存到: {mitre_index_path}")
+
+
     
     def search_rules(self, query: Dict) -> List[Dict]:
         """

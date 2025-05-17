@@ -1,19 +1,19 @@
 {
-  "total_sources": 4,
+  "total_sources": 3,
   "successful_sources": 3,
-  "failed_sources": 1,
+  "failed_sources": 0,
   "total_rules": 12330,
   "converted_rules": 6165,
   "failed_rules": 0,
-  "start_time": 1747389556.048198,
-  "end_time": 1747389582.5243468,
-  "duration": 26.47614884376526,
+  "start_time": 1747489430.0200589,
+  "end_time": 1747489472.381537,
+  "duration": 42.361478090286255,
   "details": {
     "sigma": {
       "success": true,
-      "start_time": 1747389556.048715,
-      "end_time": 1747389568.541352,
-      "duration": 12.492636919021606,
+      "start_time": 1747489430.020469,
+      "end_time": 1747489433.416023,
+      "duration": 3.3955540657043457,
       "total_rules": 2989,
       "converted_rules": 2989,
       "failed_rules": 0,
@@ -21,9 +21,9 @@
     },
     "elastic": {
       "success": true,
-      "start_time": 1747389556.048825,
-      "end_time": 1747389581.0605981,
-      "duration": 25.011773109436035,
+      "start_time": 1747489430.020549,
+      "end_time": 1747489435.87628,
+      "duration": 5.855731010437012,
       "total_rules": 1411,
       "converted_rules": 1411,
       "failed_rules": 0,
@@ -31,49 +31,35 @@
     },
     "splunk": {
       "success": true,
-      "start_time": 1747389568.5418859,
-      "end_time": 1747389580.825419,
-      "duration": 12.283533096313477,
+      "start_time": 1747489433.41645,
+      "end_time": 1747489437.4074721,
+      "duration": 3.9910221099853516,
       "total_rules": 1765,
       "converted_rules": 1765,
       "failed_rules": 0,
       "error": null
-    },
-    "mitre_detection": {
-      "success": false,
-      "start_time": 1747389580.825879,
-      "end_time": 1747389582.4893749,
-      "duration": 1.6634957790374756,
-      "total_rules": 0,
-      "converted_rules": 0,
-      "failed_rules": 0,
-      "error": "克隆规则源 mitre_detection 仓库失败"
     }
   },
   "indexing": {
-    "total_sources": 4,
-    "total_rules": 0,
+    "total_sources": 3,
+    "total_rules": 6161,
     "source_stats": {
-      "elastic": {
-        "name": "elastic",
-        "rules_count": 0
-      },
       "sigma": {
         "name": "sigma",
-        "rules_count": 0
+        "rules_count": 2988
       },
       "splunk": {
         "name": "splunk",
-        "rules_count": 0
+        "rules_count": 1764
       },
-      "custom": {
-        "name": "custom",
-        "rules_count": 0
+      "elastic": {
+        "name": "elastic",
+        "rules_count": 1409
       }
     },
-    "start_time": "2025-05-16T17:59:42.489663",
-    "end_time": "2025-05-16T17:59:42.524131",
+    "start_time": "2025-05-17T21:44:31.997030",
+    "end_time": "2025-05-17T21:44:32.378698",
     "success": true,
-    "duration": 0.034468
+    "duration": 0.381668
   }
 }

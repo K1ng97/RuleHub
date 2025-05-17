@@ -129,7 +129,6 @@ class TestRuleIndexer(unittest.TestCase):
         # 验证索引文件是否存在
         self.assertTrue((self.index_dir / "rules_index.json").exists())
         self.assertTrue((self.index_dir / "rules_index_compact.json").exists())
-        self.assertTrue((self.index_dir / "tags_index.json").exists())
         self.assertTrue((self.index_dir / "mitre_index.json").exists())
         self.assertTrue((self.index_dir / "sigma_index.json").exists())
         self.assertTrue((self.index_dir / "elastic_index.json").exists())
@@ -165,27 +164,6 @@ class TestRuleIndexer(unittest.TestCase):
         self.assertNotIn('tags', rule)
         self.assertNotIn('mitre', rule)
     
-    def test_generate_tag_index(self):
-        """测试生成标签索引"""
-        # 生成索引
-        self.indexer.generate_index()
-        
-        # 验证标签索引内容
-        with open(self.index_dir / "tags_index.json", "r") as f:
-            tag_index = json.load(f)
-        
-        # 验证标签数量
-        self.assertGreater(len(tag_index['tags']), 0)
-        
-        # 验证常见标签
-        self.assertIn('windows', tag_index['tags'])
-        self.assertIn('linux', tag_index['tags'])
-        self.assertIn('powershell', tag_index['tags'])
-        
-        # 验证标签引用的规则
-        windows_tag = tag_index['tags']['windows']
-        self.assertEqual(windows_tag['count'], 2)  # 两条规则带有windows标签
-        self.assertEqual(len(windows_tag['rules']), 2)
     
     def test_generate_mitre_index(self):
         """测试生成MITRE索引"""

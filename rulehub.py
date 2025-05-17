@@ -212,6 +212,18 @@ def setup_argparser() -> argparse.ArgumentParser:
                         cmd_parser.add_argument("--source", help="按规则源搜索")
                         cmd_parser.add_argument("--limit", type=int, help="限制结果数量")
                         cmd_parser.add_argument("--format", choices=["table", "full", "json"], help="输出格式")
+                        cmd_parser.add_argument("--output", "-o", help="输出结果到文件")                    elif cmd_name == "search":
+                        cmd_parser.add_argument("--id", help="按ID搜索")
+                        cmd_parser.add_argument("--name", help="按名称搜索")
+                        cmd_parser.add_argument("--description", help="按描述搜索")
+                        cmd_parser.add_argument("--tags", help="按标签搜索 (逗号分隔)")
+                        cmd_parser.add_argument("--severity", help="按严重程度搜索")
+                        cmd_parser.add_argument("--platform", help="按平台搜索 (逗号分隔)")
+                        cmd_parser.add_argument("--mitre-tactics", help="按MITRE战术搜索 (逗号分隔)")
+                        cmd_parser.add_argument("--mitre-techniques", help="按MITRE技术搜索 (逗号分隔)")
+                        cmd_parser.add_argument("--source", help="按规则源搜索")
+                        cmd_parser.add_argument("--limit", type=int, help="限制结果数量")
+                        cmd_parser.add_argument("--format", choices=["table", "full", "json"], help="输出格式")
                         cmd_parser.add_argument("--output", "-o", help="输出结果到文件")
                     
                     elif cmd_name == "stats":

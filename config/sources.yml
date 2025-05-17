@@ -45,20 +45,6 @@ sources:
       - "spl"
     priority: 3
 
-  # MITRE Detection Lab规则
-  mitre_detection:
-    name: "MITRE Detection Lab"
-    description: "MITRE ATT&CK相关的检测规则和测试案例"
-    repo_url: "https://github.com/mitre/detection-lab-rules.git"  # 示例仓库
-    branch: "main"
-    rule_path: "rules"
-    converter: "mitre_converter"
-    enabled: true  # 默认禁用
-    tags:
-      - "mitre"
-      - "attack"
-    priority: 4
-
 # 全局配置选项
 global:
   default_output_format: "json"  # 规则统一转换后的格式
